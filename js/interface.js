@@ -11,7 +11,9 @@ $('[data-create]').click(function (event) {
     platform: prompt('Platform', 'ios')
   }).then(function () {
     loadSubmissions();
-  })
+  }).catch(function (err) {
+    alert(err.responseJSON.message);
+  });
 });
 
 $('[data-submissions]').change(function () {
@@ -60,6 +62,8 @@ function loadSubmissions() {
     submissions.forEach(function (s) {
       $submissions.append('<option value="' + s.id + '">#' + s.id + ' ' + s.platform + ' (' + s.status + ')</option>');
     });
+  }).catch(function (err) {
+    alert(err.responseJSON.message);
   });
 }
 
