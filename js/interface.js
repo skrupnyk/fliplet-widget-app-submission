@@ -7,6 +7,8 @@ var currentSubmission;
 $('[data-create]').click(function (event) {
   event.preventDefault();
 
+  hideForm();
+
   Fliplet.App.Submissions.create({
     platform: prompt('Platform', 'ios')
   }).then(function () {
@@ -32,6 +34,7 @@ $('[data-submissions]').change(function () {
 function hideForm() {
   currentSubmission = undefined;
   $form.addClass('hidden');
+  $form[0].reset();
 }
 
 function showForm() {
