@@ -39,7 +39,7 @@ function showForm() {
 }
 
 function fillForm() {
-  _.forIn(currentSubmission, function (value, key) {
+  _.forIn(currentSubmission.data, function (value, key) {
     $form.find('[name="' + key + '"]').val(value);
   });
 
