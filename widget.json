@@ -11,7 +11,8 @@
     "dependencies": [
       "lodash",
       "fliplet-app-submissions",
-      "fliplet-studio-ui"
+      "fliplet-studio-ui",
+      "bootstrap"
     ],
     "assets": [
       "js/interface.js"
