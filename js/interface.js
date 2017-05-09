@@ -1,8 +1,9 @@
-// Fliplet.Env.set('appId', 6);
+Fliplet.Env.set('appId', 1);
 
 var $submissions = $('[data-submissions]');
 var $form = $('[data-submission]');
 var currentSubmission;
+var submissionType;
 
 $('[data-create]').click(function (event) {
   event.preventDefault();
@@ -31,6 +32,11 @@ $('[data-submissions]').change(function () {
   });
 });
 
+$('input[name=submissionType]').change(function(){
+    //submissionType = this.value;
+    showForm();
+});
+
 function hideForm() {
   currentSubmission = undefined;
   $form.addClass('hidden');
@@ -39,6 +45,19 @@ function hideForm() {
 
 function showForm() {
   $form.removeClass('hidden');
+  $form.find('.ios-only, .android-only, .windows-only, .appstore, .enterprise').addClass('hidden');
+
+  submissionType = $('input:radio[name=submissionType]:checked').val()
+  //alert($('input:radio[name=submissionType]').filter(":checked").val());
+
+  $(".appName-help-block").html("There is a limit of 50 characters, however we recommend keeping this to 23");
+
+  if (currentSubmission.platform === "android"){
+    $(".appName-help-block").html("There is a limit of 30 characters");
+  }
+
+  $form.find('.' + currentSubmission.platform + '-only').removeClass('hidden');
+  $form.find('.' + submissionType).removeClass('hidden');
 }
 
 function fillForm() {
@@ -57,7 +76,7 @@ function loadSubmissions() {
     $submissions.html('');
 
     if (!submissions.length) {
-      return $submissions.append('<option value="">No submissions found for iOS</option>');
+      return $submissions.append('<option value="">No submissions found</option>');
     }
 
     $submissions.append('<option value="">-- Select a submission</option>');
@@ -74,6 +93,8 @@ loadSubmissions();
 
 $form.find('[data-build]').click(function (event) {
   event.preventDefault();
+
+  console.log('1');
 
   saveForm().then(function () {
     return Fliplet.App.Submissions.build(currentSubmission.id);
@@ -98,6 +119,8 @@ function saveForm() {
 
 $form.submit(function (event) {
   event.preventDefault();
+
+  console.log('2');
 
   saveForm().then(function () {
     hideForm();

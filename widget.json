@@ -15,7 +15,8 @@
       "bootstrap"
     ],
     "assets": [
-      "js/interface.js"
+      "js/interface.js",
+      "js/formValidation.js"
     ]
   },
   "build": {
