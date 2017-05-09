@@ -48,7 +48,7 @@
       <label for="appName">Application name</label>
     </div>
     <div class="col-sm-7">
-      <input type="text" name="appName" class="form-control" id="appName" placeholder="" value=""/>
+      <input type="text" name="appName" class="form-control" id="appName" placeholder="" value="" maxlength="50"/>
       <span id="helpBlock" class="appName-help-block"></span>
     </div>
   </div>
@@ -208,7 +208,8 @@
         <label for="input_field">Short Description</label>
       </div>
       <div class="col-sm-7">
-        <textarea class="form-control" rows="5" id="shortdescription" name="shortdescription"></textarea>
+        <textarea class="form-control" rows="5" id="shortdescription" name="shortdescription" maxlength="80"></textarea>
+        <span id="helpBlock" class="shortdescription-help-block">A description of your app, detailing features and functionality. It will also be used for your Apple Watch app. limited to 80 characters</span>
       </div>
     </div>
 
@@ -218,6 +219,7 @@
       </div>
       <div class="col-sm-7">
         <textarea class="form-control" rows="5" id="description" name="description"></textarea>
+        <span id="helpBlock" class="shortdescription-help-block">A description of your app, detailing features and functionality. It will also be used for your Apple Watch app.</span>
       </div>
     </div>
 
@@ -226,7 +228,7 @@
         <label for="keywords">Keywords</label>
       </div>
       <div class="col-sm-7">
-        <input type="text" name="keywords" class="form-control" id="keywords" placeholder="" value=""/>
+        <input type="text" name="keywords" class="form-control" id="keywords" placeholder="" value="" maxlength="100"/>
         <span id="helpBlock" class="keywords-help-block">One or more keywords that describe your app. Keywords make App Store search results more accurate. Separate keywords with a comma. There is a limit of 100 characters</span>
       </div>
     </div>
@@ -355,15 +357,15 @@
         <label> 
   Is your app primarily directed towards children under the age of 13 as defined by COPPA?</label>
         <div class="radio radio-icon">
-          <input type="radio" id="childDirectedYes" name="primarilyChildDirected" value="childDirectedYes">
-          <label for="childDirectedYes">
-            <span class="check"><i class="fa fa-circle"></i></span> Yes
-          </label>
-        </div>
-        <div class="radio radio-icon">
           <input type="radio" id="childDirectedNo" name="primarilyChildDirected" value="childDirectedNo" checked>
           <label for="childDirectedNo">
             <span class="check"><i class="fa fa-circle"></i></span> No
+          </label>
+        </div>
+        <div class="radio radio-icon">
+          <input type="radio" id="childDirectedYes" name="primarilyChildDirected" value="childDirectedYes">
+          <label for="childDirectedYes">
+            <span class="check"><i class="fa fa-circle"></i></span> Yes
           </label>
         </div>
       </div>
@@ -376,15 +378,15 @@
       <div class="col-sm-7">
         <label>Does your application have ads?</label>
         <div class="radio radio-icon">
-          <input type="radio" id="containsAdsYes" name="containsAds" value="containsAdsYes">
-          <label for="containsAdsYes">
-            <span class="check"><i class="fa fa-circle"></i></span> Yes
-          </label>
-        </div>
-        <div class="radio radio-icon">
           <input type="radio" id="containsAdsNo" name="containsAds" value="containsAdsNo" checked>
           <label for="containsAdsNo">
             <span class="check"><i class="fa fa-circle"></i></span> No
+          </label>
+        </div>
+        <div class="radio radio-icon">
+          <input type="radio" id="containsAdsYes" name="containsAds" value="containsAdsYes">
+          <label for="containsAdsYes">
+            <span class="check"><i class="fa fa-circle"></i></span> Yes
           </label>
         </div>
       </div>

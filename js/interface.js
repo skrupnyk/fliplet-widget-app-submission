@@ -51,9 +51,11 @@ function showForm() {
   //alert($('input:radio[name=submissionType]').filter(":checked").val());
 
   $(".appName-help-block").html("There is a limit of 50 characters, however we recommend keeping this to 23");
+  $('input[name="appName"]').attr('maxlength', 50);
 
   if (currentSubmission.platform === "android"){
     $(".appName-help-block").html("There is a limit of 30 characters");
+    $('input[name="appName"]').attr('maxlength', 30);
   }
 
   $form.find('.' + currentSubmission.platform + '-only').removeClass('hidden');
@@ -94,9 +96,9 @@ loadSubmissions();
 $form.find('[data-build]').click(function (event) {
   event.preventDefault();
 
-  console.log('1');
-
-  saveForm().then(function () {
+  validateForm(currentSubmission.platform, submissionType).then(function (){
+    saveForm();  
+  }).then(function () {
     return Fliplet.App.Submissions.build(currentSubmission.id);
   }).then(function () {
     hideForm();
@@ -120,9 +122,9 @@ function saveForm() {
 $form.submit(function (event) {
   event.preventDefault();
 
-  console.log('2');
-
-  saveForm().then(function () {
+  validateForm(currentSubmission.platform, submissionType).then(function (){
+    saveForm();  
+  }).then(function () {
     hideForm();
     loadSubmissions();
   });
