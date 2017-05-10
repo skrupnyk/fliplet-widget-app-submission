@@ -63,7 +63,19 @@ function showForm() {
 
 function fillForm() {
   _.forIn(currentSubmission.data, function (value, key) {
-    $form.find('[name="' + key + '"]').val(value);
+    
+    var $element = $form.find('[name="' + key + '"]');
+
+    if ($element.attr('type') === 'radio') {
+      $form.find('[name="' + key + '"][value="' + value + '"]').prop("checked", true);
+    } else {
+      $element.val(value);
+    }
+
+    if (key === 'submissionType' && value !== '') {
+      submissionType = value;
+      alert(submissionType);
+    }
   });
 
   $form.find('[data-save]').toggleClass('hidden', ['started', 'failed'].indexOf(currentSubmission.status) === -1);
@@ -96,6 +108,7 @@ $form.find('[data-build]').click(function (event) {
   event.preventDefault();
 
   if (validateForm(currentSubmission.platform, submissionType)){
+    $('.has-errors:eq(0) input:eq(0)').focus()
     return;
   }
 
@@ -124,6 +137,7 @@ $form.submit(function (event) {
   event.preventDefault();
 
   if (validateForm(currentSubmission.platform, submissionType)){
+    $('.has-errors:eq(0) input:eq(0)').focus();
     return;
   }
 
