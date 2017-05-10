@@ -15,6 +15,7 @@
       "bootstrap"
     ],
     "assets": [
+      "js/formValidation.js",
       "js/interface.js"
     ]
   },
