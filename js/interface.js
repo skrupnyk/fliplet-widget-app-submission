@@ -1,4 +1,3 @@
-Fliplet.Env.set('appId', 1);
 
 var $submissions = $('[data-submissions]');
 var $form = $('[data-submission]');
@@ -96,9 +95,11 @@ loadSubmissions();
 $form.find('[data-build]').click(function (event) {
   event.preventDefault();
 
-  validateForm(currentSubmission.platform, submissionType).then(function (){
-    saveForm();  
-  }).then(function () {
+  if (validateForm(currentSubmission.platform, submissionType)){
+    return;
+  }
+
+  saveForm().then(function () {
     return Fliplet.App.Submissions.build(currentSubmission.id);
   }).then(function () {
     hideForm();
@@ -122,9 +123,11 @@ function saveForm() {
 $form.submit(function (event) {
   event.preventDefault();
 
-  validateForm(currentSubmission.platform, submissionType).then(function (){
-    saveForm();  
-  }).then(function () {
+  if (validateForm(currentSubmission.platform, submissionType)){
+    return;
+  }
+
+  saveForm().then(function () {
     hideForm();
     loadSubmissions();
   });
