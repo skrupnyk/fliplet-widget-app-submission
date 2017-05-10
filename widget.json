@@ -11,10 +11,12 @@
     "dependencies": [
       "lodash",
       "fliplet-app-submissions",
+      "fliplet-media",
       "fliplet-studio-ui",
       "bootstrap"
     ],
     "assets": [
+      "css/interface.css",
       "js/formValidation.js",
       "js/interface.js"
     ]
