@@ -29,8 +29,10 @@ $('[data-create]').click(function (event) {
 $('[data-submissions]').change(function () {
   var id = $(this).val();
 
+  hideForm();
+
   if (!id) {
-    return hideForm();
+    return; // you didn't select a submission
   }
 
   Fliplet.App.Submissions.getById(id).then(function (submission) {
