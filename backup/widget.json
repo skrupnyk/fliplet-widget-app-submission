@@ -13,16 +13,11 @@
       "fliplet-app-submissions",
       "fliplet-media",
       "fliplet-studio-ui",
-      "handlebars",
       "bootstrap"
     ],
     "assets": [
-      "vendor/bootstrap-tokenfield.css",
-      "vendor/tokenfield-typeahead.css",
-      "vendor/bootstrap-tokenfield.js",
-      "vendor/bootstrap-select.min.css",
-      "vendor/bootstrap-select.min.js",
       "css/interface.css",
+      "js/formValidation.js",
       "js/interface.js"
     ]
   },

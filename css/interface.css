@@ -1,10 +1,79 @@
-.files {
-  display: flex;
-  list-style: none;
+/* Override */
+
+.inline-radio .radio {
+  width: 33.33%;
 }
 
-.files li {
+.inline-radio .radio label {
+  text-align: center;
+  width: 100%;
+}
+
+.inline-radio .radio:last-child:not(:nth-child(2)) label {
+  border-left: none;
+}
+
+
+/* End Override */
+
+h3 {
+  padding-bottom: 10px;
+  margin-bottom: 15px;
+  border-bottom: 1px solid #14505E;
+  color: #14505E;
+}
+
+h3 small {
+  color: #14505E;
+  font-weight: 500;
+}
+
+.label-helper {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.fl-bundleId-holder {
+  height: 44px;
   display: flex;
-  flex-direction: column;
-  margin: 0 10px 10px 0;
+  align-items: center;
+}
+
+.fl-bundleId-holder .btn-default {
+  padding: 5px 10px;
+  line-height: inherit;
+  margin-left: 20px;
+}
+
+.fl-bundleId-field {
+  display: none;
+}
+
+.fl-sb-panel {
+  display: none;
+}
+
+.tokenfield {
+  min-height: 44px;
+}
+
+.tokenfield .token-input {
+  margin: 0;
+}
+
+.bootstrap-select .btn-default, .bootstrap-select .btn-default:hover {
+  border: 1px solid #e4e9eb;
+  background-color: transparent;
+}
+
+.bootstrap-select .btn-default:active:hover, .bootstrap-select .btn-default:active:focus, .bootstrap-select .btn-default:active, .bootstrap-select .btn-default:focus, .open>.dropdown-toggle.btn-default, .open>.dropdown-toggle.btn-default:focus, .open>.dropdown-toggle.btn-default:hover {
+  background-color: transparent;
+  outline: none !important;
+  border-color: #00abd1;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(0, 171, 210, .6);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(0, 171, 210, .6);
+}
+
+.bootstrap-select.btn-group.show-tick .dropdown-menu li.selected a span.check-mark {
+  color: #00abd1;
 }
