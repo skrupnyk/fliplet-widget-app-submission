@@ -9,6 +9,11 @@ $('[change-bundleId]').on('click', function() {
   }
 });
 
+$('[change-price]').on('click', function() {
+  $('.fl-price-holder').addClass('hidden');
+  $('.fl-price-field').addClass('show');
+});
+
 $('[name="submissionType"]').on('change', function() {
   var value = $(this).val();
   var selectedOptionId = $(this).attr('id');

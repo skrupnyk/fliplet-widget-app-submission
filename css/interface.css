@@ -33,19 +33,19 @@ h3 small {
   margin-bottom: 0;
 }
 
-.fl-bundleId-holder {
+.fl-bundleId-holder, .fl-price-holder {
   height: 44px;
   display: flex;
   align-items: center;
 }
 
-.fl-bundleId-holder .btn-default {
+.fl-bundleId-holder .btn-default, .fl-price-holder .btn-default {
   padding: 5px 10px;
   line-height: inherit;
   margin-left: 20px;
 }
 
-.fl-bundleId-field {
+.fl-bundleId-field, .fl-price-field {
   display: none;
 }
 

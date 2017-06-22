@@ -18,7 +18,6 @@
     ],
     "assets": [
       "vendor/bootstrap-tokenfield.css",
-      "vendor/tokenfield-typeahead.css",
       "vendor/bootstrap-tokenfield.js",
       "vendor/bootstrap-select.min.css",
       "vendor/bootstrap-select.min.js",
