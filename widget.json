@@ -3,8 +3,8 @@
   "package": "com.fliplet.app-submissions",
   "version": "1.0.0",
   "icon": "img/icon.png",
-  "tags": [],
-  "provider_only": true,
+  "tags": ["type:submissionComponent", "category:general"],
+  "provider_only": false,
   "references": [],
   "html_tag": "div",
   "interface": {
@@ -14,13 +14,15 @@
       "fliplet-media",
       "fliplet-studio-ui",
       "handlebars",
-      "bootstrap"
+      "bootstrap",
+      "font-awesome"
     ],
     "assets": [
       "vendor/bootstrap-tokenfield.css",
       "vendor/bootstrap-tokenfield.js",
       "vendor/bootstrap-select.min.css",
       "vendor/bootstrap-select.min.js",
+      "vendor/validator.js",
       "css/interface.css",
       "js/interface.js"
     ]
