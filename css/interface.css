@@ -58,6 +58,26 @@
   color: #a94442;
 }
 
+.form-group.has-error .select-proxy-display {
+  border-color: #a94442;
+}
+
+.panel.required-fill h4 {
+  color: #a94442;
+}
+
+.has-error .help-block small {
+  color: #737373;
+}
+
+.fl-bundleId-holder .help-block.with-errors {
+  margin: 0 0 0 10px;
+}
+
+.fl-bundleId-holder .help-block.with-errors .list-unstyled {
+  margin: 0;
+}
+
 
 /* End Override */
 
@@ -178,4 +198,49 @@ h3 small {
 .app-status-panel {
   text-align: center;
   margin-bottom: 25px;
+}
+
+.save-btn-holder .btn {
+  margin-bottom: 10px;
+}
+
+.save-appStore-progress, .save-enterprise-progress, .save-unsigned-progress {
+  opacity: 0;
+  -webkit-transition: opacity 0.25s ease;
+  transition: opacity 0.25s ease;
+}
+
+.save-appStore-progress.saved, .save-enterprise-progress.saved, .save-unsigned-progress.saved {
+  opacity: 1;
+}
+
+
+/* App Settings Replica */
+
+.setting-app-icon {
+  width: 7.6rem;
+  height: 7.6rem;
+  margin-top: -0.7rem;
+  border-radius: 21%;
+  border: 1px solid #F0F0F0;
+}
+
+.setting-splash-screen {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -ms-flex-line-pack: center;
+  align-content: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  width: 200px;
+  height: 200px;
+  border: 1px solid #F0F0F0;
+  background-size: cover;
+  background-position: center center;
 }
