@@ -1,20 +1,32 @@
 var widgetId = Fliplet.Widget.getDefaultId();
 var widgetData = Fliplet.Widget.getData() || {};
-var appName = Fliplet.Env.get('appName');
-var organisationName = Fliplet.Env.get('organizationName');
+var appName = '';
+var organisationName = '';
+var appIcon = '';
+var appSettings = {};
+var allAppData = false;
+
 widgetData.formData = $.extend(true, widgetData.formData, {
+  requestCreatedAt: '',
+  requestBuild: false,
   appStore: {
+    requestBuild: false,
     notificationSettings: {
       apn: false
     }
   },
   enterprise: {
+    requestBuild: false,
     notificationSettings: {
       apn: false
     }
   },
-  unsigned: {}
+  unsigned: {
+    requestBuild: false
+  }
 });
+
+console.log(widgetData);
 
 /* FUNCTIONS */
 String.prototype.toCamelCase = function() {
@@ -29,9 +41,29 @@ function loadAppStoreData() {
   $('#appStoreConfiguration [name]').each(function(i, el) {
     var name = $(el).attr("name");
 
+    /* APP NAME */
+    if (name === "fl-sb-ast-appName") {
+      $('[name="' + name + '"]').val(appName);
+      return;
+    }
+
+    /* APP SCREENSHOTS */
+    if (name === "fl-sb-ast-screenshots") {
+      var screenNames = '';
+      if (appSettings.screensToScreenshot) {
+        appSettings.screensToScreenshot.forEach(function(screen) {
+          screenNames += screen.title + ", ";
+        });
+        screenNames = screenNames.replace(/\,[\s]$/g, '');
+        widgetData.formData.appStore.appScreenshots = appSettings.screensToScreenshot;
+      }
+      $('[name="' + name + '"]').val(screenNames);
+      return;
+    }
+
     /* CHECK COUNTRIES */
     if (name === "fl-sb-ast-availability") {
-      $('[name="' + name + '"]').selectpicker('val', ((typeof widgetData.formData !== "undefined") ? widgetData.formData.appStore[name] : []));
+      $('[name="' + name + '"]').selectpicker('val', ((typeof widgetData.formData.appStore[name] !== "undefined") ? widgetData.formData.appStore[name] : []));
       return;
     }
     if (name === "fl-sb-ast-userCountry" || name === "fl-sb-ast-category1" || name === "fl-sb-ast-category2" || name === "fl-sb-ast-language") {
@@ -45,16 +77,16 @@ function loadAppStoreData() {
 
     /* ADD KEYWORDS */
     if (name === "fl-sb-ast-keywords") {
-      $('#' + name).tokenfield('setTokens', ((typeof widgetData.formData !== "undefined") ? widgetData.formData.appStore[name] : ''));
+      $('#' + name).tokenfield('setTokens', ((typeof widgetData.formData.appStore[name] !== "undefined") ? widgetData.formData.appStore[name] : ''));
     }
 
     /* ADD BUNDLE ID */
-    if (name === "fl-appStore-bundleId" && typeof widgetData.formData === "undefined") {
+    if (name === "fl-appStore-bundleId" && typeof widgetData.formData.appStore[name] === "undefined") {
       $('.bundleId-ast-text').html('com.' + organisationName.toCamelCase() + '.' + appName.toCamelCase());
       $('[name="' + name + '"]').val('com.' + organisationName.toCamelCase() + '.' + appName.toCamelCase());
       return;
     }
-    if (name === "fl-appStore-bundleId" && typeof widgetData.formData !== "undefined") {
+    if (name === "fl-appStore-bundleId" && typeof widgetData.formData.appStore[name] !== "undefined") {
       $('.bundleId-ast-text').html(widgetData.formData.appStore[name]);
       $('[name="' + name + '"]').val(widgetData.formData.appStore[name]);
       return;
@@ -88,12 +120,12 @@ function loadEnterpriseData() {
     var name = $(el).attr("name");
 
     /* ADD BUNDLE ID */
-    if (name === "fl-ent-bundleId" && typeof widgetData.formData === "undefined") {
+    if (name === "fl-ent-bundleId" && typeof widgetData.formData.enterprise[name] === "undefined") {
       $('.bundleId-ent-text').html('com.' + organisationName.toCamelCase() + '.' + appName.toCamelCase());
       $('[name="' + name + '"]').val('com.' + organisationName.toCamelCase() + '.' + appName.toCamelCase());
       return;
     }
-    if (name === "fl-ent-bundleId" && typeof widgetData.formData !== "undefined") {
+    if (name === "fl-ent-bundleId" && typeof widgetData.formData.enterprise[name] !== "undefined") {
       $('.bundleId-ent-text').html(widgetData.formData.enterprise[name]);
       $('[name="' + name + '"]').val(widgetData.formData.enterprise[name]);
       return;
@@ -127,12 +159,12 @@ function loadUnsignedData() {
     var name = $(el).attr("name");
 
     /* ADD BUNDLE ID */
-    if (name === "fl-uns-bundleId" && typeof widgetData.formData === "undefined") {
+    if (name === "fl-uns-bundleId" && typeof widgetData.formData.unsigned[name] === "undefined") {
       $('.bundleId-uns-text').html('com.' + organisationName.toCamelCase() + '.' + appName.toCamelCase());
       $('[name="' + name + '"]').val('com.' + organisationName.toCamelCase() + '.' + appName.toCamelCase());
       return;
     }
-    if (name === "fl-uns-bundleId" && typeof widgetData.formData !== "undefined") {
+    if (name === "fl-uns-bundleId" && typeof widgetData.formData.unsigned[name] !== "undefined") {
       $('.bundleId-uns-text').html(widgetData.formData.unsigned[name]);
       $('[name="' + name + '"]').val(widgetData.formData.unsigned[name]);
       return;
@@ -142,8 +174,73 @@ function loadUnsignedData() {
   });
 }
 
-function save() {
-  Fliplet.Widget.save(widgetData);
+function save(origin) {
+  Fliplet.Widget.save(widgetData).then(function() {
+    $('.save-' + origin + '-progress').addClass('saved');
+
+    setTimeout(function() {
+      $('.save-' + origin + '-progress').removeClass('saved');
+    }, 4000);
+  });
+}
+
+function requestBuild(origin) {
+  console.log(widgetData);
+
+  var data = widgetData.formData;
+  data.requestCreatedAt = Date();
+  data.requestBuild = true;
+
+  if (origin === 'appStore') {
+    data.appStore.requestBuild = true;
+    data.appStore.splashScreen = appSettings.splashScreen;
+    data.appStore.screensToScreenshot = appSettings.screensToScreenshot;
+    data.appStore.appIcon = appIcon;
+
+    widgetData.formData = data;
+
+    Fliplet.Widget.save(widgetData).then(function() {
+      // @TODO: After
+      showRequestStatus();
+      Fliplet.Widget.autosize();
+    });
+  }
+
+  if (origin === 'enterprise') {
+    data.enterprise.requestBuild = true;
+    data.enterprise.splashScreen = appSettings.splashScreen;
+    data.enterprise.appIcon = appIcon;
+
+    widgetData.formData = data;
+
+    Fliplet.Widget.save(widgetData).then(function() {
+      // @TODO: After
+      showRequestStatus();
+      Fliplet.Widget.autosize();
+    });
+  }
+
+  if (origin === 'unsigned') {
+    data.unsigned.requestBuild = true;
+    data.unsigned.splashScreen = appSettings.splashScreen;
+    data.unsigned.appIcon = appIcon;
+
+    widgetData.formData = data;
+
+    Fliplet.Widget.save(widgetData).then(function() {
+      // @TODO: After
+      showRequestStatus();
+      Fliplet.Widget.autosize();
+    });
+  }
+}
+
+function showRequestStatus() {
+  if (widgetData.formData.requestBuild) {
+    var requestCreatedAt = moment(widgetData.formData.requestCreatedAt).format('MMMM Do, YYYY - h:mm A');
+    $('.app-status-panel span').html(requestCreatedAt);
+    $('.app-status').removeClass('hidden');
+  }
 }
 
 function saveAppStoreData() {
@@ -182,10 +279,15 @@ function saveAppStoreData() {
   data.notificationSettings.apn = !!(data.notificationSettings.apnAuthKey !== '' && data.notificationSettings.apnKeyId !== '' && data.notificationSettings.apnTeamId !== '' && data.notificationSettings.apnTopic !== '');
 
   widgetData.formData.appStore = data;
-  save();
+
+  if (request) {
+    requestBuild('appStore');
+  } else {
+    save('appStore');
+  }
 }
 
-function saveEnterpriseData() {
+function saveEnterpriseData(request) {
   var data = widgetData.formData.enterprise;
 
   $('#enterpriseConfiguration [name]').each(function(i, el) {
@@ -214,10 +316,15 @@ function saveEnterpriseData() {
   data.notificationSettings.apn = !!(data.notificationSettings.apnAuthKey !== '' && data.notificationSettings.apnKeyId !== '' && data.notificationSettings.apnTeamId !== '' && data.notificationSettings.apnTopic !== '');
 
   widgetData.formData.enterprise = data;
-  save();
+  console.log(widgetData);
+  if (request) {
+    requestBuild('enterprise');
+  } else {
+    save('enterprise');
+  }
 }
 
-function saveUnsignedData() {
+function saveUnsignedData(request) {
   var data = widgetData.formData.unsigned;
 
   $('#unsignedConfiguration [name]').each(function(i, el) {
@@ -228,16 +335,57 @@ function saveUnsignedData() {
   });
 
   widgetData.formData.unsigned = data;
-  save();
+
+  if (request) {
+    requestBuild('unsigned');
+  } else {
+    save('unsigned');
+  }
 }
 
 function init() {
   $('#fl-sb-ast-keywords').tokenfield();
 
+  /* APP ICON */
+  if (appIcon) {
+    $('.setting-app-icon.userUploaded').attr('src', appIcon);
+    $('.setting-app-icon.userUploaded').removeClass('hidden');
+    $('.setting-app-icon.default').addClass('hidden');
+  }
+
+  /* APP SPLASH SCREEN */
+  if (appSettings.splashScreen) {
+    $('.setting-splash-screen.userUploaded').css('background-image', 'url(' + appSettings.splashScreen.url + ')');
+    $('.setting-splash-screen.userUploaded').removeClass('hidden');
+    $('.setting-splash-screen.default').addClass('hidden');
+  }
+
+  if (appName === '' || !appIcon || !appSettings.splashScreen || !appSettings.screensToScreenshot) {
+    $('.app-details').addClass('required-fill');
+  } else {
+    allAppData = true;
+  }
+
   loadAppStoreData();
   loadEnterpriseData();
   loadUnsignedData();
+  showRequestStatus();
   Fliplet.Widget.autosize();
+}
+
+/* AUX FUNCTIONS */
+function checkGroupErrors() {
+  $('.has-error').each(function(i, el) {
+    $(el).parents('.panel-default').addClass('required-fill');
+  });
+
+  $('.panel-default').each(function(i, el) {
+    var withError = $(el).find('.has-error').length;
+
+    if (withError === 0) {
+      $(el).not('.app-details').removeClass('required-fill');
+    }
+  });
 }
 
 /* ATTACH LISTENERS */
@@ -278,19 +426,72 @@ $('[name="fl-sb-ast-keywords"]').on('tokenfield:createtoken', function(e) {
   }
 });
 
-$('#appStoreConfiguration').on('submit', function(event) {
-  event.preventDefault();
-  save();
+$('#redirectToSettings').on('click', function() {
+  Fliplet.Studio.emit('navigate', {
+    name: 'appSettings',
+    params: {
+      appId: Fliplet.Env.get('appId')
+    }
+  });
 });
 
-$('#enterpriseConfiguration').on('submit', function(event) {
-  event.preventDefault();
-  save();
+$('#appStoreConfiguration, #enterpriseConfiguration, #unsignedConfiguration').on('validated.bs.validator', function() {
+  checkGroupErrors();
+  Fliplet.Widget.autosize();
 });
 
-$('#unsignedConfiguration').on('submit', function(event) {
-  event.preventDefault();
-  save();
+$('#appStoreConfiguration').validator().on('submit', function(event) {
+  if (event.isDefaultPrevented()) {
+    // Gives time to Validator to apply classes
+    setTimeout(checkGroupErrors, 0);
+    console.log('ERRORS');
+  } else {
+    event.preventDefault();
+
+    if (allAppData) {
+      saveAppStoreData(true);
+    } else {
+      console.log('ERRORS');
+    }
+    // Gives time to Validator to apply classes
+    setTimeout(checkGroupErrors, 0);
+  }
+});
+
+$('#enterpriseConfiguration').validator().on('submit', function(event) {
+  if (event.isDefaultPrevented()) {
+    // Gives time to Validator to apply classes
+    setTimeout(checkGroupErrors, 0);
+    console.log('ERRORS');
+  } else {
+    event.preventDefault();
+
+    if (allAppData) {
+      saveEnterpriseData(true);
+    } else {
+      console.log('ERRORS');
+    }
+    // Gives time to Validator to apply classes
+    setTimeout(checkGroupErrors, 0);
+  }
+});
+
+$('#unsignedConfiguration').validator().on('submit', function(event) {
+  if (event.isDefaultPrevented()) {
+    // Gives time to Validator to apply classes
+    setTimeout(checkGroupErrors, 0);
+    console.log('ERRORS');
+  } else {
+    event.preventDefault();
+
+    if (allAppData) {
+      saveUnsignedData(true);
+    } else {
+      console.log('ERRORS');
+    }
+    // Gives time to Validator to apply classes
+    setTimeout(checkGroupErrors, 0);
+  }
 });
 
 /* SAVE PROGRESS CLICK */
@@ -306,4 +507,27 @@ $('[data-unsigned-save]').on('click', function() {
 
 /* INIT */
 $('[name="submissionType"][value="appStore"]').prop('checked', true).trigger('change');
-init();
+
+if (!Fliplet.Env.get('development')) {
+  Fliplet.API.request({
+      cache: true,
+      url: 'v1/apps/' + Fliplet.Env.get('appId')
+    })
+    .then(function(result) {
+      appName = result.app.name;
+      appIcon = result.app.icon;
+      appSettings = result.app.settings;
+    })
+    .then(function() {
+      Fliplet.API.request({
+          cache: true,
+          url: 'v1/organizations/' + Fliplet.Env.get('organizationId')
+        })
+        .then(function(org) {
+          organisationName = org.name;
+          init();
+        });
+    });
+} else {
+  init();
+}
