@@ -1,6 +1,6 @@
 {
-  "name": "App Submissions",
-  "package": "com.fliplet.app-submissions",
+  "name": "Apple App Submissions",
+  "package": "com.fliplet.apple-app-submissions",
   "version": "1.0.0",
   "icon": "img/icon.png",
   "tags": ["type:submissionComponent", "category:general"],
@@ -15,9 +15,12 @@
       "fliplet-studio-ui",
       "handlebars",
       "bootstrap",
-      "font-awesome"
+      "font-awesome",
+      "moment"
     ],
     "assets": [
+      "img/app-icon.png",
+      "img/splash-screen.png",
       "vendor/bootstrap-tokenfield.css",
       "vendor/bootstrap-tokenfield.js",
       "vendor/bootstrap-select.min.css",
