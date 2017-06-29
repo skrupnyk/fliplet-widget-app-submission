@@ -73,12 +73,12 @@
     </div>
   </div>
 </div>
-<div class="hidden">
+<div class="app-status hidden">
   <h3>App Status</h3>
   <div class="app-status-panel fl-green">
     <p><i class="fa fa-check-circle-o fa-3x"></i></p>
     <h4>Your request was sent successfully!</h4>
-    <p>You latest request was submitted on <strong>June 27th, 2017 - 13:23 PM</strong>.<br>Fliplet will get in touch in the next 24h with updates on your app submission or build.</p>
+    <p>You latest request was submitted on <strong><span>June 27th, 2017 - 13:23 PM</span></strong>.<br>Fliplet will get in touch in the next 24h with updates on your app submission or build.</p>
   </div>
 </div>
 <h3>Request App</h3>
@@ -113,13 +113,48 @@
   <div class="fl-sb-panel fl-sb-appStore">
     <form data-toggle="validator" role="form" id="appStoreConfiguration">
       <div class="panel-group" id="accordionAppStore" role="tablist" aria-multiselectable="true">
-        <div class="panel panel-default">
+        <div class="panel panel-default app-details">
           <div class="panel-heading" role="tab" id="appStoreSettingsHeading">
             <h4 class="panel-title" role="button" data-toggle="collapse" data-parent="#accordionAppStore" href="#appStoreSettings" aria-expanded="true" aria-controls="appStoreSettings">App details <small>(Required)</small></h4>
           </div>
           <div id="appStoreSettings" class="panel-collapse collapse" role="tabpanel" aria-labelledby="appStoreSettingsHeading">
             <div class="panel-body">
-              <p>This will display the splash screen, Screenshots, app listing name based on app name from settings and app icon.</p>
+              <p style="margin-bottom: 25px;"><strong>Go to the <a href="#" id="redirectToSettings">App settings</a> page to change these fields. They are all required.</strong></p>
+              <div class="form-group clearfix">
+                <div class="col-sm-4 control-label">
+                  <label>App list name</label>
+                </div>
+                <div class="col-sm-8">
+                  <input type="text" name="fl-sb-ast-appName" class="form-control" id="fl-sb-ast-appName" placeholder="Please enter an app name" data-validate="true" disabled required/>
+                </div>
+              </div>
+              <div class="form-group clearfix">
+                <div class="col-sm-4 control-label">
+                  <label>App icon</label>
+                </div>
+                <div class="col-sm-8">
+                  <img class="setting-app-icon userUploaded hidden" src="#" />
+                  <img class="setting-app-icon default" src="{{ asset 'img/app-icon.png' }}" />
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-4 control-label">
+                  <label>Splash screen</label>
+                </div>
+                <div class="col-sm-8">
+                  <div class="setting-splash-screen userUploaded hidden" style="background-image: url();"></div>
+                  <div class="setting-splash-screen default" style="background-image: url({{ asset 'img/splash-screen.png' }});"></div>
+                </div>
+              </div>
+              <div class="form-group clearfix">
+                <div class="col-sm-4 control-label">
+                  <label>Screenshots</label>
+                  <p class="help-block label-helper"><small>Screenshots will be taken of the following screens</small></p>
+                </div>
+                <div class="col-sm-8">
+                  <input type="text" name="fl-sb-ast-screenshots" class="form-control" id="fl-sb-ast-screenshots" placeholder="Please select at least one screen to screenshot" data-validate="true" disabled required/>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -132,11 +167,12 @@
               <p>Fill in the fields below for the information that will be displayed on the app's page in the App Store.</p>
               <div class="form-group clearfix">
                 <div class="col-sm-4 control-label">
-                  <label for="fl-sb-ast-listingName">App icon name</label>
+                  <label for="fl-sb-ast-iconName">App icon name</label>
                   <p class="help-block label-helper"><small>This is the name that will appear below the icon of your app</small></p>
                 </div>
                 <div class="col-sm-8">
-                  <input type="text" name="fl-sb-ast-listingName" class="form-control" id="fl-sb-ast-listingName" placeholder="Enter the app icon name" maxlength="30" required/>
+                  <input type="text" name="fl-sb-ast-iconName" class="form-control" id="fl-sb-ast-iconName" placeholder="Enter the app icon name" maxlength="30" data-error="Please enter an app icon name" required/>
+                  <div class="help-block with-errors"></div>
                   <p class="help-block"><small>The length of your app icon name is limited to 30 characters</small></p>
                 </div>
               </div>
@@ -179,18 +215,19 @@
                   <label for="fl-sb-ast-appType" class="select-proxy-display">
                     <span class="icon fa fa-chevron-down"></span>
                     <span class="select-value-proxy">-- Primary Category</span>
-                    <select id="fl-sb-ast-category1" name="fl-sb-ast-category1" data-label="select" class="hidden-select form-control" required>
+                    <select id="fl-sb-ast-category1" name="fl-sb-ast-category1" data-label="select" class="hidden-select form-control" data-error="Please select a category" required>
                       <option value="">-- Primary Category</option>
                       <option value="1">Option 1</option>
                       <option value="2">Option 2</option>
                       <option value="2">Option 3</option>
                     </select>
                   </label>
+                  <div class="help-block with-errors"></div>
                   <label for="fl-sb-ast-category" class="select-proxy-display">
                     <span class="icon fa fa-chevron-down"></span>
                     <span class="select-value-proxy">-- Secondary Category</span>
                     <select id="fl-sb-ast-category2" name="fl-sb-ast-category2" data-label="select" class="hidden-select form-control">
-                      <option value="">-- Primary Category</option>
+                      <option value="">-- Secondary Category</option>
                       <option value="1">Option 1</option>
                       <option value="2">Option 2</option>
                       <option value="2">Option 3</option>
@@ -207,7 +244,7 @@
                   <label for="fl-sb-ast-language" class="select-proxy-display">
                     <span class="icon fa fa-chevron-down"></span>
                     <span class="select-value-proxy">English</span>
-                    <select id="fl-sb-ast-language" name="fl-sb-ast-language" data-label="select" class="hidden-select form-control" required>
+                    <select id="fl-sb-ast-language" name="fl-sb-ast-language" data-label="select" class="hidden-select form-control" data-error="Please select a language" required>
                       <option value="">-- Select a language</option>
                       <option value="Afrikanns">Afrikanns</option>
                       <option value="Albanian">Albanian</option>
@@ -283,6 +320,7 @@
                       <option value="Xhosa">Xhosa</option>
                     </select>
                   </label>
+                  <div class="help-block with-errors"></div>
                 </div>
               </div>
               <div class="form-group clearfix">
@@ -291,7 +329,8 @@
                   <p class="help-block label-helper"><small>Keywords help determine where your app displays in search results.</small></p>
                 </div>
                 <div class="col-sm-8">
-                  <input type="text" name="fl-sb-ast-keywords" class="form-control" id="fl-sb-ast-keywords" placeholder="Type a keyword and hit enter" required/>
+                  <input type="text" name="fl-sb-ast-keywords" class="form-control" id="fl-sb-ast-keywords" placeholder="Type a keyword" data-error="Please enter at least one keyword" required/>
+                  <div class="help-block with-errors"></div>
                   <p class="help-block"><small>Keywords are limited to 100 characters total.</small></p>
                 </div>
               </div>
@@ -300,7 +339,8 @@
                   <label>Availability (Countries)</label>
                 </div>
                 <div class="col-sm-8">
-                  <select id="fl-sb-ast-availability" name="fl-sb-ast-availability" data-live-search="true" data-actions-box="true" data-none-selected-text="Select from the list of countries" multiple class="form-control selectpicker" required>
+                  <select id="fl-sb-ast-availability" name="fl-sb-ast-availability" data-live-search="true" data-actions-box="true" data-none-selected-text="Select from the list of countries" multiple class="form-control selectpicker" data-error="Please select at least one country"
+                    required>
                     <option value="Albania">Albania</option>
                     <option value="Algeria">Algeria</option>
                     <option value="Angola">Angola</option>
@@ -457,6 +497,7 @@
                     <option value="Yemen">Yemen</option>
                     <option value="Zimbabwe">Zimbabwe</option>
                   </select>
+                  <div class="help-block with-errors"></div>
                 </div>
               </div>
               <div class="form-group clearfix">
@@ -467,13 +508,14 @@
                   <label for="fl-sb-ast-pricing" class="select-proxy-display">
                     <span class="icon fa fa-chevron-down"></span>
                     <span class="select-value-proxy">Free</span>
-                    <select id="fl-sb-ast-pricing" name="fl-sb-ast-pricing" data-label="select" class="hidden-select form-control" required>
+                    <select id="fl-sb-ast-pricing" name="fl-sb-ast-pricing" data-label="select" class="hidden-select form-control" data-error="Please select a price" required>
                       <option value="free">Free</option>
                       <option value="1">£0.99</option>
                       <option value="2">£1.99</option>
                       <option value="2">£2.99</option>
                     </select>
                   </label>
+                  <div class="help-block with-errors"></div>
                 </div>
               </div>
               <div class="form-group clearfix">
@@ -490,7 +532,8 @@
                   <p class="help-block label-helper"><small>A URL that links to your organization's support page.</small></p>
                 </div>
                 <div class="col-sm-8">
-                  <input type="text" name="fl-sb-ast-support" class="form-control" id="fl-sb-ast-support" placeholder="Enter your Support URL" required/>
+                  <input type="text" name="fl-sb-ast-support" class="form-control" id="fl-sb-ast-support" placeholder="Enter your Support URL" data-error="Please enter your Support URL" required/>
+                  <div class="help-block with-errors"></div>
                 </div>
               </div>
               <div class="form-group clearfix">
@@ -499,7 +542,8 @@
                   <p class="help-block label-helper"><small>A URL that links to your organization's marketing website.</small></p>
                 </div>
                 <div class="col-sm-8">
-                  <input type="text" name="fl-sb-ast-marketing" class="form-control" id="fl-sb-ast-marketing" placeholder="Enter your Marketing URL" required/>
+                  <input type="text" name="fl-sb-ast-marketing" class="form-control" id="fl-sb-ast-marketing" placeholder="Enter your Marketing URL" data-error="Please enter your Marketing URL" required/>
+                  <div class="help-block with-errors"></div>
                 </div>
               </div>
               <div class="form-group clearfix">
@@ -508,7 +552,8 @@
                   <p class="help-block label-helper"><small>A URL that links to your organization's privacy policy.</small></p>
                 </div>
                 <div class="col-sm-8">
-                  <input type="text" name="fl-sb-ast-privacy" class="form-control" id="fl-sb-ast-privacy" placeholder="Enter your privacy policy URL" required/>
+                  <input type="text" name="fl-sb-ast-privacy" class="form-control" id="fl-sb-ast-privacy" placeholder="Enter your Privacy Policy URL" data-error="Please enter your Privacy Policy URL" required/>
+                  <div class="help-block with-errors"></div>
                 </div>
               </div>
               <div class="form-group clearfix">
@@ -517,7 +562,8 @@
                   <p class="help-block label-helper"><small>The name of the person or entity that owns the exclusive rights to your app, preceded by the year the rights were obtained.</small></p>
                 </div>
                 <div class="col-sm-8">
-                  <input type="text" name="fl-sb-ast-copyright" class="form-control" id="fl-sb-ast-copyright" placeholder="Eg: 2008 Acme Inc." required/>
+                  <input type="text" name="fl-sb-ast-copyright" class="form-control" id="fl-sb-ast-copyright" placeholder="Eg: 2008 Acme Inc." data-error="Please enter your Copyright text" required/>
+                  <div class="help-block with-errors"></div>
                 </div>
               </div>
             </div>
@@ -535,7 +581,8 @@
                   <label for="fl-sb-ast-teamId">App Developer account login</label>
                 </div>
                 <div class="col-sm-8">
-                  <input type="email" name="fl-sb-ast-appDevLogin" class="form-control" id="fl-sb-ast-appDevLogin" placeholder="Enter App Developer account login" required/>
+                  <input type="email" name="fl-sb-ast-appDevLogin" class="form-control" id="fl-sb-ast-appDevLogin" placeholder="Enter App Developer login email" data-error="Please enter a valid email address" required/>
+                  <div class="help-block with-errors"></div>
                 </div>
               </div>
               <div class="form-group clearfix">
@@ -544,7 +591,8 @@
                   <p class="help-block label-helper"><small>The password will be encrypted, safely stored and never shown.</small></p>
                 </div>
                 <div class="col-sm-8">
-                  <input type="password" name="fl-sb-ast-appDevPass" class="form-control" id="fl-sb-ast-appDevPass" placeholder="Enter App Developer account pass" required/>
+                  <input type="password" name="fl-sb-ast-appDevPass" class="form-control" id="fl-sb-ast-appDevPass" placeholder="Enter App Developer account pass" data-error="Please enter a password" required/>
+                  <div class="help-block with-errors"></div>
                 </div>
               </div>
               <div class="form-group clearfix">
@@ -554,10 +602,12 @@
                 </div>
                 <div class="col-sm-8 fl-bundleId-holder">
                   <span class="bundleId-ast-text"></span> <span class="btn btn-sm btn-default" change-bundleid>Change</span>
+                  <div class="help-block with-errors"></div>
                 </div>
                 <div class="fl-bundleId-field">
                   <div class="col-sm-8">
-                    <input type="text" name="fl-appStore-bundleId" class="form-control" id="fl-appStore-bundleId" placeholder="Enter your unique Bundle ID" required/>
+                    <input type="text" name="fl-appStore-bundleId" class="form-control" id="fl-appStore-bundleId" placeholder="Enter your unique Bundle ID" data-error="Please enter the Bundle ID" required/>
+                    <div class="help-block with-errors"></div>
                     <p class="help-block"><small>This value needs to be unique and the structure must be <code>com.<i>organisationName</i>.<i>appName</i></code>.</small></p>
                   </div>
                 </div>
@@ -567,7 +617,8 @@
                   <label for="fl-sb-ast-teamId">Team ID</label>
                 </div>
                 <div class="col-sm-8">
-                  <input type="text" name="fl-sb-ast-teamId" class="form-control" id="fl-sb-ast-teamId" placeholder="Enter your Team ID" required/>
+                  <input type="text" name="fl-sb-ast-teamId" class="form-control" id="fl-sb-ast-teamId" placeholder="Enter your Team ID" data-error="Please enter your Team ID" required/>
+                  <div class="help-block with-errors"></div>
                   <p class="help-block"><small>Your Team ID can be found <a href="https://developer.apple.com/account/#/membership/">here</a>.</small></p>
                 </div>
               </div>
@@ -605,14 +656,6 @@
                   <input type="text" name="fl-appStore-keyId" class="form-control" id="fl-keyId" placeholder="Enter your Key ID" />
                 </div>
               </div>
-              <div class="form-group clearfix">
-                <div class="col-sm-4 control-label">
-                  <label for="fl-topic">The Package Name (Topic).</label>
-                </div>
-                <div class="col-sm-8">
-                  <input type="text" name="fl-appStore-topic" class="form-control" id="fl-topic" placeholder="Enter your Topic" />
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -628,7 +671,8 @@
                   <label for="fl-sb-ast-fname">First Name</label>
                 </div>
                 <div class="col-sm-8">
-                  <input type="text" name="fl-sb-ast-fname" class="form-control" id="fl-sb-ast-fname" placeholder="Enter your first name" required/>
+                  <input type="text" name="fl-sb-ast-fname" class="form-control" id="fl-sb-ast-fname" placeholder="Enter your first name" data-error="Please enter your first name" required/>
+                  <div class="help-block with-errors"></div>
                 </div>
               </div>
               <div class="form-group clearfix">
@@ -636,7 +680,8 @@
                   <label for="fl-sb-ast-lname">Last Name</label>
                 </div>
                 <div class="col-sm-8">
-                  <input type="text" name="fl-sb-ast-lname" class="form-control" id="fl-sb-ast-lname" placeholder="Enter your last name" required/>
+                  <input type="text" name="fl-sb-ast-lname" class="form-control" id="fl-sb-ast-lname" placeholder="Enter your last name" data-error="Please enter your last name" required/>
+                  <div class="help-block with-errors"></div>
                 </div>
               </div>
               <div class="form-group clearfix">
@@ -644,7 +689,8 @@
                   <label for="fl-sb-ast-address1">Address line 1</label>
                 </div>
                 <div class="col-sm-8">
-                  <input type="text" name="fl-sb-ast-address1" class="form-control" id="fl-sb-ast-address1" placeholder="Enter your address" required/>
+                  <input type="text" name="fl-sb-ast-address1" class="form-control" id="fl-sb-ast-address1" placeholder="Enter your address" data-error="Please enter your address" required/>
+                  <div class="help-block with-errors"></div>
                 </div>
               </div>
               <div class="form-group clearfix">
@@ -661,7 +707,8 @@
                   <label for="fl-sb-ast-postCode">Post Code</label>
                 </div>
                 <div class="col-sm-8">
-                  <input type="text" name="fl-sb-ast-postCode" class="form-control" id="fl-sb-ast-postCode" placeholder="Enter your post code" required/>
+                  <input type="text" name="fl-sb-ast-postCode" class="form-control" id="fl-sb-ast-postCode" placeholder="Enter your post code" data-error="Please enter your post code" required/>
+                  <div class="help-block with-errors"></div>
                 </div>
               </div>
               <div class="form-group clearfix">
@@ -672,7 +719,7 @@
                   <label for="fl-sb-ast-userCountry" class="select-proxy-display">
                     <span class="icon fa fa-chevron-down"></span>
                     <span class="select-value-proxy">-- Select a country</span>
-                    <select id="fl-sb-ast-userCountry" data-label="select" name="fl-sb-ast-userCountry" class="hidden-select form-control" required>
+                    <select id="fl-sb-ast-userCountry" data-label="select" name="fl-sb-ast-userCountry" class="hidden-select form-control" data-error="Please enter your country" required>
                       <option value="">-- Select a country</option>
                       <option value="Albania">Albania</option>
                       <option value="Algeria">Algeria</option>
@@ -831,6 +878,7 @@
                       <option value="Zimbabwe">Zimbabwe</option>
                     </select>
                   </label>
+                  <div class="help-block with-errors"></div>
                 </div>
               </div>
               <div class="form-group clearfix">
@@ -838,7 +886,8 @@
                   <label for="fl-sb-ast-phone">Phone Number</label>
                 </div>
                 <div class="col-sm-8">
-                  <input type="number" name="fl-sb-ast-phone" class="form-control" id="fl-sb-ast-phone" placeholder="Enter your phone number" required/>
+                  <input type="number" name="fl-sb-ast-phone" class="form-control" id="fl-sb-ast-phone" placeholder="Enter your phone number" data-error="Please enter a valid phone number" required/>
+                  <div class="help-block with-errors"></div>
                 </div>
               </div>
               <div class="form-group clearfix">
@@ -846,7 +895,8 @@
                   <label for="fl-sb-ast-email">Email Address</label>
                 </div>
                 <div class="col-sm-8">
-                  <input type="email" name="fl-sb-ast-email" class="form-control" id="fl-sb-ast-email" placeholder="Enter your email address" required/>
+                  <input type="email" name="fl-sb-ast-email" class="form-control" id="fl-sb-ast-email" placeholder="Enter your email address" data-error="Please enter a valid email address" required/>
+                  <div class="help-block with-errors"></div>
                   <p class="help-block"><small>Apple will use this email to get in touch if there are any issues with your app submission. Fliplet will not receive any correspondence from Apple.</small></p>
                 </div>
               </div>
@@ -865,11 +915,12 @@
         </div>
       </div>
       <hr>
-      <div class="col-xs-5">
+      <div class="col-xs-5 save-btn-holder">
         <p class="help-block"><small>Save your progress at any point.<br>You can come back and finish it.</small></p>
-        <button type="button" class="btn btn-primary" data-app-store-save>Save progress <i class="fa fa-cloud-upload"></i></button>
+        <div class="btn btn-primary" data-app-store-save>Save progress <i class="fa fa-cloud-upload"></i></div>
+        <p class="text-success save-appStore-progress">Your progress was saved successfully!</p>
       </div>
-      <div class="col-xs-5 col-xs-offset-2 text-right">
+      <div class="col-xs-5 save-btn-holder col-xs-offset-2 text-right">
         <p class="help-block"><small>Submit your information when you are ready!<br>We will take care of the rest.</small></p>
         <button type="submit" class="btn btn-primary fl-green" data-app-store-build>Request App <i class="fa fa-paper-plane"></i></button>
       </div>
@@ -878,13 +929,31 @@
   <div class="fl-sb-panel fl-sb-enterprise">
     <form data-toggle="validator" role="form" id="enterpriseConfiguration">
       <div class="panel-group" id="accordionEnterprise" role="tablist" aria-multiselectable="true">
-        <div class="panel panel-default">
+        <div class="panel panel-default app-details">
           <div class="panel-heading" role="tab" id="enterpriseSettingsHeading">
             <h4 class="panel-title" role="button" data-toggle="collapse" data-parent="#accordionEnterprise" href="#enterpriseSettings" aria-expanded="true" aria-controls="enterpriseSettings">App details <small>(Required)</small></h4>
           </div>
           <div id="enterpriseSettings" class="panel-collapse collapse" role="tabpanel" aria-labelledby="enterpriseSettingsHeading">
             <div class="panel-body">
-              <p>This will display the splash screen and app icon.</p>
+              <p style="margin-bottom: 25px;"><strong>Go to the <a href="#" id="redirectToSettings">App settings</a> page to change these fields. They are all required.</strong></p>
+              <div class="form-group clearfix">
+                <div class="col-sm-4 control-label">
+                  <label>App icon</label>
+                </div>
+                <div class="col-sm-8">
+                  <img class="setting-app-icon userUploaded hidden" src="#" />
+                  <img class="setting-app-icon default" src="{{ asset 'img/app-icon.png' }}" />
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-4 control-label">
+                  <label>Splash screen</label>
+                </div>
+                <div class="col-sm-8">
+                  <div class="setting-splash-screen userUploaded hidden" style="background-image: url();"></div>
+                  <div class="setting-splash-screen default" style="background-image: url({{ asset 'img/splash-screen.png' }});"></div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -902,10 +971,12 @@
                 </div>
                 <div class="col-sm-8 fl-bundleId-holder">
                   <span class="bundleId-ent-text"></span> <span class="btn btn-sm btn-default" change-bundleid>Change</span>
+                  <div class="help-block with-errors"></div>
                 </div>
                 <div class="fl-bundleId-field">
                   <div class="col-sm-8">
-                    <input type="text" name="fl-ent-bundleId" class="form-control" id="fl-ent-bundleId" placeholder="Enter your unique Bundle ID" required/>
+                    <input type="text" name="fl-ent-bundleId" class="form-control" id="fl-ent-bundleId" placeholder="Enter your unique Bundle ID" data-error="Please enter your Bundle ID" required/>
+                    <div class="help-block with-errors"></div>
                     <p class="help-block"><small>This value needs to be unique and the structure must be <code>com.<i>organisationName</i>.<i>appName</i></code>.</small></p>
                   </div>
                 </div>
@@ -915,7 +986,8 @@
                   <label for="fl-sb-ent-teamId">Team ID</label>
                 </div>
                 <div class="col-sm-8">
-                  <input type="text" name="fl-sb-ent-teamId" class="form-control" id="fl-sb-ent-teamId" placeholder="Enter your Team ID" required/>
+                  <input type="text" name="fl-sb-ent-teamId" class="form-control" id="fl-sb-ent-teamId" placeholder="Enter your Team ID" data-error="Please enter your Team ID" required/>
+                  <div class="help-block with-errors"></div>
                   <p class="help-block"><small>The Team ID can be found <a href="https://developer.apple.com/account/#/membership/">here</a>.</small></p>
                 </div>
               </div>
@@ -941,7 +1013,7 @@
                   <p class="help-block label-helper"><small>Authentication Key can be created <a target="_blank" href="https://developer.apple.com/account/ios/certificate/key">here</a></small></p>
                 </div>
                 <div class="col-sm-8">
-                  <input type="text" name="fl-authKey" class="form-control" id="fl-ent-authKey" placeholder="Enter your Authentication Key" required/>
+                  <input type="text" name="fl-authKey" class="form-control" id="fl-ent-authKey" placeholder="Enter your Authentication Key" />
                 </div>
               </div>
               <div class="form-group clearfix">
@@ -950,15 +1022,7 @@
                   <p class="help-block label-helper"><small>Available <a target="_blank" href="https://developer.apple.com/account/ios/certificate/key">here</a></small></p>
                 </div>
                 <div class="col-sm-8">
-                  <input type="text" name="fl-keyId" class="form-control" id="fl-ent-keyId" placeholder="Enter your Key ID" required/>
-                </div>
-              </div>
-              <div class="form-group clearfix">
-                <div class="col-sm-4 control-label">
-                  <label for="fl-ent-topic">The Package Name (Topic).</label>
-                </div>
-                <div class="col-sm-8">
-                  <input type="text" name="fl-topic" class="form-control" id="fl-ent-topic" placeholder="Enter your Topic" required/>
+                  <input type="text" name="fl-keyId" class="form-control" id="fl-ent-keyId" placeholder="Enter your Key ID" />
                 </div>
               </div>
             </div>
@@ -966,11 +1030,12 @@
         </div>
       </div>
       <hr>
-      <div class="col-xs-5">
+      <div class="col-xs-5 save-btn-holder">
         <p class="help-block"><small>Save your progress at any point.<br>You can come back and finish it.</small></p>
-        <button type="button" class="btn btn-primary" data-enterprise-save>Save progress <i class="fa fa-cloud-upload"></i></button>
+        <div class="btn btn-primary" data-enterprise-save>Save progress <i class="fa fa-cloud-upload"></i></div>
+        <p class="text-success save-enterprise-progress">Your progress was saved successfully!</p>
       </div>
-      <div class="col-xs-5 col-xs-offset-2 text-right">
+      <div class="col-xs-5 save-btn-holder col-xs-offset-2 text-right">
         <p class="help-block"><small>Submit your information when you are ready!<br>We will take care of the rest.</small></p>
         <button type="submit" class="btn btn-primary fl-green" data-enterprise-build>Request App <i class="fa fa-paper-plane"></i></button>
       </div>
@@ -979,13 +1044,31 @@
   <div class="fl-sb-panel fl-sb-unsigned">
     <form data-toggle="validator" role="form" id="unsignedConfiguration">
       <div class="panel-group" id="accordionUnsigned" role="tablist" aria-multiselectable="true">
-        <div class="panel panel-default">
+        <div class="panel panel-default app-details">
           <div class="panel-heading" role="tab" id="unsignedSettingsHeading">
             <h4 class="panel-title" role="button" data-toggle="collapse" data-parent="#accordionUnsigned" href="#unsignedSettings" aria-expanded="true" aria-controls="unsignedSettings">App details <small>(Required)</small></h4>
           </div>
           <div id="unsignedSettings" class="panel-collapse collapse" role="tabpanel" aria-labelledby="unsignedSettingsHeading">
             <div class="panel-body">
-              <p>This will display the splash screen and app icon.</p>
+              <p style="margin-bottom: 25px;"><strong>Go to the <a href="#" id="redirectToSettings">App settings</a> page to change these fields. They are all required.</strong></p>
+              <div class="form-group clearfix">
+                <div class="col-sm-4 control-label">
+                  <label>App icon</label>
+                </div>
+                <div class="col-sm-8">
+                  <img class="setting-app-icon userUploaded hidden" src="#" />
+                  <img class="setting-app-icon default" src="{{ asset 'img/app-icon.png' }}" />
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-4 control-label">
+                  <label>Splash screen</label>
+                </div>
+                <div class="col-sm-8">
+                  <div class="setting-splash-screen userUploaded hidden" style="background-image: url();"></div>
+                  <div class="setting-splash-screen default" style="background-image: url({{ asset 'img/splash-screen.png' }});"></div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -1003,10 +1086,12 @@
                 </div>
                 <div class="col-sm-8 fl-bundleId-holder">
                   <span class="bundleId-uns-text"></span> <span class="btn btn-sm btn-default" change-bundleid>Change</span>
+                  <div class="help-block with-errors"></div>
                 </div>
                 <div class="fl-bundleId-field">
                   <div class="col-sm-8">
-                    <input type="text" name="fl-uns-bundleId" class="form-control" id="fl-uns-bundleId" placeholder="Enter your unique Bundle ID" required/>
+                    <input type="text" name="fl-uns-bundleId" class="form-control" id="fl-uns-bundleId" placeholder="Enter your unique Bundle ID" data-error="Please enter your Bundle ID" required/>
+                    <div class="help-block with-errors"></div>
                     <p class="help-block"><small>This value needs to be unique and the structure must be <code>com.<i>organisationName</i>.<i>appName</i></code>.</small></p>
                   </div>
                 </div>
@@ -1016,11 +1101,12 @@
         </div>
       </div>
       <hr>
-      <div class="col-xs-5">
+      <div class="col-xs-5 save-btn-holder">
         <p class="help-block"><small>Save your progress at any point.<br>You can come back and finish it.</small></p>
-        <button type="button" class="btn btn-primary" data-unsigned-save>Save progress <i class="fa fa-cloud-upload"></i></button>
+        <div class="btn btn-primary" data-unsigned-save>Save progress <i class="fa fa-cloud-upload"></i></div>
+        <p class="text-success save-unsigned-progress">Your progress was saved successfully!</p>
       </div>
-      <div class="col-xs-5 col-xs-offset-2 text-right">
+      <div class="col-xs-5 save-btn-holder col-xs-offset-2 text-right">
         <p class="help-block"><small>Submit your information when you are ready!<br>We will take care of the rest.</small></p>
         <button type="submit" class="btn btn-primary fl-green" data-unsigned-build>Request App <i class="fa fa-paper-plane"></i></button>
       </div>
