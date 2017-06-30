@@ -78,6 +78,15 @@
   margin: 0;
 }
 
+.nav-tabs>li>a span {
+  display: block;
+  text-align: center;
+}
+
+.nav-tabs>li>a span:first-child {
+  font-weight: bold;
+}
+
 
 /* End Override */
 
@@ -88,13 +97,17 @@ h3 {
   color: #14505E;
 }
 
-body>h3 {
+body>h3, .app-status h3 {
   margin-top: 0;
 }
 
 h3 small {
   color: #14505E;
   font-weight: 500;
+}
+
+.tab-pane form {
+  margin-top: 25px;
 }
 
 .label-helper {
@@ -114,10 +127,6 @@ h3 small {
 }
 
 .fl-bundleId-field, .fl-price-field {
-  display: none;
-}
-
-.fl-sb-panel {
   display: none;
 }
 
@@ -204,13 +213,13 @@ h3 small {
   margin-bottom: 10px;
 }
 
-.save-appStore-progress, .save-enterprise-progress, .save-unsigned-progress {
+.save-appStore-progress, .save-enterprise-progress, .save-unsigned-progress, .save-appStore-request, .save-enterprise-request, .save-unsigned-request, .save-push-progress {
   opacity: 0;
   -webkit-transition: opacity 0.25s ease;
   transition: opacity 0.25s ease;
 }
 
-.save-appStore-progress.saved, .save-enterprise-progress.saved, .save-unsigned-progress.saved {
+.save-appStore-progress.saved, .save-enterprise-progress.saved, .save-unsigned-progress.saved, .save-appStore-request.saved, .save-enterprise-request.saved, .save-unsigned-request.saved, .save-push-progress.saved {
   opacity: 1;
 }
 

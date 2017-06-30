@@ -1,6 +1,6 @@
 {
   "name": "Apple App Submissions",
-  "package": "com.fliplet.apple-app-submissions",
+  "package": "com.fliplet.apple-app-request",
   "version": "1.0.0",
   "icon": "img/icon.png",
   "tags": ["type:submissionComponent", "category:general"],

@@ -78,173 +78,176 @@
   <div class="app-status-panel fl-green">
     <p><i class="fa fa-check-circle-o fa-3x"></i></p>
     <h4>Your request was sent successfully!</h4>
-    <p>Your latest request was submitted on <strong><span>June 27th, 2017 - 13:23 PM</span></strong>.<br>Fliplet will get in touch in the next 24h with updates on your app submission or build.</p>
+    <p>Your latest request is for an <strong><span class="requestType"></span></strong> app and was submitted on <strong><span class="requestDate">June 27th, 2017 - 13:23 PM</span></strong>.<br>Fliplet will get in touch in the next 24h with updates on your
+      app submission or build.</p>
   </div>
 </div>
 <h3>Request App</h3>
-<p>This information will be used for all platforms of this app.</p>
+<p>Select how you want to distribute your app.</p>
 <hr>
 <div class="form-horizontal">
-  <div class="form-group clearfix inline-radio">
-    <div class="col-sm-4 control-label">
-      <label>How do you want to distribute your app?</label>
-    </div>
-    <div class="col-sm-8">
-      <div class="radio-buttons clearfix">
-        <div class="radio radio-icon">
-          <input type="radio" id="fl-sb-appStore" name="submissionType" value="appStore">
-          <label for="fl-sb-appStore">App Store</label>
-          <p><small>Publicly available</small></p>
-        </div>
-        <div class="radio radio-icon">
-          <input type="radio" id="fl-sb-enterprise" name="submissionType" value="enterprise">
-          <label for="fl-sb-enterprise">Enterprise</label>
-          <p><small>Company's mobile security system</small></p>
-        </div>
-        <div class="radio radio-icon">
-          <input type="radio" id="fl-sb-unsigned" name="submissionType" value="unsigned">
-          <label for="fl-sb-unsigned">Unsigned</label>
-          <p><small>Get the app file</small></p>
-        </div>
-      </div>
-    </div>
-  </div>
-  <hr>
-  <div class="fl-sb-panel fl-sb-appStore">
-    <form data-toggle="validator" role="form" id="appStoreConfiguration">
-      <div class="panel-group" id="accordionAppStore" role="tablist" aria-multiselectable="true">
-        <div class="panel panel-default app-details">
-          <div class="panel-heading" role="tab" id="appStoreSettingsHeading">
-            <h4 class="panel-title" role="button" data-toggle="collapse" data-parent="#accordionAppStore" href="#appStoreSettings" aria-expanded="true" aria-controls="appStoreSettings">App details <small>(Required)</small></h4>
-          </div>
-          <div id="appStoreSettings" class="panel-collapse collapse" role="tabpanel" aria-labelledby="appStoreSettingsHeading">
-            <div class="panel-body">
-              <p style="margin-bottom: 25px;"><strong>Go to the <a href="#" id="redirectToSettings">App settings</a> page to change these fields. They are all required.</strong></p>
-              <div class="form-group clearfix">
-                <div class="col-sm-4 control-label">
-                  <label>App list name</label>
+  <ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active" id="appstore-control">
+      <a href="#appstore-tab" aria-controls="appstore" role="tab" data-toggle="tab">
+        <span>App Store</span>
+        <span><small>Publicly available</small></span>
+      </a>
+    </li>
+    <li role="presentation" id="enterprise-control">
+      <a href="#enterprise-tab" aria-controls="enterprise" role="tab" data-toggle="tab">
+        <span>Enterprise</span>
+        <span><small>Within your company</small></span>
+      </a>
+    </li>
+    <li role="presentation" id="unsigned-control">
+      <a href="#unsigned-tab" aria-controls="unsigned" role="tab" data-toggle="tab">
+        <span>Unsigned</span>
+        <span><small>Get the app file</small></span>
+      </a>
+    </li>
+    <li role="presentation" id="push-control">
+      <a href="#push-tab" aria-controls="push" role="tab" data-toggle="tab">
+        <span>Push Notifications</span>
+        <span><small>Configure to enable</small></span>
+      </a>
+    </li>
+  </ul>
+  <div class="tab-content">
+    <div role="tabpanel" class="tab-pane fl-sb-appStore active" id="appstore-tab">
+      <form data-toggle="validator" data-disable="false" role="form" id="appStoreConfiguration">
+        <div class="panel-group" id="accordionAppStore" role="tablist" aria-multiselectable="true">
+          <div class="panel panel-default app-details">
+            <div class="panel-heading" role="tab" id="appStoreSettingsHeading">
+              <h4 class="panel-title" role="button" data-toggle="collapse" data-parent="#accordionAppStore" href="#appStoreSettings" aria-expanded="true" aria-controls="appStoreSettings">App details <small>(Required)</small></h4>
+            </div>
+            <div id="appStoreSettings" class="panel-collapse collapse" role="tabpanel" aria-labelledby="appStoreSettingsHeading">
+              <div class="panel-body">
+                <p style="margin-bottom: 25px;"><strong>Go to the <a href="#" class="redirectToSettings">App settings</a> page to change these fields. They are all required.</strong></p>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label>App list name</label>
+                  </div>
+                  <div class="col-sm-8">
+                    <input type="text" name="fl-store-appName" class="form-control" id="fl-store-appName" placeholder="Please enter an app name" data-validate="true" disabled required/>
+                  </div>
                 </div>
-                <div class="col-sm-8">
-                  <input type="text" name="fl-sb-ast-appName" class="form-control" id="fl-sb-ast-appName" placeholder="Please enter an app name" data-validate="true" disabled required/>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label>App icon</label>
+                  </div>
+                  <div class="col-sm-8">
+                    <img class="setting-app-icon userUploaded hidden" src="#" />
+                    <img class="setting-app-icon default" src="{{ asset 'img/app-icon.png' }}" />
+                  </div>
                 </div>
-              </div>
-              <div class="form-group clearfix">
-                <div class="col-sm-4 control-label">
-                  <label>App icon</label>
+                <div class="form-group">
+                  <div class="col-sm-4 control-label">
+                    <label>Splash screen</label>
+                  </div>
+                  <div class="col-sm-8">
+                    <div class="setting-splash-screen userUploaded hidden" style="background-image: url();"></div>
+                    <div class="setting-splash-screen default" style="background-image: url({{ asset 'img/splash-screen.png' }});"></div>
+                  </div>
                 </div>
-                <div class="col-sm-8">
-                  <img class="setting-app-icon userUploaded hidden" src="#" />
-                  <img class="setting-app-icon default" src="{{ asset 'img/app-icon.png' }}" />
-                </div>
-              </div>
-              <div class="form-group">
-                <div class="col-sm-4 control-label">
-                  <label>Splash screen</label>
-                </div>
-                <div class="col-sm-8">
-                  <div class="setting-splash-screen userUploaded hidden" style="background-image: url();"></div>
-                  <div class="setting-splash-screen default" style="background-image: url({{ asset 'img/splash-screen.png' }});"></div>
-                </div>
-              </div>
-              <div class="form-group clearfix">
-                <div class="col-sm-4 control-label">
-                  <label>Screenshots</label>
-                  <p class="help-block label-helper"><small>Screenshots will be taken of the following screens</small></p>
-                </div>
-                <div class="col-sm-8">
-                  <input type="text" name="fl-sb-ast-screenshots" class="form-control" id="fl-sb-ast-screenshots" placeholder="Please select at least one screen to screenshot" data-validate="true" disabled required/>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label>Screenshots</label>
+                    <p class="help-block label-helper"><small>Screenshots will be taken of the following screens</small></p>
+                  </div>
+                  <div class="col-sm-8">
+                    <input type="text" name="fl-store-screenshots" class="form-control" id="fl-store-screenshots" placeholder="Please select at least one screen to screenshot" data-validate="true" disabled required/>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div class="panel panel-default">
-          <div class="panel-heading" role="tab" id="appStoreGeneralHeading">
-            <h4 class="panel-title" role="button" data-toggle="collapse" data-parent="#accordionAppStore" href="#appStoreGeneral" aria-expanded="true" aria-controls="appStoreGeneral">App Store listing details <small>(Required)</small></h4>
-          </div>
-          <div id="appStoreGeneral" class="panel-collapse collapse" role="tabpanel" aria-labelledby="appStoreGeneralHeading">
-            <div class="panel-body">
-              <p>Fill in the fields below for the information that will be displayed on the app's page in the App Store.</p>
-              <div class="form-group clearfix">
-                <div class="col-sm-4 control-label">
-                  <label for="fl-sb-ast-iconName">App icon name</label>
-                  <p class="help-block label-helper"><small>This is the name that will appear below the icon of your app</small></p>
+          <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="appStoreGeneralHeading">
+              <h4 class="panel-title" role="button" data-toggle="collapse" data-parent="#accordionAppStore" href="#appStoreGeneral" aria-expanded="true" aria-controls="appStoreGeneral">App Store listing details <small>(Required)</small></h4>
+            </div>
+            <div id="appStoreGeneral" class="panel-collapse collapse" role="tabpanel" aria-labelledby="appStoreGeneralHeading">
+              <div class="panel-body">
+                <p>Fill in the fields below for the information that will be displayed on the app's page in the App Store.</p>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-store-iconName">App icon name</label>
+                    <p class="help-block label-helper"><small>This is the name that will appear below the icon of your app</small></p>
+                  </div>
+                  <div class="col-sm-8">
+                    <input type="text" name="fl-store-iconName" class="form-control" id="fl-store-iconName" placeholder="Enter the app icon name" maxlength="30" data-error="Please enter an app icon name" required/>
+                    <div class="help-block with-errors"></div>
+                    <p class="help-block"><small>The length of your app icon name is limited to 30 characters</small></p>
+                  </div>
                 </div>
-                <div class="col-sm-8">
-                  <input type="text" name="fl-sb-ast-iconName" class="form-control" id="fl-sb-ast-iconName" placeholder="Enter the app icon name" maxlength="30" data-error="Please enter an app icon name" required/>
-                  <div class="help-block with-errors"></div>
-                  <p class="help-block"><small>The length of your app icon name is limited to 30 characters</small></p>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-store-subtitle">App subtitle</label>
+                    <p class="help-block label-helper"><small>Optional</small></p>
+                  </div>
+                  <div class="col-sm-8">
+                    <textarea name="fl-store-subtitle" class="form-control" id="fl-store-subtitle" placeholder="Enter an app subtitle" maxlength="30"></textarea>
+                    <p class="help-block"><small>Subtitles are limited to 30 characters and appear below your app’s name throughout the App Store.</small></p>
+                  </div>
                 </div>
-              </div>
-              <div class="form-group clearfix">
-                <div class="col-sm-4 control-label">
-                  <label for="fl-sb-ast-subtitle">App subtitle</label>
-                  <p class="help-block label-helper"><small>Optional</small></p>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-store-description">App description</label>
+                    <p class="help-block label-helper"><small>Optional</small></p>
+                  </div>
+                  <div class="col-sm-8">
+                    <textarea name="fl-store-description" class="form-control" id="fl-store-description" placeholder="Enter an app description"></textarea>
+                    <p class="help-block"><small>Provide an engaging description that highlights the features and functionality of your app.</small></p>
+                  </div>
                 </div>
-                <div class="col-sm-8">
-                  <textarea name="fl-sb-ast-subtitle" class="form-control" id="fl-sb-ast-subtitle" placeholder="Enter an app subtitle" maxlength="30"></textarea>
-                  <p class="help-block"><small>Subtitles are limited to 30 characters and appear below your app’s name throughout the App Store.</small></p>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-store-promotional">App promotional text</label>
+                    <p class="help-block label-helper"><small>Optional</small></p>
+                  </div>
+                  <div class="col-sm-8">
+                    <textarea name="fl-store-promotional" class="form-control" id="fl-store-promotional" placeholder="Enter an app promotional text" maxlength="170"></textarea>
+                    <p class="help-block"><small>Your app’s promotional text appears at the top of the description and is limited to 170 characters. </small></p>
+                  </div>
                 </div>
-              </div>
-              <div class="form-group clearfix">
-                <div class="col-sm-4 control-label">
-                  <label for="fl-sb-ast-description">App description</label>
-                  <p class="help-block label-helper"><small>Optional</small></p>
-                </div>
-                <div class="col-sm-8">
-                  <textarea name="fl-sb-ast-description" class="form-control" id="fl-sb-ast-description" placeholder="Enter an app description"></textarea>
-                  <p class="help-block"><small>Provide an engaging description that highlights the features and functionality of your app.</small></p>
-                </div>
-              </div>
-              <div class="form-group clearfix">
-                <div class="col-sm-4 control-label">
-                  <label for="fl-sb-ast-promotional">App promotional text</label>
-                  <p class="help-block label-helper"><small>Optional</small></p>
-                </div>
-                <div class="col-sm-8">
-                  <textarea name="fl-sb-ast-promotional" class="form-control" id="fl-sb-ast-promotional" placeholder="Enter an app promotional text" maxlength="170"></textarea>
-                  <p class="help-block"><small>Your app’s promotional text appears at the top of the description and is limited to 170 characters. </small></p>
-                </div>
-              </div>
-              <div class="form-group clearfix">
-                <div class="col-sm-4 control-label">
-                  <label>Application Category</label>
-                  <p class="help-block label-helper"><small>The category that best describes this app. For more information, see the <a href="https://itunesconnect.apple.com/itc/static/category_definitions" target="_blank">App Store Category Definitions.</a></small></p>
-                </div>
-                <div class="col-sm-8">
-                  <label for="fl-sb-ast-appType" class="select-proxy-display">
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label>Application Category</label>
+                    <p class="help-block label-helper"><small>The category that best describes this app. For more information, see the <a href="https://itunesconnect.apple.com/itc/static/category_definitions" target="_blank">App Store Category Definitions.</a></small></p>
+                  </div>
+                  <div class="col-sm-8">
+                    <label for="fl-store-category1" class="select-proxy-display">
                     <span class="icon fa fa-chevron-down"></span>
                     <span class="select-value-proxy">-- Primary Category</span>
-                    <select id="fl-sb-ast-category1" name="fl-sb-ast-category1" data-label="select" class="hidden-select form-control" data-error="Please select a category" required>
+                    <select id="fl-store-category1" name="fl-store-category1" data-label="select" class="hidden-select form-control" data-error="Please select a category" required>
                       <option value="">-- Primary Category</option>
                       <option value="1">Option 1</option>
                       <option value="2">Option 2</option>
                       <option value="2">Option 3</option>
                     </select>
                   </label>
-                  <div class="help-block with-errors"></div>
-                  <label for="fl-sb-ast-category" class="select-proxy-display">
+                    <div class="help-block with-errors"></div>
+                    <label for="fl-store-category2" class="select-proxy-display">
                     <span class="icon fa fa-chevron-down"></span>
                     <span class="select-value-proxy">-- Secondary Category</span>
-                    <select id="fl-sb-ast-category2" name="fl-sb-ast-category2" data-label="select" class="hidden-select form-control">
+                    <select id="fl-store-category2" name="fl-store-category2" data-label="select" class="hidden-select form-control">
                       <option value="">-- Secondary Category</option>
                       <option value="1">Option 1</option>
                       <option value="2">Option 2</option>
                       <option value="2">Option 3</option>
                     </select>
                   </label>
-                  <p class="help-block"><small>Secondary category is optional</small></p>
+                    <p class="help-block"><small>Secondary category is optional</small></p>
+                  </div>
                 </div>
-              </div>
-              <div class="form-group clearfix">
-                <div class="col-sm-4 control-label">
-                  <label>Primary Language</label>
-                </div>
-                <div class="col-sm-8">
-                  <label for="fl-sb-ast-language" class="select-proxy-display">
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label>Primary Language</label>
+                  </div>
+                  <div class="col-sm-8">
+                    <label for="fl-store-language" class="select-proxy-display">
                     <span class="icon fa fa-chevron-down"></span>
                     <span class="select-value-proxy">English</span>
-                    <select id="fl-sb-ast-language" name="fl-sb-ast-language" data-label="select" class="hidden-select form-control" data-error="Please select a language" required>
+                    <select id="fl-store-language" name="fl-store-language" data-label="select" class="hidden-select form-control" data-error="Please select a language" required>
                       <option value="">-- Select a language</option>
                       <option value="Afrikanns">Afrikanns</option>
                       <option value="Albanian">Albanian</option>
@@ -320,27 +323,27 @@
                       <option value="Xhosa">Xhosa</option>
                     </select>
                   </label>
-                  <div class="help-block with-errors"></div>
+                    <div class="help-block with-errors"></div>
+                  </div>
                 </div>
-              </div>
-              <div class="form-group clearfix">
-                <div class="col-sm-4 control-label">
-                  <label for="fl-sb-ast-keywords">Keywords</label>
-                  <p class="help-block label-helper"><small>Keywords help determine where your app displays in search results.</small></p>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-store-keywords">Keywords</label>
+                    <p class="help-block label-helper"><small>Keywords help determine where your app displays in search results.</small></p>
+                  </div>
+                  <div class="col-sm-8">
+                    <input type="text" name="fl-store-keywords" class="form-control" id="fl-store-keywords" placeholder="Type a keyword" data-error="Please enter at least one keyword" required/>
+                    <div class="help-block with-errors"></div>
+                    <p class="help-block"><small>Keywords are limited to 100 characters total.</small></p>
+                  </div>
                 </div>
-                <div class="col-sm-8">
-                  <input type="text" name="fl-sb-ast-keywords" class="form-control" id="fl-sb-ast-keywords" placeholder="Type a keyword" data-error="Please enter at least one keyword" required/>
-                  <div class="help-block with-errors"></div>
-                  <p class="help-block"><small>Keywords are limited to 100 characters total.</small></p>
-                </div>
-              </div>
-              <div class="form-group clearfix">
-                <div class="col-sm-4 control-label">
-                  <label>Availability (Countries)</label>
-                </div>
-                <div class="col-sm-8">
-                  <select id="fl-sb-ast-availability" name="fl-sb-ast-availability" data-live-search="true" data-actions-box="true" data-none-selected-text="Select from the list of countries" multiple class="form-control selectpicker" data-error="Please select at least one country"
-                    required>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label>Availability (Countries)</label>
+                  </div>
+                  <div class="col-sm-8">
+                    <select id="fl-store-availability" name="fl-store-availability" data-live-search="true" data-actions-box="true" data-none-selected-text="Select from the list of countries" multiple class="form-control selectpicker" data-error="Please select at least one country"
+                      required>
                     <option value="Albania">Albania</option>
                     <option value="Algeria">Algeria</option>
                     <option value="Angola">Angola</option>
@@ -497,229 +500,195 @@
                     <option value="Yemen">Yemen</option>
                     <option value="Zimbabwe">Zimbabwe</option>
                   </select>
-                  <div class="help-block with-errors"></div>
+                    <div class="help-block with-errors"></div>
+                  </div>
                 </div>
-              </div>
-              <div class="form-group clearfix">
-                <div class="col-sm-4 control-label">
-                  <label>Price</label>
-                </div>
-                <div class="col-sm-8">
-                  <label for="fl-sb-ast-pricing" class="select-proxy-display">
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label>Price</label>
+                  </div>
+                  <div class="col-sm-8">
+                    <label for="fl-store-pricing" class="select-proxy-display">
                     <span class="icon fa fa-chevron-down"></span>
                     <span class="select-value-proxy">Free</span>
-                    <select id="fl-sb-ast-pricing" name="fl-sb-ast-pricing" data-label="select" class="hidden-select form-control" data-error="Please select a price" required>
+                    <select id="fl-store-pricing" name="fl-store-pricing" data-label="select" class="hidden-select form-control" data-error="Please select a price" required>
                       <option value="free">Free</option>
                       <option value="1">£0.99</option>
                       <option value="2">£1.99</option>
                       <option value="2">£2.99</option>
                     </select>
                   </label>
-                  <div class="help-block with-errors"></div>
-                </div>
-              </div>
-              <div class="form-group clearfix">
-                <div class="col-sm-4 control-label">
-                  <label for="fl-sb-ast-keywords">Rating</label>
-                </div>
-                <div class="col-sm-8">
-                  Your app rating is determined by Apple based on your app type. The app rating will display on the App Store across all your platforms. Fliplet apps will be rated <strong>17+</strong> by default.
-                </div>
-              </div>
-              <div class="form-group clearfix">
-                <div class="col-sm-4 control-label">
-                  <label for="fl-sb-ast-support">Support URL</label>
-                  <p class="help-block label-helper"><small>A URL that links to your organization's support page.</small></p>
-                </div>
-                <div class="col-sm-8">
-                  <input type="text" name="fl-sb-ast-support" class="form-control" id="fl-sb-ast-support" placeholder="Enter your Support URL" data-error="Please enter your Support URL" required/>
-                  <div class="help-block with-errors"></div>
-                </div>
-              </div>
-              <div class="form-group clearfix">
-                <div class="col-sm-4 control-label">
-                  <label for="fl-sb-ast-marketing">Marketing URL</label>
-                  <p class="help-block label-helper"><small>A URL that links to your organization's marketing website.</small></p>
-                </div>
-                <div class="col-sm-8">
-                  <input type="text" name="fl-sb-ast-marketing" class="form-control" id="fl-sb-ast-marketing" placeholder="Enter your Marketing URL" data-error="Please enter your Marketing URL" required/>
-                  <div class="help-block with-errors"></div>
-                </div>
-              </div>
-              <div class="form-group clearfix">
-                <div class="col-sm-4 control-label">
-                  <label for="fl-sb-ast-privacy">Privacy Policy URL</label>
-                  <p class="help-block label-helper"><small>A URL that links to your organization's privacy policy.</small></p>
-                </div>
-                <div class="col-sm-8">
-                  <input type="text" name="fl-sb-ast-privacy" class="form-control" id="fl-sb-ast-privacy" placeholder="Enter your Privacy Policy URL" data-error="Please enter your Privacy Policy URL" required/>
-                  <div class="help-block with-errors"></div>
-                </div>
-              </div>
-              <div class="form-group clearfix">
-                <div class="col-sm-4 control-label">
-                  <label for="fl-sb-ast-copyright">Copyright</label>
-                  <p class="help-block label-helper"><small>The name of the person or entity that owns the exclusive rights to your app, preceded by the year the rights were obtained.</small></p>
-                </div>
-                <div class="col-sm-8">
-                  <input type="text" name="fl-sb-ast-copyright" class="form-control" id="fl-sb-ast-copyright" placeholder="Eg: 2008 Acme Inc." data-error="Please enter your Copyright text" required/>
-                  <div class="help-block with-errors"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="panel panel-default">
-          <div class="panel-heading" role="tab" id="appStoreTechHeading">
-            <h4 class="panel-title" role="button" data-toggle="collapse" data-parent="#accordionAppStore" href="#appStoreTech" aria-expanded="true" aria-controls="appStoreTech">App technical details <small>(Required)</small></h4>
-          </div>
-          <div id="appStoreTech" class="panel-collapse collapse" role="tabpanel" aria-labelledby="appStoreTechHeading">
-            <div class="panel-body">
-              <p>Now it's down to the technical inforamtion.</p>
-              <div class="form-group clearfix">
-                <div class="col-sm-4 control-label">
-                  <label for="fl-sb-ast-teamId">App Developer account login</label>
-                </div>
-                <div class="col-sm-8">
-                  <input type="email" name="fl-sb-ast-appDevLogin" class="form-control" id="fl-sb-ast-appDevLogin" placeholder="Enter App Developer login email" data-error="Please enter a valid email address" required/>
-                  <div class="help-block with-errors"></div>
-                </div>
-              </div>
-              <div class="form-group clearfix">
-                <div class="col-sm-4 control-label">
-                  <label for="fl-sb-ast-teamId">App Developer account password</label>
-                  <p class="help-block label-helper"><small>The password will be encrypted, safely stored and never shown.</small></p>
-                </div>
-                <div class="col-sm-8">
-                  <input type="password" name="fl-sb-ast-appDevPass" class="form-control" id="fl-sb-ast-appDevPass" placeholder="Enter App Developer account pass" data-error="Please enter a password" required/>
-                  <div class="help-block with-errors"></div>
-                </div>
-              </div>
-              <div class="form-group clearfix">
-                <div class="col-sm-4 control-label">
-                  <label for="fl-appStore-bundleId">Bundle ID</label>
-                  <p class="help-block label-helper"><small>This is a unique ID for your app on the App Store. Fliplet auto-generated one for you.</small></p>
-                </div>
-                <div class="col-sm-8 fl-bundleId-holder">
-                  <span class="bundleId-ast-text"></span> <span class="btn btn-sm btn-default" change-bundleid>Change</span>
-                  <div class="help-block with-errors"></div>
-                </div>
-                <div class="fl-bundleId-field">
-                  <div class="col-sm-8">
-                    <input type="text" name="fl-appStore-bundleId" class="form-control" id="fl-appStore-bundleId" placeholder="Enter your unique Bundle ID" data-error="Please enter the Bundle ID" required/>
                     <div class="help-block with-errors"></div>
-                    <p class="help-block"><small>This value needs to be unique and the structure must be <code>com.<i>organisationName</i>.<i>appName</i></code>.</small></p>
+                  </div>
+                </div>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-store-keywords">Rating</label>
+                  </div>
+                  <div class="col-sm-8">
+                    Your app rating is determined by Apple based on your app type. The app rating will display on the App Store across all your platforms. Fliplet apps will be rated <strong>17+</strong> by default.
+                  </div>
+                </div>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-store-support">Support URL</label>
+                    <p class="help-block label-helper"><small>A URL that links to your organization's support page.</small></p>
+                  </div>
+                  <div class="col-sm-8">
+                    <input type="text" name="fl-store-support" class="form-control" id="fl-store-support" placeholder="Enter your Support URL" data-error="Please enter your Support URL" required/>
+                    <div class="help-block with-errors"></div>
+                  </div>
+                </div>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-store-marketing">Marketing URL</label>
+                    <p class="help-block label-helper"><small>A URL that links to your organization's marketing website.</small></p>
+                  </div>
+                  <div class="col-sm-8">
+                    <input type="text" name="fl-store-marketing" class="form-control" id="fl-store-marketing" placeholder="Enter your Marketing URL" data-error="Please enter your Marketing URL" required/>
+                    <div class="help-block with-errors"></div>
+                  </div>
+                </div>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-store-privacy">Privacy Policy URL</label>
+                    <p class="help-block label-helper"><small>A URL that links to your organization's privacy policy.</small></p>
+                  </div>
+                  <div class="col-sm-8">
+                    <input type="text" name="fl-store-privacy" class="form-control" id="fl-store-privacy" placeholder="Enter your Privacy Policy URL" data-error="Please enter your Privacy Policy URL" required/>
+                    <div class="help-block with-errors"></div>
+                  </div>
+                </div>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-store-copyright">Copyright</label>
+                    <p class="help-block label-helper"><small>The name of the person or entity that owns the exclusive rights to your app, preceded by the year the rights were obtained.</small></p>
+                  </div>
+                  <div class="col-sm-8">
+                    <input type="text" name="fl-store-copyright" class="form-control" id="fl-store-copyright" placeholder="Eg: 2008 Acme Inc." data-error="Please enter your Copyright text" required/>
+                    <div class="help-block with-errors"></div>
                   </div>
                 </div>
               </div>
-              <div class="form-group clearfix">
-                <div class="col-sm-4 control-label">
-                  <label for="fl-sb-ast-teamId">Team ID</label>
+            </div>
+          </div>
+          <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="appStoreTechHeading">
+              <h4 class="panel-title" role="button" data-toggle="collapse" data-parent="#accordionAppStore" href="#appStoreTech" aria-expanded="true" aria-controls="appStoreTech">App technical details <small>(Required)</small></h4>
+            </div>
+            <div id="appStoreTech" class="panel-collapse collapse" role="tabpanel" aria-labelledby="appStoreTechHeading">
+              <div class="panel-body">
+                <p>Now it's down to the technical inforamtion.</p>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-store-appDevLogin">App Developer account login</label>
+                  </div>
+                  <div class="col-sm-8">
+                    <input type="email" name="fl-store-appDevLogin" class="form-control" id="fl-store-appDevLogin" placeholder="Enter App Developer login email" data-error="Please enter a valid email address" required/>
+                    <div class="help-block with-errors"></div>
+                  </div>
                 </div>
-                <div class="col-sm-8">
-                  <input type="text" name="fl-sb-ast-teamId" class="form-control" id="fl-sb-ast-teamId" placeholder="Enter your Team ID" data-error="Please enter your Team ID" required/>
-                  <div class="help-block with-errors"></div>
-                  <p class="help-block"><small>Your Team ID can be found <a href="https://developer.apple.com/account/#/membership/">here</a>.</small></p>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-store-appDevPass">App Developer account password</label>
+                    <p class="help-block label-helper"><small>The password will be encrypted, safely stored and never shown.</small></p>
+                  </div>
+                  <div class="col-sm-8">
+                    <input type="password" name="fl-store-appDevPass" class="form-control" id="fl-store-appDevPass" placeholder="Enter App Developer account pass" data-error="Please enter a password" required/>
+                    <div class="help-block with-errors"></div>
+                  </div>
+                </div>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-appStore-bundleId">Bundle ID</label>
+                    <p class="help-block label-helper"><small>This is a unique ID for your app on the App Store. Fliplet auto-generated one for you.</small></p>
+                  </div>
+                  <div class="col-sm-8 fl-bundleId-holder">
+                    <span class="bundleId-ast-text"></span> <span class="btn btn-sm btn-default" change-bundleid>Change</span>
+                    <div class="help-block with-errors"></div>
+                  </div>
+                  <div class="fl-bundleId-field">
+                    <div class="col-sm-8">
+                      <input type="text" name="fl-appStore-bundleId" class="form-control" id="fl-appStore-bundleId" placeholder="Enter your unique Bundle ID" data-error="Please enter the Bundle ID" required/>
+                      <div class="help-block with-errors"></div>
+                      <p class="help-block"><small>This value needs to be unique and the structure must be <code>com.<i>organisationName</i>.<i>appName</i></code>.</small></p>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-store-teamId">Team ID</label>
+                  </div>
+                  <div class="col-sm-8">
+                    <input type="text" name="fl-store-teamId" class="form-control" id="fl-store-teamId" placeholder="Enter your Team ID" data-error="Please enter your Team ID" required/>
+                    <div class="help-block with-errors"></div>
+                    <p class="help-block"><small>Your Team ID can be found <a href="https://developer.apple.com/account/#/membership/">here</a>.</small></p>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div class="panel panel-default">
-          <div class="panel-heading" role="tab" id="appStoreNotificationsHeading">
-            <h4 class="panel-title" role="button" data-toggle="collapse" data-parent="#accordionAppStore" href="#appStoreNotifications" aria-expanded="true" aria-controls="appStoreNotifications">Push notifications technical details <small>(Optional)</small></h4>
-          </div>
-          <div id="appStoreNotifications" class="panel-collapse collapse" role="tabpanel" aria-labelledby="appStoreNotificationsHeading">
-            <div class="panel-body">
-              <p>Push notifications can be set up at a later stage if you don't want to configure it now. It's the only section on this screen that you can edit after submission.</p>
-              <p>For instructions on how to get the information you need to configure this section, see these help articles:</p>
-              <ul>
-                <li><a href="http://help.fliplet.com/deploying-and-updating-apps/technical-bits/setting-up-push-notifications-for-ios" target="_blank">How to set-up push notifications for iOS</a></li>
-                <li><a href="http://help.fliplet.com/being-successful/using-analytics/adding-googles-firebase-push-notifications-for-android" target="_blank">How to set-up push notifications for Android</a></li>
-              </ul>
-              <p>For push notification best practices, you might also want to check out our blog post <a href="https://fliplet.com/blog/start-using-push-notifications-the-right-way/" target="_blank">everything you need to know about push notifications and how to use them well</a>.</p>
-              <div class="form-group clearfix">
-                <div class="col-sm-4 control-label">
-                  <label for="fl-authKey">Authentication Key</label>
-                  <p class="help-block label-helper"><small>Authentication Key can be created <a target="_blank" href="https://developer.apple.com/account/ios/certificate/key">here</a></small></p>
-                </div>
-                <div class="col-sm-8">
-                  <input type="text" name="fl-appStore-authKey" class="form-control" id="fl-authKey" placeholder="Enter your Authentication Key" />
-                </div>
-              </div>
-              <div class="form-group clearfix">
-                <div class="col-sm-4 control-label">
-                  <label for="fl-keyId">The Key ID <small>(of the p8 file)</small></label>
-                  <p class="help-block label-helper"><small>Available <a target="_blank" href="https://developer.apple.com/account/ios/certificate/key">here</a></small></p>
-                </div>
-                <div class="col-sm-8">
-                  <input type="text" name="fl-appStore-keyId" class="form-control" id="fl-keyId" placeholder="Enter your Key ID" />
-                </div>
-              </div>
+          <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="appStoreContactsHeading">
+              <h4 class="panel-title" role="button" data-toggle="collapse" data-parent="#accordionAppStore" href="#appStoreContacts" aria-expanded="true" aria-controls="appStoreContacts">App submission details <small>(Required)</small></h4>
             </div>
-          </div>
-        </div>
-        <div class="panel panel-default">
-          <div class="panel-heading" role="tab" id="appStoreContactsHeading">
-            <h4 class="panel-title" role="button" data-toggle="collapse" data-parent="#accordionAppStore" href="#appStoreContacts" aria-expanded="true" aria-controls="appStoreContacts">App submission details <small>(Required)</small></h4>
-          </div>
-          <div id="appStoreContacts" class="panel-collapse collapse" role="tabpanel" aria-labelledby="appStoreContactsHeading">
-            <div class="panel-body">
-              <p>These details will be used by Apple Review team to get in touch with you if needed.</p>
-              <div class="form-group clearfix">
-                <div class="col-sm-4 control-label">
-                  <label for="fl-sb-ast-fname">First Name</label>
+            <div id="appStoreContacts" class="panel-collapse collapse" role="tabpanel" aria-labelledby="appStoreContactsHeading">
+              <div class="panel-body">
+                <p>These details will be used by Apple Review team to get in touch with you if needed.</p>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-store-fname">First Name</label>
+                  </div>
+                  <div class="col-sm-8">
+                    <input type="text" name="fl-store-fname" class="form-control" id="fl-store-fname" placeholder="Enter your first name" data-error="Please enter your first name" required/>
+                    <div class="help-block with-errors"></div>
+                  </div>
                 </div>
-                <div class="col-sm-8">
-                  <input type="text" name="fl-sb-ast-fname" class="form-control" id="fl-sb-ast-fname" placeholder="Enter your first name" data-error="Please enter your first name" required/>
-                  <div class="help-block with-errors"></div>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-store-lname">Last Name</label>
+                  </div>
+                  <div class="col-sm-8">
+                    <input type="text" name="fl-store-lname" class="form-control" id="fl-store-lname" placeholder="Enter your last name" data-error="Please enter your last name" required/>
+                    <div class="help-block with-errors"></div>
+                  </div>
                 </div>
-              </div>
-              <div class="form-group clearfix">
-                <div class="col-sm-4 control-label">
-                  <label for="fl-sb-ast-lname">Last Name</label>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-store-address1">Address line 1</label>
+                  </div>
+                  <div class="col-sm-8">
+                    <input type="text" name="fl-store-address1" class="form-control" id="fl-store-address1" placeholder="Enter your address" data-error="Please enter your address" required/>
+                    <div class="help-block with-errors"></div>
+                  </div>
                 </div>
-                <div class="col-sm-8">
-                  <input type="text" name="fl-sb-ast-lname" class="form-control" id="fl-sb-ast-lname" placeholder="Enter your last name" data-error="Please enter your last name" required/>
-                  <div class="help-block with-errors"></div>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-store-address2">Address line 2</label>
+                    <p class="help-block label-helper"><small>Optional</small></p>
+                  </div>
+                  <div class="col-sm-8">
+                    <input type="text" name="fl-store-address2" class="form-control" id="fl-store-address2" placeholder="Enter your address" />
+                  </div>
                 </div>
-              </div>
-              <div class="form-group clearfix">
-                <div class="col-sm-4 control-label">
-                  <label for="fl-sb-ast-address1">Address line 1</label>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-store-postCode">Post Code</label>
+                  </div>
+                  <div class="col-sm-8">
+                    <input type="text" name="fl-store-postCode" class="form-control" id="fl-store-postCode" placeholder="Enter your post code" data-error="Please enter your post code" required/>
+                    <div class="help-block with-errors"></div>
+                  </div>
                 </div>
-                <div class="col-sm-8">
-                  <input type="text" name="fl-sb-ast-address1" class="form-control" id="fl-sb-ast-address1" placeholder="Enter your address" data-error="Please enter your address" required/>
-                  <div class="help-block with-errors"></div>
-                </div>
-              </div>
-              <div class="form-group clearfix">
-                <div class="col-sm-4 control-label">
-                  <label for="fl-sb-ast-address2">Address line 2</label>
-                  <p class="help-block label-helper"><small>Optional</small></p>
-                </div>
-                <div class="col-sm-8">
-                  <input type="text" name="fl-sb-ast-address2" class="form-control" id="fl-sb-ast-address2" placeholder="Enter your address" />
-                </div>
-              </div>
-              <div class="form-group clearfix">
-                <div class="col-sm-4 control-label">
-                  <label for="fl-sb-ast-postCode">Post Code</label>
-                </div>
-                <div class="col-sm-8">
-                  <input type="text" name="fl-sb-ast-postCode" class="form-control" id="fl-sb-ast-postCode" placeholder="Enter your post code" data-error="Please enter your post code" required/>
-                  <div class="help-block with-errors"></div>
-                </div>
-              </div>
-              <div class="form-group clearfix">
-                <div class="col-sm-4 control-label">
-                  <label for="fl-sb-ast-country">Country</label>
-                </div>
-                <div class="col-sm-8">
-                  <label for="fl-sb-ast-userCountry" class="select-proxy-display">
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-store-userCountry">Country</label>
+                  </div>
+                  <div class="col-sm-8">
+                    <label for="fl-store-userCountry" class="select-proxy-display">
                     <span class="icon fa fa-chevron-down"></span>
                     <span class="select-value-proxy">-- Select a country</span>
-                    <select id="fl-sb-ast-userCountry" data-label="select" name="fl-sb-ast-userCountry" class="hidden-select form-control" data-error="Please enter your country" required>
+                    <select id="fl-store-userCountry" data-label="select" name="fl-store-userCountry" class="hidden-select form-control" data-error="Please enter your country" required>
                       <option value="">-- Select a country</option>
                       <option value="Albania">Albania</option>
                       <option value="Algeria">Algeria</option>
@@ -878,238 +847,255 @@
                       <option value="Zimbabwe">Zimbabwe</option>
                     </select>
                   </label>
-                  <div class="help-block with-errors"></div>
-                </div>
-              </div>
-              <div class="form-group clearfix">
-                <div class="col-sm-4 control-label">
-                  <label for="fl-sb-ast-phone">Phone Number</label>
-                </div>
-                <div class="col-sm-8">
-                  <input type="number" name="fl-sb-ast-phone" class="form-control" id="fl-sb-ast-phone" placeholder="Enter your phone number" data-error="Please enter a valid phone number" required/>
-                  <div class="help-block with-errors"></div>
-                </div>
-              </div>
-              <div class="form-group clearfix">
-                <div class="col-sm-4 control-label">
-                  <label for="fl-sb-ast-email">Email Address</label>
-                </div>
-                <div class="col-sm-8">
-                  <input type="email" name="fl-sb-ast-email" class="form-control" id="fl-sb-ast-email" placeholder="Enter your email address" data-error="Please enter a valid email address" required/>
-                  <div class="help-block with-errors"></div>
-                  <p class="help-block"><small>Apple will use this email to get in touch if there are any issues with your app submission. Fliplet will not receive any correspondence from Apple.</small></p>
-                </div>
-              </div>
-              <div class="form-group clearfix">
-                <div class="col-sm-4 control-label">
-                  <label for="fl-sb-ast-review-notes">Reviewer Notes</label>
-                  <p class="help-block"><small>Optional</small></p>
-                </div>
-                <div class="col-sm-8">
-                  <textarea name="fl-sb-ast-review-notes" class="form-control" id="fl-sb-ast-review-notes" placeholder="Enter your message"></textarea>
-                  <p class="help-block"><small>Use this text area to add any notes to the Apple Review team. <i>Eg: Email and Verification Code for a Registration screen</i></small></p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <hr>
-      <div class="col-xs-5 save-btn-holder">
-        <p class="help-block"><small>Save your progress at any point.<br>You can come back and finish it.</small></p>
-        <div class="btn btn-primary" data-app-store-save>Save progress <i class="fa fa-cloud-upload"></i></div>
-        <p class="text-success save-appStore-progress">Your progress was saved successfully!</p>
-      </div>
-      <div class="col-xs-5 save-btn-holder col-xs-offset-2 text-right">
-        <p class="help-block"><small>Submit your information when you are ready!<br>We will take care of the rest.</small></p>
-        <button type="submit" class="btn btn-primary fl-green" data-app-store-build>Request App <i class="fa fa-paper-plane"></i></button>
-      </div>
-    </form>
-  </div>
-  <div class="fl-sb-panel fl-sb-enterprise">
-    <form data-toggle="validator" role="form" id="enterpriseConfiguration">
-      <div class="panel-group" id="accordionEnterprise" role="tablist" aria-multiselectable="true">
-        <div class="panel panel-default app-details">
-          <div class="panel-heading" role="tab" id="enterpriseSettingsHeading">
-            <h4 class="panel-title" role="button" data-toggle="collapse" data-parent="#accordionEnterprise" href="#enterpriseSettings" aria-expanded="true" aria-controls="enterpriseSettings">App details <small>(Required)</small></h4>
-          </div>
-          <div id="enterpriseSettings" class="panel-collapse collapse" role="tabpanel" aria-labelledby="enterpriseSettingsHeading">
-            <div class="panel-body">
-              <p style="margin-bottom: 25px;"><strong>Go to the <a href="#" id="redirectToSettings">App settings</a> page to change these fields. They are all required.</strong></p>
-              <div class="form-group clearfix">
-                <div class="col-sm-4 control-label">
-                  <label>App icon</label>
-                </div>
-                <div class="col-sm-8">
-                  <img class="setting-app-icon userUploaded hidden" src="#" />
-                  <img class="setting-app-icon default" src="{{ asset 'img/app-icon.png' }}" />
-                </div>
-              </div>
-              <div class="form-group">
-                <div class="col-sm-4 control-label">
-                  <label>Splash screen</label>
-                </div>
-                <div class="col-sm-8">
-                  <div class="setting-splash-screen userUploaded hidden" style="background-image: url();"></div>
-                  <div class="setting-splash-screen default" style="background-image: url({{ asset 'img/splash-screen.png' }});"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="panel panel-default">
-          <div class="panel-heading" role="tab" id="enterpriseTechHeading">
-            <h4 class="panel-title" role="button" data-toggle="collapse" data-parent="#accordionEnterprise" href="#enterpriseTech" aria-expanded="true" aria-controls="enterpriseTech">App technical details <small>(Required)</small></h4>
-          </div>
-          <div id="enterpriseTech" class="panel-collapse collapse" role="tabpanel" aria-labelledby="enterpriseTechHeading">
-            <div class="panel-body">
-              <p>Now it's down to the technical inforamtion.</p>
-              <div class="form-group clearfix">
-                <div class="col-sm-4 control-label">
-                  <label for="fl-ent-bundleId">Bundle ID</label>
-                  <p class="help-block label-helper"><small>This is a unique ID for your app on the App Store. Fliplet auto-generated one for you.</small></p>
-                </div>
-                <div class="col-sm-8 fl-bundleId-holder">
-                  <span class="bundleId-ent-text"></span> <span class="btn btn-sm btn-default" change-bundleid>Change</span>
-                  <div class="help-block with-errors"></div>
-                </div>
-                <div class="fl-bundleId-field">
-                  <div class="col-sm-8">
-                    <input type="text" name="fl-ent-bundleId" class="form-control" id="fl-ent-bundleId" placeholder="Enter your unique Bundle ID" data-error="Please enter your Bundle ID" required/>
                     <div class="help-block with-errors"></div>
-                    <p class="help-block"><small>This value needs to be unique and the structure must be <code>com.<i>organisationName</i>.<i>appName</i></code>.</small></p>
                   </div>
                 </div>
-              </div>
-              <div class="form-group clearfix">
-                <div class="col-sm-4 control-label">
-                  <label for="fl-sb-ent-teamId">Team ID</label>
-                </div>
-                <div class="col-sm-8">
-                  <input type="text" name="fl-sb-ent-teamId" class="form-control" id="fl-sb-ent-teamId" placeholder="Enter your Team ID" data-error="Please enter your Team ID" required/>
-                  <div class="help-block with-errors"></div>
-                  <p class="help-block"><small>The Team ID can be found <a href="https://developer.apple.com/account/#/membership/">here</a>.</small></p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="panel panel-default">
-          <div class="panel-heading" role="tab" id="enterpriseNotificationsHeading">
-            <h4 class="panel-title" role="button" data-toggle="collapse" data-parent="#accordionEnterprise" href="#enterpriseNotifications" aria-expanded="true" aria-controls="enterpriseNotifications">Push notifications technical details <small>(Optional)</small></h4>
-          </div>
-          <div id="enterpriseNotifications" class="panel-collapse collapse" role="tabpanel" aria-labelledby="enterpriseNotificationsHeading">
-            <div class="panel-body">
-              <p>Push notifications can be set up at a later stage if you don't want to configure it now. It's the only section on this screen that you can edit after submission.</p>
-              <p>For instructions on how to get the information you need to configure this section, see these help articles:</p>
-              <ul>
-                <li><a href="http://help.fliplet.com/deploying-and-updating-apps/technical-bits/setting-up-push-notifications-for-ios" target="_blank">How to set-up push notifications for iOS</a></li>
-                <li><a href="http://help.fliplet.com/being-successful/using-analytics/adding-googles-firebase-push-notifications-for-android" target="_blank">How to set-up push notifications for Android</a></li>
-              </ul>
-              <p>For push notification best practices, you might also want to check out our blog post <a href="https://fliplet.com/blog/start-using-push-notifications-the-right-way/" target="_blank">everything you need to know about push notifications and how to use them well</a>.</p>
-              <div class="form-group clearfix">
-                <div class="col-sm-4 control-label">
-                  <label for="fl-ent-authKey">Authentication Key</label>
-                  <p class="help-block label-helper"><small>Authentication Key can be created <a target="_blank" href="https://developer.apple.com/account/ios/certificate/key">here</a></small></p>
-                </div>
-                <div class="col-sm-8">
-                  <input type="text" name="fl-authKey" class="form-control" id="fl-ent-authKey" placeholder="Enter your Authentication Key" />
-                </div>
-              </div>
-              <div class="form-group clearfix">
-                <div class="col-sm-4 control-label">
-                  <label for="fl-ent-keyId">The Key ID <small>(of the p8 file)</small></label>
-                  <p class="help-block label-helper"><small>Available <a target="_blank" href="https://developer.apple.com/account/ios/certificate/key">here</a></small></p>
-                </div>
-                <div class="col-sm-8">
-                  <input type="text" name="fl-keyId" class="form-control" id="fl-ent-keyId" placeholder="Enter your Key ID" />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <hr>
-      <div class="col-xs-5 save-btn-holder">
-        <p class="help-block"><small>Save your progress at any point.<br>You can come back and finish it.</small></p>
-        <div class="btn btn-primary" data-enterprise-save>Save progress <i class="fa fa-cloud-upload"></i></div>
-        <p class="text-success save-enterprise-progress">Your progress was saved successfully!</p>
-      </div>
-      <div class="col-xs-5 save-btn-holder col-xs-offset-2 text-right">
-        <p class="help-block"><small>Submit your information when you are ready!<br>We will take care of the rest.</small></p>
-        <button type="submit" class="btn btn-primary fl-green" data-enterprise-build>Request App <i class="fa fa-paper-plane"></i></button>
-      </div>
-    </form>
-  </div>
-  <div class="fl-sb-panel fl-sb-unsigned">
-    <form data-toggle="validator" role="form" id="unsignedConfiguration">
-      <div class="panel-group" id="accordionUnsigned" role="tablist" aria-multiselectable="true">
-        <div class="panel panel-default app-details">
-          <div class="panel-heading" role="tab" id="unsignedSettingsHeading">
-            <h4 class="panel-title" role="button" data-toggle="collapse" data-parent="#accordionUnsigned" href="#unsignedSettings" aria-expanded="true" aria-controls="unsignedSettings">App details <small>(Required)</small></h4>
-          </div>
-          <div id="unsignedSettings" class="panel-collapse collapse" role="tabpanel" aria-labelledby="unsignedSettingsHeading">
-            <div class="panel-body">
-              <p style="margin-bottom: 25px;"><strong>Go to the <a href="#" id="redirectToSettings">App settings</a> page to change these fields. They are all required.</strong></p>
-              <div class="form-group clearfix">
-                <div class="col-sm-4 control-label">
-                  <label>App icon</label>
-                </div>
-                <div class="col-sm-8">
-                  <img class="setting-app-icon userUploaded hidden" src="#" />
-                  <img class="setting-app-icon default" src="{{ asset 'img/app-icon.png' }}" />
-                </div>
-              </div>
-              <div class="form-group">
-                <div class="col-sm-4 control-label">
-                  <label>Splash screen</label>
-                </div>
-                <div class="col-sm-8">
-                  <div class="setting-splash-screen userUploaded hidden" style="background-image: url();"></div>
-                  <div class="setting-splash-screen default" style="background-image: url({{ asset 'img/splash-screen.png' }});"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="panel panel-default">
-          <div class="panel-heading" role="tab" id="unsignedTechHeading">
-            <h4 class="panel-title" role="button" data-toggle="collapse" data-parent="#accordionUnsigned" href="#unsignedTech" aria-expanded="true" aria-controls="unsignedTech">App technical details <small>(Required)</small></h4>
-          </div>
-          <div id="unsignedTech" class="panel-collapse collapse" role="tabpanel" aria-labelledby="unsignedTechHeading">
-            <div class="panel-body">
-              <p>Now it's down to the technical inforamtion.</p>
-              <div class="form-group clearfix">
-                <div class="col-sm-4 control-label">
-                  <label for="fl-uns-bundleId">Bundle ID</label>
-                  <p class="help-block label-helper"><small>This is a unique ID for your app on the App Store. Fliplet auto-generated one for you.</small></p>
-                </div>
-                <div class="col-sm-8 fl-bundleId-holder">
-                  <span class="bundleId-uns-text"></span> <span class="btn btn-sm btn-default" change-bundleid>Change</span>
-                  <div class="help-block with-errors"></div>
-                </div>
-                <div class="fl-bundleId-field">
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-store-phone">Phone Number</label>
+                  </div>
                   <div class="col-sm-8">
-                    <input type="text" name="fl-uns-bundleId" class="form-control" id="fl-uns-bundleId" placeholder="Enter your unique Bundle ID" data-error="Please enter your Bundle ID" required/>
+                    <input type="number" name="fl-store-phone" class="form-control" id="fl-store-phone" placeholder="Enter your phone number" data-error="Please enter a valid phone number" required/>
                     <div class="help-block with-errors"></div>
-                    <p class="help-block"><small>This value needs to be unique and the structure must be <code>com.<i>organisationName</i>.<i>appName</i></code>.</small></p>
+                  </div>
+                </div>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-store-email">Email Address</label>
+                  </div>
+                  <div class="col-sm-8">
+                    <input type="email" name="fl-store-email" class="form-control" id="fl-store-email" placeholder="Enter your email address" data-error="Please enter a valid email address" required/>
+                    <div class="help-block with-errors"></div>
+                    <p class="help-block"><small>Apple will use this email to get in touch if there are any issues with your app submission. Fliplet will not receive any correspondence from Apple.</small></p>
+                  </div>
+                </div>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-store-review-notes">Reviewer Notes</label>
+                    <p class="help-block"><small>Optional</small></p>
+                  </div>
+                  <div class="col-sm-8">
+                    <textarea name="fl-store-review-notes" class="form-control" id="fl-store-review-notes" placeholder="Enter your message"></textarea>
+                    <p class="help-block"><small>Use this text area to add any notes to the Apple Review team. <i>Eg: Email and Verification Code for a Registration screen</i></small></p>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-      <hr>
-      <div class="col-xs-5 save-btn-holder">
-        <p class="help-block"><small>Save your progress at any point.<br>You can come back and finish it.</small></p>
-        <div class="btn btn-primary" data-unsigned-save>Save progress <i class="fa fa-cloud-upload"></i></div>
-        <p class="text-success save-unsigned-progress">Your progress was saved successfully!</p>
-      </div>
-      <div class="col-xs-5 save-btn-holder col-xs-offset-2 text-right">
-        <p class="help-block"><small>Submit your information when you are ready!<br>We will take care of the rest.</small></p>
-        <button type="submit" class="btn btn-primary fl-green" data-unsigned-build>Request App <i class="fa fa-paper-plane"></i></button>
-      </div>
-    </form>
+        <hr>
+        <div class="col-xs-5 save-btn-holder">
+          <p class="help-block"><small>Save your progress at any point.<br>You can come back and finish it.</small></p>
+          <div class="btn btn-primary" data-app-store-save>Save progress <i class="fa fa-cloud-upload"></i></div>
+          <p class="text-success save-appStore-progress">Your progress was saved successfully!</p>
+        </div>
+        <div class="col-xs-5 save-btn-holder col-xs-offset-2 text-right">
+          <p class="help-block"><small>Submit your information when you are ready!<br>We will take care of the rest.</small></p>
+          <button type="submit" class="btn btn-primary fl-green" data-app-store-build>Request App <i class="fa fa-paper-plane"></i></button>
+          <p class="text-success save-appStore-request">Your request was sent successfully!</p>
+        </div>
+      </form>
+    </div>
+    <div role="tabpanel" class="tab-pane fl-sb-enterprise" id="enterprise-tab">
+      <form data-toggle="validator" data-disable="false" role="form" id="enterpriseConfiguration">
+        <div class="panel-group" id="accordionEnterprise" role="tablist" aria-multiselectable="true">
+          <div class="panel panel-default app-details">
+            <div class="panel-heading" role="tab" id="enterpriseSettingsHeading">
+              <h4 class="panel-title" role="button" data-toggle="collapse" data-parent="#accordionEnterprise" href="#enterpriseSettings" aria-expanded="true" aria-controls="enterpriseSettings">App details <small>(Required)</small></h4>
+            </div>
+            <div id="enterpriseSettings" class="panel-collapse collapse" role="tabpanel" aria-labelledby="enterpriseSettingsHeading">
+              <div class="panel-body">
+                <p style="margin-bottom: 25px;"><strong>Go to the <a href="#" class="redirectToSettings">App settings</a> page to change these fields. They are all required.</strong></p>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label>App icon</label>
+                  </div>
+                  <div class="col-sm-8">
+                    <img class="setting-app-icon userUploaded hidden" src="#" />
+                    <img class="setting-app-icon default" src="{{ asset 'img/app-icon.png' }}" />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <div class="col-sm-4 control-label">
+                    <label>Splash screen</label>
+                  </div>
+                  <div class="col-sm-8">
+                    <div class="setting-splash-screen userUploaded hidden" style="background-image: url();"></div>
+                    <div class="setting-splash-screen default" style="background-image: url({{ asset 'img/splash-screen.png' }});"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="enterpriseTechHeading">
+              <h4 class="panel-title" role="button" data-toggle="collapse" data-parent="#accordionEnterprise" href="#enterpriseTech" aria-expanded="true" aria-controls="enterpriseTech">App technical details <small>(Required)</small></h4>
+            </div>
+            <div id="enterpriseTech" class="panel-collapse collapse" role="tabpanel" aria-labelledby="enterpriseTechHeading">
+              <div class="panel-body">
+                <p>Now it's down to the technical inforamtion.</p>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-enterprise-bundleId">Bundle ID</label>
+                    <p class="help-block label-helper"><small>This is a unique ID for your app on the App Store. Fliplet auto-generated one for you.</small></p>
+                  </div>
+                  <div class="col-sm-8 fl-bundleId-holder">
+                    <span class="bundleId-ent-text"></span> <span class="btn btn-sm btn-default" change-bundleid>Change</span>
+                    <div class="help-block with-errors"></div>
+                  </div>
+                  <div class="fl-bundleId-field">
+                    <div class="col-sm-8">
+                      <input type="text" name="fl-enterprise-bundleId" class="form-control" id="fl-enterprise-bundleId" placeholder="Enter your unique Bundle ID" data-error="Please enter your Bundle ID" required/>
+                      <div class="help-block with-errors"></div>
+                      <p class="help-block"><small>This value needs to be unique and the structure must be <code>com.<i>organisationName</i>.<i>appName</i></code>.</small></p>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-enterprise-teamId">Team ID</label>
+                  </div>
+                  <div class="col-sm-8">
+                    <input type="text" name="fl-enterprise-teamId" class="form-control" id="fl-enterprise-teamId" placeholder="Enter your Team ID" data-error="Please enter your Team ID" required/>
+                    <div class="help-block with-errors"></div>
+                    <p class="help-block"><small>The Team ID can be found <a href="https://developer.apple.com/account/#/membership/">here</a>.</small></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <hr>
+        <div class="col-xs-5 save-btn-holder">
+          <p class="help-block"><small>Save your progress at any point.<br>You can come back and finish it.</small></p>
+          <div class="btn btn-primary" data-enterprise-save>Save progress <i class="fa fa-cloud-upload"></i></div>
+          <p class="text-success save-enterprise-progress">Your progress was saved successfully!</p>
+        </div>
+        <div class="col-xs-5 save-btn-holder col-xs-offset-2 text-right">
+          <p class="help-block"><small>Submit your information when you are ready!<br>We will take care of the rest.</small></p>
+          <button type="submit" class="btn btn-primary fl-green" data-enterprise-build>Request App <i class="fa fa-paper-plane"></i></button>
+          <p class="text-success save-enterprise-request">Your request was sent successfully!</p>
+        </div>
+      </form>
+    </div>
+    <div role="tabpanel" class="tab-pane fl-sb-unsigned" id="unsigned-tab">
+      <form data-toggle="validator" data-disable="false" role="form" id="unsignedConfiguration">
+        <div class="panel-group" id="accordionUnsigned" role="tablist" aria-multiselectable="true">
+          <div class="panel panel-default app-details">
+            <div class="panel-heading" role="tab" id="unsignedSettingsHeading">
+              <h4 class="panel-title" role="button" data-toggle="collapse" data-parent="#accordionUnsigned" href="#unsignedSettings" aria-expanded="true" aria-controls="unsignedSettings">App details <small>(Required)</small></h4>
+            </div>
+            <div id="unsignedSettings" class="panel-collapse collapse" role="tabpanel" aria-labelledby="unsignedSettingsHeading">
+              <div class="panel-body">
+                <p style="margin-bottom: 25px;"><strong>Go to the <a href="#" class="redirectToSettings">App settings</a> page to change these fields. They are all required.</strong></p>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label>App icon</label>
+                  </div>
+                  <div class="col-sm-8">
+                    <img class="setting-app-icon userUploaded hidden" src="#" />
+                    <img class="setting-app-icon default" src="{{ asset 'img/app-icon.png' }}" />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <div class="col-sm-4 control-label">
+                    <label>Splash screen</label>
+                  </div>
+                  <div class="col-sm-8">
+                    <div class="setting-splash-screen userUploaded hidden" style="background-image: url();"></div>
+                    <div class="setting-splash-screen default" style="background-image: url({{ asset 'img/splash-screen.png' }});"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="unsignedTechHeading">
+              <h4 class="panel-title" role="button" data-toggle="collapse" data-parent="#accordionUnsigned" href="#unsignedTech" aria-expanded="true" aria-controls="unsignedTech">App technical details <small>(Required)</small></h4>
+            </div>
+            <div id="unsignedTech" class="panel-collapse collapse" role="tabpanel" aria-labelledby="unsignedTechHeading">
+              <div class="panel-body">
+                <p>Now it's down to the technical inforamtion.</p>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-unsigned-bundleId">Bundle ID</label>
+                    <p class="help-block label-helper"><small>This is a unique ID for your app on the App Store. Fliplet auto-generated one for you.</small></p>
+                  </div>
+                  <div class="col-sm-8 fl-bundleId-holder">
+                    <span class="bundleId-uns-text"></span> <span class="btn btn-sm btn-default" change-bundleid>Change</span>
+                    <div class="help-block with-errors"></div>
+                  </div>
+                  <div class="fl-bundleId-field">
+                    <div class="col-sm-8">
+                      <input type="text" name="fl-unsigned-bundleId" class="form-control" id="fl-unsigned-bundleId" placeholder="Enter your unique Bundle ID" data-error="Please enter your Bundle ID" required/>
+                      <div class="help-block with-errors"></div>
+                      <p class="help-block"><small>This value needs to be unique and the structure must be <code>com.<i>organisationName</i>.<i>appName</i></code>.</small></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <hr>
+        <div class="col-xs-5 save-btn-holder">
+          <p class="help-block"><small>Save your progress at any point.<br>You can come back and finish it.</small></p>
+          <div class="btn btn-primary" data-unsigned-save>Save progress <i class="fa fa-cloud-upload"></i></div>
+          <p class="text-success save-unsigned-progress">Your progress was saved successfully!</p>
+        </div>
+        <div class="col-xs-5 save-btn-holder col-xs-offset-2 text-right">
+          <p class="help-block"><small>Submit your information when you are ready!<br>We will take care of the rest.</small></p>
+          <button type="submit" class="btn btn-primary fl-green" data-unsigned-build>Request App <i class="fa fa-paper-plane"></i></button>
+          <p class="text-success save-unsigned-request">Your request was sent successfully!</p>
+        </div>
+      </form>
+    </div>
+    <div role="tabpanel" class="tab-pane fl-sb-push" id="push-tab">
+      <form data-toggle="validator" data-disable="false" role="form" id="pushConfiguration">
+        <div class="panel-group" id="accordionPush" role="tablist" aria-multiselectable="true">
+          <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="notificationsHeading">
+              <h4 class="panel-title" role="button" data-toggle="collapse" data-parent="#accordionPush" href="#notifications" aria-expanded="true" aria-controls="notifications">Push notifications technical details <small>(Optional)</small></h4>
+            </div>
+            <div id="notifications" class="panel-collapse collapse" role="tabpanel" aria-labelledby="notificationsHeading">
+              <div class="panel-body">
+                <p>Push notifications can be set up at a later stage if you don't want to configure it now. It's the only section on this screen that you can edit after submission.</p>
+                <p>For instructions on how to get the information you need to configure this section, see these help articles:</p>
+                <ul>
+                  <li><a href="http://help.fliplet.com/deploying-and-updating-apps/technical-bits/setting-up-push-notifications-for-ios" target="_blank">How to set-up push notifications for iOS</a></li>
+                  <li <li><a href="http://help.fliplet.com/being-successful/using-analytics/adding-googles-firebase-push-notifications-for-android" target="_blank">How to set-up push notifications for Android</a></li>
+                </ul>
+                <p>For push notification best practices, you might also want to check out our blog post <a href="https://fliplet.com/blog/start-using-push-notifications-the-right-way/" target="_blank">everything you need to know about push notifications and how to use them well</a>.</p>
+                <p><strong>Push Notifications will only work for your latest app request.</strong></p>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-push-authKey">Authentication Key</label>
+                    <p class="help-block label-helper"><small>Authentication Key can be created <a target="_blank" href="https://developer.apple.com/account/ios/certificate/key">here</a></small></p>
+                  </div>
+                  <div class="col-sm-8">
+                    <input type="text" name="fl-push-authKey" class="form-control" id="fl-push-authKey" placeholder="Enter your Authentication Key" />
+                  </div>
+                </div>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-push-keyId">The Key ID <small>(of the p8 file)</small></label>
+                    <p class="help-block label-helper"><small>Available <a target="_blank" href="https://developer.apple.com/account/ios/certificate/key">here</a></small></p>
+                  </div>
+                  <div class="col-sm-8">
+                    <input type="text" name="fl-push-keyId" class="form-control" id="fl-push-keyId" placeholder="Enter your Key ID" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <hr>
+        <div class="col-xs-6 save-btn-holder">
+          <p class="help-block"><small>After saving send notifications from the Promote tab.</small></p>
+          <div class="btn btn-primary" data-push-save>Save <i class="fa fa-cloud-upload"></i></div>
+          <p class="text-success save-push-progress">Your data saved successfully!</p>
+        </div>
+      </form>
+    </div>
   </div>
 </div>
