@@ -1,3 +1,3 @@
-# App Submission Widget
+# Apple App Store Submission Widget
 
-Component to capture App data for App Stores submission
+Component to capture App data for App Store submission
