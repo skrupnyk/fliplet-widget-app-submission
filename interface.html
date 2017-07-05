@@ -174,9 +174,9 @@
                     <p class="help-block label-helper"><small>This is the name that will appear below the icon of your app</small></p>
                   </div>
                   <div class="col-sm-8">
-                    <input type="text" name="fl-store-iconName" class="form-control" id="fl-store-iconName" placeholder="Enter the app icon name" maxlength="30" data-error="Please enter an app icon name" required/>
+                    <input type="text" name="fl-store-iconName" class="form-control" id="fl-store-iconName" placeholder="Enter the app icon name" maxlength="13" data-error="Please enter an app icon name" required/>
                     <div class="help-block with-errors"></div>
-                    <p class="help-block"><small>The length of your app icon name is limited to 30 characters</small></p>
+                    <p class="help-block"><small>The length of your app icon name is limited to 13 characters</small></p>
                   </div>
                 </div>
                 <div class="form-group clearfix">
@@ -186,7 +186,7 @@
                   </div>
                   <div class="col-sm-8">
                     <textarea name="fl-store-subtitle" class="form-control" id="fl-store-subtitle" placeholder="Enter an app subtitle" maxlength="30"></textarea>
-                    <p class="help-block"><small>Subtitles are limited to 30 characters and appear below your app’s name throughout the App Store.</small></p>
+                    <p class="help-block"><small>A summary of your app that will appear under your app’s name on the App Store for customers with devices running iOS 11 or later. Subtitles are limited to 30 characters.</small></p>
                   </div>
                 </div>
                 <div class="form-group clearfix">
@@ -216,27 +216,35 @@
                   </div>
                   <div class="col-sm-8">
                     <label for="fl-store-category1" class="select-proxy-display">
-                    <span class="icon fa fa-chevron-down"></span>
-                    <span class="select-value-proxy">-- Primary Category</span>
-                    <select id="fl-store-category1" name="fl-store-category1" data-label="select" class="hidden-select form-control" data-error="Please select a category" required>
-                      <option value="">-- Primary Category</option>
-                      <option value="1">Option 1</option>
-                      <option value="2">Option 2</option>
-                      <option value="2">Option 3</option>
-                    </select>
-                  </label>
+                      <span class="icon fa fa-chevron-down"></span>
+                      <span class="select-value-proxy">-- Primary Category</span>
+                      <select id="fl-store-category1" name="fl-store-category1" data-label="select" class="hidden-select form-control" data-error="Please select a category" required>
+                        <option value="">-- Primary Category</option>
+                        <option value="1">Option 1</option>
+                        <option value="2">Option 2</option>
+                        <option value="2">Option 3</option>
+                      </select>
+                    </label>
                     <div class="help-block with-errors"></div>
+                  </div>
+                </div>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label>Application Subcategory</label>
+                    <p class="help-block label-helper"><small>The subcategory that best describes this app. For more information, see the <a href="https://itunesconnect.apple.com/itc/static/category_definitions" target="_blank">App Store Category Definitions.</a></small></p>
+                  </div>
+                  <div class="col-sm-8">
                     <label for="fl-store-category2" class="select-proxy-display">
-                    <span class="icon fa fa-chevron-down"></span>
-                    <span class="select-value-proxy">-- Secondary Category</span>
-                    <select id="fl-store-category2" name="fl-store-category2" data-label="select" class="hidden-select form-control">
-                      <option value="">-- Secondary Category</option>
-                      <option value="1">Option 1</option>
-                      <option value="2">Option 2</option>
-                      <option value="2">Option 3</option>
-                    </select>
-                  </label>
-                    <p class="help-block"><small>Secondary category is optional</small></p>
+                      <span class="icon fa fa-chevron-down"></span>
+                      <span class="select-value-proxy">-- Select a Subcategory</span>
+                      <select id="fl-store-category2" name="fl-store-category2" data-label="select" class="hidden-select form-control" data-error="Please select a subcategory" required>
+                        <option value="">-- Select a Subcategory</option>
+                        <option value="1">Option 1</option>
+                        <option value="2">Option 2</option>
+                        <option value="2">Option 3</option>
+                      </select>
+                    </label>
+                    <div class="help-block with-errors"></div>
                   </div>
                 </div>
                 <div class="form-group clearfix">
@@ -332,7 +340,7 @@
                     <p class="help-block label-helper"><small>Keywords help determine where your app displays in search results.</small></p>
                   </div>
                   <div class="col-sm-8">
-                    <input type="text" name="fl-store-keywords" class="form-control" id="fl-store-keywords" placeholder="Type a keyword" data-error="Please enter at least one keyword" required/>
+                    <input type="text" name="fl-store-keywords" class="form-control" id="fl-store-keywords" placeholder="Type a keyword and press enter" data-error="Please enter at least one keyword" required/>
                     <div class="help-block with-errors"></div>
                     <p class="help-block"><small>Keywords are limited to 100 characters total.</small></p>
                   </div>
@@ -342,7 +350,7 @@
                     <label>Availability (Countries)</label>
                   </div>
                   <div class="col-sm-8">
-                    <select id="fl-store-availability" name="fl-store-availability" data-live-search="true" data-actions-box="true" data-none-selected-text="Select from the list of countries" multiple class="form-control selectpicker" data-error="Please select at least one country"
+                    <select id="fl-store-availability" name="fl-store-availability" data-size="10" data-live-search="true" data-actions-box="true" data-none-selected-text="Select from the list of countries" multiple class="form-control selectpicker" data-error="Please select at least one country"
                       required>
                     <option value="Albania">Albania</option>
                     <option value="Algeria">Algeria</option>
@@ -508,17 +516,7 @@
                     <label>Price</label>
                   </div>
                   <div class="col-sm-8">
-                    <label for="fl-store-pricing" class="select-proxy-display">
-                    <span class="icon fa fa-chevron-down"></span>
-                    <span class="select-value-proxy">Free</span>
-                    <select id="fl-store-pricing" name="fl-store-pricing" data-label="select" class="hidden-select form-control" data-error="Please select a price" required>
-                      <option value="free">Free</option>
-                      <option value="1">£0.99</option>
-                      <option value="2">£1.99</option>
-                      <option value="2">£2.99</option>
-                    </select>
-                  </label>
-                    <div class="help-block with-errors"></div>
+                    Your app will be set to <strong>free app</strong> by default. If you want to change it to a paid app, please get in touch with us.
                   </div>
                 </div>
                 <div class="form-group clearfix">
@@ -545,8 +543,7 @@
                     <p class="help-block label-helper"><small>A URL that links to your organization's marketing website.</small></p>
                   </div>
                   <div class="col-sm-8">
-                    <input type="text" name="fl-store-marketing" class="form-control" id="fl-store-marketing" placeholder="Enter your Marketing URL" data-error="Please enter your Marketing URL" required/>
-                    <div class="help-block with-errors"></div>
+                    <input type="text" name="fl-store-marketing" class="form-control" id="fl-store-marketing" placeholder="Enter your Marketing URL" />
                   </div>
                 </div>
                 <div class="form-group clearfix">
@@ -555,8 +552,7 @@
                     <p class="help-block label-helper"><small>A URL that links to your organization's privacy policy.</small></p>
                   </div>
                   <div class="col-sm-8">
-                    <input type="text" name="fl-store-privacy" class="form-control" id="fl-store-privacy" placeholder="Enter your Privacy Policy URL" data-error="Please enter your Privacy Policy URL" required/>
-                    <div class="help-block with-errors"></div>
+                    <input type="text" name="fl-store-privacy" class="form-control" id="fl-store-privacy" placeholder="Enter your Privacy Policy URL" />
                   </div>
                 </div>
                 <div class="form-group clearfix">
@@ -581,27 +577,27 @@
                 <p>Now it's down to the technical inforamtion.</p>
                 <div class="form-group clearfix">
                   <div class="col-sm-4 control-label">
-                    <label for="fl-store-appDevLogin">App Developer account login</label>
+                    <label for="fl-store-appDevLogin">Apple Developer account login</label>
                   </div>
                   <div class="col-sm-8">
-                    <input type="email" name="fl-store-appDevLogin" class="form-control" id="fl-store-appDevLogin" placeholder="Enter App Developer login email" data-error="Please enter a valid email address" required/>
+                    <input type="email" name="fl-store-appDevLogin" class="form-control" id="fl-store-appDevLogin" placeholder="Enter Apple Developer login email" data-error="Please enter a valid email address" required/>
                     <div class="help-block with-errors"></div>
                   </div>
                 </div>
                 <div class="form-group clearfix">
                   <div class="col-sm-4 control-label">
-                    <label for="fl-store-appDevPass">App Developer account password</label>
+                    <label for="fl-store-appDevPass">Apple Developer account password</label>
                     <p class="help-block label-helper"><small>The password will be encrypted, safely stored and never shown.</small></p>
                   </div>
                   <div class="col-sm-8">
-                    <input type="password" name="fl-store-appDevPass" class="form-control" id="fl-store-appDevPass" placeholder="Enter App Developer account pass" data-error="Please enter a password" required/>
+                    <input type="password" name="fl-store-appDevPass" class="form-control" id="fl-store-appDevPass" placeholder="Enter Apple Developer account pass" data-error="Please enter a password" required/>
                     <div class="help-block with-errors"></div>
                   </div>
                 </div>
                 <div class="form-group clearfix">
                   <div class="col-sm-4 control-label">
                     <label for="fl-store-bundleId">Bundle ID</label>
-                    <p class="help-block label-helper"><small>This is a unique ID for your app on the App Store. Fliplet auto-generated one for you.</small></p>
+                    <p class="help-block label-helper"><small>This is a unique ID for your app on the App Store. Fliplet auto-generated one for you. The Bundle ID will never be shown to the users.</small></p>
                   </div>
                   <div class="col-sm-8 fl-bundleId-holder">
                     <span class="bundleId-ast-text"></span> <span class="btn btn-sm btn-default" change-bundleid>Change</span>
@@ -853,6 +849,7 @@
                 <div class="form-group clearfix">
                   <div class="col-sm-4 control-label">
                     <label for="fl-store-phone">Phone Number</label>
+                    <p class="help-block label-helper"><small>The phone number needs to include the area code. (Eg.: +44)</small></p>
                   </div>
                   <div class="col-sm-8">
                     <input type="number" name="fl-store-phone" class="form-control" id="fl-store-phone" placeholder="Enter your phone number" data-error="Please enter a valid phone number" required/>
@@ -876,7 +873,7 @@
                   </div>
                   <div class="col-sm-8">
                     <textarea name="fl-store-review-notes" class="form-control" id="fl-store-review-notes" placeholder="Enter your message"></textarea>
-                    <p class="help-block"><small>Use this text area to add any notes to the Apple Review team. <i>Eg: Email and Verification Code for a Registration screen</i></small></p>
+                    <p class="help-block"><small>Additional information about your app that can help during the review process. Include information that may be needed to test your app, such as app-specific settings.</small></p>
                   </div>
                 </div>
               </div>
@@ -928,12 +925,51 @@
             </div>
           </div>
           <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="enterpriseGeneralHeading">
+              <h4 class="panel-title" role="button" data-toggle="collapse" data-parent="#accordionEnterprise" href="#enterpriseGeneral" aria-expanded="true" aria-controls="enterpriseGeneral">App listing details <small>(Required)</small></h4>
+            </div>
+            <div id="enterpriseGeneral" class="panel-collapse collapse" role="tabpanel" aria-labelledby="enterpriseGeneralHeading">
+              <div class="panel-body">
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-ent-iconName">App icon name</label>
+                    <p class="help-block label-helper"><small>This is the name that will appear below the icon of your app</small></p>
+                  </div>
+                  <div class="col-sm-8">
+                    <input type="text" name="fl-ent-iconName" class="form-control" id="fl-ent-iconName" placeholder="Enter the app icon name" maxlength="13" data-error="Please enter an app icon name" required/>
+                    <div class="help-block with-errors"></div>
+                    <p class="help-block"><small>The length of your app icon name is limited to 13 characters</small></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="panel panel-default">
             <div class="panel-heading" role="tab" id="enterpriseTechHeading">
               <h4 class="panel-title" role="button" data-toggle="collapse" data-parent="#accordionEnterprise" href="#enterpriseTech" aria-expanded="true" aria-controls="enterpriseTech">App technical details <small>(Required)</small></h4>
             </div>
             <div id="enterpriseTech" class="panel-collapse collapse" role="tabpanel" aria-labelledby="enterpriseTechHeading">
               <div class="panel-body">
                 <p>Now it's down to the technical inforamtion.</p>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-ent-appDevLogin">Apple Developer account login</label>
+                  </div>
+                  <div class="col-sm-8">
+                    <input type="email" name="fl-ent-appDevLogin" class="form-control" id="fl-ent-appDevLogin" placeholder="Enter Apple Developer login email" data-error="Please enter a valid email address" required/>
+                    <div class="help-block with-errors"></div>
+                  </div>
+                </div>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-ent-appDevPass">Apple Developer account password</label>
+                    <p class="help-block label-helper"><small>The password will be encrypted, safely stored and never shown.</small></p>
+                  </div>
+                  <div class="col-sm-8">
+                    <input type="password" name="fl-ent-appDevPass" class="form-control" id="fl-ent-appDevPass" placeholder="Enter Apple Developer account pass" data-error="Please enter a password" required/>
+                    <div class="help-block with-errors"></div>
+                  </div>
+                </div>
                 <div class="form-group clearfix">
                   <div class="col-sm-4 control-label">
                     <label for="fl-enterprise-bundleId">Bundle ID</label>
@@ -1004,6 +1040,26 @@
                   <div class="col-sm-8">
                     <div class="setting-splash-screen userUploaded hidden" style="background-image: url();"></div>
                     <div class="setting-splash-screen default" style="background-image: url({{ asset 'img/splash-screen.png' }});"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="unsignedGeneralHeading">
+              <h4 class="panel-title" role="button" data-toggle="collapse" data-parent="#accordionUnsigned" href="#unsignedGeneral" aria-expanded="true" aria-controls="unsignedGeneral">App listing details <small>(Required)</small></h4>
+            </div>
+            <div id="unsignedGeneral" class="panel-collapse collapse" role="tabpanel" aria-labelledby="unsignedGeneralHeading">
+              <div class="panel-body">
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-unsigned-iconName">App icon name</label>
+                    <p class="help-block label-helper"><small>This is the name that will appear below the icon of your app</small></p>
+                  </div>
+                  <div class="col-sm-8">
+                    <input type="text" name="fl-unsigned-iconName" class="form-control" id="fl-unsigned-iconName" placeholder="Enter the app icon name" maxlength="13" data-error="Please enter an app icon name" required/>
+                    <div class="help-block with-errors"></div>
+                    <p class="help-block"><small>The length of your app icon name is limited to 13 characters</small></p>
                   </div>
                 </div>
               </div>

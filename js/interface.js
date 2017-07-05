@@ -26,7 +26,14 @@ String.prototype.toCamelCase = function() {
   return this.replace(/^([A-Z])|[^A-Za-z]+(\w)/g, function(match, p1, p2, offset) {
     if (p2) return p2.toUpperCase();
     return p1.toLowerCase();
-  }).replace(/([^A-Z-a-z])/g, '');
+  }).replace(/([^A-Z-a-z])/g, '').toLowerCase();
+};
+
+var createBundleID = function(orgName, appName) {
+  return $.ajax({
+    url: "https://itunes.apple.com/lookup?bundleId=com." + orgName + "." + appName,
+    dataType: "jsonp"
+  });
 };
 
 function loadAppStoreData() {
@@ -75,8 +82,15 @@ function loadAppStoreData() {
 
     /* ADD BUNDLE ID */
     if (name === "fl-store-bundleId" && typeof widgetData.formData.appStore[name] === "undefined") {
-      $('.bundleId-ast-text').html('com.' + organisationName.toCamelCase() + '.' + appName.toCamelCase());
-      $('[name="' + name + '"]').val('com.' + organisationName.toCamelCase() + '.' + appName.toCamelCase());
+      createBundleID(organisationName.toCamelCase(), appName.toCamelCase()).then(function(response) {
+        if (response.resultCount === 0) {
+          $('.bundleId-ast-text').html('com.' + organisationName.toCamelCase() + '.' + appName.toCamelCase());
+          $('[name="' + name + '"]').val('com.' + organisationName.toCamelCase() + '.' + appName.toCamelCase());
+        } else {
+          $('.bundleId-ast-text').html('com.' + organisationName.toCamelCase() + '.' + appName.toCamelCase() + (response.resultCount + 1));
+          $('[name="' + name + '"]').val('com.' + organisationName.toCamelCase() + '.' + appName.toCamelCase() + (response.resultCount + 1));
+        }
+      });
       return;
     }
     if (name === "fl-store-bundleId" && typeof widgetData.formData.appStore[name] !== "undefined") {
@@ -96,8 +110,15 @@ function loadEnterpriseData() {
 
     /* ADD BUNDLE ID */
     if (name === "fl-enterprise-bundleId" && typeof widgetData.formData.enterprise[name] === "undefined") {
-      $('.bundleId-ent-text').html('com.' + organisationName.toCamelCase() + '.' + appName.toCamelCase());
-      $('[name="' + name + '"]').val('com.' + organisationName.toCamelCase() + '.' + appName.toCamelCase());
+      createBundleID(organisationName.toCamelCase(), appName.toCamelCase()).then(function(response) {
+        if (response.resultCount === 0) {
+          $('.bundleId-ent-text').html('com.' + organisationName.toCamelCase() + '.' + appName.toCamelCase());
+          $('[name="' + name + '"]').val('com.' + organisationName.toCamelCase() + '.' + appName.toCamelCase());
+        } else {
+          $('.bundleId-ent-text').html('com.' + organisationName.toCamelCase() + '.' + appName.toCamelCase() + (response.resultCount + 1));
+          $('[name="' + name + '"]').val('com.' + organisationName.toCamelCase() + '.' + appName.toCamelCase() + (response.resultCount + 1));
+        }
+      });
       return;
     }
     if (name === "fl-enterprise-bundleId" && typeof widgetData.formData.enterprise[name] !== "undefined") {
@@ -117,8 +138,15 @@ function loadUnsignedData() {
 
     /* ADD BUNDLE ID */
     if (name === "fl-unsigned-bundleId" && typeof widgetData.formData.unsigned[name] === "undefined") {
-      $('.bundleId-uns-text').html('com.' + organisationName.toCamelCase() + '.' + appName.toCamelCase());
-      $('[name="' + name + '"]').val('com.' + organisationName.toCamelCase() + '.' + appName.toCamelCase());
+      createBundleID(organisationName.toCamelCase(), appName.toCamelCase()).then(function(response) {
+        if (response.resultCount === 0) {
+          $('.bundleId-uns-text').html('com.' + organisationName.toCamelCase() + '.' + appName.toCamelCase());
+          $('[name="' + name + '"]').val('com.' + organisationName.toCamelCase() + '.' + appName.toCamelCase());
+        } else {
+          $('.bundleId-uns-text').html('com.' + organisationName.toCamelCase() + '.' + appName.toCamelCase() + (response.resultCount + 1));
+          $('[name="' + name + '"]').val('com.' + organisationName.toCamelCase() + '.' + appName.toCamelCase() + (response.resultCount + 1));
+        }
+      });
       return;
     }
     if (name === "fl-unsigned-bundleId" && typeof widgetData.formData.unsigned[name] !== "undefined") {
