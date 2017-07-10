@@ -21,6 +21,14 @@
   padding-top: 0;
 }
 
+.form-control-static {
+  border: none;
+}
+
+.form-static {
+  padding-top: 4px;
+}
+
 @media (min-width: 640px) {
   .form-horizontal .control-label {
     padding-top: 12px;

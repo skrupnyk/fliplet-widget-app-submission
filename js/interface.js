@@ -208,6 +208,15 @@ function requestBuild(origin) {
       showRequestStatus();
       Fliplet.Widget.autosize();
     });
+
+    Fliplet.App.Submissions.create({
+      platform: 'ios',
+      data: widgetData.formData.appStore
+    }).then(function(response) {
+      console.log(response);
+    }).catch(function(err) {
+      alert(err.responseJSON.message);
+    });
   }
 
   if (origin === 'enterprise') {
@@ -226,6 +235,15 @@ function requestBuild(origin) {
 
       showRequestStatus();
       Fliplet.Widget.autosize();
+    });
+
+    Fliplet.App.Submissions.create({
+      platform: 'ios',
+      data: widgetData.formData.enterprise
+    }).then(function(response) {
+      console.log(response);
+    }).catch(function(err) {
+      alert(err.responseJSON.message);
     });
   }
 
@@ -342,6 +360,7 @@ function saveEnterpriseData(request) {
 
 function saveUnsignedData(request) {
   var data = widgetData.formData.unsigned;
+  var pushData = widgetData.formData.notificationSettings;
 
   $('#unsignedConfiguration [name]').each(function(i, el) {
     var name = $(el).attr("name");
@@ -351,6 +370,7 @@ function saveUnsignedData(request) {
   });
 
   widgetData.formData.unsigned = data;
+  widgetData.formData.notificationSettings = pushData;
 
   if (request) {
     requestBuild('unsigned');
