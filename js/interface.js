@@ -1,246 +1,615 @@
+var widgetId = Fliplet.Widget.getDefaultId();
+var widgetData = Fliplet.Widget.getData(widgetId) || {};
+var appName = '';
+var organisationName = '';
+var appIcon = '';
+var appSettings = {};
+var allAppData = false;
 
-var $submissions = $('[data-submissions]');
-var $form = $('[data-submission]');
-var currentSubmission;
-var submissionType;
-var uploadedFiles = {};
-
-$('input[type="file"]').each(function () {
-  $(this).parent().append([
-    '<p class="message hidden alert alert-info"></p>',
-    '<ul class="files"></ul>'
-  ].join(''));
+widgetData.formData = $.extend(true, widgetData.formData, {
+  notificationSettings: {},
+  appStore: {
+    submissionType: 'appstore',
+  },
+  enterprise: {
+    submissionType: 'enterprise',
+  },
+  unsigned: {
+    submissionType: 'unsigned'
+  }
 });
 
-$('[data-create]').click(function (event) {
-  event.preventDefault();
+console.log(widgetData);
 
-  hideForm();
+/* FUNCTIONS */
+String.prototype.toCamelCase = function() {
+  return this.replace(/^([A-Z])|[^A-Za-z]+(\w)/g, function(match, p1, p2, offset) {
+    if (p2) return p2.toUpperCase();
+    return p1.toLowerCase();
+  }).replace(/([^A-Z-a-z])/g, '').toLowerCase();
+};
 
-  Fliplet.App.Submissions.create({
-    platform: prompt('Platform', 'ios')
-  }).then(function () {
-    loadSubmissions();
-  }).catch(function (err) {
-    alert(err.responseJSON.message);
+var createBundleID = function(orgName, appName) {
+  return $.ajax({
+    url: "https://itunes.apple.com/lookup?bundleId=com." + orgName + "." + appName,
+    dataType: "jsonp"
   });
-});
+};
 
-$('[data-submissions]').change(function () {
-  var id = $(this).val();
+function loadAppStoreData() {
 
-  hideForm();
+  $('#appStoreConfiguration [name]').each(function(i, el) {
+    var name = $(el).attr("name");
 
-  if (!id) {
-    return; // you didn't select a submission
-  }
-
-  Fliplet.App.Submissions.getById(id).then(function (submission) {
-    currentSubmission = submission;
-    fillForm();
-  });
-});
-
-$('input[type="file"]').change(function () {
-  var formData = new FormData();
-  var files = this.files;
-  var $field = $(this);
-  var fieldName = $field.attr('name');
-  var $message = $field.parent().find('.message');
-  var currentFilesCount = $field.parent().find('.files li').length;
-  var max = parseInt($field.data('max') || 99);
-
-  $message.removeClass('hidden');
-
-  if (currentFilesCount >= max) {
-    event.preventDefault();
-    $message.text('You can only upload ' + max + ' files for this field.');
-    return;
-  }
-
-  for (var i = 0; i < files.length; i++) {
-    formData.append(fieldName, files.item(i));
-  }
-
-  $field.val('');
-  $message.text('Uploading ' + (files.length+1) + ' files...');
-
-  Fliplet.Media.Files.upload({
-    data: formData
-  }).then(function (files) {
-    $message.addClass('hidden');
-    $message.text('');
-
-    files.forEach(function (file) {
-      addFile($field, file);
-    });
-  }).catch(function (err) {
-    $message.html(err.message || err.description || err);
-  });
-});
-
-function addFile($field, file) {
-  var $ul = $field.parent().find('.files');
-  var $li = $([
-    '<li data-id="' + file.id + '">',
-    '<img src="' + file.thumbnail + '" />',
-    '<a data-delete href="#">Delete</a>',
-    '</li>'
-  ].join(''));
-
-  uploadedFiles[file.id] = file;
-  $ul.append($li);
-}
-
-$('.files').on('click', '[data-delete]', function (event) {
-  event.preventDefault();
-  var $li = $(this).parent();
-  $li.remove();
-
-  Fliplet.Media.Files.delete($li.data('id'));
-});
-
-$('input[name=submissionType]').change(function(){
-    //submissionType = this.value;
-    showForm();
-});
-
-function hideForm() {
-  currentSubmission = undefined;
-  $form.addClass('hidden');
-  $form[0].reset();
-  $form.find('.files').html('');
-}
-
-function showForm() {
-  $form.removeClass('hidden');
-  $form.find('.ios-only, .android-only, .windows-only, .appstore, .enterprise').addClass('hidden');
-
-  submissionType = $('input:radio[name=submissionType]:checked').val()
-  //alert($('input:radio[name=submissionType]').filter(":checked").val());
-
-  $(".appName-help-block").html("There is a limit of 50 characters, however we recommend keeping this to 23");
-  $('input[name="appName"]').attr('maxlength', 50);
-
-  if (currentSubmission.platform === "android"){
-    $(".appName-help-block").html("There is a limit of 30 characters");
-    $('input[name="appName"]').attr('maxlength', 30);
-  }
-
-  $form.find('.' + currentSubmission.platform + '-only').removeClass('hidden');
-  $form.find('.' + submissionType).removeClass('hidden');
-}
-
-function fillForm() {
-  _.forIn(currentSubmission.data, function (value, key) {
-    var $element = $form.find('[name="' + key + '"]');
-
-    if (key === 'submissionType' && value !== '') {
-      submissionType = value;
+    /* APP NAME */
+    if (name === "fl-store-appName") {
+      $('[name="' + name + '"]').val(appName);
+      return;
     }
 
-    if ($element.attr('type') === 'file') {
-      if (Array.isArray(value)) {
-        value.forEach(function (file) {
-          addFile($element, file);
+    /* APP SCREENSHOTS */
+    if (name === "fl-store-screenshots") {
+      var screenNames = '';
+      if (appSettings.screensToScreenshot) {
+        appSettings.screensToScreenshot.forEach(function(screen) {
+          screenNames += screen.title + ", ";
         });
-      } else {
-        console.warn('Files for field ' + key + ' are expected to be an array.')
+        screenNames = screenNames.replace(/\,[\s]$/g, '');
+        widgetData.formData.appStore.appScreenshots = appSettings.screensToScreenshot;
       }
-
+      $('[name="' + name + '"]').val(screenNames);
       return;
     }
 
-    if ($element.attr('type') === 'radio') {
-      $form.find('[name="' + key + '"][value="' + value + '"]').prop("checked", true);
+    /* CHECK COUNTRIES */
+    if (name === "fl-store-availability") {
+      $('[name="' + name + '"]').selectpicker('val', ((typeof widgetData.formData.appStore[name] !== "undefined") ? widgetData.formData.appStore[name] : []));
+      return;
+    }
+    if (name === "fl-store-userCountry" || name === "fl-store-category1" || name === "fl-store-category2" || name === "fl-store-language") {
+      $('[name="' + name + '"]').val(widgetData.formData.appStore[name]).trigger('change');
       return;
     }
 
-    $element.val(value);
-  });
-
-  $form.find('[data-save]').toggleClass('hidden', ['started', 'failed'].indexOf(currentSubmission.status) === -1);
-  $form.find('[data-build]').toggleClass('hidden', ['started', 'failed'].indexOf(currentSubmission.status) === -1);
-
-  showForm();
-}
-
-function loadSubmissions() {
-  Fliplet.App.Submissions.get().then(function (submissions) {
-    $submissions.html('');
-
-    if (!submissions.length) {
-      return $submissions.append('<option value="">No submissions found</option>');
+    if (name === "fl-store-pricing") {
+      $('[name="' + name + '"]').val((typeof widgetData.formData.appStore[name] !== "undefined") ? widgetData.formData.appStore[name] : 'free').trigger('change');
     }
 
-    $submissions.append('<option value="">-- Select a submission</option>');
+    /* ADD KEYWORDS */
+    if (name === "fl-store-keywords") {
+      $('#' + name).tokenfield('setTokens', ((typeof widgetData.formData.appStore[name] !== "undefined") ? widgetData.formData.appStore[name] : ''));
+    }
 
-    submissions.forEach(function (s) {
-      $submissions.append('<option value="' + s.id + '">#' + s.id + ' ' + s.platform + ' (' + s.status + ')</option>');
-    });
-  }).catch(function (err) {
-    alert(err.responseJSON.message);
+    /* ADD BUNDLE ID */
+    if (name === "fl-store-bundleId" && typeof widgetData.formData.appStore[name] === "undefined") {
+      createBundleID(organisationName.toCamelCase(), appName.toCamelCase()).then(function(response) {
+        if (response.resultCount === 0) {
+          $('.bundleId-ast-text').html('com.' + organisationName.toCamelCase() + '.' + appName.toCamelCase());
+          $('[name="' + name + '"]').val('com.' + organisationName.toCamelCase() + '.' + appName.toCamelCase());
+        } else {
+          $('.bundleId-ast-text').html('com.' + organisationName.toCamelCase() + '.' + appName.toCamelCase() + (response.resultCount + 1));
+          $('[name="' + name + '"]').val('com.' + organisationName.toCamelCase() + '.' + appName.toCamelCase() + (response.resultCount + 1));
+        }
+      });
+      return;
+    }
+    if (name === "fl-store-bundleId" && typeof widgetData.formData.appStore[name] !== "undefined") {
+      $('.bundleId-ast-text').html(widgetData.formData.appStore[name]);
+      $('[name="' + name + '"]').val(widgetData.formData.appStore[name]);
+      return;
+    }
+
+    $('[name="' + name + '"]').val(widgetData.formData.appStore[name]);
   });
 }
 
-loadSubmissions();
+function loadEnterpriseData() {
 
-$form.find('[data-build]').click(function (event) {
-  event.preventDefault();
+  $('#enterpriseConfiguration [name]').each(function(i, el) {
+    var name = $(el).attr("name");
 
-  if (validateForm(currentSubmission.platform, submissionType)){
-    $('.has-errors:eq(0) input:eq(0)').focus()
-    return;
-  }
+    /* ADD BUNDLE ID */
+    if (name === "fl-enterprise-bundleId" && typeof widgetData.formData.enterprise[name] === "undefined") {
+      createBundleID(organisationName.toCamelCase(), appName.toCamelCase()).then(function(response) {
+        if (response.resultCount === 0) {
+          $('.bundleId-ent-text').html('com.' + organisationName.toCamelCase() + '.' + appName.toCamelCase());
+          $('[name="' + name + '"]').val('com.' + organisationName.toCamelCase() + '.' + appName.toCamelCase());
+        } else {
+          $('.bundleId-ent-text').html('com.' + organisationName.toCamelCase() + '.' + appName.toCamelCase() + (response.resultCount + 1));
+          $('[name="' + name + '"]').val('com.' + organisationName.toCamelCase() + '.' + appName.toCamelCase() + (response.resultCount + 1));
+        }
+      });
+      return;
+    }
+    if (name === "fl-enterprise-bundleId" && typeof widgetData.formData.enterprise[name] !== "undefined") {
+      $('.bundleId-ent-text').html(widgetData.formData.enterprise[name]);
+      $('[name="' + name + '"]').val(widgetData.formData.enterprise[name]);
+      return;
+    }
 
-  saveForm().then(function () {
-    return Fliplet.App.Submissions.build(currentSubmission.id);
-  }).then(function () {
-    hideForm();
-    loadSubmissions();
-  }).catch(function (err) {
-    alert(err.responseJSON.message);
-  });
-});
-
-function saveForm() {
-  var data = $form.serializeArray().reduce(function(obj, item) {
-    obj[item.name] = item.value;
-    return obj;
-  }, {});
-
-  $('input[type="file"]').each(function () {
-    var $el = $(this);
-    var $files = $el.parent().find('.files li');
-    var filesList = [];
-
-    $files.each(function () {
-      filesList.push(uploadedFiles[$(this).data('id')]);
-    });
-
-    data[$el.attr('name')] = filesList;
-  });
-
-  return Fliplet.App.Submissions.update(currentSubmission.id, data).catch(function (err) {
-    alert(err.responseJSON.message);
+    $('[name="' + name + '"]').val(widgetData.formData.enterprise[name]);
   });
 }
 
-$form.submit(function (event) {
-  event.preventDefault();
+function loadUnsignedData() {
 
-  if (validateForm(currentSubmission.platform, submissionType)){
-    $('.has-errors:eq(0) input:eq(0)').focus();
-    return;
+  $('#unsignedConfiguration [name]').each(function(i, el) {
+    var name = $(el).attr("name");
+
+    /* ADD BUNDLE ID */
+    if (name === "fl-unsigned-bundleId" && typeof widgetData.formData.unsigned[name] === "undefined") {
+      createBundleID(organisationName.toCamelCase(), appName.toCamelCase()).then(function(response) {
+        if (response.resultCount === 0) {
+          $('.bundleId-uns-text').html('com.' + organisationName.toCamelCase() + '.' + appName.toCamelCase());
+          $('[name="' + name + '"]').val('com.' + organisationName.toCamelCase() + '.' + appName.toCamelCase());
+        } else {
+          $('.bundleId-uns-text').html('com.' + organisationName.toCamelCase() + '.' + appName.toCamelCase() + (response.resultCount + 1));
+          $('[name="' + name + '"]').val('com.' + organisationName.toCamelCase() + '.' + appName.toCamelCase() + (response.resultCount + 1));
+        }
+      });
+      return;
+    }
+    if (name === "fl-unsigned-bundleId" && typeof widgetData.formData.unsigned[name] !== "undefined") {
+      $('.bundleId-uns-text').html(widgetData.formData.unsigned[name]);
+      $('[name="' + name + '"]').val(widgetData.formData.unsigned[name]);
+      return;
+    }
+
+    $('[name="' + name + '"]').val(widgetData.formData.unsigned[name]);
+  });
+}
+
+function loadPushNotesData() {
+  $('#pushConfiguration [name]').each(function(i, el) {
+    var name = $(el).attr("name");
+    console.log(name);
+    /* ADDING NOTIFICATIONS SETTINGS */
+    if (name === 'fl-push-authKey') {
+      $('[name="' + name + '"]').val(widgetData.formData.notificationSettings.apnAuthKey || '');
+      return;
+    }
+    if (name === 'fl-push-keyId') {
+      $('[name="' + name + '"]').val(widgetData.formData.notificationSettings.apnKeyId || '');
+      return;
+    }
+  });
+}
+
+function save(origin) {
+  Fliplet.Widget.save(widgetData).then(function() {
+    $('.save-' + origin + '-progress').addClass('saved');
+
+    setTimeout(function() {
+      $('.save-' + origin + '-progress').removeClass('saved');
+    }, 4000);
+  });
+}
+
+function requestBuild(origin) {
+  var data = widgetData.formData;
+  data.requestCreatedAt = Date();
+  data.requestBuild = true;
+
+  if (origin === 'appStore') {
+    data.appStore.splashScreen = appSettings.splashScreen;
+    data.appStore.screensToScreenshot = appSettings.screensToScreenshot;
+    data.appStore.appIcon = appIcon;
+    data.submissionType = 'App Store';
+
+    widgetData.formData = data;
+
+    Fliplet.Widget.save(widgetData).then(function() {
+      $('.save-' + origin + '-request').addClass('saved');
+
+      setTimeout(function() {
+        $('.save-' + origin + '-request').removeClass('saved');
+      }, 4000);
+
+      showRequestStatus();
+      Fliplet.Widget.autosize();
+    });
+
+    Fliplet.App.Submissions.create({
+      platform: 'ios',
+      data: widgetData.formData.appStore
+    }).then(function(response) {
+      console.log(response);
+    }).catch(function(err) {
+      alert(err.responseJSON.message);
+    });
   }
 
-  saveForm().then(function () {
-    hideForm();
-    loadSubmissions();
+  if (origin === 'enterprise') {
+    data.enterprise.splashScreen = appSettings.splashScreen;
+    data.enterprise.appIcon = appIcon;
+    data.submissionType = 'Enterprise';
+
+    widgetData.formData = data;
+
+    Fliplet.Widget.save(widgetData).then(function() {
+      $('.save-' + origin + '-request').addClass('saved');
+
+      setTimeout(function() {
+        $('.save-' + origin + '-request').removeClass('saved');
+      }, 4000);
+
+      showRequestStatus();
+      Fliplet.Widget.autosize();
+    });
+
+    Fliplet.App.Submissions.create({
+      platform: 'ios',
+      data: widgetData.formData.enterprise
+    }).then(function(response) {
+      console.log(response);
+    }).catch(function(err) {
+      alert(err.responseJSON.message);
+    });
+  }
+
+  if (origin === 'unsigned') {
+    data.unsigned.splashScreen = appSettings.splashScreen;
+    data.unsigned.appIcon = appIcon;
+    data.submissionType = 'Unsigned';
+
+    widgetData.formData = data;
+
+    Fliplet.Widget.save(widgetData).then(function() {
+      $('.save-' + origin + '-request').addClass('saved');
+
+      setTimeout(function() {
+        $('.save-' + origin + '-request').removeClass('saved');
+      }, 4000);
+
+      showRequestStatus();
+      Fliplet.Widget.autosize();
+    });
+
+    Fliplet.App.Submissions.create({
+      platform: 'ios',
+      data: widgetData.formData.unsigned
+    }).then(function(response) {
+      console.log(response);
+    }).catch(function(err) {
+      alert(err.responseJSON.message);
+    });
+  }
+}
+
+function showRequestStatus() {
+  if (widgetData.formData.requestBuild) {
+    var requestCreatedAt = moment(widgetData.formData.requestCreatedAt).format('MMMM Do, YYYY - h:mm A');
+    $('.app-status-panel .requestDate').html(requestCreatedAt);
+    $('.app-status-panel .requestType').html(widgetData.formData.submissionType);
+    $('.app-status').removeClass('hidden');
+  }
+}
+
+function saveAppStoreData(request) {
+  var data = widgetData.formData.appStore;
+  var pushData = widgetData.formData.notificationSettings;
+
+  $('#appStoreConfiguration [name]').each(function(i, el) {
+    var name = $(el).attr("name");
+    var value = $(el).val();
+
+    /* PROCESSING KEYWORDS */
+    if (name === 'fl-store-keywords') {
+      var newValue = value.replace(/,\s+/g, ',');
+      data[name] = newValue;
+      return;
+    }
+
+    if (name === 'fl-store-teamId') {
+      pushData.apnTeamId = value;
+      data[name] = value;
+      return;
+    }
+
+    if (name === 'fl-store-bundleId') {
+      pushData.apnTopic = value;
+      data[name] = value;
+      return;
+    }
+
+    data[name] = value;
+  });
+
+  widgetData.formData.appStore = data;
+  widgetData.formData.notificationSettings = pushData;
+
+  if (request) {
+    requestBuild('appStore');
+  } else {
+    save('appStore');
+  }
+}
+
+function saveEnterpriseData(request) {
+  var data = widgetData.formData.enterprise;
+  var pushData = widgetData.formData.notificationSettings;
+
+  $('#enterpriseConfiguration [name]').each(function(i, el) {
+    var name = $(el).attr("name");
+    var value = $(el).val();
+
+    if (name === 'fl-enterprise-teamId') {
+      pushData.apnTeamId = value;
+      data[name] = value;
+      return;
+    }
+
+    if (name === 'fl-enterprise-bundleId') {
+      pushData.apnTopic = value;
+      data[name] = value;
+      return;
+    }
+
+    data[name] = value;
+  });
+
+  widgetData.formData.enterprise = data;
+  widgetData.formData.notificationSettings = pushData;
+
+  if (request) {
+    requestBuild('enterprise');
+  } else {
+    save('enterprise');
+  }
+}
+
+function saveUnsignedData(request) {
+  var data = widgetData.formData.unsigned;
+  var pushData = widgetData.formData.notificationSettings;
+
+  $('#unsignedConfiguration [name]').each(function(i, el) {
+    var name = $(el).attr("name");
+    var value = $(el).val();
+
+    data[name] = value;
+  });
+
+  widgetData.formData.unsigned = data;
+  widgetData.formData.notificationSettings = pushData;
+
+  if (request) {
+    requestBuild('unsigned');
+  } else {
+    save('unsigned');
+  }
+}
+
+function savePushData() {
+  var data = widgetData.formData.notificationSettings;
+
+  $('#pushConfiguration [name]').each(function(i, el) {
+    var name = $(el).attr("name");
+    var value = $(el).val();
+
+    if (name === 'fl-push-authKey') {
+      data.apnAuthKey = value;
+      return;
+    }
+    if (name === 'fl-push-keyId') {
+      data.apnKeyId = value;
+      return;
+    }
+  });
+
+  data.apn = !!((data.apnAuthKey && data.apnAuthKey !== '') && (data.apnKeyId && data.apnKeyId !== '') && (data.apnTeamId && data.apnTeamId !== '') && (data.apnTopic && data.apnTopic !== ''));
+
+  widgetData.formData.notificationSettings = data;
+
+  console.log(widgetData);
+  Fliplet.Widget.save(widgetData).then(function() {
+    $('.save-push-progress').addClass('saved');
+
+    setTimeout(function() {
+      $('.save-push-progress').removeClass('saved');
+    }, 4000);
+
+    if (data.apn) {
+      Fliplet.API.request({
+        method: 'PUT',
+        url: 'v1/widget-instances/com.fliplet.push-notifications?appId=' + Fliplet.Env.get('appId'),
+        data: data
+      });
+    }
+  });
+}
+
+function init() {
+  $('#fl-store-keywords').tokenfield();
+
+  /* APP ICON */
+  if (appIcon) {
+    $('.setting-app-icon.userUploaded').attr('src', appIcon);
+    $('.setting-app-icon.userUploaded').removeClass('hidden');
+    $('.setting-app-icon.default').addClass('hidden');
+  }
+
+  /* APP SPLASH SCREEN */
+  if (appSettings.splashScreen) {
+    $('.setting-splash-screen.userUploaded').css('background-image', 'url(' + appSettings.splashScreen.url + ')');
+    $('.setting-splash-screen.userUploaded').removeClass('hidden');
+    $('.setting-splash-screen.default').addClass('hidden');
+  }
+
+  if (appName === '' || !appIcon || !appSettings.splashScreen || !appSettings.screensToScreenshot) {
+    $('.app-details').addClass('required-fill');
+  } else {
+    allAppData = true;
+  }
+
+  loadAppStoreData();
+  loadEnterpriseData();
+  loadUnsignedData();
+  loadPushNotesData();
+  showRequestStatus();
+  Fliplet.Widget.autosize();
+}
+
+/* AUX FUNCTIONS */
+function checkGroupErrors() {
+  $('.has-error').each(function(i, el) {
+    $(el).parents('.panel-default').addClass('required-fill');
+  });
+
+  $('.panel-default').each(function(i, el) {
+    var withError = $(el).find('.has-error').length;
+
+    if (withError === 0) {
+      $(el).not('.app-details').removeClass('required-fill');
+    }
+  });
+}
+
+/* ATTACH LISTENERS */
+$('[name="submissionType"]').on('change', function() {
+  var selectedOptionId = $(this).attr('id');
+
+  $('.fl-sb-panel').removeClass('show');
+  $('.' + selectedOptionId).addClass('show');
+
+  Fliplet.Widget.autosize();
+});
+
+$('.fl-sb-appStore [change-bundleid], .fl-sb-enterprise [change-bundleid], .fl-sb-unsigned [change-bundleid]').on('click', function() {
+  var changeBundleId = confirm("Are you sure you want to change the unique Bundle ID?");
+
+  if (changeBundleId) {
+    $('.fl-bundleId-holder').addClass('hidden');
+    $('.fl-bundleId-field').addClass('show');
+
+    Fliplet.Widget.autosize();
+  }
+});
+
+$('.panel-group').on('shown.bs.collapse', '.panel-collapse', function() {
+    Fliplet.Widget.autosize();
+  })
+  .on('hidden.bs.collapse', '.panel-collapse', function() {
+    Fliplet.Widget.autosize();
+  });
+
+$('a[data-toggle="tab"').on('shown.bs.tab', function() {
+    Fliplet.Widget.autosize();
+  })
+  .on('hidden.bs.tab', function() {
+    Fliplet.Widget.autosize();
+  });
+
+$('[name="fl-store-keywords"]').on('tokenfield:createtoken', function(e) {
+  var currentValue = e.currentTarget.value.replace(/,\s+/g, ',');
+  var newValue = e.attrs.value;
+  var oldAndNew = currentValue + ',' + newValue;
+
+  if (oldAndNew.length > 100) {
+    e.preventDefault();
+  }
+});
+
+$('.redirectToSettings').on('click', function() {
+  Fliplet.Studio.emit('navigate', {
+    name: 'appSettings',
+    params: {
+      appId: Fliplet.Env.get('appId')
+    }
   });
 });
 
-// Fired from Fliplet Studio when the external save button is clicked
-Fliplet.Widget.onSaveRequest(function () {
-  $form.submit();
+$('#appStoreConfiguration, #enterpriseConfiguration, #unsignedConfiguration').on('validated.bs.validator', function() {
+  checkGroupErrors();
+  Fliplet.Widget.autosize();
 });
+
+$('#appStoreConfiguration').validator().on('submit', function(event) {
+  if (event.isDefaultPrevented()) {
+    // Gives time to Validator to apply classes
+    setTimeout(checkGroupErrors, 0);
+    alert('Please fill in all the required information.');
+  } else {
+    event.preventDefault();
+
+    if (allAppData) {
+      saveAppStoreData(true);
+    } else {
+      alert('Please configure your App Settings to contain the required information.');
+    }
+    // Gives time to Validator to apply classes
+    setTimeout(checkGroupErrors, 0);
+  }
+});
+
+$('#enterpriseConfiguration').validator().on('submit', function(event) {
+  if (event.isDefaultPrevented()) {
+    // Gives time to Validator to apply classes
+    setTimeout(checkGroupErrors, 0);
+    alert('Please fill in all the required information.');
+  } else {
+    event.preventDefault();
+
+    if (allAppData) {
+      saveEnterpriseData(true);
+    } else {
+      alert('Please configure your App Settings to contain the required information.');
+    }
+    // Gives time to Validator to apply classes
+    setTimeout(checkGroupErrors, 0);
+  }
+});
+
+$('#unsignedConfiguration').validator().on('submit', function(event) {
+  if (event.isDefaultPrevented()) {
+    // Gives time to Validator to apply classes
+    setTimeout(checkGroupErrors, 0);
+    alert('Please fill in all the required information.');
+  } else {
+    event.preventDefault();
+
+    if (allAppData) {
+      saveUnsignedData(true);
+    } else {
+      alert('Please configure your App Settings to contain the required information.');
+    }
+    // Gives time to Validator to apply classes
+    setTimeout(checkGroupErrors, 0);
+  }
+});
+
+/* SAVE PROGRESS CLICK */
+$('[data-app-store-save]').on('click', function() {
+  saveAppStoreData();
+});
+$('[data-enterprise-save]').on('click', function() {
+  saveEnterpriseData();
+});
+$('[data-unsigned-save]').on('click', function() {
+  saveUnsignedData();
+});
+$('[data-push-save]').on('click', function() {
+  savePushData();
+});
+
+/* INIT */
+$('[name="submissionType"][value="appStore"]').prop('checked', true).trigger('change');
+
+Fliplet.API.request({
+    cache: true,
+    url: 'v1/apps/' + Fliplet.Env.get('appId')
+  })
+  .then(function(result) {
+    appName = result.app.name;
+    appIcon = result.app.icon;
+    appSettings = result.app.settings;
+  })
+  .then(function() {
+    Fliplet.API.request({
+        cache: true,
+        url: 'v1/organizations/' + Fliplet.Env.get('organizationId')
+      })
+      .then(function(org) {
+        organisationName = org.name;
+        init();
+      });
+  });

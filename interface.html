@@ -1,480 +1,1157 @@
-<form class="form-horizontal" data-select-submission>
-  <header>
-    <p>App submissions</p>
-    <a id="help_tip" href="#">Need help?</a>
-  </header>
-
-  <div class="form-group clearfix">
-    <div class="col-sm-4 control-label"><label>Select platform</label></div>
-    <div class="col-sm-7" >
-      <select data-submissions class="form-control"></select>
-      <a data-create href="#">Create new</a>
-    </div>
-  </div>
-</form>
-
-<hr />
-
-<form class="form-horizontal hidden" data-submission>
-
-  <!-- start of form -->
-
-  <div class="form-group clearfix">
-    <label class="col-sm-4 control-label">Submission Type</label>
-    <div class="col-sm-7">
-      <div class="radio radio-icon">
-        <input type="radio" id="unsigned" name="submissionType" value="unsigned" checked>
-        <label for="unsigned">
-          <span class="check"><i class="fa fa-circle"></i></span> Unsigned
-        </label>
+<div class="hidden">
+  <h3>App Status</h3>
+  <div class="activity-table">
+    <div class="activity-table-header">
+      <div class="activity-table-cell platform">
+        Platform
       </div>
-      <div class="radio radio-icon">
-        <input type="radio" id="enterprise" name="submissionType" value="enterprise">
-        <label for="enterprise">
-          <span class="check"><i class="fa fa-circle"></i></span> Enterprise
-        </label>
+      <div class="activity-table-cell">
+        Requested by
       </div>
-      <div class="radio radio-icon">
-        <input type="radio" id="appstore" name="submissionType" value="appstore">
-        <label for="appstore">
-          <span class="check"><i class="fa fa-circle"></i></span> App Store
-        </label>
+      <div class="activity-table-cell">
+        Date
+      </div>
+      <div class="activity-table-cell">
+        Version <small>(Build/Content/Framework)</small>
+      </div>
+      <div class="activity-table-cell">
+        Status
       </div>
     </div>
-  </div>
-
-  <div class="form-group clearfix appstore">
-    <div class="col-sm-4 control-label">
-      <label for="appName">Application name</label>
-    </div>
-    <div class="col-sm-7">
-      <input type="text" name="appName" class="form-control" id="appName" placeholder="" value="" maxlength="50"/>
-      <span id="helpBlock" class="appName-help-block"></span>
-    </div>
-  </div>
-
-  <div class="form-group clearfix">
-    <div class="col-sm-4 control-label">
-      <label for="appIconName">Application Icon name</label>
-    </div>
-    <div class="col-sm-7">
-      <input type="text" name="appIconName" class="form-control" id="appIconName" placeholder="" value="" maxlength="15"/>
-      <span id="helpBlock" class="app-icon-name-help-block">There is a limit of 15 characters</span>
-    </div>
-  </div>
-
-  <!-- <div class="form-group clearfix appstore">
-    <div class="col-sm-4 control-label">
-      <label for="bundleId">Bundle ID/Package name</label>
-    </div>
-    <div class="col-sm-7">
-      <input type="text" name="bundleId" class="form-control" id="bundleId" placeholder="" value=""/>
-    </div>
-  </div>
-
-  <div class="ios-only">
-    <div class="form-group clearfix appstore">
-      <div class="col-sm-4 control-label">
-        <label for="teamId">Team ID</label>
-      </div>
-      <div class="col-sm-7">
-        <input type="text" name="teamId" class="form-control" id="teamId" placeholder="" value=""/>
-      </div>
-    </div>
-  </div>
-
-  <div class="form-group clearfix">
-    <div class="col-sm-4 control-label">
-      <label for="versionNum">Version number</label>
-    </div>
-    <div class="col-sm-7">
-      <input type="text" name="versionNum" class="form-control" id="versionNum" placeholder="" value=""/>
-    </div>
-  </div> -->
-
-  <div class="form-group clearfix">
-    <div class="col-sm-4 control-label">
-      <label for="appLaunchScreen">App Launch Screen</label>
-    </div>
-    <div class="col-sm-7">
-      <input type="file" id="exampleInputFile" name="appLaunchScreen" data-max="1" accept="image/jpg, image/jpeg, image/png">
-      <p class="help-block">The launch screen should be a square image with a size of 2732 px by 2732 px. Please use the following template as a guide when creating the image. <a href="https://cdn.fliplet.com/organizations/2704/df34886f08b9dab2801bb0b9b8c5387c511-347-5200.jpg">Launch Screen Template</a></p>
-    </div>
-  </div>
-
-  <div class="form-group clearfix android-only">
-    <div class="col-sm-4 control-label">
-      <label for="appLaunchScreen">Push Notification Icon Image</label>
-    </div>
-    <div class="col-sm-7">
-      <input type="file" id="pushNotificationIcon" name="pushNotificationIcon">
-      <p class="help-block">Image Size: 800px by 800px. Must have a transparent background. Best practice is to have a white/black icon - on a transparent background. Delivered in .png format</p>
-    </div>
-  </div>
-
-  <div class='appstore'>
-    <div class="form-group clearfix android-only">
-      <div class="col-sm-4 control-label">
-        <label for="appFeaturedGraphic">Featured Graphic</label>
-      </div>
-      <div class="col-sm-7">
-        <input type="file" id="exampleInputFile" name="appFeaturedGraphic">
-        <p class="help-block">The feature graphic is displayed at the top of your store listing page in the Play Store app. Requirements: JPEG or 24-bit PNG (no alpha), Dimensions: 1024 px by 500 px. <a href="https://support.google.com/googleplay/android-developer/answer/1078870?hl=en-GB">Learn more</a></p></p>
-      </div>
-    </div>
-  </div>
-
-  <div class="appstore">
-    <div class="form-group clearfix">
-      <div class="col-sm-4 control-label">
-        <label>Primary category</label>
-      </div>
-      <div class="col-sm-7">
-        <label for="primaryCategory" class="select-proxy-display">
-          <span class="icon fa fa-chevron-down"></span>
-          <span class="select-value-proxy">-- Select an option</span>
-          <select name="primaryCategory" id="primaryCategory" data-label="select" class="hidden-select form-control">
-            <option value="">-- Select an option</option>
-            <option value="Books">Books</option>
-            <option value="Business">Business</option>
-            <option value="Catalogs">Catalogs</option>
-            <option value="Education">Education</option>
-            <option value="Entertainment">Entertainment</option>
-            <option value="Finance">Finance</option>
-            <option value="Food&Drink">Food & Drink</option>
-            <option value="Games">Games</option>
-            <option value="Health&Fitness">Health & Fitness</option>
-            <option value="Lifestyle">Lifestyle</option>
-            <option value="Kids">Kids</option>
-            <option value="Magazines&Newspapers">Magazines & Newspapers</option>
-            <option value="Medical">Medical</option>
-            <option value="Music">Music</option>
-            <option value="Navigation">Navigation</option>
-            <option value="News">News</option>
-            <option value="Photo&Video">Photo & Video</option>
-            <option value="18">Productivity</option>
-            <option value="Productivity">Reference</option>
-            <option value="Shopping">Shopping</option>
-            <option value="SocialNetworking">Social Networking</option>
-            <option value="Sports">Sports</option>
-            <option value="Travel">Travel</option>
-            <option value="Utilities">Utilities</option>
-          </select>
-        </label>
-      </div>
-    </div>
-
-    <div class="form-group clearfix ios-only">
-      <div class="col-sm-4 control-label">
-        <label>Secondary category</label>
-      </div>
-      <div class="col-sm-7">
-        <label for="secondaryCategory" class="select-proxy-display">
-          <span class="icon fa fa-chevron-down"></span>
-          <span class="select-value-proxy">-- Select an option</span>
-          <select name="secondaryCategory" id="secondaryCategory" data-label="select" class="hidden-select form-control">
-            <option value="">-- Select an option</option>
-            <option value="Books">Books</option>
-            <option value="Business">Business</option>
-            <option value="Catalogs">Catalogs</option>
-            <option value="Education">Education</option>
-            <option value="Entertainment">Entertainment</option>
-            <option value="Finance">Finance</option>
-            <option value="Food&Drink">Food & Drink</option>
-            <option value="Games">Games</option>
-            <option value="Health&Fitness">Health & Fitness</option>
-            <option value="Lifestyle">Lifestyle</option>
-            <option value="Kids">Kids</option>
-            <option value="Magazines&Newspapers">Magazines & Newspapers</option>
-            <option value="Medical">Medical</option>
-            <option value="Music">Music</option>
-            <option value="Navigation">Navigation</option>
-            <option value="News">News</option>
-            <option value="Photo&Video">Photo & Video</option>
-            <option value="18">Productivity</option>
-            <option value="Productivity">Reference</option>
-            <option value="Shopping">Shopping</option>
-            <option value="SocialNetworking">Social Networking</option>
-            <option value="Sports">Sports</option>
-            <option value="Travel">Travel</option>
-            <option value="Utilities">Utilities</option>
-          </select>
-        </label>
-      </div>
-    </div>
-
-    <div class="form-group clearfix android-only">
-      <div class="col-sm-4 control-label">
-        <label for="input_field">Short Description</label>
-      </div>
-      <div class="col-sm-7">
-        <textarea class="form-control" rows="5" id="shortdescription" name="shortdescription" maxlength="80"></textarea>
-        <span id="helpBlock" class="shortdescription-help-block">A description of your app, detailing features and functionality. It will also be used for your Apple Watch app. limited to 80 characters</span>
-      </div>
-    </div>
-
-    <div class="form-group clearfix">
-      <div class="col-sm-4 control-label">
-        <label for="input_field">Description</label>
-      </div>
-      <div class="col-sm-7">
-        <textarea class="form-control" rows="5" id="description" name="description"></textarea>
-        <span id="helpBlock" class="shortdescription-help-block">A description of your app, detailing features and functionality. It will also be used for your Apple Watch app.</span>
-      </div>
-    </div>
-
-    <div class="form-group clearfix">
-      <div class="col-sm-4 control-label">
-        <label for="keywords">Keywords</label>
-      </div>
-      <div class="col-sm-7">
-        <input type="text" name="keywords" class="form-control" id="keywords" placeholder="" value="" maxlength="100"/>
-        <span id="helpBlock" class="keywords-help-block">One or more keywords that describe your app. Keywords make App Store search results more accurate. Separate keywords with a comma. There is a limit of 100 characters</span>
-      </div>
-    </div>
-
-    <div class="form-group clearfix">
-      <div class="col-sm-4 control-label">
-        <label for="privacyPolicy">Privacy policy url (Optional)</label>
-      </div>
-      <div class="col-sm-7">
-        <input type="text" name="privacyPolicy" class="form-control" id="privacyPolicy" placeholder="" value=""/>
-      </div>
-    </div>
-
-    <div class="form-group clearfix">
-      <div class="col-sm-4 control-label">
-        <label for="supportUrl">Support URL</label>
-      </div>
-      <div class="col-sm-7">
-        <input type="text" name="supportUrl" class="form-control" id="supportUrl" placeholder="" value=""/>
-      </div>
-    </div>
-
-    <div class="form-group clearfix">
-      <div class="col-sm-4 control-label">
-        <label for="marketingUrl">Marketing URL (Optional)</label>
-      </div>
-      <div class="col-sm-7">
-        <input type="text" name="marketingUrl" class="form-control" id="marketingUrl" placeholder="" value=""/>
-      </div>
-    </div>
-
-    <div class="form-group clearfix">
-      <div class="col-sm-4 control-label">
-        <label for="copyright">Copyright</label>
-      </div>
-      <div class="col-sm-7">
-        <input type="text" name="copyright" class="form-control" id="copyright" placeholder="" value=""/>
-      </div>
-    </div>
-
-    <div class="form-group clearfix">
-      <div class="col-sm-4 control-label">
-        <label>Primary Language</label>
-      </div>
-      <div class="col-sm-7">
-        <label for="primaryLanguage" class="select-proxy-display">
-          <span class="icon fa fa-chevron-down"></span>
-          <span class="select-value-proxy">-- Select an option</span>
-          <select name="primaryLanguage" id="primaryLanguage" data-label="select" class="hidden-select form-control">
-            <option value="">-- Select an option</option>
-            <option value="Chinese(Simplified)">Chinese (Simplified)</option>
-            <option value="Chinese(Traditional)">Chinese (Traditional)</option>
-            <option value="Danish">Danish</option>
-            <option value="Dutch">Dutch</option>
-            <option value="English(UK)">English (U.K.)</option>
-            <option value="English(Australian)">English (Australian)</option>
-            <option value="English(Canada)">English (Canada)</option>
-            <option value="English(US)">English (U.S.)</option>
-            <option value="Finnish">Finnish</option>
-            <option value="French">French</option>
-            <option value="French(Canada)">French (Canada)</option>
-            <option value="German">German</option>
-            <option value="Greek">Greek</option>
-            <option value="Indonesian">Indonesian</option>
-            <option value="Italian">Italian</option>
-            <option value="Japanese">Japanese</option>
-            <option value="Korean">Korean</option>
-            <option value="Malay">Malay</option>
-            <option value="Norwegian">Norwegian</option>
-            <option value="Portuguese(Brazil)">Portuguese (Brazil)</option>
-            <option value="Portuguese(Portugal)">Portuguese (Portugal)</option>
-            <option value="Russian">Russian</option>
-            <option value="Spanish(Mexico)">Spanish (Mexico)</option>
-            <option value="Spanish(Spain)">Spanish (Spain)</option>
-            <option value="Swedish">Swedish</option>
-            <option value="Thai">Thai</option>
-            <option value="Turkish">Turkish</option>
-            <option value="Turkish">Vietnamese</option>
-          </select>
-        </label>
-      </div>
-    </div>
-  </div>
-
-  <div class="form-group clearfix appstore">
-    <div class="col-sm-4 control-label">
-      <label for="copyright">Contact Details</label>
-    </div>
-    <div class="col-sm-7">
-      <input type="text" name="contactFirstName" class="form-control" id="contactFirstName" placeholder="First name" value=""/>
-    </div>
-    <div class="col-sm-4 control-label"></div>
-    <div class="col-sm-7">
-      <input type="text" name="contactLastName" class="form-control" id="contactLastName" placeholder="Last name" value=""/>
-    </div>
-    <div class="col-sm-4 control-label"></div>
-    <div class="col-sm-7">
-      <input type="text" name="contactAddress" class="form-control" id="contactAddress" placeholder="Address" value=""/>
-    </div>
-    <div class="col-sm-4 control-label"></div>
-    <div class="col-sm-7">
-      <input type="text" name="contactCity" class="form-control" id="contactCity" placeholder="City" value=""/>
-    </div>
-    <div class="col-sm-4 control-label"></div>
-    <div class="col-sm-7">
-      <input type="text" name="contactCountry" class="form-control" id="contactCountry" placeholder="Country" value=""/>
-    </div>
-    <div class="col-sm-4 control-label"></div>
-    <div class="col-sm-7">
-      <input type="text" name="contactPostcode" class="form-control" id="contactPostcode" placeholder="Postcode" value=""/>
-    </div>
-    <div class="col-sm-4 control-label"></div>
-    <div class="col-sm-7">
-      <input type="text" name="contactPhonenumber" class="form-control" id="contactPhonenumber" placeholder="Phone Number" value=""/>
-    </div>
-    <div class="col-sm-4 control-label"></div>
-    <div class="col-sm-7">
-      <input type="text" name="contactEmail" class="form-control" id="contactEmail" placeholder="Email" value=""/>
-    </div>
-  </div>
-
-  <div class='appstore'>
-    <div class="form-group clearfix android-only">
-      <label class="col-sm-4 control-label">Primarily Child-Directed</label>
-      <div class="col-sm-7">
-        <label>
-  Is your app primarily directed towards children under the age of 13 as defined by COPPA?</label>
-        <div class="radio radio-icon">
-          <input type="radio" id="childDirectedNo" name="primarilyChildDirected" value="childDirectedNo" checked>
-          <label for="childDirectedNo">
-            <span class="check"><i class="fa fa-circle"></i></span> No
-          </label>
+    <div class="activity-table-body">
+      <div class="activity-table-row building">
+        <div class="activity-table-cell platform">
+          Enterprise
         </div>
-        <div class="radio radio-icon">
-          <input type="radio" id="childDirectedYes" name="primarilyChildDirected" value="childDirectedYes">
-          <label for="childDirectedYes">
-            <span class="check"><i class="fa fa-circle"></i></span> Yes
-          </label>
+        <div class="activity-table-cell">
+          hcarneiro@fliplet.com
+        </div>
+        <div class="activity-table-cell">
+          Jun 27 2017 10:03AM
+        </div>
+        <div class="activity-table-cell">
+          v3 / v25 / v12345
+        </div>
+        <div class="activity-table-cell">
+          <i class="fa fa-spinner fa-pulse fa-fw"></i> Building
+        </div>
+      </div>
+      <div class="activity-table-row ready">
+        <div class="activity-table-cell platform">
+          Unsigned
+        </div>
+        <div class="activity-table-cell">
+          hcarneiro@fliplet.com
+        </div>
+        <div class="activity-table-cell">
+          Jun 27 2017 10:03AM
+        </div>
+        <div class="activity-table-cell">
+          v2 / v25 / v12345
+        </div>
+        <div class="activity-table-cell">
+          <i class="fa fa-circle"></i> Ready (<a href="#">Download</a>)
+        </div>
+      </div>
+      <div class="activity-table-row ready">
+        <div class="activity-table-cell platform">
+          App Store
+        </div>
+        <div class="activity-table-cell">
+          hcarneiro@fliplet.com
+        </div>
+        <div class="activity-table-cell">
+          Jun 27 2017 10:03AM
+        </div>
+        <div class="activity-table-cell">
+          v1 / v15 / v12345
+        </div>
+        <div class="activity-table-cell">
+          <i class="fa fa-circle"></i> Live
         </div>
       </div>
     </div>
   </div>
-
-  <div class='appstore'>
-    <div class="form-group clearfix android-only">
-      <label class="col-sm-4 control-label">Contains ads</label>
-      <div class="col-sm-7">
-        <label>Does your application have ads?</label>
-        <div class="radio radio-icon">
-          <input type="radio" id="containsAdsNo" name="containsAds" value="containsAdsNo" checked>
-          <label for="containsAdsNo">
-            <span class="check"><i class="fa fa-circle"></i></span> No
-          </label>
+</div>
+<div class="app-status hidden">
+  <h3>App Status</h3>
+  <div class="app-status-panel fl-green">
+    <p><i class="fa fa-check-circle-o fa-3x"></i></p>
+    <h4>Your request was sent successfully!</h4>
+    <p>Your latest request is for an <strong><span class="requestType"></span></strong> app and was submitted on <strong><span class="requestDate">June 27th, 2017 - 13:23 PM</span></strong>.<br>Fliplet will get in touch in the next 24h with updates on your
+      app submission or build.</p>
+  </div>
+</div>
+<h3>Request App</h3>
+<p>Select how you want to distribute your app.</p>
+<hr>
+<div class="form-horizontal">
+  <ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active" id="appstore-control">
+      <a href="#appstore-tab" aria-controls="appstore" role="tab" data-toggle="tab">
+        <span>App Store</span>
+        <span><small>Publicly available</small></span>
+      </a>
+    </li>
+    <li role="presentation" id="enterprise-control">
+      <a href="#enterprise-tab" aria-controls="enterprise" role="tab" data-toggle="tab">
+        <span>Enterprise</span>
+        <span><small>Within your company</small></span>
+      </a>
+    </li>
+    <li role="presentation" id="unsigned-control">
+      <a href="#unsigned-tab" aria-controls="unsigned" role="tab" data-toggle="tab">
+        <span>Unsigned</span>
+        <span><small>Get the app file</small></span>
+      </a>
+    </li>
+    <li role="presentation" id="push-control">
+      <a href="#push-tab" aria-controls="push" role="tab" data-toggle="tab">
+        <span>Push Notifications</span>
+        <span><small>Configure to enable</small></span>
+      </a>
+    </li>
+  </ul>
+  <div class="tab-content">
+    <div role="tabpanel" class="tab-pane fl-sb-appStore active" id="appstore-tab">
+      <form data-toggle="validator" data-disable="false" role="form" id="appStoreConfiguration">
+        <div class="panel-group" id="accordionAppStore" role="tablist" aria-multiselectable="true">
+          <div class="panel panel-default app-details">
+            <div class="panel-heading" role="tab" id="appStoreSettingsHeading">
+              <h4 class="panel-title" role="button" data-toggle="collapse" data-parent="#accordionAppStore" href="#appStoreSettings" aria-expanded="true" aria-controls="appStoreSettings">App details <small>(Required)</small></h4>
+            </div>
+            <div id="appStoreSettings" class="panel-collapse collapse" role="tabpanel" aria-labelledby="appStoreSettingsHeading">
+              <div class="panel-body">
+                <p style="margin-bottom: 25px;"><strong>Go to the <a href="#" class="redirectToSettings">App settings</a> page to change these fields. They are all required.</strong></p>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label>App list name</label>
+                  </div>
+                  <div class="col-sm-8 form-static">
+                    <input type="text" name="fl-store-appName" class="form-control-static" id="fl-store-appName" placeholder="Please enter an app name" data-validate="true" disabled required/>
+                  </div>
+                </div>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label>App icon</label>
+                  </div>
+                  <div class="col-sm-8">
+                    <img class="setting-app-icon userUploaded hidden" src="#" />
+                    <img class="setting-app-icon default" src="{{ asset 'img/app-icon.png' }}" />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <div class="col-sm-4 control-label">
+                    <label>Splash screen</label>
+                  </div>
+                  <div class="col-sm-8">
+                    <div class="setting-splash-screen userUploaded hidden" style="background-image: url();"></div>
+                    <div class="setting-splash-screen default" style="background-image: url({{ asset 'img/splash-screen.png' }});"></div>
+                  </div>
+                </div>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label>Screenshots</label>
+                    <p class="help-block label-helper"><small>Screenshots will be taken of the following screens</small></p>
+                  </div>
+                  <div class="col-sm-8 form-static">
+                    <input type="text" name="fl-store-screenshots" class="form-control-static" id="fl-store-screenshots" placeholder="Please select at least one screen to screenshot" data-validate="true" disabled required/>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="appStoreGeneralHeading">
+              <h4 class="panel-title" role="button" data-toggle="collapse" data-parent="#accordionAppStore" href="#appStoreGeneral" aria-expanded="true" aria-controls="appStoreGeneral">App Store listing details <small>(Required)</small></h4>
+            </div>
+            <div id="appStoreGeneral" class="panel-collapse collapse" role="tabpanel" aria-labelledby="appStoreGeneralHeading">
+              <div class="panel-body">
+                <p>Fill in the fields below for the information that will be displayed on the app's page in the App Store.</p>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-store-iconName">App icon name</label>
+                    <p class="help-block label-helper"><small>This is the name that will appear below the icon of your app</small></p>
+                  </div>
+                  <div class="col-sm-8">
+                    <input type="text" name="fl-store-iconName" class="form-control" id="fl-store-iconName" placeholder="Enter the app icon name" maxlength="13" data-error="Please enter an app icon name" required/>
+                    <div class="help-block with-errors"></div>
+                    <p class="help-block"><small>The length of your app icon name is limited to 13 characters</small></p>
+                  </div>
+                </div>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-store-subtitle">App subtitle</label>
+                    <p class="help-block label-helper"><small>Optional</small></p>
+                  </div>
+                  <div class="col-sm-8">
+                    <textarea name="fl-store-subtitle" class="form-control" id="fl-store-subtitle" placeholder="Enter an app subtitle" maxlength="30"></textarea>
+                    <p class="help-block"><small>A summary of your app that will appear under your app’s name on the App Store for customers with devices running iOS 11 or later. Subtitles are limited to 30 characters.</small></p>
+                  </div>
+                </div>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-store-description">App description</label>
+                    <p class="help-block label-helper"><small>Optional</small></p>
+                  </div>
+                  <div class="col-sm-8">
+                    <textarea name="fl-store-description" class="form-control" id="fl-store-description" placeholder="Enter an app description"></textarea>
+                    <p class="help-block"><small>Provide an engaging description that highlights the features and functionality of your app.</small></p>
+                  </div>
+                </div>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-store-promotional">App promotional text</label>
+                    <p class="help-block label-helper"><small>Optional</small></p>
+                  </div>
+                  <div class="col-sm-8">
+                    <textarea name="fl-store-promotional" class="form-control" id="fl-store-promotional" placeholder="Enter an app promotional text" maxlength="170"></textarea>
+                    <p class="help-block"><small>Your app’s promotional text appears at the top of the description and is limited to 170 characters. </small></p>
+                  </div>
+                </div>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label>Application Category</label>
+                    <p class="help-block label-helper"><small>The category that best describes this app. For more information, see the <a href="https://itunesconnect.apple.com/itc/static/category_definitions" target="_blank">App Store Category Definitions.</a></small></p>
+                  </div>
+                  <div class="col-sm-8">
+                    <label for="fl-store-category1" class="select-proxy-display">
+                      <span class="icon fa fa-chevron-down"></span>
+                      <span class="select-value-proxy">-- Primary Category</span>
+                      <select id="fl-store-category1" name="fl-store-category1" data-label="select" class="hidden-select form-control" data-error="Please select a category" required>
+                        <option value="">-- Primary Category</option>
+                        <option value="1">Option 1</option>
+                        <option value="2">Option 2</option>
+                        <option value="2">Option 3</option>
+                      </select>
+                    </label>
+                    <div class="help-block with-errors"></div>
+                  </div>
+                </div>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label>Application Subcategory</label>
+                    <p class="help-block label-helper"><small>The subcategory that best describes this app. For more information, see the <a href="https://itunesconnect.apple.com/itc/static/category_definitions" target="_blank">App Store Category Definitions.</a></small></p>
+                  </div>
+                  <div class="col-sm-8">
+                    <label for="fl-store-category2" class="select-proxy-display">
+                      <span class="icon fa fa-chevron-down"></span>
+                      <span class="select-value-proxy">-- Select a Subcategory</span>
+                      <select id="fl-store-category2" name="fl-store-category2" data-label="select" class="hidden-select form-control" data-error="Please select a subcategory" required>
+                        <option value="">-- Select a Subcategory</option>
+                        <option value="1">Option 1</option>
+                        <option value="2">Option 2</option>
+                        <option value="2">Option 3</option>
+                      </select>
+                    </label>
+                    <div class="help-block with-errors"></div>
+                  </div>
+                </div>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label>Primary Language</label>
+                  </div>
+                  <div class="col-sm-8">
+                    <label for="fl-store-language" class="select-proxy-display">
+                    <span class="icon fa fa-chevron-down"></span>
+                    <span class="select-value-proxy">English</span>
+                    <select id="fl-store-language" name="fl-store-language" data-label="select" class="hidden-select form-control" data-error="Please select a language" required>
+                      <option value="">-- Select a language</option>
+                      <option value="Afrikanns">Afrikanns</option>
+                      <option value="Albanian">Albanian</option>
+                      <option value="Arabic">Arabic</option>
+                      <option value="Armenian">Armenian</option>
+                      <option value="Basque">Basque</option>
+                      <option value="Bengali">Bengali</option>
+                      <option value="Bulgarian">Bulgarian</option>
+                      <option value="Catalan">Catalan</option>
+                      <option value="Cambodian">Cambodian</option>
+                      <option value="Chinese (Mandarin)">Chinese (Mandarin)</option>
+                      <option value="Croation">Croation</option>
+                      <option value="Czech">Czech</option>
+                      <option value="Danish">Danish</option>
+                      <option value="Dutch">Dutch</option>
+                      <option value="English" selected>English</option>
+                      <option value="Estonian">Estonian</option>
+                      <option value="Fiji">Fiji</option>
+                      <option value="Finnish">Finnish</option>
+                      <option value="French">French</option>
+                      <option value="Georgian">Georgian</option>
+                      <option value="German">German</option>
+                      <option value="Greek">Greek</option>
+                      <option value="Gujarati">Gujarati</option>
+                      <option value="Hebrew">Hebrew</option>
+                      <option value="Hindi">Hindi</option>
+                      <option value="Hungarian">Hungarian</option>
+                      <option value="Icelandic">Icelandic</option>
+                      <option value="Indonesian">Indonesian</option>
+                      <option value="Irish">Irish</option>
+                      <option value="Italian">Italian</option>
+                      <option value="Japanese">Japanese</option>
+                      <option value="Javanese">Javanese</option>
+                      <option value="Korean">Korean</option>
+                      <option value="Latin">Latin</option>
+                      <option value="Latvian">Latvian</option>
+                      <option value="Lithuanian">Lithuanian</option>
+                      <option value="Macedonian">Macedonian</option>
+                      <option value="Malay">Malay</option>
+                      <option value="Malayalam">Malayalam</option>
+                      <option value="Maltese">Maltese</option>
+                      <option value="Maori">Maori</option>
+                      <option value="Marathi">Marathi</option>
+                      <option value="Mongolian">Mongolian</option>
+                      <option value="Nepali">Nepali</option>
+                      <option value="Norwegian">Norwegian</option>
+                      <option value="Persian">Persian</option>
+                      <option value="Polish">Polish</option>
+                      <option value="Portuguese">Portuguese</option>
+                      <option value="Punjabi">Punjabi</option>
+                      <option value="Quechua">Quechua</option>
+                      <option value="Romanian">Romanian</option>
+                      <option value="Russian">Russian</option>
+                      <option value="Samoan">Samoan</option>
+                      <option value="Serbian">Serbian</option>
+                      <option value="Slovak">Slovak</option>
+                      <option value="Slovenian">Slovenian</option>
+                      <option value="Spanish">Spanish</option>
+                      <option value="Swahili">Swahili</option>
+                      <option value="Swedish ">Swedish </option>
+                      <option value="Tamil">Tamil</option>
+                      <option value="Tatar">Tatar</option>
+                      <option value="Telugu">Telugu</option>
+                      <option value="Thai">Thai</option>
+                      <option value="Tibetan">Tibetan</option>
+                      <option value="Tonga">Tonga</option>
+                      <option value="Turkish">Turkish</option>
+                      <option value="Ukranian">Ukranian</option>
+                      <option value="Urdu">Urdu</option>
+                      <option value="Uzbek">Uzbek</option>
+                      <option value="Vietnamese">Vietnamese</option>
+                      <option value="Welsh">Welsh</option>
+                      <option value="Xhosa">Xhosa</option>
+                    </select>
+                  </label>
+                    <div class="help-block with-errors"></div>
+                  </div>
+                </div>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-store-keywords">Keywords</label>
+                    <p class="help-block label-helper"><small>Keywords help determine where your app displays in search results.</small></p>
+                  </div>
+                  <div class="col-sm-8">
+                    <input type="text" name="fl-store-keywords" class="form-control" id="fl-store-keywords" placeholder="Type a keyword and press enter" data-error="Please enter at least one keyword" required/>
+                    <div class="help-block with-errors"></div>
+                    <p class="help-block"><small>Keywords are limited to 100 characters total.</small></p>
+                  </div>
+                </div>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label>Availability (Countries)</label>
+                  </div>
+                  <div class="col-sm-8">
+                    <select id="fl-store-availability" name="fl-store-availability" data-size="10" data-live-search="true" data-actions-box="true" data-none-selected-text="Select from the list of countries" multiple class="form-control selectpicker" data-error="Please select at least one country"
+                      required>
+                    <option value="Albania">Albania</option>
+                    <option value="Algeria">Algeria</option>
+                    <option value="Angola">Angola</option>
+                    <option value="Anguilla">Anguilla</option>
+                    <option value="Antigua and Barbuda">Antigua and Barbuda</option>
+                    <option value="Argentina">Argentina</option>
+                    <option value="Armenia">Armenia</option>
+                    <option value="Australia">Australia</option>
+                    <option value="Austria">Austria</option>
+                    <option value="Azerbaijan">Azerbaijan</option>
+                    <option value="Bahamas">Bahamas</option>
+                    <option value="Bahrain">Bahrain</option>
+                    <option value="Barbados">Barbados</option>
+                    <option value="Belarus">Belarus</option>
+                    <option value="Belgium">Belgium</option>
+                    <option value="Belize">Belize</option>
+                    <option value="Benin">Benin</option>
+                    <option value="Bermuda">Bermuda</option>
+                    <option value="Bhutan">Bhutan</option>
+                    <option value="Bolivia">Bolivia</option>
+                    <option value="Botswana">Botswana</option>
+                    <option value="Brazil">Brazil</option>
+                    <option value="Brunei Darussalam">Brunei Darussalam</option>
+                    <option value="Bulgaria">Bulgaria</option>
+                    <option value="Burkina Faso">Burkina Faso</option>
+                    <option value="Cambodia">Cambodia</option>
+                    <option value="Canada">Canada</option>
+                    <option value="Cape Verde">Cape Verde</option>
+                    <option value="Cayman Islands">Cayman Islands</option>
+                    <option value="Chad">Chad</option>
+                    <option value="Chile">Chile</option>
+                    <option value="China">China</option>
+                    <option value="Colombia">Colombia</option>
+                    <option value="Congo, Republic of">Congo, Republic of</option>
+                    <option value="Costa Rica">Costa Rica</option>
+                    <option value="Croatia">Croatia</option>
+                    <option value="Cyprus">Cyprus</option>
+                    <option value="Czech Republic">Czech Republic</option>
+                    <option value="Denmark">Denmark</option>
+                    <option value="Dominica">Dominica</option>
+                    <option value="Dominican Republic">Dominican Republic</option>
+                    <option value="Ecuador">Ecuador</option>
+                    <option value="Egypt">Egypt</option>
+                    <option value="El Salvador">El Salvador</option>
+                    <option value="Estonia">Estonia</option>
+                    <option value="Fiji">Fiji</option>
+                    <option value="Finland">Finland</option>
+                    <option value="France">France</option>
+                    <option value="Gambia">Gambia</option>
+                    <option value="Germany">Germany</option>
+                    <option value="Ghana">Ghana</option>
+                    <option value="Greece">Greece</option>
+                    <option value="Grenada">Grenada</option>
+                    <option value="Guatemala">Guatemala</option>
+                    <option value="Guinea-Bissau">Guinea-Bissau</option>
+                    <option value="Guyana">Guyana</option>
+                    <option value="Honduras">Honduras</option>
+                    <option value="Hong Kong">Hong Kong</option>
+                    <option value="Hungary">Hungary</option>
+                    <option value="Iceland">Iceland</option>
+                    <option value="India">India</option>
+                    <option value="Indonesia">Indonesia</option>
+                    <option value="Ireland">Ireland</option>
+                    <option value="Israel">Israel</option>
+                    <option value="Italy">Italy</option>
+                    <option value="Jamaica">Jamaica</option>
+                    <option value="Japan">Japan</option>
+                    <option value="Jordan">Jordan</option>
+                    <option value="Kazakhstan">Kazakhstan</option>
+                    <option value="Kenya">Kenya</option>
+                    <option value="Korea, Republic Of">Korea, Republic Of</option>
+                    <option value="Kuwait">Kuwait</option>
+                    <option value="Kyrgyzstan">Kyrgyzstan</option>
+                    <option value="Lao People's Democratic Republic">Lao People's Democratic Republic</option>
+                    <option value="Latvia">Latvia</option>
+                    <option value="Lebanon">Lebanon</option>
+                    <option value="Liberia">Liberia</option>
+                    <option value="Lithuania">Lithuania</option>
+                    <option value="Luxembourg">Luxembourg</option>
+                    <option value="Macau">Macau</option>
+                    <option value="Macedonia, The Former Yugoslav Republic Of">Macedonia, The Former Yugoslav Republic Of</option>
+                    <option value="Madagascar">Madagascar</option>
+                    <option value="Malawi">Malawi</option>
+                    <option value="Malaysia">Malaysia</option>
+                    <option value="Mali">Mali</option>
+                    <option value="Malta">Malta</option>
+                    <option value="Mauritania">Mauritania</option>
+                    <option value="Mauritius">Mauritius</option>
+                    <option value="Mexico">Mexico</option>
+                    <option value="Micronesia, Federated States of">Micronesia, Federated States of</option>
+                    <option value="Moldova, Republic Of">Moldova, Republic Of</option>
+                    <option value="Mongolia">Mongolia</option>
+                    <option value="Montserrat">Montserrat</option>
+                    <option value="Mozambique">Mozambique</option>
+                    <option value="Namibia">Namibia</option>
+                    <option value="Nepal">Nepal</option>
+                    <option value="Netherlands">Netherlands</option>
+                    <option value="New Zealand">New Zealand</option>
+                    <option value="Nicaragua">Nicaragua</option>
+                    <option value="Niger">Niger</option>
+                    <option value="Nigeria">Nigeria</option>
+                    <option value="Norway">Norway</option>
+                    <option value="Oman">Oman</option>
+                    <option value="Pakistan">Pakistan</option>
+                    <option value="Palau">Palau</option>
+                    <option value="Panama">Panama</option>
+                    <option value="Papua New Guinea">Papua New Guinea</option>
+                    <option value="Paraguay">Paraguay</option>
+                    <option value="Peru">Peru</option>
+                    <option value="Philippines">Philippines</option>
+                    <option value="Poland">Poland</option>
+                    <option value="Portugal">Portugal</option>
+                    <option value="Qatar">Qatar</option>
+                    <option value="Romania">Romania</option>
+                    <option value="Russia">Russia</option>
+                    <option value="Saint Lucia">Saint Lucia</option>
+                    <option value="Saudi Arabia">Saudi Arabia</option>
+                    <option value="Senegal">Senegal</option>
+                    <option value="Seychelles">Seychelles</option>
+                    <option value="Sierra Leone">Sierra Leone</option>
+                    <option value="Singapore">Singapore</option>
+                    <option value="Slovakia">Slovakia</option>
+                    <option value="Slovenia">Slovenia</option>
+                    <option value="Solomon Islands">Solomon Islands</option>
+                    <option value="South Africa">South Africa</option>
+                    <option value="Spain">Spain</option>
+                    <option value="Sri Lanka">Sri Lanka</option>
+                    <option value="St. Kitts and Nevis">St. Kitts and Nevis</option>
+                    <option value="St. Vincent and The Grenadines">St. Vincent and The Grenadines</option>
+                    <option value="Suriname">Suriname</option>
+                    <option value="Swaziland">Swaziland</option>
+                    <option value="Sweden">Sweden</option>
+                    <option value="Switzerland">Switzerland</option>
+                    <option value="São Tomé and Príncipe">São Tomé and Príncipe</option>
+                    <option value="Taiwan">Taiwan</option>
+                    <option value="Tajikistan">Tajikistan</option>
+                    <option value="Tanzania, United Republic Of">Tanzania, United Republic Of</option>
+                    <option value="Thailand">Thailand</option>
+                    <option value="Trinidad and Tobago">Trinidad and Tobago</option>
+                    <option value="Tunisia">Tunisia</option>
+                    <option value="Turkey">Turkey</option>
+                    <option value="Turkmenistan">Turkmenistan</option>
+                    <option value="Turks and Caicos">Turks and Caicos</option>
+                    <option value="Uganda">Uganda</option>
+                    <option value="Ukraine">Ukraine</option>
+                    <option value="United Arab Emirates">United Arab Emirates</option>
+                    <option value="United Kingdom">United Kingdom</option>
+                    <option value="United States">United States</option>
+                    <option value="Uruguay">Uruguay</option>
+                    <option value="Uzbekistan">Uzbekistan</option>
+                    <option value="Venezuela">Venezuela</option>
+                    <option value="Vietnam">Vietnam</option>
+                    <option value="Virgin Islands, British">Virgin Islands, British</option>
+                    <option value="Yemen">Yemen</option>
+                    <option value="Zimbabwe">Zimbabwe</option>
+                  </select>
+                    <div class="help-block with-errors"></div>
+                  </div>
+                </div>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label>Price</label>
+                  </div>
+                  <div class="col-sm-8">
+                    Your app will be set to <strong>free app</strong> by default. If you want to change it to a paid app, please get in touch with us.
+                  </div>
+                </div>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-store-keywords">Rating</label>
+                  </div>
+                  <div class="col-sm-8">
+                    Your app rating is determined by Apple based on your app type. The app rating will be displayed on the App Store across all your platforms. Fliplet apps will be rated <strong>17+</strong> by default.
+                  </div>
+                </div>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-store-support">Support URL</label>
+                    <p class="help-block label-helper"><small>A URL that links to your organization's support page.</small></p>
+                  </div>
+                  <div class="col-sm-8">
+                    <input type="text" name="fl-store-support" class="form-control" id="fl-store-support" placeholder="Enter your Support URL" data-error="Please enter your Support URL" required/>
+                    <div class="help-block with-errors"></div>
+                  </div>
+                </div>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-store-marketing">Marketing URL</label>
+                    <p class="help-block label-helper"><small>A URL that links to your organization's marketing website.</small></p>
+                  </div>
+                  <div class="col-sm-8">
+                    <input type="text" name="fl-store-marketing" class="form-control" id="fl-store-marketing" placeholder="Enter your Marketing URL" />
+                  </div>
+                </div>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-store-privacy">Privacy Policy URL</label>
+                    <p class="help-block label-helper"><small>A URL that links to your organization's privacy policy.</small></p>
+                  </div>
+                  <div class="col-sm-8">
+                    <input type="text" name="fl-store-privacy" class="form-control" id="fl-store-privacy" placeholder="Enter your Privacy Policy URL" />
+                  </div>
+                </div>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-store-copyright">Copyright</label>
+                    <p class="help-block label-helper"><small>The name of the person or entity that owns the exclusive rights to your app, preceded by the year the rights were obtained.</small></p>
+                  </div>
+                  <div class="col-sm-8">
+                    <input type="text" name="fl-store-copyright" class="form-control" id="fl-store-copyright" placeholder="Eg: 2008 Acme Inc." data-error="Please enter your Copyright text" required/>
+                    <div class="help-block with-errors"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="appStoreTechHeading">
+              <h4 class="panel-title" role="button" data-toggle="collapse" data-parent="#accordionAppStore" href="#appStoreTech" aria-expanded="true" aria-controls="appStoreTech">App technical details <small>(Required)</small></h4>
+            </div>
+            <div id="appStoreTech" class="panel-collapse collapse" role="tabpanel" aria-labelledby="appStoreTechHeading">
+              <div class="panel-body">
+                <p>Now it's down to the technical inforamtion.</p>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-store-appDevLogin">Apple Developer account login</label>
+                  </div>
+                  <div class="col-sm-8">
+                    <input type="email" name="fl-store-appDevLogin" class="form-control" id="fl-store-appDevLogin" placeholder="Enter Apple Developer login email" data-error="Please enter a valid email address" required/>
+                    <div class="help-block with-errors"></div>
+                  </div>
+                </div>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-store-appDevPass">Apple Developer account password</label>
+                    <p class="help-block label-helper"><small>The password will be encrypted, safely stored and never shown.</small></p>
+                  </div>
+                  <div class="col-sm-8">
+                    <input type="password" name="fl-store-appDevPass" class="form-control" id="fl-store-appDevPass" placeholder="Enter Apple Developer account pass" data-error="Please enter a password" required/>
+                    <div class="help-block with-errors"></div>
+                  </div>
+                </div>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-store-bundleId">Bundle ID</label>
+                    <p class="help-block label-helper"><small>This is a unique ID for your app on the App Store. Fliplet auto-generated one for you. The Bundle ID will never be shown to the users.</small></p>
+                  </div>
+                  <div class="col-sm-8 fl-bundleId-holder">
+                    <span class="bundleId-ast-text"></span> <span class="btn btn-sm btn-default" change-bundleid>Change</span>
+                    <div class="help-block with-errors"></div>
+                  </div>
+                  <div class="fl-bundleId-field">
+                    <div class="col-sm-8">
+                      <input type="text" name="fl-store-bundleId" class="form-control" id="fl-store-bundleId" placeholder="Enter your unique Bundle ID" data-error="Please enter the Bundle ID" required/>
+                      <div class="help-block with-errors"></div>
+                      <p class="help-block"><small>This value needs to be unique and the structure must be <code>com.<i>organisationName</i>.<i>appName</i></code>.</small></p>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-store-teamId">Team ID</label>
+                  </div>
+                  <div class="col-sm-8">
+                    <input type="text" name="fl-store-teamId" class="form-control" id="fl-store-teamId" placeholder="Enter your Team ID" data-error="Please enter your Team ID" required/>
+                    <div class="help-block with-errors"></div>
+                    <p class="help-block"><small>Your Team ID can be found <a href="https://developer.apple.com/account/#/membership/">here</a>.</small></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="appStoreContactsHeading">
+              <h4 class="panel-title" role="button" data-toggle="collapse" data-parent="#accordionAppStore" href="#appStoreContacts" aria-expanded="true" aria-controls="appStoreContacts">App submission details <small>(Required)</small></h4>
+            </div>
+            <div id="appStoreContacts" class="panel-collapse collapse" role="tabpanel" aria-labelledby="appStoreContactsHeading">
+              <div class="panel-body">
+                <p>These details will be used by Apple Review team to get in touch with you if needed.</p>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-store-fname">First Name</label>
+                  </div>
+                  <div class="col-sm-8">
+                    <input type="text" name="fl-store-fname" class="form-control" id="fl-store-fname" placeholder="Enter your first name" data-error="Please enter your first name" required/>
+                    <div class="help-block with-errors"></div>
+                  </div>
+                </div>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-store-lname">Last Name</label>
+                  </div>
+                  <div class="col-sm-8">
+                    <input type="text" name="fl-store-lname" class="form-control" id="fl-store-lname" placeholder="Enter your last name" data-error="Please enter your last name" required/>
+                    <div class="help-block with-errors"></div>
+                  </div>
+                </div>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-store-address1">Address line 1</label>
+                  </div>
+                  <div class="col-sm-8">
+                    <input type="text" name="fl-store-address1" class="form-control" id="fl-store-address1" placeholder="Enter your address" data-error="Please enter your address" required/>
+                    <div class="help-block with-errors"></div>
+                  </div>
+                </div>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-store-address2">Address line 2</label>
+                    <p class="help-block label-helper"><small>Optional</small></p>
+                  </div>
+                  <div class="col-sm-8">
+                    <input type="text" name="fl-store-address2" class="form-control" id="fl-store-address2" placeholder="Enter your address" />
+                  </div>
+                </div>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-store-postCode">Post Code</label>
+                  </div>
+                  <div class="col-sm-8">
+                    <input type="text" name="fl-store-postCode" class="form-control" id="fl-store-postCode" placeholder="Enter your post code" data-error="Please enter your post code" required/>
+                    <div class="help-block with-errors"></div>
+                  </div>
+                </div>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-store-userCountry">Country</label>
+                  </div>
+                  <div class="col-sm-8">
+                    <label for="fl-store-userCountry" class="select-proxy-display">
+                    <span class="icon fa fa-chevron-down"></span>
+                    <span class="select-value-proxy">-- Select a country</span>
+                    <select id="fl-store-userCountry" data-label="select" name="fl-store-userCountry" class="hidden-select form-control" data-error="Please enter your country" required>
+                      <option value="">-- Select a country</option>
+                      <option value="Albania">Albania</option>
+                      <option value="Algeria">Algeria</option>
+                      <option value="Angola">Angola</option>
+                      <option value="Anguilla">Anguilla</option>
+                      <option value="Antigua and Barbuda">Antigua and Barbuda</option>
+                      <option value="Argentina">Argentina</option>
+                      <option value="Armenia">Armenia</option>
+                      <option value="Australia">Australia</option>
+                      <option value="Austria">Austria</option>
+                      <option value="Azerbaijan">Azerbaijan</option>
+                      <option value="Bahamas">Bahamas</option>
+                      <option value="Bahrain">Bahrain</option>
+                      <option value="Barbados">Barbados</option>
+                      <option value="Belarus">Belarus</option>
+                      <option value="Belgium">Belgium</option>
+                      <option value="Belize">Belize</option>
+                      <option value="Benin">Benin</option>
+                      <option value="Bermuda">Bermuda</option>
+                      <option value="Bhutan">Bhutan</option>
+                      <option value="Bolivia">Bolivia</option>
+                      <option value="Botswana">Botswana</option>
+                      <option value="Brazil">Brazil</option>
+                      <option value="Brunei Darussalam">Brunei Darussalam</option>
+                      <option value="Bulgaria">Bulgaria</option>
+                      <option value="Burkina Faso">Burkina Faso</option>
+                      <option value="Cambodia">Cambodia</option>
+                      <option value="Canada">Canada</option>
+                      <option value="Cape Verde">Cape Verde</option>
+                      <option value="Cayman Islands">Cayman Islands</option>
+                      <option value="Chad">Chad</option>
+                      <option value="Chile">Chile</option>
+                      <option value="China">China</option>
+                      <option value="Colombia">Colombia</option>
+                      <option value="Congo, Republic of">Congo, Republic of</option>
+                      <option value="Costa Rica">Costa Rica</option>
+                      <option value="Croatia">Croatia</option>
+                      <option value="Cyprus">Cyprus</option>
+                      <option value="Czech Republic">Czech Republic</option>
+                      <option value="Denmark">Denmark</option>
+                      <option value="Dominica">Dominica</option>
+                      <option value="Dominican Republic">Dominican Republic</option>
+                      <option value="Ecuador">Ecuador</option>
+                      <option value="Egypt">Egypt</option>
+                      <option value="El Salvador">El Salvador</option>
+                      <option value="Estonia">Estonia</option>
+                      <option value="Fiji">Fiji</option>
+                      <option value="Finland">Finland</option>
+                      <option value="France">France</option>
+                      <option value="Gambia">Gambia</option>
+                      <option value="Germany">Germany</option>
+                      <option value="Ghana">Ghana</option>
+                      <option value="Greece">Greece</option>
+                      <option value="Grenada">Grenada</option>
+                      <option value="Guatemala">Guatemala</option>
+                      <option value="Guinea-Bissau">Guinea-Bissau</option>
+                      <option value="Guyana">Guyana</option>
+                      <option value="Honduras">Honduras</option>
+                      <option value="Hong Kong">Hong Kong</option>
+                      <option value="Hungary">Hungary</option>
+                      <option value="Iceland">Iceland</option>
+                      <option value="India">India</option>
+                      <option value="Indonesia">Indonesia</option>
+                      <option value="Ireland">Ireland</option>
+                      <option value="Israel">Israel</option>
+                      <option value="Italy">Italy</option>
+                      <option value="Jamaica">Jamaica</option>
+                      <option value="Japan">Japan</option>
+                      <option value="Jordan">Jordan</option>
+                      <option value="Kazakhstan">Kazakhstan</option>
+                      <option value="Kenya">Kenya</option>
+                      <option value="Korea, Republic Of">Korea, Republic Of</option>
+                      <option value="Kuwait">Kuwait</option>
+                      <option value="Kyrgyzstan">Kyrgyzstan</option>
+                      <option value="Lao People's Democratic Republic">Lao People's Democratic Republic</option>
+                      <option value="Latvia">Latvia</option>
+                      <option value="Lebanon">Lebanon</option>
+                      <option value="Liberia">Liberia</option>
+                      <option value="Lithuania">Lithuania</option>
+                      <option value="Luxembourg">Luxembourg</option>
+                      <option value="Macau">Macau</option>
+                      <option value="Macedonia, The Former Yugoslav Republic Of">Macedonia, The Former Yugoslav Republic Of</option>
+                      <option value="Madagascar">Madagascar</option>
+                      <option value="Malawi">Malawi</option>
+                      <option value="Malaysia">Malaysia</option>
+                      <option value="Mali">Mali</option>
+                      <option value="Malta">Malta</option>
+                      <option value="Mauritania">Mauritania</option>
+                      <option value="Mauritius">Mauritius</option>
+                      <option value="Mexico">Mexico</option>
+                      <option value="Micronesia, Federated States of">Micronesia, Federated States of</option>
+                      <option value="Moldova, Republic Of">Moldova, Republic Of</option>
+                      <option value="Mongolia">Mongolia</option>
+                      <option value="Montserrat">Montserrat</option>
+                      <option value="Mozambique">Mozambique</option>
+                      <option value="Namibia">Namibia</option>
+                      <option value="Nepal">Nepal</option>
+                      <option value="Netherlands">Netherlands</option>
+                      <option value="New Zealand">New Zealand</option>
+                      <option value="Nicaragua">Nicaragua</option>
+                      <option value="Niger">Niger</option>
+                      <option value="Nigeria">Nigeria</option>
+                      <option value="Norway">Norway</option>
+                      <option value="Oman">Oman</option>
+                      <option value="Pakistan">Pakistan</option>
+                      <option value="Palau">Palau</option>
+                      <option value="Panama">Panama</option>
+                      <option value="Papua New Guinea">Papua New Guinea</option>
+                      <option value="Paraguay">Paraguay</option>
+                      <option value="Peru">Peru</option>
+                      <option value="Philippines">Philippines</option>
+                      <option value="Poland">Poland</option>
+                      <option value="Portugal">Portugal</option>
+                      <option value="Qatar">Qatar</option>
+                      <option value="Romania">Romania</option>
+                      <option value="Russia">Russia</option>
+                      <option value="Saint Lucia">Saint Lucia</option>
+                      <option value="Saudi Arabia">Saudi Arabia</option>
+                      <option value="Senegal">Senegal</option>
+                      <option value="Seychelles">Seychelles</option>
+                      <option value="Sierra Leone">Sierra Leone</option>
+                      <option value="Singapore">Singapore</option>
+                      <option value="Slovakia">Slovakia</option>
+                      <option value="Slovenia">Slovenia</option>
+                      <option value="Solomon Islands">Solomon Islands</option>
+                      <option value="South Africa">South Africa</option>
+                      <option value="Spain">Spain</option>
+                      <option value="Sri Lanka">Sri Lanka</option>
+                      <option value="St. Kitts and Nevis">St. Kitts and Nevis</option>
+                      <option value="St. Vincent and The Grenadines">St. Vincent and The Grenadines</option>
+                      <option value="Suriname">Suriname</option>
+                      <option value="Swaziland">Swaziland</option>
+                      <option value="Sweden">Sweden</option>
+                      <option value="Switzerland">Switzerland</option>
+                      <option value="São Tomé and Príncipe">São Tomé and Príncipe</option>
+                      <option value="Taiwan">Taiwan</option>
+                      <option value="Tajikistan">Tajikistan</option>
+                      <option value="Tanzania, United Republic Of">Tanzania, United Republic Of</option>
+                      <option value="Thailand">Thailand</option>
+                      <option value="Trinidad and Tobago">Trinidad and Tobago</option>
+                      <option value="Tunisia">Tunisia</option>
+                      <option value="Turkey">Turkey</option>
+                      <option value="Turkmenistan">Turkmenistan</option>
+                      <option value="Turks and Caicos">Turks and Caicos</option>
+                      <option value="Uganda">Uganda</option>
+                      <option value="Ukraine">Ukraine</option>
+                      <option value="United Arab Emirates">United Arab Emirates</option>
+                      <option value="United Kingdom">United Kingdom</option>
+                      <option value="United States">United States</option>
+                      <option value="Uruguay">Uruguay</option>
+                      <option value="Uzbekistan">Uzbekistan</option>
+                      <option value="Venezuela">Venezuela</option>
+                      <option value="Vietnam">Vietnam</option>
+                      <option value="Virgin Islands, British">Virgin Islands, British</option>
+                      <option value="Yemen">Yemen</option>
+                      <option value="Zimbabwe">Zimbabwe</option>
+                    </select>
+                  </label>
+                    <div class="help-block with-errors"></div>
+                  </div>
+                </div>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-store-phone">Phone Number</label>
+                    <p class="help-block label-helper"><small>The phone number needs to include the area code. (Eg.: +44)</small></p>
+                  </div>
+                  <div class="col-sm-8">
+                    <input type="number" name="fl-store-phone" class="form-control" id="fl-store-phone" placeholder="Enter your phone number" data-error="Please enter a valid phone number" required/>
+                    <div class="help-block with-errors"></div>
+                  </div>
+                </div>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-store-email">Email Address</label>
+                  </div>
+                  <div class="col-sm-8">
+                    <input type="email" name="fl-store-email" class="form-control" id="fl-store-email" placeholder="Enter your email address" data-error="Please enter a valid email address" required/>
+                    <div class="help-block with-errors"></div>
+                    <p class="help-block"><small>Apple will use this email to get in touch if there are any issues with your app submission. Fliplet will not receive any correspondence from Apple.</small></p>
+                  </div>
+                </div>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-store-review-notes">Reviewer Notes</label>
+                    <p class="help-block"><small>Optional</small></p>
+                  </div>
+                  <div class="col-sm-8">
+                    <textarea name="fl-store-review-notes" class="form-control" id="fl-store-review-notes" placeholder="Enter your message"></textarea>
+                    <p class="help-block"><small>Additional information about your app that can help during the review process. Include information that may be needed to test your app, such as app-specific settings.</small></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="radio radio-icon">
-          <input type="radio" id="containsAdsYes" name="containsAds" value="containsAdsYes">
-          <label for="containsAdsYes">
-            <span class="check"><i class="fa fa-circle"></i></span> Yes
-          </label>
+        <hr>
+        <div class="col-xs-5 save-btn-holder">
+          <p class="help-block"><small>Save your progress at any point.<br>You can come back and finish it.</small></p>
+          <div class="btn btn-primary" data-app-store-save>Save progress <i class="fa fa-cloud-upload"></i></div>
+          <p class="text-success save-appStore-progress">Your progress was saved successfully!</p>
         </div>
-      </div>
-    </div>
-  </div>
-
-  <div class='appstore'>
-    <div class="form-group clearfix android-only">
-      <div class="col-sm-4 control-label">
-        <label for="show_subtitle">Designed for Families</label>
-      </div>
-      <div class="col-sm-8">
-        <div class="checkbox checkbox-icon">
-          <input type="checkbox" id="designedForFamilies" name="designedForFamilies">
-          <label for="designedForFamilies">
-            <span class="check"><i class="fa fa-check"></i></span> Opt in to Designed for Families. Designed for Families is a developer programme for apps and games designed specifically for children and family audiences.
-          </label>
+        <div class="col-xs-5 save-btn-holder col-xs-offset-2 text-right">
+          <p class="help-block"><small>Submit your information when you are ready!<br>We will take care of the rest.</small></p>
+          <button type="submit" class="btn btn-primary fl-green" data-app-store-build>Request App <i class="fa fa-paper-plane"></i></button>
+          <p class="text-success save-appStore-request">Your request was sent successfully!</p>
         </div>
-      </div>
+      </form>
     </div>
-  </div>
-
-  <div class='appstore'>
-    <div class="form-group clearfix android-only">
-      <div class="col-sm-4 control-label">
-        <label for="show_subtitle">Google Play for Education</label>
-      </div>
-      <div class="col-sm-8">
-        <div class="checkbox checkbox-icon">
-          <input type="checkbox" id="googlePlayEducation" name="googlePlayEducation">
-          <label for="googlePlayEducation">
-            <span class="check"><i class="fa fa-check"></i></span> Distribute your app through Google Play for Education. Ticking this box submits this app for inclusion in the "educator recommended" section of Google Play for Education.
-          </label>
+    <div role="tabpanel" class="tab-pane fl-sb-enterprise" id="enterprise-tab">
+      <form data-toggle="validator" data-disable="false" role="form" id="enterpriseConfiguration">
+        <div class="panel-group" id="accordionEnterprise" role="tablist" aria-multiselectable="true">
+          <div class="panel panel-default app-details">
+            <div class="panel-heading" role="tab" id="enterpriseSettingsHeading">
+              <h4 class="panel-title" role="button" data-toggle="collapse" data-parent="#accordionEnterprise" href="#enterpriseSettings" aria-expanded="true" aria-controls="enterpriseSettings">App details <small>(Required)</small></h4>
+            </div>
+            <div id="enterpriseSettings" class="panel-collapse collapse" role="tabpanel" aria-labelledby="enterpriseSettingsHeading">
+              <div class="panel-body">
+                <p style="margin-bottom: 25px;"><strong>Go to the <a href="#" class="redirectToSettings">App settings</a> page to change these fields. They are all required.</strong></p>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label>App icon</label>
+                  </div>
+                  <div class="col-sm-8">
+                    <img class="setting-app-icon userUploaded hidden" src="#" />
+                    <img class="setting-app-icon default" src="{{ asset 'img/app-icon.png' }}" />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <div class="col-sm-4 control-label">
+                    <label>Splash screen</label>
+                  </div>
+                  <div class="col-sm-8">
+                    <div class="setting-splash-screen userUploaded hidden" style="background-image: url();"></div>
+                    <div class="setting-splash-screen default" style="background-image: url({{ asset 'img/splash-screen.png' }});"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="enterpriseGeneralHeading">
+              <h4 class="panel-title" role="button" data-toggle="collapse" data-parent="#accordionEnterprise" href="#enterpriseGeneral" aria-expanded="true" aria-controls="enterpriseGeneral">App listing details <small>(Required)</small></h4>
+            </div>
+            <div id="enterpriseGeneral" class="panel-collapse collapse" role="tabpanel" aria-labelledby="enterpriseGeneralHeading">
+              <div class="panel-body">
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-ent-iconName">App icon name</label>
+                    <p class="help-block label-helper"><small>This is the name that will appear below the icon of your app</small></p>
+                  </div>
+                  <div class="col-sm-8">
+                    <input type="text" name="fl-ent-iconName" class="form-control" id="fl-ent-iconName" placeholder="Enter the app icon name" maxlength="13" data-error="Please enter an app icon name" required/>
+                    <div class="help-block with-errors"></div>
+                    <p class="help-block"><small>The length of your app icon name is limited to 13 characters</small></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="enterpriseTechHeading">
+              <h4 class="panel-title" role="button" data-toggle="collapse" data-parent="#accordionEnterprise" href="#enterpriseTech" aria-expanded="true" aria-controls="enterpriseTech">App technical details <small>(Required)</small></h4>
+            </div>
+            <div id="enterpriseTech" class="panel-collapse collapse" role="tabpanel" aria-labelledby="enterpriseTechHeading">
+              <div class="panel-body">
+                <p>Now it's down to the technical inforamtion.</p>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-ent-appDevLogin">Apple Developer account login</label>
+                  </div>
+                  <div class="col-sm-8">
+                    <input type="email" name="fl-ent-appDevLogin" class="form-control" id="fl-ent-appDevLogin" placeholder="Enter Apple Developer login email" data-error="Please enter a valid email address" required/>
+                    <div class="help-block with-errors"></div>
+                  </div>
+                </div>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-ent-appDevPass">Apple Developer account password</label>
+                    <p class="help-block label-helper"><small>The password will be encrypted, safely stored and never shown.</small></p>
+                  </div>
+                  <div class="col-sm-8">
+                    <input type="password" name="fl-ent-appDevPass" class="form-control" id="fl-ent-appDevPass" placeholder="Enter Apple Developer account pass" data-error="Please enter a password" required/>
+                    <div class="help-block with-errors"></div>
+                  </div>
+                </div>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-enterprise-bundleId">Bundle ID</label>
+                    <p class="help-block label-helper"><small>This is a unique ID for your app on the App Store. Fliplet auto-generated one for you.</small></p>
+                  </div>
+                  <div class="col-sm-8 fl-bundleId-holder">
+                    <span class="bundleId-ent-text"></span> <span class="btn btn-sm btn-default" change-bundleid>Change</span>
+                    <div class="help-block with-errors"></div>
+                  </div>
+                  <div class="fl-bundleId-field">
+                    <div class="col-sm-8">
+                      <input type="text" name="fl-enterprise-bundleId" class="form-control" id="fl-enterprise-bundleId" placeholder="Enter your unique Bundle ID" data-error="Please enter your Bundle ID" required/>
+                      <div class="help-block with-errors"></div>
+                      <p class="help-block"><small>This value needs to be unique and the structure must be <code>com.<i>organisationName</i>.<i>appName</i></code>.</small></p>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-enterprise-teamId">Team ID</label>
+                  </div>
+                  <div class="col-sm-8">
+                    <input type="text" name="fl-enterprise-teamId" class="form-control" id="fl-enterprise-teamId" placeholder="Enter your Team ID" data-error="Please enter your Team ID" required/>
+                    <div class="help-block with-errors"></div>
+                    <p class="help-block"><small>The Team ID can be found <a href="https://developer.apple.com/account/#/membership/">here</a>.</small></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-  </div>
-
-  <div class='appstore'>
-    <div class="form-group clearfix android-only">
-      <div class="col-sm-4 control-label">
-        <label for="show_subtitle">Marketing opt-out</label>
-      </div>
-      <div class="col-sm-8">
-        <div class="checkbox checkbox-icon">
-          <input type="checkbox" id="marketingOptOut" name="marketingOptOut">
-          <label for="marketingOptOut">
-            <span class="check"><i class="fa fa-check"></i></span> Do not promote my application except in Google Play and in any Google-owned online or mobile properties.
-          </label>
+        <hr>
+        <div class="col-xs-5 save-btn-holder">
+          <p class="help-block"><small>Save your progress at any point.<br>You can come back and finish it.</small></p>
+          <div class="btn btn-primary" data-enterprise-save>Save progress <i class="fa fa-cloud-upload"></i></div>
+          <p class="text-success save-enterprise-progress">Your progress was saved successfully!</p>
         </div>
-      </div>
+        <div class="col-xs-5 save-btn-holder col-xs-offset-2 text-right">
+          <p class="help-block"><small>Submit your information when you are ready!<br>We will take care of the rest.</small></p>
+          <button type="submit" class="btn btn-primary fl-green" data-enterprise-build>Request App <i class="fa fa-paper-plane"></i></button>
+          <p class="text-success save-enterprise-request">Your request was sent successfully!</p>
+        </div>
+      </form>
+    </div>
+    <div role="tabpanel" class="tab-pane fl-sb-unsigned" id="unsigned-tab">
+      <form data-toggle="validator" data-disable="false" role="form" id="unsignedConfiguration">
+        <div class="panel-group" id="accordionUnsigned" role="tablist" aria-multiselectable="true">
+          <div class="panel panel-default app-details">
+            <div class="panel-heading" role="tab" id="unsignedSettingsHeading">
+              <h4 class="panel-title" role="button" data-toggle="collapse" data-parent="#accordionUnsigned" href="#unsignedSettings" aria-expanded="true" aria-controls="unsignedSettings">App details <small>(Required)</small></h4>
+            </div>
+            <div id="unsignedSettings" class="panel-collapse collapse" role="tabpanel" aria-labelledby="unsignedSettingsHeading">
+              <div class="panel-body">
+                <p style="margin-bottom: 25px;"><strong>Go to the <a href="#" class="redirectToSettings">App settings</a> page to change these fields. They are all required.</strong></p>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label>App icon</label>
+                  </div>
+                  <div class="col-sm-8">
+                    <img class="setting-app-icon userUploaded hidden" src="#" />
+                    <img class="setting-app-icon default" src="{{ asset 'img/app-icon.png' }}" />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <div class="col-sm-4 control-label">
+                    <label>Splash screen</label>
+                  </div>
+                  <div class="col-sm-8">
+                    <div class="setting-splash-screen userUploaded hidden" style="background-image: url();"></div>
+                    <div class="setting-splash-screen default" style="background-image: url({{ asset 'img/splash-screen.png' }});"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="unsignedGeneralHeading">
+              <h4 class="panel-title" role="button" data-toggle="collapse" data-parent="#accordionUnsigned" href="#unsignedGeneral" aria-expanded="true" aria-controls="unsignedGeneral">App listing details <small>(Required)</small></h4>
+            </div>
+            <div id="unsignedGeneral" class="panel-collapse collapse" role="tabpanel" aria-labelledby="unsignedGeneralHeading">
+              <div class="panel-body">
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-unsigned-iconName">App icon name</label>
+                    <p class="help-block label-helper"><small>This is the name that will appear below the icon of your app</small></p>
+                  </div>
+                  <div class="col-sm-8">
+                    <input type="text" name="fl-unsigned-iconName" class="form-control" id="fl-unsigned-iconName" placeholder="Enter the app icon name" maxlength="13" data-error="Please enter an app icon name" required/>
+                    <div class="help-block with-errors"></div>
+                    <p class="help-block"><small>The length of your app icon name is limited to 13 characters</small></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="unsignedTechHeading">
+              <h4 class="panel-title" role="button" data-toggle="collapse" data-parent="#accordionUnsigned" href="#unsignedTech" aria-expanded="true" aria-controls="unsignedTech">App technical details <small>(Required)</small></h4>
+            </div>
+            <div id="unsignedTech" class="panel-collapse collapse" role="tabpanel" aria-labelledby="unsignedTechHeading">
+              <div class="panel-body">
+                <p>Now it's down to the technical inforamtion.</p>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-unsigned-bundleId">Bundle ID</label>
+                    <p class="help-block label-helper"><small>This is a unique ID for your app on the App Store. Fliplet auto-generated one for you.</small></p>
+                  </div>
+                  <div class="col-sm-8 fl-bundleId-holder">
+                    <span class="bundleId-uns-text"></span> <span class="btn btn-sm btn-default" change-bundleid>Change</span>
+                    <div class="help-block with-errors"></div>
+                  </div>
+                  <div class="fl-bundleId-field">
+                    <div class="col-sm-8">
+                      <input type="text" name="fl-unsigned-bundleId" class="form-control" id="fl-unsigned-bundleId" placeholder="Enter your unique Bundle ID" data-error="Please enter your Bundle ID" required/>
+                      <div class="help-block with-errors"></div>
+                      <p class="help-block"><small>This value needs to be unique and the structure must be <code>com.<i>organisationName</i>.<i>appName</i></code>.</small></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <hr>
+        <div class="col-xs-5 save-btn-holder">
+          <p class="help-block"><small>Save your progress at any point.<br>You can come back and finish it.</small></p>
+          <div class="btn btn-primary" data-unsigned-save>Save progress <i class="fa fa-cloud-upload"></i></div>
+          <p class="text-success save-unsigned-progress">Your progress was saved successfully!</p>
+        </div>
+        <div class="col-xs-5 save-btn-holder col-xs-offset-2 text-right">
+          <p class="help-block"><small>Submit your information when you are ready!<br>We will take care of the rest.</small></p>
+          <button type="submit" class="btn btn-primary fl-green" data-unsigned-build>Request App <i class="fa fa-paper-plane"></i></button>
+          <p class="text-success save-unsigned-request">Your request was sent successfully!</p>
+        </div>
+      </form>
+    </div>
+    <div role="tabpanel" class="tab-pane fl-sb-push" id="push-tab">
+      <form data-toggle="validator" data-disable="false" role="form" id="pushConfiguration">
+        <div class="panel-group" id="accordionPush" role="tablist" aria-multiselectable="true">
+          <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="notificationsHeading">
+              <h4 class="panel-title" role="button" data-toggle="collapse" data-parent="#accordionPush" href="#notifications" aria-expanded="true" aria-controls="notifications">Push notifications technical details <small>(Optional)</small></h4>
+            </div>
+            <div id="notifications" class="panel-collapse collapse" role="tabpanel" aria-labelledby="notificationsHeading">
+              <div class="panel-body">
+                <p>Push notifications can be set up at a later stage if you don't want to configure it now. It's the only section on this screen that you can edit after submission.</p>
+                <p>For instructions on how to get the information you need to configure this section, see these help articles:</p>
+                <ul>
+                  <li><a href="http://help.fliplet.com/deploying-and-updating-apps/technical-bits/setting-up-push-notifications-for-ios" target="_blank">How to set-up push notifications for iOS</a></li>
+                  <li <li><a href="http://help.fliplet.com/being-successful/using-analytics/adding-googles-firebase-push-notifications-for-android" target="_blank">How to set-up push notifications for Android</a></li>
+                </ul>
+                <p>For push notification best practices, you might also want to check out our blog post <a href="https://fliplet.com/blog/start-using-push-notifications-the-right-way/" target="_blank">everything you need to know about push notifications and how to use them well</a>.</p>
+                <p><strong>Push Notifications will only work for your latest app request.</strong></p>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-push-authKey">Authentication Key</label>
+                    <p class="help-block label-helper"><small>Authentication Key can be created <a target="_blank" href="https://developer.apple.com/account/ios/certificate/key">here</a></small></p>
+                  </div>
+                  <div class="col-sm-8">
+                    <input type="text" name="fl-push-authKey" class="form-control" id="fl-push-authKey" placeholder="Enter your Authentication Key" />
+                  </div>
+                </div>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-push-keyId">The Key ID <small>(of the p8 file)</small></label>
+                    <p class="help-block label-helper"><small>Available <a target="_blank" href="https://developer.apple.com/account/ios/certificate/key">here</a></small></p>
+                  </div>
+                  <div class="col-sm-8">
+                    <input type="text" name="fl-push-keyId" class="form-control" id="fl-push-keyId" placeholder="Enter your Key ID" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <hr>
+        <div class="col-xs-6 save-btn-holder">
+          <p class="help-block"><small>After saving send notifications from the Promote tab.</small></p>
+          <div class="btn btn-primary" data-push-save>Save <i class="fa fa-cloud-upload"></i></div>
+          <p class="text-success save-push-progress">Your data saved successfully!</p>
+        </div>
+      </form>
     </div>
   </div>
-
-  <div class="form-group clearfix appstore">
-    <label class="col-sm-4 control-label">Version Release</label>
-    <div class="col-sm-7">
-      <div class="radio radio-icon">
-        <input type="radio" id="manually" name="versionRelease" value="manually" checked>
-        <label for="manually">
-          <span class="check"><i class="fa fa-circle"></i></span> Manually release this version
-        </label>
-      </div>
-      <div class="radio radio-icon">
-        <input type="radio" id="automatically" name="versionRelease" value="automatically">
-        <label for="automatically">
-          <span class="check"><i class="fa fa-circle"></i></span> Automatically release this version
-        </label>
-      </div>
-    </div>
-  </div>
-
-  <div class="form-group clearfix appstore">
-    <label class="col-sm-4 control-label">Please Note</label>
-    <div class="col-sm-7">
-    Your app will be available in all territories and for free. If you want to change this please modify the app's settings in the app store.
-    </div>
-  </div>
-
-  <!-- end of form -->
-
-  <hr />
-
-  <div class="form-group clearfix">
-    <div class="col-sm-4 control-label"></div>
-    <div class="col-sm-7">
-      <input type="submit" class="btn btn-primary" data-save value="Save changes" />
-      <input type="submit" class="btn btn-default" data-build value="Save & Build" />
-    </div>
-  </div>
-</form>
+</div>

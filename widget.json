@@ -1,10 +1,10 @@
 {
-  "name": "App Submissions",
-  "package": "com.fliplet.app-submissions",
+  "name": "Apple App Submissions",
+  "package": "com.fliplet.apple-app-request",
   "version": "1.0.0",
   "icon": "img/icon.png",
-  "tags": [],
-  "provider_only": true,
+  "tags": ["type:submissionComponent", "category:general"],
+  "provider_only": false,
   "references": [],
   "html_tag": "div",
   "interface": {
@@ -13,11 +13,20 @@
       "fliplet-app-submissions",
       "fliplet-media",
       "fliplet-studio-ui",
-      "bootstrap"
+      "handlebars",
+      "bootstrap",
+      "font-awesome",
+      "moment"
     ],
     "assets": [
+      "img/app-icon.png",
+      "img/splash-screen.png",
+      "vendor/bootstrap-tokenfield.css",
+      "vendor/bootstrap-tokenfield.js",
+      "vendor/bootstrap-select.min.css",
+      "vendor/bootstrap-select.min.js",
+      "vendor/validator.js",
       "css/interface.css",
-      "js/formValidation.js",
       "js/interface.js"
     ]
   },
