@@ -199,17 +199,6 @@ function requestBuild(origin, submission) {
   });
 }
 
-/*
-function showRequestStatus() {
-  if (widgetData.formData.requestBuild) {
-    var requestCreatedAt = moment(widgetData.formData.requestCreatedAt).format('MMMM Do, YYYY - h:mm A');
-    $('.app-status-panel .requestDate').html(requestCreatedAt);
-    $('.app-status-panel .requestType').html(widgetData.formData.submissionType);
-    $('.app-status').removeClass('hidden');
-  }
-}
-*/
-
 function saveAppStoreData(request) {
   var data = appStoreSubmission.data;
   var pushData = notificationSettings;
@@ -365,7 +354,6 @@ function init() {
   loadEnterpriseData();
   loadUnsignedData();
   loadPushNotesData();
-  // showRequestStatus();
   Fliplet.Widget.autosize();
 }
 
@@ -523,10 +511,7 @@ Fliplet.App.Submissions.get().then(function(submissions) {
         submissionType: "appStore"
       }
     }).then(function(submission) {
-
-      console.log(submission);
       appStoreSubmission.id = submission.id;
-
     }).catch(function(err) {
       alert(err.responseJSON.message);
     });
@@ -537,10 +522,7 @@ Fliplet.App.Submissions.get().then(function(submissions) {
         submissionType: "enterprise"
       }
     }).then(function(submission) {
-
-      console.log(submission);
       enterpriseSubmission.id = submission.id;
-
     }).catch(function(err) {
       alert(err.responseJSON.message);
     });
@@ -551,10 +533,7 @@ Fliplet.App.Submissions.get().then(function(submissions) {
         submissionType: "unsigned"
       }
     }).then(function(submission) {
-
-      console.log(submission);
       unsignedSubmission.id = submission.id;
-
     }).catch(function(err) {
       alert(err.responseJSON.message);
     });
