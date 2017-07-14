@@ -190,7 +190,7 @@ function requestBuild(origin, submission) {
     setTimeout(function() {
       $('.save-' + origin + '-request').removeClass('saved');
     }, 4000);
-  }).then(function() {
+
     Fliplet.App.Submissions.build(submission.id).then(function(response) {
       console.log(response);
     });
@@ -417,9 +417,22 @@ $('[name="fl-store-keywords"]').on('tokenfield:createtoken', function(e) {
   }
 });
 
-$('.redirectToSettings').on('click', function() {
+$('.redirectToSettings, [data-change-settings]').on('click', function(event) {
+  event.preventDefault();
+
   Fliplet.Studio.emit('navigate', {
     name: 'appSettings',
+    params: {
+      appId: Fliplet.Env.get('appId')
+    }
+  });
+});
+
+$('[data-change-assets]').on('click', function(event) {
+  event.preventDefault();
+
+  Fliplet.Studio.emit('navigate', {
+    name: 'launchAssets',
     params: {
       appId: Fliplet.Env.get('appId')
     }
@@ -436,17 +449,18 @@ $('#appStoreConfiguration').validator().on('submit', function(event) {
     // Gives time to Validator to apply classes
     setTimeout(checkGroupErrors, 0);
     alert('Please fill in all the required information.');
-  } else {
-    event.preventDefault();
-
-    if (allAppData) {
-      saveAppStoreData(true);
-    } else {
-      alert('Please configure your App Settings to contain the required information.');
-    }
-    // Gives time to Validator to apply classes
-    setTimeout(checkGroupErrors, 0);
+    return;
   }
+
+  event.preventDefault();
+
+  if (allAppData) {
+    saveAppStoreData(true);
+  } else {
+    alert('Please configure your App Settings to contain the required information.');
+  }
+  // Gives time to Validator to apply classes
+  setTimeout(checkGroupErrors, 0);
 });
 
 $('#enterpriseConfiguration').validator().on('submit', function(event) {
@@ -454,17 +468,18 @@ $('#enterpriseConfiguration').validator().on('submit', function(event) {
     // Gives time to Validator to apply classes
     setTimeout(checkGroupErrors, 0);
     alert('Please fill in all the required information.');
-  } else {
-    event.preventDefault();
-
-    if (allAppData) {
-      saveEnterpriseData(true);
-    } else {
-      alert('Please configure your App Settings to contain the required information.');
-    }
-    // Gives time to Validator to apply classes
-    setTimeout(checkGroupErrors, 0);
+    return;
   }
+
+  event.preventDefault();
+
+  if (allAppData) {
+    saveEnterpriseData(true);
+  } else {
+    alert('Please configure your App Settings to contain the required information.');
+  }
+  // Gives time to Validator to apply classes
+  setTimeout(checkGroupErrors, 0);
 });
 
 $('#unsignedConfiguration').validator().on('submit', function(event) {
@@ -472,17 +487,18 @@ $('#unsignedConfiguration').validator().on('submit', function(event) {
     // Gives time to Validator to apply classes
     setTimeout(checkGroupErrors, 0);
     alert('Please fill in all the required information.');
-  } else {
-    event.preventDefault();
-
-    if (allAppData) {
-      saveUnsignedData(true);
-    } else {
-      alert('Please configure your App Settings to contain the required information.');
-    }
-    // Gives time to Validator to apply classes
-    setTimeout(checkGroupErrors, 0);
+    return;
   }
+
+  event.preventDefault();
+
+  if (allAppData) {
+    saveUnsignedData(true);
+  } else {
+    alert('Please configure your App Settings to contain the required information.');
+  }
+  // Gives time to Validator to apply classes
+  setTimeout(checkGroupErrors, 0);
 });
 
 /* SAVE PROGRESS CLICK */
@@ -500,7 +516,7 @@ $('[data-push-save]').on('click', function() {
 });
 
 /* INIT */
-$('#appStoreConfiguration, #enterpriseConfiguration, #unsignedConfiguration').validator().off('input.bs.validator change.bs.validator focusout.bs.validator');
+$('#appStoreConfiguration, #enterpriseConfiguration, #unsignedConfiguration').validator().off('focusout.bs.validator');
 $('[name="submissionType"][value="appStore"]').prop('checked', true).trigger('change');
 
 Fliplet.App.Submissions.get()

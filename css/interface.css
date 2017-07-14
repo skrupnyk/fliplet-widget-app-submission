@@ -118,6 +118,34 @@ h3 small {
   margin-top: 25px;
 }
 
+.panel-title {
+  position: relative;
+  padding-right: 27px;
+}
+
+.panel-title .fa {
+  position: absolute;
+  right: 0;
+  width: 17px;
+  height: 17px;
+  font-size: 24px;
+  line-height: 17px;
+  -webkit-transition: -webkit-transform 0.25s ease;
+  transition: transform 0.25s ease;
+}
+
+.panel-title.collapsed .fa {
+  -ms-transform: rotate(0deg);
+  -webkit-transform: rotate(0deg);
+  transform: rotate(0deg);
+}
+
+.panel-title .fa {
+  -ms-transform: rotate(-180deg);
+  -webkit-transform: rotate(-180deg);
+  transform: rotate(-180deg);
+}
+
 .label-helper {
   margin-top: -5px;
 }
