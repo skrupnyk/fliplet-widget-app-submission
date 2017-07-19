@@ -236,6 +236,8 @@ function save(origin, submission) {
 }
 
 function requestBuild(origin, submission) {
+  $('.button-' + origin + '-request').html('Requesting <i class="fa fa-spinner fa-pulse fa-fw"></i>');
+
   if (origin === 'appStore') {
     submission.data.screensToScreenshot = appSettings.screensToScreenshot;
   }
@@ -246,15 +248,20 @@ function requestBuild(origin, submission) {
   Fliplet.App.Submissions.update(submission.id, submission.data).then(function() {
 
     Fliplet.App.Submissions.build(submission.id).then(function(response) {
+      Fliplet.Studio.emit('submission-request');
+
+      $('.button-' + origin + '-request').html('Request App <i class="fa fa-paper-plane"></i>');
       $('.save-' + origin + '-request').addClass('saved');
 
       setTimeout(function() {
         $('.save-' + origin + '-request').removeClass('saved');
       }, 10000);
     }, function(err) {
+      $('.button-' + origin + '-request').html('Request App <i class="fa fa-paper-plane"></i>');
       alert(err.responseJSON.message);
     });
   }).catch(function(err) {
+    $('.button-' + origin + '-request').html('Request App <i class="fa fa-paper-plane"></i>');
     alert(err.responseJSON.message);
   });
 }
