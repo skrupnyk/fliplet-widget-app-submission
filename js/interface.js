@@ -428,7 +428,7 @@ function checkGroupErrors() {
     var withError = $(el).find('.has-error').length;
 
     if (withError === 0) {
-      $(el).not('.app-details').removeClass('required-fill');
+      $(el).not('.app-details-appStore, .app-details-ent, .app-details-uns').removeClass('required-fill');
     }
   });
 }
