@@ -56,12 +56,8 @@ function loadAppStoreData() {
       return;
     }
     if (name === "fl-store-userCountry" || name === "fl-store-category1" || name === "fl-store-category2" || name === "fl-store-language") {
-      $('[name="' + name + '"]').val(appStoreSubmission.data[name]).trigger('change');
+      $('[name="' + name + '"]').val((typeof appStoreSubmission.data[name] !== "undefined") ? appStoreSubmission.data[name] : '').trigger('change');
       return;
-    }
-
-    if (name === "fl-store-pricing") {
-      $('[name="' + name + '"]').val((typeof appStoreSubmission.data[name] !== "undefined") ? appStoreSubmission.data[name] : 'free').trigger('change');
     }
 
     /* ADD KEYWORDS */
@@ -88,7 +84,7 @@ function loadAppStoreData() {
       return;
     }
 
-    $('[name="' + name + '"]').val(appStoreSubmission.data[name]);
+    $('[name="' + name + '"]').val((typeof appStoreSubmission.data[name] !== "undefined") ? appStoreSubmission.data[name] : '');
   });
 }
 
@@ -116,7 +112,7 @@ function loadEnterpriseData() {
       return;
     }
 
-    $('[name="' + name + '"]').val(enterpriseSubmission.data[name]);
+    $('[name="' + name + '"]').val((typeof enterpriseSubmission.data[name] !== "undefined") ? enterpriseSubmission.data[name] : '');
   });
 }
 
@@ -144,7 +140,7 @@ function loadUnsignedData() {
       return;
     }
 
-    $('[name="' + name + '"]').val(unsignedSubmission.data[name]);
+    $('[name="' + name + '"]').val((typeof unsignedSubmission.data[name] !== "undefined") ? unsignedSubmission.data[name] : '');
   });
 }
 
@@ -543,7 +539,7 @@ Fliplet.App.Submissions.get()
         }
       })
       .then(function(submission) {
-        appStoreSubmission.id = submission.id;
+        appStoreSubmission = submission;
       }),
       Fliplet.App.Submissions.create({
         platform: 'ios',
@@ -552,7 +548,7 @@ Fliplet.App.Submissions.get()
         }
       })
       .then(function(submission) {
-        unsignedSubmission.id = submission.id;
+        unsignedSubmission = submission;
       }),
       Fliplet.App.Submissions.create({
         platform: 'ios',
@@ -561,7 +557,7 @@ Fliplet.App.Submissions.get()
         }
       })
       .then(function(submission) {
-        enterpriseSubmission.id = submission.id;
+        enterpriseSubmission = submission;
       })
     ]);
   })
