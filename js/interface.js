@@ -248,7 +248,7 @@ function requestBuild(origin, submission) {
   Fliplet.App.Submissions.update(submission.id, submission.data).then(function() {
 
     Fliplet.App.Submissions.build(submission.id).then(function(response) {
-      Fliplet.Studio.emit('submission-request');
+      Fliplet.Studio.emit('refresh-app-submissions');
 
       $('.button-' + origin + '-request').html('Request App <i class="fa fa-paper-plane"></i>');
       $('.save-' + origin + '-request').addClass('saved');
