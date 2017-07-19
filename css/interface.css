@@ -70,8 +70,29 @@
   border-color: #a94442;
 }
 
+.panel.required-fill {
+  -webkit-box-shadow: 0 1px 1px rgba(169, 68, 66, 0.30);
+  box-shadow: 0 1px 1px rgba(169, 68, 66, 0.30);
+}
+
 .panel.required-fill h4 {
   color: #a94442;
+}
+
+.panel-default.required-fill {
+  border-color: #a94442;
+}
+
+.app-details-error, .app-details-warning {
+  display: none;
+}
+
+.has-error .app-details-error {
+  display: block;
+}
+
+.has-warning .app-details-warning {
+  display: block;
 }
 
 .has-error .help-block small {
