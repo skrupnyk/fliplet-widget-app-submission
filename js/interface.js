@@ -83,6 +83,9 @@ function loadAppStoreData() {
       $('[name="' + name + '"]').val(appStoreSubmission.data[name]);
       return;
     }
+    if (name === "_fl-store-appDevPass" || name === "fl-store-appDevLogin") {
+      return;
+    }
 
     $('[name="' + name + '"]').val((typeof appStoreSubmission.data[name] !== "undefined") ? appStoreSubmission.data[name] : '');
   });
@@ -134,6 +137,9 @@ function loadEnterpriseData() {
     if (name === "fl-ent-bundleId" && typeof enterpriseSubmission.data[name] !== "undefined") {
       $('.bundleId-ent-text').html(enterpriseSubmission.data[name]);
       $('[name="' + name + '"]').val(enterpriseSubmission.data[name]);
+      return;
+    }
+    if (name === "_fl-ent-appDevPass" || name === "fl-ent-appDevLogin") {
       return;
     }
 
