@@ -97,7 +97,7 @@ function loadAppStoreData() {
       $('[name="' + name + '"]').val(appStoreSubmission.data[name]);
       return;
     }
-    if (name === "_fl-store-appDevPass" || name === "fl-store-appDevLogin") {
+    if (name === "_fl-store-appDevPass") {
       return;
     }
 
@@ -541,7 +541,11 @@ $('#appStoreConfiguration').validator().on('submit', function(event) {
   event.preventDefault();
 
   if (allAppData.indexOf('appStore') > -1) {
-    saveAppStoreData(true);
+    var requestAppConfirm = confirm("Are you sure you wish to submit this request to publish your app??");
+
+    if (requestAppConfirm) {
+      saveAppStoreData(true);
+    }
   } else {
     alert('Please configure your App Settings to contain the required information.');
   }
@@ -560,7 +564,11 @@ $('#enterpriseConfiguration').validator().on('submit', function(event) {
   event.preventDefault();
 
   if (allAppData.indexOf('enterprise') > -1) {
-    saveEnterpriseData(true);
+    var requestAppConfirm = confirm("Are you sure you wish to submit this request to publish your app??");
+
+    if (requestAppConfirm) {
+      saveEnterpriseData(true);
+    }
   } else {
     alert('Please configure your App Settings to contain the required information.');
   }
@@ -579,7 +587,11 @@ $('#unsignedConfiguration').validator().on('submit', function(event) {
   event.preventDefault();
 
   if (allAppData.indexOf('unsigned') > -1) {
-    saveUnsignedData(true);
+    var requestAppConfirm = confirm("Are you sure you wish to submit this request to publish your app??");
+
+    if (requestAppConfirm) {
+      saveUnsignedData(true);
+    }
   } else {
     alert('Please configure your App Settings to contain the required information.');
   }
