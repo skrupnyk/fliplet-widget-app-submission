@@ -249,8 +249,64 @@ function loadPushNotesData() {
   });
 }
 
+function submissionBuild(appSubmission, origin) {
+  Fliplet.App.Submissions.build(appSubmission.id).then(function(builtSubmission) {
+
+    if (origin === "appStore") {
+      appStoreSubmission = builtSubmission.submission;
+    }
+    if (origin === "enterprise") {
+      enterpriseSubmission = builtSubmission.submission;
+    }
+    if (origin === "unsigned") {
+      unsignedSubmission = builtSubmission.submission;
+    }
+
+    Fliplet.Studio.emit('refresh-app-submissions');
+
+    $('.button-' + origin + '-request').html('Request App <i class="fa fa-paper-plane"></i>');
+    $('.save-' + origin + '-request').addClass('saved');
+
+    setTimeout(function() {
+      $('.save-' + origin + '-request').removeClass('saved');
+    }, 10000);
+  }, function(err) {
+    $('.button-' + origin + '-request').html('Request App <i class="fa fa-paper-plane"></i>');
+    alert(err.responseJSON.message);
+  });
+}
 
 function save(origin, submission) {
+  if (submission.status !== 'started') {
+    return Fliplet.App.Submissions.create({
+        platform: 'ios',
+        data: submission.data
+      })
+      .then(function(newSubmission) {
+        if (origin === "appStore") {
+          appStoreSubmission = newSubmission;
+        }
+        if (origin === "enterprise") {
+          enterpriseSubmission = newSubmission;
+        }
+        if (origin === "unsigned") {
+          unsignedSubmission = newSubmission;
+        }
+
+        Fliplet.App.Submissions.update(newSubmission.id, newSubmission.data).then(function() {
+          $('.save-' + origin + '-progress').addClass('saved');
+
+          setTimeout(function() {
+            $('.save-' + origin + '-progress').removeClass('saved');
+          }, 4000);
+        });
+
+      })
+      .catch(function(err) {
+        alert(err.responseJSON.message);
+      });
+  }
+
   Fliplet.App.Submissions.update(submission.id, submission.data).then(function() {
     $('.save-' + origin + '-progress').addClass('saved');
 
@@ -270,21 +326,35 @@ function requestBuild(origin, submission) {
   submission.data.splashScreen = appSettings.splashScreen;
   submission.data.appIcon = appIcon;
 
+  if (submission.status !== 'started') {
+    return Fliplet.App.Submissions.create({
+        platform: 'ios',
+        data: submission.data
+      })
+      .then(function(newSubmission) {
+        if (origin === "appStore") {
+          appStoreSubmission = newSubmission;
+        }
+        if (origin === "enterprise") {
+          enterpriseSubmission = newSubmission;
+        }
+        if (origin === "unsigned") {
+          unsignedSubmission = newSubmission;
+        }
+
+        submissionBuild(newSubmission, origin);
+
+      })
+      .catch(function(err) {
+        $('.button-' + origin + '-request').html('Request App <i class="fa fa-paper-plane"></i>');
+        alert(err.responseJSON.message);
+      });
+  }
+
   Fliplet.App.Submissions.update(submission.id, submission.data).then(function() {
 
-    Fliplet.App.Submissions.build(submission.id).then(function(response) {
-      Fliplet.Studio.emit('refresh-app-submissions');
+    submissionBuild(submission, origin);
 
-      $('.button-' + origin + '-request').html('Request App <i class="fa fa-paper-plane"></i>');
-      $('.save-' + origin + '-request').addClass('saved');
-
-      setTimeout(function() {
-        $('.save-' + origin + '-request').removeClass('saved');
-      }, 10000);
-    }, function(err) {
-      $('.button-' + origin + '-request').html('Request App <i class="fa fa-paper-plane"></i>');
-      alert(err.responseJSON.message);
-    });
   }).catch(function(err) {
     $('.button-' + origin + '-request').html('Request App <i class="fa fa-paper-plane"></i>');
     alert(err.responseJSON.message);
@@ -541,7 +611,13 @@ $('#appStoreConfiguration').validator().on('submit', function(event) {
   event.preventDefault();
 
   if (allAppData.indexOf('appStore') > -1) {
-    var requestAppConfirm = confirm("Are you sure you wish to submit this request to publish your app??");
+    var requestAppConfirm;
+
+    if (appStoreSubmission.status === "started") {
+      requestAppConfirm = confirm("Are you sure you wish to request your app to be published?");
+    } else {
+      requestAppConfirm = confirm("Are you sure you wish to update your published app?");
+    }
 
     if (requestAppConfirm) {
       saveAppStoreData(true);
@@ -564,7 +640,13 @@ $('#enterpriseConfiguration').validator().on('submit', function(event) {
   event.preventDefault();
 
   if (allAppData.indexOf('enterprise') > -1) {
-    var requestAppConfirm = confirm("Are you sure you wish to submit this request to publish your app??");
+    var requestAppConfirm;
+
+    if (enterpriseSubmission.status === "started") {
+      requestAppConfirm = confirm("Are you sure you wish to request your app to be published?");
+    } else {
+      requestAppConfirm = confirm("Are you sure you wish to update your published app?");
+    }
 
     if (requestAppConfirm) {
       saveEnterpriseData(true);
@@ -587,7 +669,13 @@ $('#unsignedConfiguration').validator().on('submit', function(event) {
   event.preventDefault();
 
   if (allAppData.indexOf('unsigned') > -1) {
-    var requestAppConfirm = confirm("Are you sure you wish to submit this request to publish your app??");
+    var requestAppConfirm;
+
+    if (unsignedSubmission.status === "started") {
+      requestAppConfirm = confirm("Are you sure you wish to request your app to be published?");
+    } else {
+      requestAppConfirm = confirm("Are you sure you wish to update your published app?");
+    }
 
     if (requestAppConfirm) {
       saveUnsignedData(true);
@@ -618,17 +706,30 @@ $('#appStoreConfiguration, #enterpriseConfiguration, #unsignedConfiguration').va
 $('[name="submissionType"][value="appStore"]').prop('checked', true).trigger('change');
 
 function submissionChecker(submissions) {
-  appStoreSubmission = _.find(submissions, function(submission) {
+  var asub = _.filter(submissions, function(submission) {
     return submission.data.submissionType === "appStore" && submission.platform === "ios";
   });
 
-  enterpriseSubmission = _.find(submissions, function(submission) {
+  asub = _.maxBy(asub, function(el) {
+    return new Date(el.updatedAt).getTime();
+  });
+  appStoreSubmission = asub;
+
+  var esub = _.filter(submissions, function(submission) {
     return submission.data.submissionType === "enterprise" && submission.platform === "ios";
   });
+  esub = _.maxBy(esub, function(el) {
+    return new Date(el.updatedAt).getTime();
+  });
+  enterpriseSubmission = esub;
 
-  unsignedSubmission = _.find(submissions, function(submission) {
+  var usub = _.filter(submissions, function(submission) {
     return submission.data.submissionType === "unsigned" && submission.platform === "ios";
   });
+  usub = _.maxBy(usub, function(el) {
+    return new Date(el.updatedAt).getTime();
+  });
+  unsignedSubmission = usub;
 
   if (_.isEmpty(appStoreSubmission)) {
     Fliplet.App.Submissions.create({
