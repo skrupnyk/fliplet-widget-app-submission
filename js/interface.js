@@ -328,40 +328,45 @@ function requestBuild(origin, submission) {
   submission.data.splashScreen = appSettings.splashScreen;
   submission.data.appIcon = appIcon;
 
-  if (submission.status !== 'started') {
-    return Fliplet.App.Submissions.create({
-        platform: 'ios',
-        data: submission.data,
-        result: submission.result
-      })
-      .then(function(newSubmission) {
-        if (origin === "appStore") {
-          appStoreSubmission = newSubmission;
-        }
-        if (origin === "enterprise") {
-          enterpriseSubmission = newSubmission;
-        }
-        if (origin === "unsigned") {
-          unsignedSubmission = newSubmission;
-        }
-
-        submissionBuild(newSubmission, origin);
-
-      })
-      .catch(function(err) {
-        $('.button-' + origin + '-request').html('Request App <i class="fa fa-paper-plane"></i>');
-        alert(err.responseJSON.message);
+  Fliplet.App.Submissions.get()
+    .then(function(submissions) {
+      var savedSubmission = _.find(submissions, function(sub) {
+        return sub.id === submission.id;
       });
-  }
 
-  Fliplet.App.Submissions.update(submission.id, submission.data).then(function() {
+      submission = _.extend(savedSubmission, submission);
+      return Promise.resolve();
+    })
+    .then(function() {
+      if (submission.status !== 'started') {
+        return Fliplet.App.Submissions.create({
+            platform: 'ios',
+            data: submission.data,
+            result: submission.result
+          })
+          .then(function(newSubmission) {
+            if (origin === "appStore") {
+              appStoreSubmission = newSubmission;
+            }
+            if (origin === "enterprise") {
+              enterpriseSubmission = newSubmission;
+            }
+            if (origin === "unsigned") {
+              unsignedSubmission = newSubmission;
+            }
 
-    submissionBuild(submission, origin);
+            submissionBuild(newSubmission, origin);
+          });
+      }
 
-  }).catch(function(err) {
-    $('.button-' + origin + '-request').html('Request App <i class="fa fa-paper-plane"></i>');
-    alert(err.responseJSON.message);
-  });
+      Fliplet.App.Submissions.update(submission.id, submission.data).then(function() {
+        submissionBuild(submission, origin);
+      });
+    })
+    .catch(function(err) {
+      $('.button-' + origin + '-request').html('Request App <i class="fa fa-paper-plane"></i>');
+      alert(err.responseJSON.message);
+    });
 }
 
 function saveAppStoreData(request) {
