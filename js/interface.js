@@ -493,18 +493,16 @@ function savePushData() {
 
   notificationSettings = data;
 
-  if (notificationSettings.apn) {
-    Fliplet.API.request({
-      method: 'PUT',
-      url: 'v1/widget-instances/com.fliplet.push-notifications?appId=' + Fliplet.Env.get('appId'),
-      data: notificationSettings
-    }).then(function() {
-      $('.save-push-progress').addClass('saved');
+  Fliplet.API.request({
+    method: 'PUT',
+    url: 'v1/widget-instances/com.fliplet.push-notifications?appId=' + Fliplet.Env.get('appId'),
+    data: notificationSettings
+  }).then(function() {
+    $('.save-push-progress').addClass('saved');
 
-      setTimeout(function() {
-        $('.save-push-progress').removeClass('saved');
-      }, 4000);
-    });
+    setTimeout(function() {
+      $('.save-push-progress').removeClass('saved');
+    }, 4000);
   }
 }
 
