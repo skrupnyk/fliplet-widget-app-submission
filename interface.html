@@ -1,78 +1,3 @@
-<div class="hidden">
-  <h3>App Status</h3>
-  <div class="activity-table">
-    <div class="activity-table-header">
-      <div class="activity-table-cell platform">
-        Platform
-      </div>
-      <div class="activity-table-cell">
-        Requested by
-      </div>
-      <div class="activity-table-cell">
-        Date
-      </div>
-      <div class="activity-table-cell">
-        Version <small>(Build/Content/Framework)</small>
-      </div>
-      <div class="activity-table-cell">
-        Status
-      </div>
-    </div>
-    <div class="activity-table-body">
-      <div class="activity-table-row building">
-        <div class="activity-table-cell platform">
-          Enterprise
-        </div>
-        <div class="activity-table-cell">
-          hcarneiro@fliplet.com
-        </div>
-        <div class="activity-table-cell">
-          Jun 27 2017 10:03AM
-        </div>
-        <div class="activity-table-cell">
-          v3 / v25 / v12345
-        </div>
-        <div class="activity-table-cell">
-          <i class="fa fa-spinner fa-pulse fa-fw"></i> Building
-        </div>
-      </div>
-      <div class="activity-table-row ready">
-        <div class="activity-table-cell platform">
-          Unsigned
-        </div>
-        <div class="activity-table-cell">
-          hcarneiro@fliplet.com
-        </div>
-        <div class="activity-table-cell">
-          Jun 27 2017 10:03AM
-        </div>
-        <div class="activity-table-cell">
-          v2 / v25 / v12345
-        </div>
-        <div class="activity-table-cell">
-          <i class="fa fa-circle"></i> Ready (<a href="#">Download</a>)
-        </div>
-      </div>
-      <div class="activity-table-row ready">
-        <div class="activity-table-cell platform">
-          App Store
-        </div>
-        <div class="activity-table-cell">
-          hcarneiro@fliplet.com
-        </div>
-        <div class="activity-table-cell">
-          Jun 27 2017 10:03AM
-        </div>
-        <div class="activity-table-cell">
-          v1 / v15 / v12345
-        </div>
-        <div class="activity-table-cell">
-          <i class="fa fa-circle"></i> Live
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
 <h3>iOS distribution settings</h3>
 <p>Before your app can be distributed, we need some additional information. Select the tab(s) that match how you want to distribute your app and add the data required. Once you submit your information and assets, we will process your request and distribute
   your app in your prefered ways within 2 business days. Apple may take up to 5 days to review apps.<br><br> For more information about these fields and examples, see <a href="https://developer.apple.com/app-store/product-page/" target="_blank">Apple's official recommendations</a>.</p>
@@ -93,8 +18,8 @@
     </li>
     <li role="presentation" id="unsigned-control">
       <a href="#unsigned-tab" aria-controls="unsigned" role="tab" data-toggle="tab">
-        <span>Unsigned</span>
-        <span><small>Get the app file</small></span>
+        <span>Unsigned IPA</span>
+        <span><small>Get the IPA file</small></span>
       </a>
     </li>
     <li role="presentation" id="push-control">
@@ -106,6 +31,7 @@
   </ul>
   <div class="tab-content">
     <div role="tabpanel" class="tab-pane fl-sb-appStore active" id="appstore-tab">
+      <p class="text-info">Complete this section to submit your app to the <a href="https://www.apple.com/ios/app-store/" target="_blank">Apple App Store</a>.</p>
       <form data-disable="false" role="form" id="appStoreConfiguration">
         <div class="panel-group" id="accordionAppStore" role="tablist" aria-multiselectable="true">
           <div class="panel panel-default app-details-appStore">
@@ -955,6 +881,7 @@
       </form>
     </div>
     <div role="tabpanel" class="tab-pane fl-sb-enterprise" id="enterprise-tab">
+      <p class="text-info">Complete this section to receive an app signed with <a href="https://developer.apple.com/programs/enterprise/" target="_blank">your Apple Developer Enterprise account</a> to distribute in-house apps to your employees.</p>
       <form data-disable="false" role="form" id="enterpriseConfiguration">
         <div class="panel-group" id="accordionEnterprise" role="tablist" aria-multiselectable="true">
           <div class="panel panel-default app-details-ent">
@@ -1085,6 +1012,7 @@
       </form>
     </div>
     <div role="tabpanel" class="tab-pane fl-sb-unsigned" id="unsigned-tab">
+      <p class="text-info">Unsigned apps will need to be signed before they can be distributed. If you would like Fliplet to sign the app for you, please request an app via the "App Store" or "Enterprise" tabs above. If you request an unsigned app file, you will need a Mac or software that can resign this app for you. For more information about signing apps, please see <a href="https://developer.apple.com/library/content/documentation/Security/Conceptual/CodeSigningGuide/Procedures/Procedures.html#//apple_ref/doc/uid/TP40005929-CH4-SW7" target="_blank">this Apple Developer article</a>.</p>
       <form data-disable="false" role="form" id="unsignedConfiguration">
         <div class="panel-group" id="accordionUnsigned" role="tablist" aria-multiselectable="true">
           <div class="panel panel-default app-details-uns">
