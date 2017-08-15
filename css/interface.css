@@ -50,14 +50,6 @@
   border-bottom-color: #000201;
 }
 
-.app-status-panel.fl-green .fa {
-  color: #1db188;
-}
-
-.app-status-panel.fl-green h4 {
-  color: #126f55;
-}
-
 .radio-icon {
   text-align: center;
 }
@@ -135,8 +127,8 @@ h3 small {
   font-weight: 500;
 }
 
-.tab-pane form {
-  margin-top: 25px;
+.tab-pane {
+  padding-top: 10px;
 }
 
 .panel-title {
@@ -210,55 +202,6 @@ h3 small {
 
 .bootstrap-select.btn-group.show-tick .dropdown-menu li.selected a span.check-mark {
   color: #00abd1;
-}
-
-
-/* Status table */
-
-.activity-table {
-  display: table;
-  table-layout: fixed;
-  width: 100%;
-  color: #999;
-  margin-bottom: 25px;
-}
-
-.activity-table-header {
-  background-color: #f5f5f5;
-  border-bottom: 1px solid #e4e9eb;
-  display: table-header-group;
-  padding-right: 16px;
-  color: #999;
-}
-
-.activity-table-cell {
-  border-bottom: 1px solid #e4e9eb;
-  display: table-cell;
-  padding-left: 10px;
-  vertical-align: middle;
-  height: 46px;
-  width: 100%;
-  word-break: break-word;
-}
-
-.activity-table-cell.platform {
-  width: 90px;
-}
-
-.activity-table-body {
-  display: table-row-group;
-}
-
-.activity-table-row {
-  display: table-row;
-}
-
-.activity-table-row.building .fa {
-  color: #ed9119;
-}
-
-.activity-table-row.ready .fa {
-  color: #1db188;
 }
 
 .app-status-panel {
