@@ -27,21 +27,6 @@ var createBundleID = function(orgName, appName) {
 };
 
 function loadAppStoreData() {
-  var reviewerNotesTemplate = `Dear Apple,
-
-  The [App Name] app guides users through the issues their business should be thinking about when trying to prevent, and respond to, data breaches.
-
-  The app and its content are intended for public consumption and much like apps such as Salesforce, users need to verify their details before being given access to the content. The app contains a validation form for accessing content. Access is free and involves no payment. We do not charge anyone for accessing the app.
-
-  You can get access to the app with the following credentials:
-
-    Email: [email-address]
-    Password: [pass-code]
-
-  All the best
-
-  [Your Name]`;
-
   $('#appStoreConfiguration [name]').each(function(i, el) {
     var name = $(el).attr("name");
 
@@ -104,11 +89,6 @@ function loadAppStoreData() {
         $('[name="' + name + '"]').removeAttr('required');
         $('[name="' + name + '"] ~ .hasPassword').removeClass('hidden');
       }
-      return;
-    }
-
-    if (name === "fl-store-review-notes" && (appStoreSubmission.data[name] === "" || !appStoreSubmission.data[name])) {
-      $('[name="' + name + '"]').val(reviewerNotesTemplate);
       return;
     }
 
