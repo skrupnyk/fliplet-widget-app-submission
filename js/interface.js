@@ -97,7 +97,12 @@ function loadAppStoreData() {
       $('[name="' + name + '"]').val(appStoreSubmission.data[name]);
       return;
     }
+
     if (name === "_fl-store-appDevPass") {
+      if (appStoreSubmission.data[name] !== "") {
+        $('[name="' + name + '"]').removeAttr('required');
+        $('[name="' + name + '"] ~ .hasPassword').removeClass('hidden');
+      }
       return;
     }
 
@@ -158,7 +163,11 @@ function loadEnterpriseData() {
       $('[name="' + name + '"]').val(enterpriseSubmission.data[name]);
       return;
     }
-    if (name === "_fl-ent-appDevPass" || name === "fl-ent-appDevLogin") {
+    if (name === "_fl-ent-appDevPass") {
+      if (enterpriseSubmission.data[name] !== "") {
+        $('[name="' + name + '"]').removeAttr('required');
+        $('[name="' + name + '"] ~ .hasPassword').removeClass('hidden');
+      }
       return;
     }
 
