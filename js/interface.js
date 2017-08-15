@@ -9,6 +9,7 @@ var appStoreSubmission = {};
 var enterpriseSubmission = {};
 var unsignedSubmission = {};
 var notificationSettings = {};
+var appInfo;
 
 /* FUNCTIONS */
 String.prototype.toCamelCase = function() {
@@ -522,6 +523,12 @@ function savePushData() {
 }
 
 function init() {
+  Fliplet.Apps.get().then(function(apps) {
+    appInfo = _.find(apps, function(app) {
+      return app.id === Fliplet.Env.get('appId');
+    });
+  });
+
   $('#fl-store-keywords').tokenfield();
 
   /* APP ICON */
@@ -642,21 +649,26 @@ $('#appStoreConfiguration').validator().on('submit', function(event) {
 
   event.preventDefault();
 
-  if (allAppData.indexOf('appStore') > -1) {
-    var requestAppConfirm;
+  if (appInfo && appInfo.productionAppId) {
+    if (allAppData.indexOf('appStore') > -1) {
+      var requestAppConfirm;
 
-    if (appStoreSubmission.status === "started") {
-      requestAppConfirm = confirm("Are you sure you wish to request your app to be published?");
+      if (appStoreSubmission.status === "started") {
+        requestAppConfirm = confirm("Are you sure you wish to request your app to be published?");
+      } else {
+        requestAppConfirm = confirm("Are you sure you wish to update your published app?");
+      }
+
+      if (requestAppConfirm) {
+        saveAppStoreData(true);
+      }
     } else {
-      requestAppConfirm = confirm("Are you sure you wish to update your published app?");
-    }
-
-    if (requestAppConfirm) {
-      saveAppStoreData(true);
+      alert('Please configure your App Settings to contain the required information.');
     }
   } else {
-    alert('Please configure your App Settings to contain the required information.');
+    alert('You need to publish this app first.\nGo to "Step 1. Prepare your app" to publish your app.');
   }
+
   // Gives time to Validator to apply classes
   setTimeout(checkGroupErrors, 0);
 });
@@ -671,21 +683,26 @@ $('#enterpriseConfiguration').validator().on('submit', function(event) {
 
   event.preventDefault();
 
-  if (allAppData.indexOf('enterprise') > -1) {
-    var requestAppConfirm;
+  if (appInfo && appInfo.productionAppId) {
+    if (allAppData.indexOf('enterprise') > -1) {
+      var requestAppConfirm;
 
-    if (enterpriseSubmission.status === "started") {
-      requestAppConfirm = confirm("Are you sure you wish to request your app to be published?");
+      if (enterpriseSubmission.status === "started") {
+        requestAppConfirm = confirm("Are you sure you wish to request your app to be published?");
+      } else {
+        requestAppConfirm = confirm("Are you sure you wish to update your published app?");
+      }
+
+      if (requestAppConfirm) {
+        saveEnterpriseData(true);
+      }
     } else {
-      requestAppConfirm = confirm("Are you sure you wish to update your published app?");
-    }
-
-    if (requestAppConfirm) {
-      saveEnterpriseData(true);
+      alert('Please configure your App Settings to contain the required information.');
     }
   } else {
-    alert('Please configure your App Settings to contain the required information.');
+    alert('You need to publish this app first.\nGo to "Step 1. Prepare your app" to publish your app.');
   }
+
   // Gives time to Validator to apply classes
   setTimeout(checkGroupErrors, 0);
 });
@@ -700,21 +717,26 @@ $('#unsignedConfiguration').validator().on('submit', function(event) {
 
   event.preventDefault();
 
-  if (allAppData.indexOf('unsigned') > -1) {
-    var requestAppConfirm;
+  if (appInfo && appInfo.productionAppId) {
+    if (allAppData.indexOf('unsigned') > -1) {
+      var requestAppConfirm;
 
-    if (unsignedSubmission.status === "started") {
-      requestAppConfirm = confirm("Are you sure you wish to request your app to be published?");
+      if (unsignedSubmission.status === "started") {
+        requestAppConfirm = confirm("Are you sure you wish to request your app to be published?");
+      } else {
+        requestAppConfirm = confirm("Are you sure you wish to update your published app?");
+      }
+
+      if (requestAppConfirm) {
+        saveUnsignedData(true);
+      }
     } else {
-      requestAppConfirm = confirm("Are you sure you wish to update your published app?");
-    }
-
-    if (requestAppConfirm) {
-      saveUnsignedData(true);
+      alert('Please configure your App Settings to contain the required information.');
     }
   } else {
-    alert('Please configure your App Settings to contain the required information.');
+    alert('You need to publish this app first.\nGo to "Step 1. Prepare your app" to publish your app.');
   }
+
   // Gives time to Validator to apply classes
   setTimeout(checkGroupErrors, 0);
 });
