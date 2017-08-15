@@ -539,6 +539,15 @@
                     <p class="help-block"><small>Eg: 2008 Acme Inc.</small></p>
                   </div>
                 </div>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-store-releaseNotes">Release Notes</label>
+                    <p class="help-block label-helper"><small>When submitting an update to your app, use the Release Notes to tell users what is new in the new version.</small></p>
+                  </div>
+                  <div class="col-sm-8">
+                    <textarea name="fl-store-releaseNotes" id="fl-store-releaseNotes" rows="8"></textarea>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -652,6 +661,14 @@
                   </div>
                   <div class="col-sm-8">
                     <input type="text" name="fl-store-address2" class="form-control" id="fl-store-address2" />
+                  </div>
+                </div>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-store-city">City</label>
+                  </div>
+                  <div class="col-sm-8">
+                    <input type="text" name="fl-store-city" class="form-control" id="fl-store-city" required />
                   </div>
                 </div>
                 <div class="form-group clearfix">
@@ -852,15 +869,71 @@
                     <div class="help-block with-errors"></div>
                   </div>
                 </div>
+                <h3><small>Reviewer Notes</small></h3>
+                <p class="help-block">Additional information about your app that can help during the review process. If your app is secured, be sure to provide login details or credentials - the reviewer needs them to test your app.</p>
                 <div class="form-group clearfix">
                   <div class="col-sm-4 control-label">
-                    <label for="fl-store-review-notes">Reviewer Notes</label>
+                    <label for="fl-store-revFirstName">First Name</label>
                     <p class="help-block label-helper"><small>Optional</small></p>
-                    <p class="help-block label-helper"><small class="text-warning">You can use our suggested text, but you must change the sections in brackets [] before submitting.</small></p>
                   </div>
                   <div class="col-sm-8">
-                    <textarea name="fl-store-review-notes" class="form-control" id="fl-store-review-notes" rows="10"></textarea>
-                    <p class="help-block"><small>Additional information about your app that can help during the review process. If your app is secured, be sure to provide login details or credentials in this field - the reviewer needs them to test your app.</small></p>
+                    <input type="email" name="fl-store-revFirstName" class="form-control" id="fl-store-revFirstName" />
+                  </div>
+                </div>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-store-revLastName">Last Name</label>
+                    <p class="help-block label-helper"><small>Optional</small></p>
+                  </div>
+                  <div class="col-sm-8">
+                    <input type="text" name="fl-store-revLastName" class="form-control" id="fl-store-revLastName" />
+                  </div>
+                </div>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-store-revEmail">Email Address</label>
+                    <p class="help-block label-helper"><small>Optional</small></p>
+                  </div>
+                  <div class="col-sm-8">
+                    <input type="email" name="fl-store-revEmail" class="form-control" id="fl-store-revEmail" />
+                  </div>
+                </div>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-store-revPhone">Phone Number</label>
+                    <p class="help-block label-helper"><small>Optional</small></p>
+                  </div>
+                  <div class="col-sm-8">
+                    <input type="text" name="fl-store-revPhone" class="form-control" id="fl-store-revPhone" />
+                    <p class="help-block"><small>The phone number needs to include the area code. (Eg.: +44)</small></p>
+                  </div>
+                </div>
+                <p class="help-block"><small>If your app has some kind of security system, please provide a demo user and password (if applicable).</small></p>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-store-revDemoUser">Demo User</label>
+                    <p class="help-block label-helper"><small>Optional</small></p>
+                  </div>
+                  <div class="col-sm-8">
+                    <input type="text" name="fl-store-revDemoUser" class="form-control" id="fl-store-revDemoUser" />
+                  </div>
+                </div>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-store-revDemoPass">Demo Password</label>
+                    <p class="help-block label-helper"><small>Optional</small></p>
+                  </div>
+                  <div class="col-sm-8">
+                    <input type="text" name="fl-store-revDemoPass" class="form-control" id="fl-store-revDemoPass" />
+                  </div>
+                </div>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-store-revNotes">Notes</label>
+                    <p class="help-block label-helper"><small>Optional</small></p>
+                  </div>
+                  <div class="col-sm-8">
+                    <textarea name="fl-store-revNotes" class="form-control" id="fl-store-revNotes" rows="10"></textarea>
                   </div>
                 </div>
               </div>
