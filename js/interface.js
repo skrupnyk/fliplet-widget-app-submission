@@ -1,7 +1,7 @@
 var widgetId = Fliplet.Widget.getDefaultId();
 var widgetData = Fliplet.Widget.getData(widgetId) || {};
 var appName = '';
-var organisationName = '';
+var organizationName = '';
 var appIcon = '';
 var appSettings = {};
 var allAppData = [];
@@ -67,13 +67,13 @@ function loadAppStoreData() {
 
     /* ADD BUNDLE ID */
     if (name === "fl-store-bundleId" && typeof appStoreSubmission.data[name] === "undefined") {
-      createBundleID(organisationName.toCamelCase(), appName.toCamelCase()).then(function(response) {
+      createBundleID(organizationName.toCamelCase(), appName.toCamelCase()).then(function(response) {
         if (response.resultCount === 0) {
-          $('.bundleId-ast-text').html('com.' + organisationName.toCamelCase() + '.' + appName.toCamelCase());
-          $('[name="' + name + '"]').val('com.' + organisationName.toCamelCase() + '.' + appName.toCamelCase());
+          $('.bundleId-ast-text').html('com.' + organizationName.toCamelCase() + '.' + appName.toCamelCase());
+          $('[name="' + name + '"]').val('com.' + organizationName.toCamelCase() + '.' + appName.toCamelCase());
         } else {
-          $('.bundleId-ast-text').html('com.' + organisationName.toCamelCase() + '.' + appName.toCamelCase() + (response.resultCount + 1));
-          $('[name="' + name + '"]').val('com.' + organisationName.toCamelCase() + '.' + appName.toCamelCase() + (response.resultCount + 1));
+          $('.bundleId-ast-text').html('com.' + organizationName.toCamelCase() + '.' + appName.toCamelCase() + (response.resultCount + 1));
+          $('[name="' + name + '"]').val('com.' + organizationName.toCamelCase() + '.' + appName.toCamelCase() + (response.resultCount + 1));
         }
       });
       return;
@@ -128,13 +128,13 @@ function loadEnterpriseData() {
 
     /* ADD BUNDLE ID */
     if (name === "fl-ent-bundleId" && typeof enterpriseSubmission.data[name] === "undefined") {
-      createBundleID(organisationName.toCamelCase(), appName.toCamelCase()).then(function(response) {
+      createBundleID(organizationName.toCamelCase(), appName.toCamelCase()).then(function(response) {
         if (response.resultCount === 0) {
-          $('.bundleId-ent-text').html('com.' + organisationName.toCamelCase() + '.' + appName.toCamelCase());
-          $('[name="' + name + '"]').val('com.' + organisationName.toCamelCase() + '.' + appName.toCamelCase());
+          $('.bundleId-ent-text').html('com.' + organizationName.toCamelCase() + '.' + appName.toCamelCase());
+          $('[name="' + name + '"]').val('com.' + organizationName.toCamelCase() + '.' + appName.toCamelCase());
         } else {
-          $('.bundleId-ent-text').html('com.' + organisationName.toCamelCase() + '.' + appName.toCamelCase() + (response.resultCount + 1));
-          $('[name="' + name + '"]').val('com.' + organisationName.toCamelCase() + '.' + appName.toCamelCase() + (response.resultCount + 1));
+          $('.bundleId-ent-text').html('com.' + organizationName.toCamelCase() + '.' + appName.toCamelCase() + (response.resultCount + 1));
+          $('[name="' + name + '"]').val('com.' + organizationName.toCamelCase() + '.' + appName.toCamelCase() + (response.resultCount + 1));
         }
       });
       return;
@@ -182,13 +182,13 @@ function loadUnsignedData() {
 
     /* ADD BUNDLE ID */
     if (name === "fl-uns-bundleId" && typeof unsignedSubmission.data[name] === "undefined") {
-      createBundleID(organisationName.toCamelCase(), appName.toCamelCase()).then(function(response) {
+      createBundleID(organizationName.toCamelCase(), appName.toCamelCase()).then(function(response) {
         if (response.resultCount === 0) {
-          $('.bundleId-uns-text').html('com.' + organisationName.toCamelCase() + '.' + appName.toCamelCase());
-          $('[name="' + name + '"]').val('com.' + organisationName.toCamelCase() + '.' + appName.toCamelCase());
+          $('.bundleId-uns-text').html('com.' + organizationName.toCamelCase() + '.' + appName.toCamelCase());
+          $('[name="' + name + '"]').val('com.' + organizationName.toCamelCase() + '.' + appName.toCamelCase());
         } else {
-          $('.bundleId-uns-text').html('com.' + organisationName.toCamelCase() + '.' + appName.toCamelCase() + (response.resultCount + 1));
-          $('[name="' + name + '"]').val('com.' + organisationName.toCamelCase() + '.' + appName.toCamelCase() + (response.resultCount + 1));
+          $('.bundleId-uns-text').html('com.' + organizationName.toCamelCase() + '.' + appName.toCamelCase() + (response.resultCount + 1));
+          $('[name="' + name + '"]').val('com.' + organizationName.toCamelCase() + '.' + appName.toCamelCase() + (response.resultCount + 1));
         }
       });
       return;
@@ -860,7 +860,7 @@ Fliplet.App.Submissions.get()
         url: 'v1/organizations/' + Fliplet.Env.get('organizationId')
       })
       .then(function(org) {
-        organisationName = org.name;
+        organizationName = org.name;
       })
     ]);
   })
