@@ -40,12 +40,15 @@
   border-bottom-color: #126f55;
 }
 
-.btn-primary.fl-green:hover, .btn-primary.fl-green:focus, .btn-primary.fl-green:active {
+.btn-primary.fl-green:hover,
+.btn-primary.fl-green:focus,
+.btn-primary.fl-green:active {
   background-color: #168566;
   border-bottom-color: #0a3b2d;
 }
 
-.btn-primary.fl-green:active:focus, .btn-primary.fl-green:active:hover {
+.btn-primary.fl-green:active:focus,
+.btn-primary.fl-green:active:hover {
   background-color: #11674f;
   border-bottom-color: #000201;
 }
@@ -75,7 +78,8 @@
   border-color: #a94442;
 }
 
-.app-details-error, .app-details-warning {
+.app-details-error,
+.app-details-warning {
   display: none;
 }
 
@@ -118,7 +122,8 @@ h3 {
   color: #14505E;
 }
 
-body>h3, .app-status h3 {
+body>h3,
+.app-status h3 {
   margin-top: 0;
 }
 
@@ -163,19 +168,22 @@ h3 small {
   margin-top: -5px;
 }
 
-.fl-bundleId-holder, .fl-price-holder {
+.fl-bundleId-holder,
+.fl-price-holder {
   height: 44px;
   display: flex;
   align-items: center;
 }
 
-.fl-bundleId-holder .btn-default, .fl-price-holder .btn-default {
+.fl-bundleId-holder .btn-default,
+.fl-price-holder .btn-default {
   padding: 5px 10px;
   line-height: inherit;
   margin-left: 20px;
 }
 
-.fl-bundleId-field, .fl-price-field {
+.fl-bundleId-field,
+.fl-price-field {
   display: none;
 }
 
@@ -187,12 +195,19 @@ h3 small {
   margin: 0;
 }
 
-.bootstrap-select .btn-default, .bootstrap-select .btn-default:hover {
+.bootstrap-select .btn-default,
+.bootstrap-select .btn-default:hover {
   border: 1px solid #e4e9eb;
   background-color: transparent;
 }
 
-.bootstrap-select .btn-default:active:hover, .bootstrap-select .btn-default:active:focus, .bootstrap-select .btn-default:active, .bootstrap-select .btn-default:focus, .open>.dropdown-toggle.btn-default, .open>.dropdown-toggle.btn-default:focus, .open>.dropdown-toggle.btn-default:hover {
+.bootstrap-select .btn-default:active:hover,
+.bootstrap-select .btn-default:active:focus,
+.bootstrap-select .btn-default:active,
+.bootstrap-select .btn-default:focus,
+.open>.dropdown-toggle.btn-default,
+.open>.dropdown-toggle.btn-default:focus,
+.open>.dropdown-toggle.btn-default:hover {
   background-color: transparent;
   outline: none !important;
   border-color: #00abd1;
@@ -213,13 +228,25 @@ h3 small {
   margin-bottom: 10px;
 }
 
-.save-appStore-progress, .save-enterprise-progress, .save-unsigned-progress, .save-appStore-request, .save-enterprise-request, .save-unsigned-request, .save-push-progress {
+.save-appStore-progress,
+.save-enterprise-progress,
+.save-unsigned-progress,
+.save-appStore-request,
+.save-enterprise-request,
+.save-unsigned-request,
+.save-push-progress {
   opacity: 0;
   -webkit-transition: opacity 0.25s ease;
   transition: opacity 0.25s ease;
 }
 
-.save-appStore-progress.saved, .save-enterprise-progress.saved, .save-unsigned-progress.saved, .save-appStore-request.saved, .save-enterprise-request.saved, .save-unsigned-request.saved, .save-push-progress.saved {
+.save-appStore-progress.saved,
+.save-enterprise-progress.saved,
+.save-unsigned-progress.saved,
+.save-appStore-request.saved,
+.save-enterprise-request.saved,
+.save-unsigned-request.saved,
+.save-push-progress.saved {
   opacity: 1;
 }
 
@@ -252,4 +279,124 @@ h3 small {
   border: 1px solid #F0F0F0;
   background-size: cover;
   background-position: center center;
+}
+
+.app-build-status {
+  border-radius: 6px;
+  border: 1px solid #efefef;
+  padding: 15px;
+  box-shadow: inset 0px 0px 6px rgba(51, 51, 51, 0.1);
+}
+
+.app-build-status .btn-sm {
+  padding: 5px 10px;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.app-build-status table {
+  width: 100%;
+  max-width: 100%;
+}
+
+.app-build-status table thead {
+  border-bottom: 2px solid #eeeeee;
+}
+
+.app-build-status table th {
+  padding: 10px;
+}
+
+.app-build-status table tr {
+  border-bottom: 1px solid #eeeeee;
+}
+
+.app-build-status table tr:last-child {
+  border-bottom: none;
+}
+
+.app-build-status table tbody td {
+  height: 60px;
+}
+
+.app-build-status .app-build-holder {
+  border-bottom: 1px solid #eeeeee;
+}
+
+.app-build-status .app-build-holder:last-child {
+  border-bottom: none;
+}
+
+.app-build-status table td.app-build-progress {
+  text-align: right;
+  width: 100px;
+  vertical-align: top;
+  padding: 10px 0;
+}
+
+.app-build-status table td.app-build-progress .retry-build,
+.app-build-status table td.app-build-progress .download-build {
+  font-size: 12px;
+  margin-top: 5px;
+  margin-right: 5px;
+}
+
+.app-build-status table .app-build-progress .app-build-progress-holder {
+  width: 100%;
+  display: block;
+  text-align: left;
+  font-size: 12px;
+  padding: 4px 8px;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+  background-color: #eeeeee;
+  color: #333333;
+}
+
+.app-build-status table .app-build-progress.info .app-build-progress-holder {
+  background-color: #00abd1;
+  color: #fff;
+}
+
+.app-build-status table .app-build-progress.success .app-build-progress-holder {
+  background-color: #1db188;
+  color: #fff;
+}
+
+.app-build-status table .app-build-progress.danger .app-build-progress-holder {
+  background-color: #E03629;
+  color: #fff;
+}
+
+.app-build-status table td.app-build-details {
+  vertical-align: top;
+  padding: 10px;
+  border-left: 1px solid #eeeeee;
+  font-weight: bold;
+}
+
+.app-build-status table td.app-build-details span:not(.btn) {
+  font-size: 12px;
+  font-weight: normal;
+  color: #636363;
+}
+
+.app-build-status table td.app-build-details span .icon {
+  color: #b5b5b5;
+}
+
+.app-build-status table .app-build-download {
+  width: 140px;
+}
+
+.app-build-status table td.app-build-download {
+  font-size: 12px;
+  font-weight: normal;
+  color: #636363;
+  border-left: 1px solid #eeeeee;
+  padding-left: 10px;
+}
+
+.app-build-status table td.app-build-download .fa {
+  color: #b5b5b5;
 }
