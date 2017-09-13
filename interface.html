@@ -70,7 +70,7 @@
                   </div>
                   <div class="col-sm-8">
                     <div class="setting-splash-screen userUploaded hidden" style="background-image: url();"></div>
-                    <div class="setting-splash-screen default" style="background-image: url({{ asset 'img/splash-screen.png' }});"></div>
+                    <div class="setting-splash-screen default" data-appstore-default-splash-url="{{ asset 'img/splash-screen.png' }}" style="background-image: url({{ asset 'img/splash-screen.png' }});"></div>
                     <div class="help-block text-danger app-details-error">Click the change button to upload a splash screen</div>
                     <div class="help-block text-warning app-details-warning">This image is not the recommended size and may result in a low quality image.</div>
                   </div>
@@ -940,6 +940,9 @@
             </div>
           </div>
         </div>
+        <div class="app-build-status-holder">
+          <!-- App Status Area -->
+        </div>
         <hr>
         <div class="col-xs-5 save-btn-holder">
           <p class="help-block"><small>Save your progress at any point.<br>You can come back and finish it.</small></p>
@@ -983,7 +986,7 @@
                   </div>
                   <div class="col-sm-8">
                     <div class="setting-splash-screen userUploaded hidden" style="background-image: url();"></div>
-                    <div class="setting-splash-screen default" style="background-image: url({{ asset 'img/splash-screen.png' }});"></div>
+                    <div class="setting-splash-screen default" data-enterprise-default-splash-url="{{ asset 'img/splash-screen.png' }}" style="background-image: url({{ asset 'img/splash-screen.png' }});"></div>
                     <div class="help-block text-danger app-details-error">Click the change button to upload a splash screen</div>
                     <div class="help-block text-warning app-details-warning">This image is not the recommended size and may result in a low quality image.</div>
                   </div>
@@ -1116,7 +1119,7 @@
                   </div>
                   <div class="col-sm-8">
                     <div class="setting-splash-screen userUploaded hidden" style="background-image: url();"></div>
-                    <div class="setting-splash-screen default" style="background-image: url({{ asset 'img/splash-screen.png' }});"></div>
+                    <div class="setting-splash-screen default" data-unsigned-default-splash-url="{{ asset 'img/splash-screen.png' }}" style="background-image: url({{ asset 'img/splash-screen.png' }});"></div>
                     <div class="help-block text-danger app-details-error">Click the change button to upload a splash screen</div>
                     <div class="help-block text-warning app-details-warning">This image is not the recommended size and may result in a low quality image.</div>
                   </div>
@@ -1236,3 +1239,64 @@
     </div>
   </div>
 </div>
+
+<script id="status-table-template" type="text/x-handlebars-template">
+  <h4><small>App build status</small></h4>
+  <div class="app-build-status">
+    <table>
+      <tbody>
+        \{{#each this}}
+        <tr>
+          \{{#if queued}}
+          <td class="app-build-progress">
+            <div class="app-build-progress-holder"><i class="fa fa-minus-circle"></i> Queued</div>
+          </td>
+          <td class="app-build-details">
+            \{{#if submittedAt}}<span><span class="icon"><i class="fa fa-clock-o"></i> Started on:</span> \{{submittedAt}}</span>\{{/if}}
+            <div class="app-build-name">Preparing to build your app</div>
+          </td>
+          \{{/if}} \{{#if submitted}}
+          <td class="app-build-progress info">
+            <div class="app-build-progress-holder"><i class="fa fa-spinner fa-pulse fa-fw"></i> In progress</div>
+          </td>
+          <td class="app-build-details">
+            \{{#if submittedAt}}<span><span class="icon"><i class="fa fa-clock-o"></i> Started on:</span> \{{submittedAt}}</span>\{{/if}}
+            <div class="app-build-name">Building your app</div>
+          </td>
+          \{{/if}} \{{#if processing}}
+          <td class="app-build-progress info">
+            <div class="app-build-progress-holder"><i class="fa fa-spinner fa-pulse fa-fw"></i> In progress</div>
+          </td>
+          <td class="app-build-details">
+            \{{#if submittedAt}}<span><span class="icon"><i class="fa fa-clock-o"></i> Started on:</span> \{{submittedAt}}</span>\{{/if}}
+            <div class="app-build-name">Building your app</div>
+          </td>
+          \{{/if}} \{{#if completed}}
+          <td class="app-build-progress success">
+            <div class="app-build-progress-holder"><i class="fa fa-check-circle"></i> Completed</div>
+            \{{#if fileUrl}}
+            <div class="download-build"><a href="\{{fileUrl}}"><i class="fa fa-download"></i> Download file</a></div>\{{/if}}
+          </td>
+          <td class="app-build-details">
+            \{{#if updatedAt}}<span><span class="icon"><i class="fa fa-flag-checkered"></i> Finished on:</span> \{{updatedAt}}</span>\{{/if}}
+            <div class="app-build-name">App successfully built</div>
+          </td>
+          \{{/if}} \{{#if failed}}
+          <td class="app-build-progress danger">
+            <div class="app-build-progress-holder"><i class="fa fa-exclamation-circle"></i> Failed</div>
+            <div class="retry-build"><a href="#" data-retry-id="\{{id}}"><i class="fa fa-repeat"></i> Try again</a></div>
+          </td>
+          <td class="app-build-details">
+            \{{#if updatedAt}}<span><span class="icon"><i class="fa fa-flag-checkered"></i> Finished on:</span> \{{updatedAt}}</span>\{{/if}}
+            <div class="app-build-name">There was an error building your app</div>
+          </td>
+          \{{/if}}
+          <td class="app-build-download">
+            <div><i class="fa fa-cog"></i> build #\{{id}}</div>
+          </td>
+        </tr>
+        \{{/each}}
+      </tbody>
+    </table>
+  </div>
+</script>
