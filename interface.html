@@ -31,6 +31,9 @@
   </ul>
   <div class="tab-content">
     <div role="tabpanel" class="tab-pane fl-sb-appStore active" id="appstore-tab">
+      <div class="app-build-appstore-status-holder app-build-status-holder">
+        <!-- App Status Area -->
+      </div>
       <p class="text-info">Complete this section to submit your app to the <a href="https://www.apple.com/ios/app-store/" target="_blank">Apple App Store</a>.</p>
       <form data-disable="false" role="form" id="appStoreConfiguration">
         <div class="panel-group" id="accordionAppStore" role="tablist" aria-multiselectable="true">
@@ -576,7 +579,7 @@
                   <div class="col-sm-8">
                     <input type="password" name="_fl-store-appDevPass" class="form-control" id="fl-store-appDevPass" data-error="Please enter a password" required/>
                     <div class="help-block with-errors"></div>
-                    <p class="text-success hidden hasPassword">You already have a password saved!</p>
+                    <p class="text-success hidden hasPassword">No need to fill this in. You already have the password saved!!</p>
                     <p class="help-block"><small>Enter Apple Developer account password</small></p>
                   </div>
                 </div>
@@ -940,9 +943,6 @@
             </div>
           </div>
         </div>
-        <div class="app-build-appstore-status-holder">
-          <!-- App Status Area -->
-        </div>
         <hr>
         <div class="col-xs-5 save-btn-holder">
           <p class="help-block"><small>Save your progress at any point.<br>You can come back and finish it.</small></p>
@@ -957,6 +957,9 @@
       </form>
     </div>
     <div role="tabpanel" class="tab-pane fl-sb-enterprise" id="enterprise-tab">
+      <div class="app-build-enterprise-status-holder app-build-status-holder">
+        <!-- App Status Area -->
+      </div>
       <p class="text-info">Complete this section to receive an app signed with <a href="https://developer.apple.com/programs/enterprise/" target="_blank">your Apple Developer Enterprise account</a> to distribute in-house apps to your employees.</p>
       <form data-disable="false" role="form" id="enterpriseConfiguration">
         <div class="panel-group" id="accordionEnterprise" role="tablist" aria-multiselectable="true">
@@ -1039,7 +1042,7 @@
                   <div class="col-sm-8">
                     <input type="password" name="_fl-ent-appDevPass" class="form-control" id="fl-ent-appDevPass" data-error="Please enter a password" required/>
                     <div class="help-block with-errors"></div>
-                    <p class="text-success hidden hasPassword">You already have a password saved!</p>
+                    <p class="text-success hidden hasPassword">No need to fill this in. You already have the password saved!!</p>
                     <p class="help-block"><small>Enter Apple Developer account password</small></p>
                   </div>
                 </div>
@@ -1074,9 +1077,6 @@
             </div>
           </div>
         </div>
-        <div class="app-build-enterprise-status-holder">
-          <!-- App Status Area -->
-        </div>
         <hr>
         <div class="col-xs-5 save-btn-holder">
           <p class="help-block"><small>Save your progress at any point.<br>You can come back and finish it.</small></p>
@@ -1091,6 +1091,9 @@
       </form>
     </div>
     <div role="tabpanel" class="tab-pane fl-sb-unsigned" id="unsigned-tab">
+      <div class="app-build-unsigned-status-holder app-build-status-holder">
+        <!-- App Status Area -->
+      </div>
       <p class="text-info">Unsigned apps will need to be signed before they can be distributed. If you would like Fliplet to sign the app for you, please request an app via the "App Store" or "Enterprise" tabs above. If you request an unsigned app file, you will need a Mac
         or software that can resign this app for you. For more information about signing apps, please see <a href="https://developer.apple.com/library/content/documentation/Security/Conceptual/CodeSigningGuide/Procedures/Procedures.html#//apple_ref/doc/uid/TP40005929-CH4-SW7"
           target="_blank">this Apple Developer article</a>.</p>
@@ -1177,9 +1180,6 @@
               </div>
             </div>
           </div>
-        </div>
-        <div class="app-build-unsigned-status-holder">
-          <!-- App Status Area -->
         </div>
         <hr>
         <div class="col-xs-5 save-btn-holder">

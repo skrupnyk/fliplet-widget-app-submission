@@ -281,6 +281,10 @@ h3 small {
   background-position: center center;
 }
 
+.app-build-status-holder {
+  margin-bottom: 10px;
+}
+
 .app-build-status {
   border-radius: 6px;
   border: 1px solid #efefef;
