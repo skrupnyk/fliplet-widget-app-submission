@@ -877,28 +877,28 @@
                 <div class="form-group clearfix">
                   <div class="col-sm-4 control-label">
                     <label for="fl-store-revFirstName">First Name</label>
-                    <p class="help-block label-helper"><small>Optional</small></p>
                   </div>
                   <div class="col-sm-8">
-                    <input type="text" name="fl-store-revFirstName" class="form-control" id="fl-store-revFirstName" />
+                    <input type="text" name="fl-store-revFirstName" class="form-control" id="fl-store-revFirstName" data-error="Please enter the first name" required/>
+                    <div class="help-block with-errors"></div>
                   </div>
                 </div>
                 <div class="form-group clearfix">
                   <div class="col-sm-4 control-label">
                     <label for="fl-store-revLastName">Last Name</label>
-                    <p class="help-block label-helper"><small>Optional</small></p>
                   </div>
                   <div class="col-sm-8">
-                    <input type="text" name="fl-store-revLastName" class="form-control" id="fl-store-revLastName" />
+                    <input type="text" name="fl-store-revLastName" class="form-control" id="fl-store-revLastName" data-error="Please enter the last name" required/>
+                    <div class="help-block with-errors"></div>
                   </div>
                 </div>
                 <div class="form-group clearfix">
                   <div class="col-sm-4 control-label">
                     <label for="fl-store-revEmail">Email Address</label>
-                    <p class="help-block label-helper"><small>Optional</small></p>
                   </div>
                   <div class="col-sm-8">
-                    <input type="email" name="fl-store-revEmail" class="form-control" id="fl-store-revEmail" />
+                    <input type="email" name="fl-store-revEmail" class="form-control" id="fl-store-revEmail" data-error="Please enter a valid email address" required/>
+                    <div class="help-block with-errors"></div>
                   </div>
                 </div>
                 <div class="form-group clearfix">
@@ -907,8 +907,9 @@
                     <p class="help-block label-helper"><small>Optional</small></p>
                   </div>
                   <div class="col-sm-8">
-                    <input type="text" name="fl-store-revPhone" class="form-control" id="fl-store-revPhone" />
+                    <input type="text" name="fl-store-revPhone" class="form-control" id="fl-store-revPhone" data-error="Please enter a valid phone number" required/>
                     <p class="help-block"><small>The phone number needs to include the area code. (Eg.: +44)</small></p>
+                    <div class="help-block with-errors"></div>
                   </div>
                 </div>
                 <p class="help-block"><small>If your app has some kind of security system, please provide a demo user and password (if applicable).</small></p>
@@ -933,10 +934,10 @@
                 <div class="form-group clearfix">
                   <div class="col-sm-4 control-label">
                     <label for="fl-store-revNotes">Notes</label>
+                    <p class="help-block label-helper"><small>Optional</small></p>
                   </div>
                   <div class="col-sm-8">
-                    <textarea name="fl-store-revNotes" class="form-control" id="fl-store-revNotes" rows="10" data-error="Please fill in the Reviewer Notes" required></textarea>
-                    <div class="help-block with-errors"></div>
+                    <textarea name="fl-store-revNotes" class="form-control" id="fl-store-revNotes" rows="10"></textarea>
                   </div>
                 </div>
               </div>
