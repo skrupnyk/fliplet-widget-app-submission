@@ -768,7 +768,7 @@ function compileStatusTable(withData, origin, buildsData) {
   Fliplet.Widget.autosize();
 }
 
-function checkSubmissionStatus(iosSubmissions) {
+function checkSubmissionStatus(origin, iosSubmissions) {
   var submissionsToShow = _.filter(iosSubmissions, function(submission) {
     return submission.status === "queued" || submission.status === "submitted" || submission.status === "processing" || submission.status === "completed" || submission.status === "failed";
   });
@@ -804,7 +804,7 @@ function checkSubmissionStatus(iosSubmissions) {
 
     compileStatusTable(true, origin, buildsData);
   } else {
-    compileStatusTable(true, origin);
+    compileStatusTable(false, origin);
   }
 }
 
