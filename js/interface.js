@@ -380,6 +380,12 @@ function saveAppStoreData(request) {
     var name = $(el).attr("name");
     var value = $(el).val();
 
+    if (name === "_fl-store-appDevPass") {
+      if (data[name] !== '' && value === '') {
+        return;
+      }
+    }
+
     /* PROCESSING KEYWORDS */
     if (name === 'fl-store-keywords') {
       var newValue = value.replace(/,\s+/g, ',');
@@ -420,6 +426,12 @@ function saveEnterpriseData(request) {
     var name = $(el).attr("name");
     var value = $(el).val();
 
+    if (name === "_fl-ent-appDevPass") {
+      if (data[name] !== '' && value === '') {
+        return;
+      }
+    }
+    
     if (name === 'fl-ent-teamId') {
       pushData.apnTeamId = value;
       data[name] = value;
