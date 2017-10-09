@@ -969,7 +969,7 @@ function initialLoad(initial, timeout) {
             url: 'v1/organizations/' + Fliplet.Env.get('organizationId')
           })
           .then(function(org) {
-            organisationName = org.name;
+            organizationName = org.name;
           })
         ]);
       })
