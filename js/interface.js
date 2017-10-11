@@ -36,7 +36,6 @@ function incrementVersionNumber(versionNumber) {
   var arrLength = splitNumber.length;
 
   while (arrLength--) {
-    debugger;
     if (splitNumber[arrLength] < 99) {
       splitNumber[arrLength] = parseInt(splitNumber[arrLength], 10) + 1;
       break;
@@ -113,7 +112,6 @@ function loadAppStoreData() {
     }
 
     if (name === "fl-store-versionNumber") {
-      console.log('found field');
       if (typeof appStoreSubmission.result !== 'undefined' && typeof appStoreSubmission.result.versionNumber !== 'undefined' && appStoreSubmission.result.versionNumber !== '') {
         var newVersionNumber = incrementVersionNumber(appStoreSubmission.result.versionNumber);
         $('[name="' + name + '"]').val(newVersionNumber);
@@ -180,7 +178,6 @@ function loadEnterpriseData() {
       return;
     }
     if (name === "fl-ent-versionNumber") {
-      console.log('found field');
       if (typeof enterpriseSubmission.result !== 'undefined' && typeof enterpriseSubmission.result.versionNumber !== 'undefined' && enterpriseSubmission.result.versionNumber !== '') {
         var newVersionNumber = incrementVersionNumber(enterpriseSubmission.result.versionNumber);
         $('[name="' + name + '"]').val(newVersionNumber);
@@ -234,7 +231,6 @@ function loadUnsignedData() {
       return;
     }
     if (name === "fl-uns-versionNumber") {
-      console.log('found field');
       if (typeof unsignedSubmission.result !== 'undefined' && typeof unsignedSubmission.result.versionNumber !== 'undefined' && unsignedSubmission.result.versionNumber !== '') {
         var newVersionNumber = incrementVersionNumber(unsignedSubmission.result.versionNumber);
         $('[name="' + name + '"]').val(newVersionNumber);
