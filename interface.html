@@ -1059,6 +1059,17 @@
                 </div>
                 <div class="form-group clearfix">
                   <div class="col-sm-4 control-label">
+                    <label for="fl-ent-versionNumber">App version number</label>
+                    <p class="help-block label-helper"><small>This is the version number of your app.</small></p>
+                  </div>
+                  <div class="col-sm-8">
+                    <input type="text" name="fl-ent-versionNumber" class="form-control" id="fl-ent-versionNumber" data-error="Please enter an app version number" required/>
+                    <div class="help-block with-errors"></div>
+                    <p class="help-block"><small>The recommended format for version number is <code>1.0.0</code>. With a maximum value of <code>99</code> per number.</small></p>
+                  </div>
+                </div>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
                     <label for="fl-ent-bundleId">Bundle ID</label>
                     <p class="help-block label-helper"><small>This is a unique ID for your app on the App Store. Fliplet auto-generated one for you.</small></p>
                   </div>
@@ -1171,6 +1182,17 @@
             <div id="unsignedTech" class="panel-collapse collapse" role="tabpanel" aria-labelledby="unsignedTechHeading">
               <div class="panel-body">
                 <p>We will need some technical information now. Don't worry, these details will be safe with us. We need them in order to publish your app for you.</p>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-uns-versionNumber">App version number</label>
+                    <p class="help-block label-helper"><small>This is the version number of your app.</small></p>
+                  </div>
+                  <div class="col-sm-8">
+                    <input type="text" name="fl-uns-versionNumber" class="form-control" id="fl-uns-versionNumber" data-error="Please enter an app version number" required/>
+                    <div class="help-block with-errors"></div>
+                    <p class="help-block"><small>The recommended format for version number is <code>1.0.0</code>. With a maximum value of <code>99</code> per number.</small></p>
+                  </div>
+                </div>
                 <div class="form-group clearfix">
                   <div class="col-sm-4 control-label">
                     <label for="fl-uns-bundleId">Bundle ID</label>
