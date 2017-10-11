@@ -31,6 +31,21 @@ var createBundleID = function(orgName, appName) {
   });
 };
 
+function incrementVersionNumber(versionNumber) {
+  var splitNumber = versionNumber.split('.');
+  var arrLength = splitNumber.length;
+
+  while (arrLength--) {
+    debugger;
+    if (splitNumber[arrLength] < 99) {
+      splitNumber[arrLength] = parseInt(splitNumber[arrLength], 10) + 1;
+      break;
+    }
+  }
+
+  return splitNumber.join('.');
+}
+
 function loadAppStoreData() {
   $('#appStoreConfiguration [name]').each(function(i, el) {
     var name = $(el).attr("name");
@@ -97,6 +112,17 @@ function loadAppStoreData() {
       return;
     }
 
+    if (name === "fl-store-versionNumber") {
+      console.log('found field');
+      if (typeof appStoreSubmission.result !== 'undefined' && typeof appStoreSubmission.result.versionNumber !== 'undefined' && appStoreSubmission.result.versionNumber !== '') {
+        var newVersionNumber = incrementVersionNumber(appStoreSubmission.result.versionNumber);
+        $('[name="' + name + '"]').val(newVersionNumber);
+      } else {
+        $('[name="' + name + '"]').val('1.0.0');
+      }
+      return;
+    }
+
     $('[name="' + name + '"]').val((typeof appStoreSubmission.data[name] !== "undefined") ? appStoreSubmission.data[name] : '');
   });
 
@@ -153,6 +179,16 @@ function loadEnterpriseData() {
       }
       return;
     }
+    if (name === "fl-ent-versionNumber") {
+      console.log('found field');
+      if (typeof enterpriseSubmission.result !== 'undefined' && typeof enterpriseSubmission.result.versionNumber !== 'undefined' && enterpriseSubmission.result.versionNumber !== '') {
+        var newVersionNumber = incrementVersionNumber(enterpriseSubmission.result.versionNumber);
+        $('[name="' + name + '"]').val(newVersionNumber);
+      } else {
+        $('[name="' + name + '"]').val('1.0.0');
+      }
+      return;
+    }
 
     $('[name="' + name + '"]').val((typeof enterpriseSubmission.data[name] !== "undefined") ? enterpriseSubmission.data[name] : '');
   });
@@ -195,6 +231,16 @@ function loadUnsignedData() {
     if (name === "fl-uns-bundleId" && typeof unsignedSubmission.data[name] !== "undefined") {
       $('.bundleId-uns-text').html(unsignedSubmission.data[name]);
       $('[name="' + name + '"]').val(unsignedSubmission.data[name]);
+      return;
+    }
+    if (name === "fl-uns-versionNumber") {
+      console.log('found field');
+      if (typeof unsignedSubmission.result !== 'undefined' && typeof unsignedSubmission.result.versionNumber !== 'undefined' && unsignedSubmission.result.versionNumber !== '') {
+        var newVersionNumber = incrementVersionNumber(unsignedSubmission.result.versionNumber);
+        $('[name="' + name + '"]').val(newVersionNumber);
+      } else {
+        $('[name="' + name + '"]').val('1.0.0');
+      }
       return;
     }
 
