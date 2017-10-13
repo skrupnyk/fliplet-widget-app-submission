@@ -548,7 +548,7 @@
                     <p class="help-block label-helper"><small>When submitting an update to your app, use the Release Notes to tell users what is new in the new version.</small></p>
                   </div>
                   <div class="col-sm-8">
-                    <textarea name="fl-store-releaseNotes" id="fl-store-releaseNotes" rows="8"></textarea>
+                    <textarea name="fl-store-releaseNotes" id="fl-store-releaseNotes" class="form-control" rows="8"></textarea>
                   </div>
                 </div>
               </div>
@@ -566,10 +566,10 @@
                     <label for="fl-store-appDevLogin">Apple Developer account login</label>
                   </div>
                   <div class="col-sm-8">
+                    <p><small>Please consider creating a new account that is part of your developer team in order to use our system, this way you can always retract access if needed. The account has to have team-admin rights. If Two-Factor-Authentication is present on the account, login into <a href="https://appleid.apple.com/account">https://appleid.apple.com/account</a> and generate an <a href="https://support.apple.com/en-gb/HT204397">App-Specific password</a> for Fliplet.</small></p>
                     <input type="email" name="fl-store-appDevLogin" class="form-control" id="fl-store-appDevLogin" data-error="Please enter a valid email address" required/>
                     <div class="help-block with-errors"></div>
                     <p class="help-block"><small>Enter Apple Developer login email</small></p>
-                    <p><small>Please consider creating a new account that is part of your developer team in order to use our system, this way you can always retract access if needed. The account has to have team-admin rights. If Two-Factor-Authentication is present on the account, login into <a href="https://appleid.apple.com/account">https://appleid.apple.com/account</a> and generate an <a href="https://support.apple.com/en-gb/HT204397">App-Specific password</a> for Fliplet.</small></p>
                   </div>
                 </div>
                 <div class="form-group clearfix">
@@ -870,7 +870,7 @@
                     <label for="fl-store-phone">Phone Number</label>
                   </div>
                   <div class="col-sm-8">
-                    <input type="text" name="fl-store-phone" class="form-control" id="fl-store-phone" data-error="Please enter a valid phone number" required/>
+                    <input type="text" name="fl-store-phone" class="form-control" id="fl-store-phone" pattern="\+[0-9 ]+" data-error="Please enter a valid phone number" required/>
                     <div class="help-block with-errors"></div>
                     <p class="help-block"><small>The phone number needs to include the area code. (Eg.: +44)</small></p>
                   </div>
@@ -918,7 +918,7 @@
                     <label for="fl-store-revPhone">Phone Number</label>
                   </div>
                   <div class="col-sm-8">
-                    <input type="text" name="fl-store-revPhone" class="form-control" id="fl-store-revPhone" data-error="Please enter a valid phone number" required/>
+                    <input type="text" name="fl-store-revPhone" class="form-control" id="fl-store-revPhone" pattern="\+[0-9 ]+" data-error="Please enter a valid phone number" required/>
                     <p class="help-block"><small>The phone number needs to include the area code. (Eg.: +44)</small></p>
                     <div class="help-block with-errors"></div>
                   </div>
@@ -1041,10 +1041,10 @@
                     <label for="fl-ent-appDevLogin">Apple Developer account login</label>
                   </div>
                   <div class="col-sm-8">
+                    <p><small>Please consider creating a new account that is part of your developer team in order to use our system, this way you can always retract access if needed. The account has to have team-admin rights. If Two-Factor-Authentication is present on the account, login into <a href="https://appleid.apple.com/account">https://appleid.apple.com/account</a> and generate an <a href="https://support.apple.com/en-gb/HT204397">App-Specific password</a> for Fliplet.</small></p>
                     <input type="email" name="fl-ent-appDevLogin" class="form-control" id="fl-ent-appDevLogin" data-error="Please enter a valid email address" required/>
                     <div class="help-block with-errors"></div>
                     <p class="help-block"><small>Enter Apple Developer login email</small></p>
-                    <p><small>Please consider creating a new account that is part of your developer team in order to use our system, this way you can always retract access if needed. The account has to have team-admin rights. If Two-Factor-Authentication is present on the account, login into <a href="https://appleid.apple.com/account">https://appleid.apple.com/account</a> and generate an <a href="https://support.apple.com/en-gb/HT204397">App-Specific password</a> for Fliplet.</small></p>
                   </div>
                 </div>
                 <div class="form-group clearfix">
