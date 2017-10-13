@@ -128,6 +128,9 @@ function loadAppStoreData() {
     if (appSettings.splashScreen && appSettings.splashScreen.size && (appSettings.splashScreen.size[0] && appSettings.splashScreen.size[1]) < 2732) {
       $('.app-details-appStore .app-splash-screen').addClass('has-warning');
     }
+    if (appSettings.iconData && appSettings.iconData.size && (appSettings.iconData.size[0] && appSettings.iconData.size[1]) < 1024) {
+      $('.app-details-appStore .app-icon-name').addClass('has-error');
+    }
     allAppData.push('appStore');
   } else {
     $('.app-details-appStore').addClass('required-fill');
@@ -135,7 +138,7 @@ function loadAppStoreData() {
     if (appName === '') {
       $('.app-details-appStore .app-list-name').addClass('has-error');
     }
-    if (!appIcon) {
+    if (!appIcon || !appSettings.iconData || !appSettings.iconData.size || (appSettings.iconData.size[0] && appSettings.iconData.size[1]) < 1024) {
       $('.app-details-appStore .app-icon-name').addClass('has-error');
     }
     if (appSettings.splashScreen && appSettings.splashScreen.size && (appSettings.splashScreen.size[0] && appSettings.splashScreen.size[1]) < 2732) {
@@ -194,11 +197,14 @@ function loadEnterpriseData() {
     if (appSettings.splashScreen.size && (appSettings.splashScreen.size[0] && appSettings.splashScreen.size[1]) < 2732) {
       $('.app-details-ent .app-splash-screen').addClass('has-warning');
     }
+    if (appSettings.iconData && appSettings.iconData.size && (appSettings.iconData.size[0] && appSettings.iconData.size[1]) < 1024) {
+      $('.app-details-ent .app-icon-name').addClass('has-error');
+    }
     allAppData.push('enterprise');
   } else {
     $('.app-details-ent').addClass('required-fill');
 
-    if (!appIcon) {
+    if (!appIcon || !appSettings.iconData || !appSettings.iconData.size || (appSettings.iconData.size[0] && appSettings.iconData.size[1]) < 1024) {
       $('.app-details-ent .app-icon-name').addClass('has-error');
     }
     if (appSettings.splashScreen && appSettings.splashScreen.size && (appSettings.splashScreen.size[0] && appSettings.splashScreen.size[1]) < 2732) {
@@ -247,11 +253,14 @@ function loadUnsignedData() {
     if (appSettings.splashScreen.size && (appSettings.splashScreen.size[0] && appSettings.splashScreen.size[1]) < 2732) {
       $('.app-details-uns .app-splash-screen').addClass('has-warning');
     }
+    if (appSettings.iconData && appSettings.iconData.size && (appSettings.iconData.size[0] && appSettings.iconData.size[1]) < 1024) {
+      $('.app-details-uns .app-icon-name').addClass('has-error');
+    }
     allAppData.push('unsigned');
   } else {
     $('.app-details-uns').addClass('required-fill');
 
-    if (!appIcon) {
+    if (!appIcon || !appSettings.iconData || !appSettings.iconData.size || (appSettings.iconData.size[0] && appSettings.iconData.size[1]) < 1024) {
       $('.app-details-uns .app-icon-name').addClass('has-error');
     }
     if (appSettings.splashScreen && appSettings.splashScreen.size && (appSettings.splashScreen.size[0] && appSettings.splashScreen.size[1]) < 2732) {
@@ -369,7 +378,7 @@ function requestBuild(origin, submission) {
     "url": $('[data-' + origin.toLowerCase() + '-default-splash-url]').data(origin.toLowerCase() + '-default-splash-url')
   };
 
-  submission.data.splashScreen = appSettings.splashScreen;
+  submission.data.splashScreen = appSettings.splashScreen ? appSettings.splashScreen : defaultSplashScreenData;
   submission.data.appIcon = appIcon;
 
   Fliplet.App.Submissions.get()
