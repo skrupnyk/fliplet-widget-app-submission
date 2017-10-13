@@ -31,6 +31,20 @@ var createBundleID = function(orgName, appName) {
   });
 };
 
+function incrementVersionNumber(versionNumber) {
+  var splitNumber = versionNumber.split('.');
+  var arrLength = splitNumber.length;
+
+  while (arrLength--) {
+    if (splitNumber[arrLength] < 99) {
+      splitNumber[arrLength] = parseInt(splitNumber[arrLength], 10) + 1;
+      break;
+    }
+  }
+
+  return splitNumber.join('.');
+}
+
 function loadAppStoreData() {
   $('#appStoreConfiguration [name]').each(function(i, el) {
     var name = $(el).attr("name");
@@ -97,12 +111,25 @@ function loadAppStoreData() {
       return;
     }
 
+    if (name === "fl-store-versionNumber") {
+      if (typeof appStoreSubmission.result !== 'undefined' && typeof appStoreSubmission.result.versionNumber !== 'undefined' && appStoreSubmission.result.versionNumber !== '') {
+        var newVersionNumber = incrementVersionNumber(appStoreSubmission.result.versionNumber);
+        $('[name="' + name + '"]').val(newVersionNumber);
+      } else {
+        $('[name="' + name + '"]').val('1.0.0');
+      }
+      return;
+    }
+
     $('[name="' + name + '"]').val((typeof appStoreSubmission.data[name] !== "undefined") ? appStoreSubmission.data[name] : '');
   });
 
   if (appName !== '' && appIcon && (appSettings.screensToScreenshot && appSettings.screensToScreenshot.length)) {
     if (appSettings.splashScreen && appSettings.splashScreen.size && (appSettings.splashScreen.size[0] && appSettings.splashScreen.size[1]) < 2732) {
       $('.app-details-appStore .app-splash-screen').addClass('has-warning');
+    }
+    if (appSettings.iconData && appSettings.iconData.size && (appSettings.iconData.size[0] && appSettings.iconData.size[1]) < 1024) {
+      $('.app-details-appStore .app-icon-name').addClass('has-error');
     }
     allAppData.push('appStore');
   } else {
@@ -111,7 +138,7 @@ function loadAppStoreData() {
     if (appName === '') {
       $('.app-details-appStore .app-list-name').addClass('has-error');
     }
-    if (!appIcon) {
+    if (!appIcon || !appSettings.iconData || !appSettings.iconData.size || (appSettings.iconData.size[0] && appSettings.iconData.size[1]) < 1024) {
       $('.app-details-appStore .app-icon-name').addClass('has-error');
     }
     if (appSettings.splashScreen && appSettings.splashScreen.size && (appSettings.splashScreen.size[0] && appSettings.splashScreen.size[1]) < 2732) {
@@ -153,6 +180,15 @@ function loadEnterpriseData() {
       }
       return;
     }
+    if (name === "fl-ent-versionNumber") {
+      if (typeof enterpriseSubmission.result !== 'undefined' && typeof enterpriseSubmission.result.versionNumber !== 'undefined' && enterpriseSubmission.result.versionNumber !== '') {
+        var newVersionNumber = incrementVersionNumber(enterpriseSubmission.result.versionNumber);
+        $('[name="' + name + '"]').val(newVersionNumber);
+      } else {
+        $('[name="' + name + '"]').val('1.0.0');
+      }
+      return;
+    }
 
     $('[name="' + name + '"]').val((typeof enterpriseSubmission.data[name] !== "undefined") ? enterpriseSubmission.data[name] : '');
   });
@@ -161,11 +197,14 @@ function loadEnterpriseData() {
     if (appSettings.splashScreen.size && (appSettings.splashScreen.size[0] && appSettings.splashScreen.size[1]) < 2732) {
       $('.app-details-ent .app-splash-screen').addClass('has-warning');
     }
+    if (appSettings.iconData && appSettings.iconData.size && (appSettings.iconData.size[0] && appSettings.iconData.size[1]) < 1024) {
+      $('.app-details-ent .app-icon-name').addClass('has-error');
+    }
     allAppData.push('enterprise');
   } else {
     $('.app-details-ent').addClass('required-fill');
 
-    if (!appIcon) {
+    if (!appIcon || !appSettings.iconData || !appSettings.iconData.size || (appSettings.iconData.size[0] && appSettings.iconData.size[1]) < 1024) {
       $('.app-details-ent .app-icon-name').addClass('has-error');
     }
     if (appSettings.splashScreen && appSettings.splashScreen.size && (appSettings.splashScreen.size[0] && appSettings.splashScreen.size[1]) < 2732) {
@@ -197,6 +236,15 @@ function loadUnsignedData() {
       $('[name="' + name + '"]').val(unsignedSubmission.data[name]);
       return;
     }
+    if (name === "fl-uns-versionNumber") {
+      if (typeof unsignedSubmission.result !== 'undefined' && typeof unsignedSubmission.result.versionNumber !== 'undefined' && unsignedSubmission.result.versionNumber !== '') {
+        var newVersionNumber = incrementVersionNumber(unsignedSubmission.result.versionNumber);
+        $('[name="' + name + '"]').val(newVersionNumber);
+      } else {
+        $('[name="' + name + '"]').val('1.0.0');
+      }
+      return;
+    }
 
     $('[name="' + name + '"]').val((typeof unsignedSubmission.data[name] !== "undefined") ? unsignedSubmission.data[name] : '');
   });
@@ -205,11 +253,14 @@ function loadUnsignedData() {
     if (appSettings.splashScreen.size && (appSettings.splashScreen.size[0] && appSettings.splashScreen.size[1]) < 2732) {
       $('.app-details-uns .app-splash-screen').addClass('has-warning');
     }
+    if (appSettings.iconData && appSettings.iconData.size && (appSettings.iconData.size[0] && appSettings.iconData.size[1]) < 1024) {
+      $('.app-details-uns .app-icon-name').addClass('has-error');
+    }
     allAppData.push('unsigned');
   } else {
     $('.app-details-uns').addClass('required-fill');
 
-    if (!appIcon) {
+    if (!appIcon || !appSettings.iconData || !appSettings.iconData.size || (appSettings.iconData.size[0] && appSettings.iconData.size[1]) < 1024) {
       $('.app-details-uns .app-icon-name').addClass('has-error');
     }
     if (appSettings.splashScreen && appSettings.splashScreen.size && (appSettings.splashScreen.size[0] && appSettings.splashScreen.size[1]) < 2732) {
@@ -327,7 +378,7 @@ function requestBuild(origin, submission) {
     "url": $('[data-' + origin.toLowerCase() + '-default-splash-url]').data(origin.toLowerCase() + '-default-splash-url')
   };
 
-  submission.data.splashScreen = appSettings.splashScreen;
+  submission.data.splashScreen = appSettings.splashScreen ? appSettings.splashScreen : defaultSplashScreenData;
   submission.data.appIcon = appIcon;
 
   Fliplet.App.Submissions.get()
