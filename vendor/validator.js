@@ -41,6 +41,14 @@
         getValue($this) && $this.trigger('input.bs.validator')
       })
     })
+    this.$element.find('[data-nomatch]').each(function () {
+      var $this  = $(this)
+      var target = $this.attr('data-nomatch')
+
+      $(target).on('input.bs.validator', function (e) {
+        getValue($this) && $this.trigger('input.bs.validator')
+      })
+    })
 
     // run validators for fields with values, but don't clobber server-side errors
     this.$inputs.filter(function () {
@@ -64,7 +72,8 @@
     custom: {},
     errors: {
       match: 'Does not match',
-      minlength: 'Not long enough'
+      minlength: 'Not long enough',
+      nomatch: 'Can not match'
     },
     feedback: {
       success: 'glyphicon-ok',
@@ -82,6 +91,10 @@
     'match': function ($el) {
       var target = $el.attr('data-match')
       return $el.val() !== $(target).val() && Validator.DEFAULTS.errors.match
+    },
+    'nomatch': function ($el) {
+      var target = $el.attr('data-nomatch')
+      return $el.val() === $(target).val() && Validator.DEFAULTS.errors.nomatch
     },
     'minlength': function ($el) {
       var minlength = $el.attr('data-minlength')
