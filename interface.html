@@ -143,7 +143,7 @@
                 </div>
                 <div class="form-group clearfix">
                   <div class="col-sm-4 control-label">
-                    <label>Application Category</label>
+                    <label>Application Primary Category</label>
                     <p class="help-block label-helper"><small>The category that best describes this app. For more information, see the <a href="https://itunesconnect.apple.com/itc/static/category_definitions" target="_blank">App Store Category Definitions.</a></small></p>
                   </div>
                   <div class="col-sm-8">
@@ -183,14 +183,14 @@
                 </div>
                 <div class="form-group clearfix">
                   <div class="col-sm-4 control-label">
-                    <label>Application Subcategory</label>
-                    <p class="help-block label-helper"><small>The subcategory that best describes this app. For more information, see the <a href="https://itunesconnect.apple.com/itc/static/category_definitions" target="_blank">App Store Category Definitions.</a></small></p>
+                    <label>Application Secondary Category</label>
+                    <p class="help-block label-helper"><small>The secondary category that best describes this app. For more information, see the <a href="https://itunesconnect.apple.com/itc/static/category_definitions" target="_blank">App Store Category Definitions.</a></small></p>
                   </div>
                   <div class="col-sm-8">
                     <label for="fl-store-category2" class="select-proxy-display">
                       <span class="icon fa fa-chevron-down"></span>
                       <span class="select-value-proxy">-- Select a Subcategory</span>
-                      <select id="fl-store-category2" name="fl-store-category2" data-label="select" class="hidden-select form-control" data-error="Please select a subcategory" required>
+                      <select id="fl-store-category2" name="fl-store-category2" data-label="select" class="hidden-select form-control" data-nomatch="#fl-store-category1" data-nomatch-error="Primary and secondary categories can not be the same. Please select a different one." data-error="Please select a subcategory" required>
                         <option value="">-- Select a Subcategory</option>
                         <option value="Books">Books</option>
                         <option value="Business">Business</option>
@@ -219,6 +219,7 @@
                       </select>
                     </label>
                     <div class="help-block with-errors"></div>
+                    <p>The secondary category can not be the same as the primary category.</p>
                   </div>
                 </div>
                 <div class="form-group clearfix">
@@ -561,27 +562,71 @@
             <div id="appStoreTech" class="panel-collapse collapse" role="tabpanel" aria-labelledby="appStoreTechHeading">
               <div class="panel-body">
                 <p>We will need some technical information now, such as your developer account login details. Don't worry, these details will be safe with us. We need them in order to publish your app for you.</p>
-                <div class="form-group clearfix">
+                <h3><small>Apple developer account details and certificates</small></h3>
+                <div class="form-group">
                   <div class="col-sm-4 control-label">
-                    <label for="fl-store-appDevLogin">Apple Developer account login</label>
+                    <label>What account details do you want to use?</label>
                   </div>
                   <div class="col-sm-8">
-                    <p><small>Please consider creating a new account that is part of your developer team in order to use our system, this way you can always retract access if needed. The account has to have team-admin rights. If Two-Factor-Authentication is present on the account, login into <a href="https://appleid.apple.com/account">https://appleid.apple.com/account</a> and generate an <a href="https://support.apple.com/en-gb/HT204397">App-Specific password</a> for Fliplet.</small></p>
-                    <input type="email" name="fl-store-appDevLogin" class="form-control" id="fl-store-appDevLogin" data-error="Please enter a valid email address" required/>
-                    <div class="help-block with-errors"></div>
-                    <p class="help-block"><small>Enter Apple Developer login email</small></p>
-                  </div>
-                </div>
-                <div class="form-group clearfix">
-                  <div class="col-sm-4 control-label">
-                    <label for="fl-store-appDevPass">Apple Developer account password</label>
-                    <p class="help-block label-helper"><small>This password will be encrypted, safely stored and never shared or used for purposes other than publishing this app.</small></p>
-                  </div>
-                  <div class="col-sm-8">
-                    <input type="password" name="_fl-store-appDevPass" class="form-control" id="fl-store-appDevPass" data-error="Please enter a password" required/>
-                    <div class="help-block with-errors"></div>
-                    <p class="text-success hidden hasPassword">No need to fill this in. You already have the password saved!!</p>
-                    <p class="help-block"><small>Enter Apple Developer account password</small></p>
+                    <div class="radio radio-icon">
+                      <input type="radio" id="fl-store-credentials-1" name="fl-store-credentials" value="apple">
+                      <label for="fl-store-credentials-1">
+                        <span class="check"><i class="fa fa-circle"></i></span> <strong>Use organization's details</strong> - Fliplet will use the details that the organization administrator saved in our system
+                      </label>
+                    </div>
+                    <div class="radio radio-icon">
+                      <input type="radio" id="fl-store-credentials-2" name="fl-store-credentials" value="useOwn">
+                      <label for="fl-store-credentials-2">
+                        <span class="check"><i class="fa fa-circle"></i></span> <strong>Enter details manually</strong> - Fliplet will use the details that are given by you
+                      </label>
+                    </div>
+
+                    <div class="fl-store-credential indented-area hidden">
+                      <div class="form-group clearfix">
+                        <div class="col-sm-12">
+                          <label for="fl-store-appDevLogin">Apple Developer account login</label>
+                        </div>
+                        <div class="col-sm-12">
+                          <p><small>Please consider creating a new account that is part of your developer team in order to use our system, this way you can always retract access if needed. The account has to have team-admin rights. If Two-Factor-Authentication is present on the account, login into <a href="https://appleid.apple.com/account">https://appleid.apple.com/account</a> and generate an <a href="https://support.apple.com/en-gb/HT204397">App-Specific password</a> for Fliplet.</small></p>
+                          <input type="email" name="fl-store-appDevLogin" class="form-control" id="fl-store-appDevLogin" data-error="Please enter a valid email address" required/>
+                          <div class="help-block with-errors"></div>
+                          <p class="help-block"><small>Enter Apple Developer login email</small></p>
+                        </div>
+                      </div>
+                      <div class="form-group clearfix">
+                        <div class="col-sm-12">
+                          <label for="fl-store-appDevPass">Apple Developer account password</label>
+                          <p class="help-block label-helper"><small>This password will be encrypted, safely stored and never shared or used for purposes other than publishing this app.</small></p>
+                        </div>
+                        <div class="col-sm-12">
+                          <input type="password" name="_fl-store-appDevPass" class="form-control" id="fl-store-appDevPass" data-error="Please enter a password" required/>
+                          <div class="help-block with-errors"></div>
+                          <p class="text-success hidden hasPassword">No need to fill this in. You already have the password saved!!</p>
+                          <p class="help-block"><small>Enter Apple Developer account password</small></p>
+                        </div>
+                      </div>
+                      <div class="form-group clearfix">
+                        <div class="col-sm-12">
+                          <label for="fl-store-teamId">Team ID</label>
+                          <p class="help-block label-helper"><small>You need to login into your developer account to get the Team ID. Your Team ID can be found <a href="https://developer.apple.com/account/#/membership/">here</a>.</small></p>
+                        </div>
+                        <div class="col-sm-12">
+                          <input type="text" name="fl-store-teamId" class="form-control" id="fl-store-teamId" data-error="Please enter your Team ID" required/>
+                          <div class="help-block with-errors"></div>
+                        </div>
+                      </div>
+                      <div class="form-group clearfix">
+                        <div class="col-sm-12">
+                          <label for="fl-store-teamName">Team Name</label>
+                          <p class="help-block label-helper"><small>You need to login into your developer account to get the Team Name. It will be under you name on the top right corner of the screen.</small></p>
+                        </div>
+                        <div class="col-sm-12">
+                          <input type="text" name="fl-store-teamName" class="form-control" id="fl-store-teamName" data-error="Please enter your Team Name" required/>
+                          <div class="help-block with-errors"></div>
+                        </div>
+                      </div>
+                    </div>
+
                   </div>
                 </div>
                 <div class="form-group clearfix">
@@ -610,26 +655,6 @@
                       <div class="help-block with-errors"></div>
                       <p class="help-block"><small>This value needs to be unique and the structure must be <code>com.<i>organizationName</i>.<i>appName</i></code>.</small></p>
                     </div>
-                  </div>
-                </div>
-                <div class="form-group clearfix">
-                  <div class="col-sm-4 control-label">
-                    <label for="fl-store-teamId">Team ID</label>
-                    <p class="help-block label-helper"><small>You need to login into your developer account to get the Team ID. Your Team ID can be found <a href="https://developer.apple.com/account/#/membership/">here</a>.</small></p>
-                  </div>
-                  <div class="col-sm-8">
-                    <input type="text" name="fl-store-teamId" class="form-control" id="fl-store-teamId" data-error="Please enter your Team ID" required/>
-                    <div class="help-block with-errors"></div>
-                  </div>
-                </div>
-                <div class="form-group clearfix">
-                  <div class="col-sm-4 control-label">
-                    <label for="fl-store-teamName">Team Name</label>
-                    <p class="help-block label-helper"><small>You need to login into your developer account to get the Team Name. It will be under you name on the top right corner of the screen.</small></p>
-                  </div>
-                  <div class="col-sm-8">
-                    <input type="text" name="fl-store-teamName" class="form-control" id="fl-store-teamName" data-error="Please enter your Team Name" required/>
-                    <div class="help-block with-errors"></div>
                   </div>
                 </div>
               </div>
@@ -1291,6 +1316,7 @@
           \{{#if queued}}
           <td class="app-build-progress">
             <div class="app-build-progress-holder"><i class="fa fa-minus-circle"></i> Queued</div>
+            <div class="cancel-build"><a href="#" data-cancel-build-id="\{{id}}" class="text-danger">Cancel</a></div>
           </td>
           <td class="app-build-details">
             \{{#if submittedAt}}<span><span class="icon"><i class="fa fa-clock-o"></i> Started on:</span> \{{submittedAt}}</span>\{{/if}}
@@ -1299,6 +1325,7 @@
           \{{/if}} \{{#if submitted}}
           <td class="app-build-progress info">
             <div class="app-build-progress-holder"><i class="fa fa-spinner fa-pulse fa-fw"></i> In progress</div>
+            <div class="cancel-build"><a href="#" data-cancel-build-id="\{{id}}" class="text-danger">Cancel</a></div>
           </td>
           <td class="app-build-details">
             \{{#if submittedAt}}<span><span class="icon"><i class="fa fa-clock-o"></i> Started on:</span> \{{submittedAt}}</span>\{{/if}}
@@ -1307,6 +1334,7 @@
           \{{/if}} \{{#if processing}}
           <td class="app-build-progress info">
             <div class="app-build-progress-holder"><i class="fa fa-spinner fa-pulse fa-fw"></i> In progress</div>
+            <div class="cancel-build"><a href="#" data-cancel-build-id="\{{id}}" class="text-danger">Cancel</a></div>
           </td>
           <td class="app-build-details">
             \{{#if submittedAt}}<span><span class="icon"><i class="fa fa-clock-o"></i> Started on:</span> \{{submittedAt}}</span>\{{/if}}
@@ -1330,6 +1358,14 @@
           <td class="app-build-details">
             \{{#if updatedAt}}<span><span class="icon"><i class="fa fa-flag-checkered"></i> Finished on:</span> \{{updatedAt}}</span>\{{/if}}
             <div class="app-build-name">There was an error building your app</div>
+          </td>
+          \{{/if}} \{{#if cancelled}}
+          <td class="app-build-progress warning">
+            <div class="app-build-progress-holder"><i class="fa fa-ban"></i> Canceled</div>
+          </td>
+          <td class="app-build-details">
+            \{{#if updatedAt}}<span><span class="icon"><i class="fa fa-ban"></i> Canceled on:</span> \{{updatedAt}}</span>\{{/if}}
+            <div class="app-build-name">App build Canceled</div>
           </td>
           \{{/if}}
           <td class="app-build-download">

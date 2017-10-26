@@ -53,10 +53,6 @@
   border-bottom-color: #000201;
 }
 
-.radio-icon {
-  text-align: center;
-}
-
 .form-group.has-error .control-label label {
   color: #a94442;
 }
@@ -339,7 +335,8 @@ h3 small {
 }
 
 .app-build-status table td.app-build-progress .retry-build,
-.app-build-status table td.app-build-progress .download-build {
+.app-build-status table td.app-build-progress .download-build,
+.app-build-status table td.app-build-progress .cancel-build {
   font-size: 12px;
   margin-top: 5px;
   margin-right: 5px;
@@ -369,6 +366,11 @@ h3 small {
 
 .app-build-status table .app-build-progress.danger .app-build-progress-holder {
   background-color: #E03629;
+  color: #fff;
+}
+
+.app-build-status table .app-build-progress.warning .app-build-progress-holder {
+  background-color: #d37f1c;
   color: #fff;
 }
 
@@ -403,4 +405,11 @@ h3 small {
 
 .app-build-status table td.app-build-download .fa {
   color: #b5b5b5;
+}
+
+.indented-area {
+  background-color: #f9f9f9;
+  border-radius: 6px;
+  padding: 15px 15px 1px 15px;
+  margin-top: 10px;
 }

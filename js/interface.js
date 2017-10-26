@@ -121,6 +121,15 @@ function loadAppStoreData() {
       return;
     }
 
+    if (name === "fl-store-credentials") {
+      if (!appStoreSubmission.data[name]) {
+        $('[name="' + name + '"][value="apple"]').prop('checked', true).trigger('change');
+      } else {
+        $('[name="' + name + '"][value="' + appStoreSubmission.data[name] + '"]').prop('checked', true).trigger('change');
+      }
+      return;
+    }
+
     $('[name="' + name + '"]').val((typeof appStoreSubmission.data[name] !== "undefined") ? appStoreSubmission.data[name] : '');
   });
 
@@ -302,10 +311,18 @@ function submissionBuild(appSubmission, origin) {
     Fliplet.Studio.emit('refresh-app-submissions');
 
     $('.button-' + origin + '-request').html('Request App <i class="fa fa-paper-plane"></i>');
-    $('.save-' + origin + '-request').addClass('saved');
+    $('.save-' + origin + '-request').addClass('saved').hide().fadeIn(250);
+
+    clearTimeout(initLoad);
+    initialLoad(false, 0);
+    
+    Fliplet.Widget.autosize();
 
     setTimeout(function() {
-      $('.save-' + origin + '-request').removeClass('saved');
+      $('.save-' + origin + '-request').fadeOut(250, function() {
+        $('.save-' + origin + '-request').removeClass('saved');
+        Fliplet.Widget.autosize();
+      });
     }, 10000);
   }, function(err) {
     $('.button-' + origin + '-request').html('Request App <i class="fa fa-paper-plane"></i>');
@@ -620,6 +637,18 @@ $('[name="submissionType"]').on('change', function() {
   Fliplet.Widget.autosize();
 });
 
+$('[name="fl-store-credentials"]').on('change', function() {
+  var value = $(this).val();
+
+  if (value === 'useOwn') {
+    $('.fl-store-credential.indented-area').removeClass('hidden');
+  } else {
+    $('.fl-store-credential.indented-area').addClass('hidden');
+  }
+
+  Fliplet.Widget.autosize();
+});
+
 $('.fl-sb-appStore [change-bundleid], .fl-sb-enterprise [change-bundleid], .fl-sb-unsigned [change-bundleid]').on('click', function() {
   var changeBundleId = confirm("Are you sure you want to change the unique Bundle ID?");
 
@@ -798,6 +827,19 @@ $('[data-push-save]').on('click', function() {
   savePushData();
 });
 
+$(document).on('click', '[data-cancel-build-id]', function() {
+  var buildId = $(this).data('cancel-build-id');
+
+  Fliplet.API.request({
+    method: 'DELETE',
+    url: 'v1/apps/' + Fliplet.Env.get('appId') + '/submissions/' + buildId
+  })
+  .then(function() {
+    clearTimeout(initLoad);
+    initialLoad(false, 0);
+  })
+});
+
 /* INIT */
 $('#appStoreConfiguration, #enterpriseConfiguration, #unsignedConfiguration').validator().off('change.bs.validator focusout.bs.validator');
 $('[name="submissionType"][value="appStore"]').prop('checked', true).trigger('change');
@@ -833,7 +875,7 @@ function compileStatusTable(withData, origin, buildsData) {
 
 function checkSubmissionStatus(origin, iosSubmissions) {
   var submissionsToShow = _.filter(iosSubmissions, function(submission) {
-    return submission.status === "queued" || submission.status === "submitted" || submission.status === "processing" || submission.status === "completed" || submission.status === "failed";
+    return submission.status === "queued" || submission.status === "submitted" || submission.status === "processing" || submission.status === "completed" || submission.status === "failed" || submission.status === "cancelled";
   });
 
   var buildsData = [];
@@ -853,7 +895,7 @@ function checkSubmissionStatus(origin, iosSubmissions) {
       }
 
       build.id = submission.id;
-      build.updatedAt = ((submission.status === 'completed' || submission.status === 'failed') && submission.updatedAt) ?
+      build.updatedAt = ((submission.status === 'completed' || submission.status === 'failed' || submission.status === "cancelled") && submission.updatedAt) ?
         moment(submission.updatedAt).format('MMM Do YYYY, h:mm:ss a') :
         '';
       build.submittedAt = ((submission.status === 'queued' || submission.status === 'submitted') && submission.submittedAt) ?
