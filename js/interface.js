@@ -5,6 +5,7 @@ var organizationName = '';
 var appIcon = '';
 var appSettings = {};
 var allAppData = [];
+var appStoreLoggedIn = false;
 var appStoreSubmission = {};
 var enterpriseSubmission = {};
 var unsignedSubmission = {};
@@ -103,10 +104,15 @@ function loadAppStoreData() {
       return;
     }
 
-    if (name === "_fl-store-appDevPass") {
-      if (appStoreSubmission.data[name] !== "") {
-        $('[name="' + name + '"]').removeAttr('required');
-        $('[name="' + name + '"] ~ .hasPassword').removeClass('hidden');
+    if (name === "_fl-store-appDevPass" || name === "fl-store-appDevLogin") {
+      return;
+    }
+
+    if (name === "fl-store-distribution") {
+      if (appStoreSubmission.data[name]) {
+        $('[name="' + name + '"][value="' + appStoreSubmission.data[name] + '"]').prop('checked', true).trigger('change');
+      } else {
+        $('[name="' + name + '"][value="previous-file"]').prop('checked', true).trigger('change');
       }
       return;
     }
@@ -117,15 +123,6 @@ function loadAppStoreData() {
         $('[name="' + name + '"]').val(newVersionNumber);
       } else {
         $('[name="' + name + '"]').val('1.0.0');
-      }
-      return;
-    }
-
-    if (name === "fl-store-credentials") {
-      if (!appStoreSubmission.data[name]) {
-        $('[name="' + name + '"][value="apple"]').prop('checked', true).trigger('change');
-      } else {
-        $('[name="' + name + '"][value="' + appStoreSubmission.data[name] + '"]').prop('checked', true).trigger('change');
       }
       return;
     }
@@ -826,6 +823,95 @@ $('[data-unsigned-save]').on('click', function() {
 $('[data-push-save]').on('click', function() {
   savePushData();
 });
+
+/* Credentials and Certificates */
+$('.login-appStore-button').on('click', function() {
+  $(this).html('Logging in...');
+  $(this).addClass('disabled');
+  var devEmail = $('[name="fl-store-appDevLogin"]').val();
+  var devPass = $('[name="_fl-store-appDevPass"]').val();
+  var emailError = $('[name="fl-store-appDevLogin"]').data('error');
+  var passError = $('[name="_fl-store-appDevPass"]').data('error');
+
+  // Remove errors
+  $('[name="fl-store-appDevLogin"]').parents('.form-group').removeClass('has-error has-danger');
+  $('[name="fl-store-appDevLogin"]').next('.with-errors').html('');
+  $('[name="_fl-store-appDevPass"]').parents('.form-group').removeClass('has-error has-danger');
+  $('[name="_fl-store-appDevPass"]').next('.with-errors').html('');
+  
+  if (devEmail === '') {
+    $('[name="fl-store-appDevLogin"]').parents('.form-group').addClass('has-error has-danger');
+    $('[name="fl-store-appDevLogin"]').next('.with-errors').html(emailError);
+    $(this).html('Log in');
+    $(this).removeClass('disabled');
+    Fliplet.Widget.autosize();
+  }
+
+  if (devPass === '') {
+    $('[name="_fl-store-appDevPass"]').parents('.form-group').addClass('has-error has-danger');
+    $('[name="_fl-store-appDevPass"]').next('.with-errors').html(passError);
+    $(this).html('Log in');
+    $(this).removeClass('disabled');
+    Fliplet.Widget.autosize();
+  }
+
+  if (devEmail !== '' && devPass !== '') {
+    Fliplet.API.request({
+      method: 'PUT',
+      url: 'v1/organizations/' + Fliplet.Env.get('organizationId') + '/credentials/apple',
+      data: {
+        type: 'apple',
+        status: 'created',
+        email: devEmail,
+        password: devPass
+      }
+    })
+    .then(function(response) {
+      $(this).html('Log in');
+      $(this).removeClass('disabled');
+
+      $('.appStore-logged-emai').html(devEmail);
+      $('.appStore-login-details').addClass('hidden');
+      $('.appStore-logged-in, .appStore-more-options').addClass('show');
+      $('[name="fl-store-appDevLogin"]').val('');
+      $('[name="_fl-store-appDevPass"]').val('');
+      appStoreLoggedIn = true;
+      Fliplet.Widget.autosize();
+    })
+    .catch(function(error) {
+      console.log(error);
+      $(this).html('Log in');
+      $(this).removeClass('disabled');
+      Fliplet.Widget.autosize();
+    });
+  }
+});
+
+$('.log-out-appStore').on('click', function() {
+  appStoreLoggedIn = false;
+  $('.appStore-logged-emai').html('');
+  $('.appStore-login-details').removeClass('hidden');
+  $('.appStore-logged-in, .appStore-more-options').removeClass('show');
+});
+
+$('[name="fl-store-distribution"]').on('change', function() {
+  var value = $(this).val();
+  // @TODO: add required to select boxes and other fields on demand when switching between options
+  if (value === 'previous-file') {
+    $('.appStore-previous-file').addClass('show');
+    $('.appStore-generate-file, .appStore-upload-file').removeClass('show');
+  }
+  if (value === 'generate-file') {
+    $('.appStore-generate-file').addClass('show');
+    $('.appStore-previous-file, .appStore-upload-file').removeClass('show');
+  }
+  if (value === 'upload-file') {
+    $('.appStore-upload-file').addClass('show');
+    $('.appStore-previous-file, .appStore-generate-file').removeClass('show');
+  }
+  Fliplet.Widget.autosize();
+});
+/**/
 
 $(document).on('click', '[data-cancel-build-id]', function() {
   var buildId = $(this).data('cancel-build-id');
