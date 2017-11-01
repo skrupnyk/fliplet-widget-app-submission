@@ -1,5 +1,30 @@
 /* Override */
 
+.disabled,
+.btn.disabled {
+  pointer-events: none;
+  opacity: 0.3;
+}
+
+.appStore-logged-in,
+.appStore-more-options,
+.appStore-previous-file,
+.appStore-generate-file,
+.appStore-upload-file,
+.enterprise-manual-details,
+.enterprise-logged-in,
+.enterprise-more-options,
+.enterprise-previous-file,
+.enterprise-generate-file,
+.enterprise-upload-file {
+  display: none;
+}
+
+.form-control-static {
+  min-height: 30px;
+  line-height: 30px;
+}
+
 .inline-radio .radio {
   width: 33.33%;
 }
