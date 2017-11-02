@@ -598,6 +598,7 @@
                     </div>
                     <div class="col-sm-8">
                       <button type="button" class="btn btn-primary login-appStore-button">Log in</button>
+                      <div class="text-danger login-error"></div>
                     </div>
                   </div>
                 </div>
@@ -618,14 +619,15 @@
                     <label>Provide us with a distribution certificate choosing from the following options:</label>
                   </div>
                   <div class="col-sm-8">
-                    <div class="radio radio-icon">
+                    <div class="radio radio-icon if-credential">
                       <input type="radio" id="fl-store-distribution-1" name="fl-store-distribution" value="previous-file">
                       <label for="fl-store-distribution-1">
                         <span class="check"><i class="fa fa-circle"></i></span> Use distribution certificate details from your latest submission
                       </label>
                     </div>
                     <div class="appStore-previous-file indented-area">
-                      <p><span class="appStore-file-name">Certificate Name</span> - <strong>Expires on <span class="appStore-file-expire">October 30th 2018</span></strong></p>
+                      <p class="appStore-certificate-expiring text-warning hidden">Your distribution certificate is about to expire.</p>
+                      <p><span class="appStore-file-name">Certificate Name</span> - <strong>Expires on <span class="appStore-file-expire">October 30th 2018</span></strong><span class="appStore-replace-element hidden"> - <a href="#" class="appStore-replace-cert">Replace certificate</a><span></p>
                     </div>
                     <div class="radio radio-icon">
                       <input type="radio" id="fl-store-distribution-2" name="fl-store-distribution" value="generate-file">
@@ -641,17 +643,19 @@
                         <div class="col-sm-12">
                           <select class="form-control appStore-team" id="fl-store-team-generate" name="fl-store-team-generate">
                             <option value="">Selecta a team</option>
-                            <option value="1">Team name 1 - AS123456</option>
-                            <option value="2">Team name 2 - AS789012</option>
-                            <option value="3">Team name 3 - AS345678</option>
                           </select>
                         </div>
                       </div>
                       <div class="form-group">
                         <div class="col-sm-12">
                           <button type="button" class="btn btn-primary appStore-generate-cert disabled">Generate certificate</button>
+                          <div class="text-danger generate-error"></div>
                         </div>
                       </div>
+                    </div>
+                    <div class="appStore-generate-file-success indented-area">
+                      <p class="text-success">Distribution certificate created successfully.</p>
+                      <p><span class="appStore-file-name-success">Certificate Name</span> - <strong>Expires on <span class="appStore-file-expire-success">October 30th 2018</span></strong></p>
                     </div>
                     <div class="radio radio-icon">
                       <input type="radio" id="fl-store-distribution-3" name="fl-store-distribution" value="upload-file">
@@ -667,9 +671,6 @@
                         <div class="col-sm-12">
                           <select class="form-control appStore-team" id="fl-store-team-upload" name="fl-store-team-upload">
                             <option value="">Selecta a team</option>
-                            <option value="1">Team name 1 - AS123456</option>
-                            <option value="2">Team name 2 - AS789012</option>
-                            <option value="3">Team name 3 - AS345678</option>
                           </select>
                         </div>
                       </div>
