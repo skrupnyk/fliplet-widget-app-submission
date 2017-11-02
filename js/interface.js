@@ -6,6 +6,7 @@ var appIcon = '';
 var appSettings = {};
 var allAppData = [];
 var appStoreLoggedIn = false;
+var certificateCreated = false;
 var appStoreSubmission = {};
 var enterpriseSubmission = {};
 var unsignedSubmission = {};
@@ -826,6 +827,7 @@ $('[data-push-save]').on('click', function() {
 
 /* Credentials and Certificates */
 $('.login-appStore-button').on('click', function() {
+  var $this = $(this);
   $(this).html('Logging in...');
   $(this).addClass('disabled');
   var devEmail = $('[name="fl-store-appDevLogin"]').val();
@@ -838,6 +840,7 @@ $('.login-appStore-button').on('click', function() {
   $('[name="fl-store-appDevLogin"]').next('.with-errors').html('');
   $('[name="_fl-store-appDevPass"]').parents('.form-group').removeClass('has-error has-danger');
   $('[name="_fl-store-appDevPass"]').next('.with-errors').html('');
+  $this.next('login-error').html('');
   
   if (devEmail === '') {
     $('[name="fl-store-appDevLogin"]').parents('.form-group').addClass('has-error has-danger');
@@ -858,7 +861,7 @@ $('.login-appStore-button').on('click', function() {
   if (devEmail !== '' && devPass !== '') {
     Fliplet.API.request({
       method: 'PUT',
-      url: 'v1/organizations/' + Fliplet.Env.get('organizationId') + '/credentials/apple',
+      url: 'v1/organizations/' + Fliplet.Env.get('organizationId') + '/credentials/credentialKey' + appStoreSubmission.id,
       data: {
         type: 'apple',
         status: 'created',
@@ -866,22 +869,88 @@ $('.login-appStore-button').on('click', function() {
         password: devPass
       }
     })
-    .then(function(response) {
-      $(this).html('Log in');
-      $(this).removeClass('disabled');
+    .then(function() {
+      return Fliplet.API.request({
+        method: 'GET',
+        url: 'v1/organizations/' + Fliplet.Env.get('organizationId') + '/credentials/credentialKey' + appStoreSubmission.id + '/teams'
+      })
+      .then(function(result) {
+        result.teams.forEach(function(team, i) {
+          $('.appStore-team').append('<option value="' + team.teamId + '" data-team-name="' + team.name + '">'+ team.name +' - ' + team.teamId + '</option>');
+        });
 
-      $('.appStore-logged-emai').html(devEmail);
-      $('.appStore-login-details').addClass('hidden');
-      $('.appStore-logged-in, .appStore-more-options').addClass('show');
-      $('[name="fl-store-appDevLogin"]').val('');
-      $('[name="_fl-store-appDevPass"]').val('');
-      appStoreLoggedIn = true;
-      Fliplet.Widget.autosize();
+        return Fliplet.API.request({
+          method: 'POST',
+          url: 'v1/organizations/' + Fliplet.Env.get('organizationId') + '/credentials/search',
+          data: {
+            email: devEmail,
+            password: devPass,
+            type: 'apple'
+          }
+        })
+        .then(function(response) {
+          var credentialKey = _.max(Object.keys(_.omit(response, 'credentialKey' + appStoreSubmission.id)), function (o) {
+            return response[o].verifiedAt;
+          });
+
+          if (credentialKey) {
+            return Fliplet.API.request({
+              method: 'GET',
+              url: 'v1/organizations/' + Fliplet.Env.get('organizationId') + '/credentials/' + credentialKey,
+              data: {
+                email: devEmail,
+                password: devPass
+              }
+            })
+            .then(function(credential) {
+              if (credential.certificate) {
+                var expiresAt = new Date(credential.certificate.expiresAt);
+                var todayDate = new Date();
+                var remainingTime = (expiresAt.getTime() - todayDate.getTime())/(1000*60*60*24.0);
+
+                if (remainingTime < 60) {
+                  $('.appStore-certificate-expiring, .appStore-replace-element').removeClass('hidden');
+                  $('.appStore-file-expire').addClass('text-warning');
+                }
+                $('.appStore-previous-file').find('.appStore-file-name').html(credential.certificate.name);
+                $('.appStore-previous-file').find('.appStore-file-expire').html(moment(credential.certificate.expiresAt).format('MMMM Do YYYY'));
+              } else {
+                $('.if-credential').addClass('hidden');
+                $('[name="fl-store-distribution"][value="generate-file"]').prop('checked', true).trigger('change');
+              }
+
+              $this.html('Log in');
+              $this.removeClass('disabled');
+              $('.appStore-logged-emai').html(devEmail);
+              $('.appStore-login-details').addClass('hidden');
+              $('.appStore-logged-in, .appStore-more-options').addClass('show');
+              $('[name="fl-store-appDevLogin"]').val('');
+              $('[name="_fl-store-appDevPass"]').val('');
+              appStoreLoggedIn = true;
+              Fliplet.Widget.autosize();
+            });
+          } 
+
+          $('.if-credential').addClass('hidden');
+          $('[name="fl-store-distribution"][value="generate-file"]').prop('checked', true).trigger('change');
+          $this.html('Log in');
+          $this.removeClass('disabled');
+
+          $('.appStore-logged-emai').html(devEmail);
+          $('.appStore-login-details').addClass('hidden');
+          $('.appStore-logged-in, .appStore-more-options').addClass('show');
+          $('[name="fl-store-appDevLogin"]').val('');
+          $('[name="_fl-store-appDevPass"]').val('');
+          appStoreLoggedIn = true;
+          Fliplet.Widget.autosize();
+        });
+      });
     })
     .catch(function(error) {
       console.log(error);
-      $(this).html('Log in');
-      $(this).removeClass('disabled');
+      $this.next('.login-error').html(error.responseJSON.message);
+      $this.html('Log in');
+      $this.removeClass('disabled');
       Fliplet.Widget.autosize();
     });
   }
@@ -899,17 +968,71 @@ $('[name="fl-store-distribution"]').on('change', function() {
   // @TODO: add required to select boxes and other fields on demand when switching between options
   if (value === 'previous-file') {
     $('.appStore-previous-file').addClass('show');
-    $('.appStore-generate-file, .appStore-upload-file').removeClass('show');
+    $('.appStore-generate-file, .appStore-generate-file-success, .appStore-upload-file').removeClass('show');
   }
   if (value === 'generate-file') {
-    $('.appStore-generate-file').addClass('show');
+    if (certificateCreated) {
+      $('.appStore-generate-file-success').addClass('show');
+    } else {
+      $('.appStore-generate-file').addClass('show');
+    }
+
     $('.appStore-previous-file, .appStore-upload-file').removeClass('show');
   }
   if (value === 'upload-file') {
     $('.appStore-upload-file').addClass('show');
-    $('.appStore-previous-file, .appStore-generate-file').removeClass('show');
+    $('.appStore-previous-file, .appStore-generate-file, .appStore-generate-file-success').removeClass('show');
   }
   Fliplet.Widget.autosize();
+});
+
+$('[name="fl-store-team-generate"]').on('change', function() {
+  var value = $(this).val();
+
+  if (value !== '') {
+    $('.appStore-generate-cert').removeClass('disabled');
+  } else {
+    $('.appStore-generate-cert').addClass('disabled');
+  }
+});
+
+$('.appStore-generate-cert').on('click', function() {
+  var $this = $(this);
+  $(this).html('Generating...');
+  $(this).addClass('disabled');
+  $('.generate-error').html(''); // Cleans errors
+  var teamId = $('[name="fl-store-team-generate"]').val();
+  var teamName = $('[name="fl-store-team-generate"][value="' + teamId + '"]').data('team-name');
+
+  return Fliplet.API.request({
+    method: 'PUT',
+    url: 'v1/organizations/' + Fliplet.Env.get('organizationId') + '/credentials/credentialKey' + appStoreSubmission.id,
+    data: {
+      teamId: teamId,
+      teamName: teamName
+    }
+  })
+  .then(function() {
+    return Fliplet.API.request({
+      method: 'POST',
+      url: 'v1/organizations/' + Fliplet.Env.get('organizationId') + '/credentials/credentialKey' + appStoreSubmission.id + '/certificates'
+    })
+    .then(function(response) {
+      certificateCreated = true;
+      $('.appStore-generate-file-success').find('.appStore-file-name-success').html(response.certificate.name);
+      $('.appStore-generate-file-success').find('.appStore-file-expire-success').html(moment(response.certificate.expiresAt).format('MMMM Do YYYY'));
+      $('.appStore-generate-file').removeClass('show');
+      $('.appStore-generate-file-success').addClass('show');
+      $this.html('Generate certificate');
+      $this.removeClass('disabled');
+    });
+  })
+  .catch(function(error) {
+    console.log(error.responseJSON.message);
+    $this.html('Generate certificate');
+    $this.removeClass('disabled');
+    $('.generate-error').html(error.responseJSON.message);
+  });
 });
 /**/
 
