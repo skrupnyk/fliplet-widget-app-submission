@@ -566,7 +566,7 @@
 
                 <div class="appStore-login-details">
                   <div class="alert alert-info">
-                    <p>If you don't know what the developer account login details are please contact your IT team or one of the administrators of your Fliplet account: <strong>Hugo Carneiro (hcarneiro@weboo.biz)</strong></p>
+                    <p>If you do not know what the developer account login details are please contact your organization's IT team.</p>
                   </div>
                   <div class="alert alert-warning">
                     <p><strong>Note</strong> Two-Factor Authentication is not currently supported.</p>
@@ -577,7 +577,7 @@
                       <label for="fl-store-appDevLogin">Apple Developer account login</label>
                     </div>
                     <div class="col-sm-8">
-                      <input type="email" name="fl-store-appDevLogin" class="form-control" id="fl-store-appDevLogin" data-error="Please enter a valid email address">
+                      <input type="email" class="form-control" id="fl-store-appDevLogin" data-error="Please enter a valid email address">
                       <div class="help-block with-errors"></div>
                     </div>
                   </div>
@@ -587,7 +587,7 @@
                       <p class="help-block label-helper"><small>This password will be encrypted, safely stored and never shared or used for purposes other than publishing this app.</small></p>
                     </div>
                     <div class="col-sm-8">
-                      <input type="password" name="_fl-store-appDevPass" class="form-control" id="fl-store-appDevPass" data-error="Please enter a password">
+                      <input type="password" class="form-control" id="fl-store-appDevPass" data-error="Please enter a password">
                       <div class="help-block with-errors"></div>
                       <p class="text-success hidden hasPassword"><small>You have already provided a password. Enter a new password to change the saved password.</small></p>
                     </div>
@@ -628,6 +628,12 @@
                     <div class="appStore-previous-file indented-area">
                       <p class="appStore-certificate-expiring text-warning hidden">Your distribution certificate is about to expire.</p>
                       <p><span class="appStore-file-name">Certificate Name</span> - <strong>Expires on <span class="appStore-file-expire">October 30th 2018</span></strong><span class="appStore-replace-element hidden"> - <a href="#" class="appStore-replace-cert">Replace certificate</a><span></p>
+                        <p></p>
+                    </div>
+                    <div class="appStore-previous-file-success indented-area">
+                      <p class="text-success">Distribution certificate created successfully.</p>
+                      <p><span class="appStore-file-name-success">Certificate Name</span> - <strong>Expires on <span class="appStore-file-expire-success">October 30th 2018</span></strong></p>
+                      <div class="text-danger replace-error"></div>
                     </div>
                     <div class="radio radio-icon">
                       <input type="radio" id="fl-store-distribution-2" name="fl-store-distribution" value="generate-file">
@@ -674,7 +680,7 @@
                           </select>
                         </div>
                       </div>
-                      <div class="form-group">
+                      <div class="form-group appStore-upload-certificate disabled">
                         <div class="col-sm-12">
                           <label>Upload a .p12 file</label>
                         </div>
@@ -683,7 +689,7 @@
                             <label class="input-group-btn">
                               <span class="btn btn-default">Browse&hellip; <input id="fl-store-certificate" name="fl-store-certificate" class="hidden" type="file" accept="application/keychain_access, application/x-pkcs12"></span>
                             </label>
-                            <input type="text" class="form-control" placeholder="Click &ldquo;Browse&rdquo; to select a new file" readonly autocomplete="off">
+                            <input type="text" class="form-control" id="fl-store-certificate-label" placeholder="Click &ldquo;Browse&rdquo; to select a new file" readonly autocomplete="off">
                           </div>
                         </div>
                       </div>
