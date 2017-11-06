@@ -17,7 +17,9 @@
 .enterprise-logged-in,
 .enterprise-more-options,
 .enterprise-previous-file,
+.enterprise-previous-file-success,
 .enterprise-generate-file,
+.enterprise-generate-file-success,
 .enterprise-upload-file {
   display: none;
 }
