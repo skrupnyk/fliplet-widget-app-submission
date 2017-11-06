@@ -6,10 +6,19 @@ var appIcon = '';
 var appSettings = {};
 var allAppData = [];
 var appStoreLoggedIn = false;
-var certificateCreated = false;
-var certificateReplaced = false;
-var previousCredential = undefined;
-var fileField = undefined;
+var enterpriseLoggedIn = false;
+var appStoreCertificateCreated = false;
+var appStoreCertificateReplaced = false;
+var enterpriseCertificateCreated = false;
+var enterpriseCertificateReplaced = false;
+var appStorePreviousCredential = undefined;
+var appStoreFileField = undefined;
+var appStoreTeamId = undefined;
+var enterprisePreviousCredential = undefined;
+var enterpriseFileField = undefined;
+var enterpriseFileFieldManual = undefined;
+var enterpriseTeamId = undefined;
+var enterpriseManual = false;
 var appStoreSubmission = {};
 var enterpriseSubmission = {};
 var unsignedSubmission = {};
@@ -180,19 +189,21 @@ function loadEnterpriseData() {
       $('[name="' + name + '"]').val(enterpriseSubmission.data[name]);
       return;
     }
-    if (name === "_fl-ent-appDevPass") {
-      if (enterpriseSubmission.data[name] !== "") {
-        $('[name="' + name + '"]').removeAttr('required');
-        $('[name="' + name + '"] ~ .hasPassword').removeClass('hidden');
-      }
-      return;
-    }
     if (name === "fl-ent-versionNumber") {
       if (typeof enterpriseSubmission.result !== 'undefined' && typeof enterpriseSubmission.result.versionNumber !== 'undefined' && enterpriseSubmission.result.versionNumber !== '') {
         var newVersionNumber = incrementVersionNumber(enterpriseSubmission.result.versionNumber);
         $('[name="' + name + '"]').val(newVersionNumber);
       } else {
         $('[name="' + name + '"]').val('1.0.0');
+      }
+      return;
+    }
+
+    if (name === "fl-ent-distribution") {
+      if (appStoreSubmission.data[name]) {
+        $('[name="' + name + '"][value="' + appStoreSubmission.data[name] + '"]').prop('checked', true).trigger('change');
+      } else {
+        $('[name="' + name + '"][value="generate-file"]').prop('checked', true).trigger('change');
       }
       return;
     }
@@ -425,28 +436,59 @@ function requestBuild(origin, submission) {
             }
 
             // Check which type of certificate was given
-            if (appStoreSubmission.data['fl-store-distribution'] === 'previous-file' && previousCredential) {
+            if (origin === "appStore" && appStoreSubmission.data['fl-store-distribution'] === 'previous-file' && appStorePreviousCredential) {
               return setCredentials(organizationID, appStoreSubmission.id, {
-                  teamId: previousCredential.teamId,
-                  teamName: previousCredential.teamName,
-                  certSigningRequest: previousCredential.certSigningRequest,
-                  p12: previousCredential.p12,
-                  certificate: previousCredential.certificate,
-                  content: previousCredential.content
+                  teamId: appStorePreviousCredential.teamId,
+                  teamName: appStorePreviousCredential.teamName,
+                  certSigningRequest: appStorePreviousCredential.certSigningRequest,
+                  p12: appStorePreviousCredential.p12,
+                  certificate: appStorePreviousCredential.certificate,
+                  content: appStorePreviousCredential.content
                 })
                 .then(function() {
                   submissionBuild(newSubmission, origin);
                 });
-            } else if (appStoreSubmission.data['fl-store-distribution'] === 'upload-file') {
-              var formData = new FormData();
-              var fileName = fileField.value.replace(/\\/g, '/').replace(/.*\//, '');
+            }
 
-              if (fileField.files && fileField.files[0]) {
-                formData.append('p12', fileField.files[0])
+            if (origin === "appStore" && appStoreSubmission.data['fl-store-distribution'] === 'upload-file') {
+              var formData = new FormData();
+              var fileName = appStoreFileField.value.replace(/\\/g, '/').replace(/.*\//, '');
+
+              if (appStoreFileField.files && appStoreFileField.files[0]) {
+                formData.append('p12', appStoreFileField.files[0])
                 formData.append('certificateName', fileName)
               }
 
               return setCertificateP12(organizationID, appStoreSubmission.id, formData)
+                .then(function() {
+                  submissionBuild(newSubmission, origin);
+                });
+            }
+
+            if (origin === "enterprise" && enterpriseSubmission.data['fl-ent-distribution'] === 'previous-file' && enterprisePreviousCredential) {
+              return setCredentials(organizationID, enterpriseSubmission.id, {
+                  teamId: enterprisePreviousCredential.teamId,
+                  teamName: enterprisePreviousCredential.teamName,
+                  certSigningRequest: enterprisePreviousCredential.certSigningRequest,
+                  p12: enterprisePreviousCredential.p12,
+                  certificate: enterprisePreviousCredential.certificate,
+                  content: enterprisePreviousCredential.content
+                })
+                .then(function() {
+                  submissionBuild(newSubmission, origin);
+                });
+            }
+
+            if (origin === "enterprise" && enterpriseSubmission.data['fl-ent-distribution'] === 'upload-file') {
+              var formData = new FormData();
+              var fileName = enterpriseFileField.value.replace(/\\/g, '/').replace(/.*\//, '');
+
+              if (enterpriseFileField.files && enterpriseFileField.files[0]) {
+                formData.append('p12', enterpriseFileField.files[0])
+                formData.append('certificateName', fileName)
+              }
+
+              return setCertificateP12(organizationID, enterpriseSubmission.id, formData)
                 .then(function() {
                   submissionBuild(newSubmission, origin);
                 });
@@ -458,24 +500,24 @@ function requestBuild(origin, submission) {
 
       Fliplet.App.Submissions.update(submission.id, submission.data).then(function() {
         // Check which type of certificate was given
-        if (appStoreSubmission.data['fl-store-distribution'] === 'previous-file' && previousCredential) {
+        if (appStoreSubmission.data['fl-store-distribution'] === 'previous-file' && appStorePreviousCredential) {
           return setCredentials(organizationID, appStoreSubmission.id, {
-              teamId: previousCredential.teamId,
-              teamName: previousCredential.teamName,
-              certSigningRequest: previousCredential.certSigningRequest,
-              p12: previousCredential.p12,
-              certificate: previousCredential.certificate,
-              content: previousCredential.content
+              teamId: appStorePreviousCredential.teamId,
+              teamName: appStorePreviousCredential.teamName,
+              certSigningRequest: appStorePreviousCredential.certSigningRequest,
+              p12: appStorePreviousCredential.p12,
+              certificate: appStorePreviousCredential.certificate,
+              content: appStorePreviousCredential.content
             })
             .then(function() {
               submissionBuild(submission, origin);
             });
         } else if (appStoreSubmission.data['fl-store-distribution'] === 'upload-file') {
           var formData = new FormData();
-          var fileName = fileField.value.replace(/\\/g, '/').replace(/.*\//, '');
+          var fileName = appStoreFileField.value.replace(/\\/g, '/').replace(/.*\//, '');
 
-          if (fileField.files && fileField.files[0]) {
-            formData.append('p12', fileField.files[0])
+          if (appStoreFileField.files && appStoreFileField.files[0]) {
+            formData.append('p12', appStoreFileField.files[0])
             formData.append('certificateName', fileName)
           }
 
@@ -509,9 +551,12 @@ function saveAppStoreData(request) {
       return;
     }
 
-    if (name === 'fl-store-teamId') {
-      pushData.apnTeamId = value;
-      data[name] = value;
+    if (name === 'fl-store-distribution') {
+      if (value === 'previous-file') {
+        return pushData.apnTeamId = appStorePreviousCredential.teamId;
+      }
+
+      pushData.apnTeamId = appStoreTeamId;
       return;
     }
 
@@ -524,6 +569,7 @@ function saveAppStoreData(request) {
     data[name] = value;
   });
 
+  
   appStoreSubmission.data = data;
   notificationSettings = pushData;
 
@@ -537,22 +583,42 @@ function saveAppStoreData(request) {
 function saveEnterpriseData(request) {
   var data = enterpriseSubmission.data;
   var pushData = notificationSettings;
+  var uploadFilePromise = Promise.resolve();
 
   $('#enterpriseConfiguration [name]').each(function(i, el) {
     var name = $(el).attr("name");
     var value = $(el).val();
 
-    if (name === "_fl-ent-appDevPass") {
-      if (data[name] !== '' && value === '') {
-        return;
+    if (name === 'fl-ent-distribution') {
+      if (value === 'previous-file') {
+        return pushData.apnTeamId = enterprisePreviousCredential.teamId;
       }
-    }
-    
-    if (name === 'fl-ent-teamId') {
-      pushData.apnTeamId = value;
-      data[name] = value;
+      if (value === 'generate-file') {
+        return pushData.apnTeamId = $('#fl-ent-team-generate').val();
+      }
+      if (value === 'upload-file') {
+        return pushData.apnTeamId = $('#fl-ent-team-upload').val();
+      }
       return;
     }
+
+    if (name === 'fl-ent-teamId') {
+      if (enterpriseManual) {
+        data[name] = value;
+        pushData.apnTeamId = enterpriseTeamId;
+        return;
+      }
+      return;
+    }
+
+    if (name === 'fl-ent-teamName') {
+      if (enterpriseManual) {
+        data[name] = value;
+        return;
+      }
+      return;
+    }
+    
 
     if (name === 'fl-ent-bundleId') {
       pushData.apnTopic = value;
@@ -563,13 +629,43 @@ function saveEnterpriseData(request) {
     data[name] = value;
   });
 
-  enterpriseSubmission.data = data;
-  notificationSettings = pushData;
+  if (enterpriseManual) {
+    var fileList = enterpriseFileFieldManual.files
+    var file = new FormData();
 
-  if (request) {
-    requestBuild('enterprise', enterpriseSubmission);
+    if (fileList.length > 0) {
+      for (var i = 0; i < fileList.length; i++) {
+        file.append(name, fileList[i]);
+      }
+
+      uploadFilePromise = Fliplet.Media.Files.upload({
+        data: file,
+        appId: Fliplet.Env.get('appId')
+      }).then(function(files) {
+        data['fl-ent-certificate-manual'] = files;
+        return Promise.resolve();
+      });
+    }
+
+    uploadFilePromise.then(function() {
+      enterpriseSubmission.data = data;
+      notificationSettings = pushData;
+
+      if (request) {
+        requestBuild('enterprise', enterpriseSubmission);
+      } else {
+        save('enterprise', enterpriseSubmission);
+      }
+    });
   } else {
-    save('enterprise', enterpriseSubmission);
+    enterpriseSubmission.data = data;
+    notificationSettings = pushData;
+
+    if (request) {
+      requestBuild('enterprise', enterpriseSubmission);
+    } else {
+      save('enterprise', enterpriseSubmission);
+    }
   }
 }
 
@@ -943,12 +1039,12 @@ $('[data-push-save]').on('click', function() {
   savePushData();
 });
 
-/* Credentials and Certificates */
+/* Credentials and Certificates App Store */
 $('.login-appStore-button').on('click', function() {
   var $this = $(this);
   $(this).html('Logging in...');
   $(this).addClass('disabled');
-  var devEmail = $('[name="fl-store-appDevLogin"]').val();
+  var devEmail = $('#fl-store-appDevLogin').val();
   var devPass = $('#fl-store-appDevPass').val();
   var emailError = $('#fl-store-appDevLogin').data('error');
   var passError = $('#fl-store-appDevPass').data('error');
@@ -1007,7 +1103,7 @@ $('.login-appStore-button').on('click', function() {
                 return getCredential(organizationID, credentialKey)
                   .then(function(credential) {
                     if (credential.certificate) {
-                      previousCredential = credential;
+                      appStorePreviousCredential = credential;
                       var expiresAt = new Date(credential.certificate.expiresAt);
                       var todayDate = new Date();
                       var remainingTime = (expiresAt.getTime() - todayDate.getTime())/(1000*60*60*24.0);
@@ -1019,7 +1115,7 @@ $('.login-appStore-button').on('click', function() {
                       $('.appStore-previous-file').find('.appStore-file-name').html(credential.certificate.name);
                       $('.appStore-previous-file').find('.appStore-file-expire').html(moment(credential.certificate.expiresAt).format('MMMM Do YYYY'));
                     } else {
-                      $('.if-credential').addClass('hidden');
+                      $('.if-appStore-credential').addClass('hidden');
                       $('[name="fl-store-distribution"][value="generate-file"]').prop('checked', true).trigger('change');
                     }
 
@@ -1035,7 +1131,7 @@ $('.login-appStore-button').on('click', function() {
                   });
               } 
 
-              $('.if-credential').addClass('hidden');
+              $('.if-appStore-credential').addClass('hidden');
               $('[name="fl-store-distribution"][value="generate-file"]').prop('checked', true).trigger('change');
               $this.html('Log in');
               $this.removeClass('disabled');
@@ -1072,7 +1168,7 @@ $('[name="fl-store-distribution"]').on('change', function() {
   var value = $(this).val();
 
   if (value === 'previous-file') {
-    if (certificateReplaced) {
+    if (appStoreCertificateReplaced) {
       $('.appStore-previous-file-success').addClass('show');
     } else {
       $('.appStore-previous-file').addClass('show');
@@ -1080,27 +1176,29 @@ $('[name="fl-store-distribution"]').on('change', function() {
     $('.appStore-generate-file, .appStore-generate-file-success, .appStore-upload-file').removeClass('show');
   }
   if (value === 'generate-file') {
-    if (certificateCreated) {
+    if (appStoreCertificateCreated) {
       $('.appStore-generate-file-success').addClass('show');
     } else {
       $('.appStore-generate-file').addClass('show');
     }
     $('.appStore-previous-file, .appStore-previous-file-success, .appStore-upload-file').removeClass('show');
 
-    $('name="fl-store-team-generate"').prop('required',true);
-    $('name="fl-store-team-upload"').prop('required',false);
+    $('#fl-store-team-generate').prop('required',true);
+    $('#fl-store-team-upload').prop('required',false);
+    $('#fl-store-certificate').prop('required',false);
   }
   if (value === 'upload-file') {
     $('.appStore-upload-file').addClass('show');
     $('.appStore-previous-file, .appStore-previous-file-success, .appStore-generate-file, .appStore-generate-file-success').removeClass('show');
 
-    $('name="fl-store-team-generate"').prop('required',false);
-    $('name="fl-store-team-upload"').prop('required',true);
+    $('#fl-store-team-generate').prop('required',false);
+    $('#fl-store-team-upload').prop('required',true);
+    $('#fl-store-certificate').prop('required',true);
   }
   Fliplet.Widget.autosize();
 });
 
-$('[name="fl-store-team-generate"]').on('change', function() {
+$('#fl-store-team-generate').on('change', function() {
   var value = $(this).val();
 
   if (value !== '') {
@@ -1110,7 +1208,7 @@ $('[name="fl-store-team-generate"]').on('change', function() {
   }
 });
 
-$('[name="fl-store-team-upload"]').on('change', function() {
+$('#fl-store-team-upload').on('change', function() {
   var value = $(this).val();
 
   if (value !== '') {
@@ -1125,8 +1223,9 @@ $('.appStore-generate-cert').on('click', function() {
   $(this).html('Generating...');
   $(this).addClass('disabled');
   $('.generate-error').html(''); // Cleans errors
-  var teamId = $('[name="fl-store-team-generate"]').val();
-  var teamName = $('[name="fl-store-team-generate"][value="' + teamId + '"]').data('team-name');
+  var teamId = $('#fl-store-team-generate').val();
+  appStoreTeamId = teamId;
+  var teamName = $('#fl-store-team-generate[value="' + teamId + '"]').data('team-name');
 
   return setCredentials(organizationID, appStoreSubmission.id, {
       teamId: teamId,
@@ -1135,7 +1234,7 @@ $('.appStore-generate-cert').on('click', function() {
     .then(function() {
       return createCertificates(organizationID, appStoreSubmission.id)
         .then(function(response) {
-          certificateCreated = true;
+          appStoreCertificateCreated = true;
           $('.appStore-generate-file-success').find('.appStore-file-name-success').html(response.certificate.name);
           $('.appStore-generate-file-success').find('.appStore-file-expire-success').html(moment(response.certificate.expiresAt).format('MMMM Do YYYY'));
           $('.appStore-generate-file').removeClass('show');
@@ -1153,11 +1252,11 @@ $('.appStore-generate-cert').on('click', function() {
     });
 });
 
-$('[name="fl-store-certificate"]').on('change', function() {
-  var fileField = this;
-  var fileName = fileField.value.replace(/\\/g, '/').replace(/.*\//, '');
+$('#fl-store-certificate').on('change', function() {
+  appStoreFileField = this;
+  var fileName = appStoreFileField.value.replace(/\\/g, '/').replace(/.*\//, '');
 
-  if (fileField.files && fileField.files[0]) {
+  if (appStoreFileField.files && appStoreFileField.files[0]) {
     $('#fl-store-certificate-label').val(fileName);
   }
 });
@@ -1167,8 +1266,9 @@ $('.appStore-replace-cert').on('click', function() {
   $(this).html('Replacing...');
   $(this).addClass('disabled');
   $('.replace-error').html(''); // Cleans errors
-  var teamId = previousCredential ? previousCredential.teamId : '';
-  var teamName = previousCredential ? previousCredential.teamName : '';
+  var teamId = appStorePreviousCredential ? appStorePreviousCredential.teamId : '';
+  appStoreTeamId = teamId;
+  var teamName = appStorePreviousCredential ? appStorePreviousCredential.teamName : '';
 
   // @TODO: Revoking
 
@@ -1179,7 +1279,7 @@ $('.appStore-replace-cert').on('click', function() {
     .then(function() {
       return createCertificates(organizationID, appStoreSubmission.id)
         .then(function(response) {
-          certificateReplaced = true;
+          appStoreCertificateReplaced = true;
           $('.appStore-previous-file-success').find('.appStore-file-name-success').html(response.certificate.name);
           $('.appStore-previous-file-success').find('.appStore-file-expire-success').html(moment(response.certificate.expiresAt).format('MMMM Do YYYY'));
           $('.appStore-previous-file').removeClass('show');
@@ -1195,6 +1295,294 @@ $('.appStore-replace-cert').on('click', function() {
         $('.replace-error').html(error.responseJSON.message);
       }
     });
+});
+/**/
+
+/* Credentials and Certificates Enterprise */
+$('.login-enterprise-button').on('click', function() {
+  var $this = $(this);
+  $(this).html('Logging in...');
+  $(this).addClass('disabled');
+  var devEmail = $('#fl-ent-appDevLogin').val();
+  var devPass = $('#fl-ent-appDevPass').val();
+  var emailError = $('#fl-ent-distributionnt-appDevLogin').data('error');
+  var passError = $('#fl-ent-appDevPass').data('error');
+
+  // Remove errors
+  $('#fl-ent-appDevLogin').parents('.form-group').removeClass('has-error has-danger');
+  $('#fl-ent-appDevLogin').next('.with-errors').html('');
+  $('#fl-ent-appDevPass').parents('.form-group').removeClass('has-error has-danger');
+  $('#fl-ent-appDevPass').next('.with-errors').html('');
+  $this.next('login-error').html('');
+  
+  if (devEmail === '') {
+    $('#fl-ent-appDevLogin').parents('.form-group').addClass('has-error has-danger');
+    $('#fl-ent-appDevLogin').next('.with-errors').html(emailError);
+    $(this).html('Log in');
+    $(this).removeClass('disabled');
+    Fliplet.Widget.autosize();
+  }
+
+  if (devPass === '') {
+    $('#fl-ent-appDevPass').parents('.form-group').addClass('has-error has-danger');
+    $('#fl-ent-appDevPass').next('.with-errors').html(passError);
+    $(this).html('Log in');
+    $(this).removeClass('disabled');
+    Fliplet.Widget.autosize();
+  }
+
+  if (devEmail !== '' && devPass !== '') {
+    setCredentials(organizationID, appStoreSubmission.id, {
+      type: 'apple-enterprise',
+      status: 'created',
+      email: devEmail,
+      password: devPass
+    })
+    .then(function() {
+      return getTeams(organizationID, appStoreSubmission.id)
+        .then(function(teams) {
+          var enterpriseTeams = _.filter(teams, function(team) {
+            return team.type === "In-House";
+          })
+          enterpriseTeams.forEach(function(team, i) {
+            $('.enterprise-team').append('<option value="' + team.teamId + '" data-team-name="' + team.name + '">'+ team.name +' - ' + team.teamId + '</option>');
+          });
+
+          return searchCredentials(organizationID, {
+              email: devEmail,
+              password: devPass,
+              type: 'apple-enterprise'
+            })
+            .then(function(response) {
+              var credentialKey = _.max(Object.keys(_.omit(response, 'credentialKey' + appStoreSubmission.id)), function (o) {
+                return response[o].verifiedAt;
+              });
+
+              if (credentialKey) {
+                return getCredential(organizationID, credentialKey)
+                  .then(function(credential) {
+                    if (credential.certificate) {
+                      enterprisePreviousCredential = credential;
+                      var expiresAt = new Date(credential.certificate.expiresAt);
+                      var todayDate = new Date();
+                      var remainingTime = (expiresAt.getTime() - todayDate.getTime())/(1000*60*60*24.0);
+
+                      if (remainingTime < 60) {
+                        $('.enterprise-certificate-expiring, .enterprise-replace-element').removeClass('hidden');
+                        $('.enterprise-file-expire').addClass('text-warning');
+                      }
+                      $('.enterprise-previous-file').find('.enterprise-file-name').html(credential.certificate.name);
+                      $('.enterprise-previous-file').find('.enterprise-file-expire').html(moment(credential.certificate.expiresAt).format('MMMM Do YYYY'));
+                    } else {
+                      $('.if-enterprise-credential').addClass('hidden');
+                      $('[name="fl-ent-distribution"][value="generate-file"]').prop('checked', true).trigger('change');
+                    }
+
+                    $this.html('Log in');
+                    $this.removeClass('disabled');
+                    $('.enterprise-logged-emai').html(devEmail);
+                    $('.enterprise-login-details').addClass('hidden');
+                    $('.enterprise-logged-in, .enterprise-more-options').addClass('show');
+                    $('#fl-enterprise-appDevLogin').val('');
+                    $('#fl-enterprise-appDevPass').val('');
+                    enterpriseLoggedIn = true;
+                    Fliplet.Widget.autosize();
+                  });
+              } 
+
+              $('.if-enterprise-credential').addClass('hidden');
+              $('[name="fl-ent-distribution"][value="generate-file"]').prop('checked', true).trigger('change');
+              $this.html('Log in');
+              $this.removeClass('disabled');
+
+              $('.enterprise-logged-emai').html(devEmail);
+              $('.enterprise-login-details').addClass('hidden');
+              $('.enterprise-logged-in, .appStore-more-options').addClass('show');
+              $('#fl-ent-appDevLogin').val('');
+              $('#fl-ent-appDevPass').val('');
+              enterpriseLoggedIn = true;
+              Fliplet.Widget.autosize();
+            });
+        });
+    })
+    .catch(function(error) {
+      if (error.responseJSON) {
+        $this.next('.login-error').html(error.responseJSON.message);
+      }
+      $this.html('Log in');
+      $this.removeClass('disabled');
+      Fliplet.Widget.autosize();
+    });
+  }
+});
+
+$('.log-out-enterprise').on('click', function() {
+  enterpriseLoggedIn = false;
+  $('.enterprise-logged-emai').html('');
+  $('.enterprise-login-details').removeClass('hidden');
+  $('.enterprise-logged-in, .enterprise-more-options').removeClass('show');
+});
+
+$('[name="fl-ent-distribution"]').on('change', function() {
+  var value = $(this).val();
+
+  if (value === 'previous-file') {
+    if (enterpriseCertificateReplaced) {
+      $('.enterprise-previous-file-success').addClass('show');
+    } else {
+      $('.enterprise-previous-file').addClass('show');
+    }
+    $('.enterprise-generate-file, .enterprise-generate-file-success, .enterprise-upload-file').removeClass('show');
+  }
+  if (value === 'generate-file') {
+    if (enterpriseCertificateCreated) {
+      $('.enterprise-generate-file-success').addClass('show');
+    } else {
+      $('.enterprise-generate-file').addClass('show');
+    }
+    $('.enterprise-previous-file, .enterprise-previous-file-success, .enterprise-upload-file').removeClass('show');
+
+    $('#fl-ent-team-generate').prop('required',true);
+    $('#fl-ent-team-upload').prop('required',false);
+    $('#fl-ent-certificate').prop('required',false);
+  }
+  if (value === 'upload-file') {
+    $('.enterprise-upload-file').addClass('show');
+    $('.enterprise-previous-file, .enterprise-previous-file-success, .enterprise-generate-file, .enterprise-generate-file-success').removeClass('show');
+
+    $('#fl-ent-team-generate').prop('required',false);
+    $('#fl-ent-team-upload').prop('required',true);
+    $('#fl-ent-certificate').prop('required',true);
+  }
+  Fliplet.Widget.autosize();
+});
+
+$('#fl-ent-team-generate').on('change', function() {
+  var value = $(this).val();
+
+  if (value !== '') {
+    $('.enterprise-generate-cert').removeClass('disabled');
+  } else {
+    $('.enterprise-generate-cert').addClass('disabled');
+  }
+});
+
+$('#fl-ent-team-upload').on('change', function() {
+  var value = $(this).val();
+
+  if (value !== '') {
+    $('.enterprise-upload-certificate').removeClass('disabled');
+  } else {
+    $('.enterprise-upload-certificate').addClass('disabled');
+  }
+});
+
+$('.enterprise-generate-cert').on('click', function() {
+  var $this = $(this);
+  $(this).html('Generating...');
+  $(this).addClass('disabled');
+  $('.generate-error').html(''); // Cleans errors
+  var teamId = $('#fl-ent-team-generate').val();
+  enterpriseTeamId = teamId;
+  var teamName = $('#fl-ent-team-generate[value="' + teamId + '"]').data('team-name');
+
+  return setCredentials(organizationID, appStoreSubmission.id, {
+      teamId: teamId,
+      teamName: teamName
+    })
+    .then(function() {
+      return createCertificates(organizationID, appStoreSubmission.id)
+        .then(function(response) {
+          enterpriseCertificateCreated = true;
+          $('.enterprise-generate-file-success').find('.enterprise-file-name-success').html(response.certificate.name);
+          $('.enterprise-generate-file-success').find('.enterprise-file-expire-success').html(moment(response.certificate.expiresAt).format('MMMM Do YYYY'));
+          $('.enterprise-generate-file').removeClass('show');
+          $('.enterprise-generate-file-success').addClass('show');
+          $this.html('Generate certificate');
+          $this.removeClass('disabled');
+        });
+    })
+    .catch(function(error) {
+      $this.html('Generate certificate');
+      $this.removeClass('disabled');
+      if (error.responseJSON.message) {
+        $('.generate-error').html(error.responseJSON.message);
+      }
+    });
+});
+
+$('#fl-ent-certificate').on('change', function() {
+  enterpriseFileField = this;
+  var fileName = enterpriseFileField.value.replace(/\\/g, '/').replace(/.*\//, '');
+
+  if (enterpriseFileField.files && enterpriseFileField.files[0]) {
+    $('#fl-ent-certificate-label').val(fileName);
+  }
+});
+
+$('#fl-ent-certificate-manual-details').on('change', function() {
+  enterpriseFileFieldManual = this;
+  var fileName = enterpriseFileFieldManual.value.replace(/\\/g, '/').replace(/.*\//, '');
+
+  if (enterpriseFileFieldManual.files && enterpriseFileFieldManual.files[0]) {
+    $('#fl-ent-certificate-manual-details-label').val(fileName);
+  }
+});
+
+$('.enterprise-replace-cert').on('click', function() {
+  var $this = $(this);
+  $(this).html('Replacing...');
+  $(this).addClass('disabled');
+  $('.replace-error').html(''); // Cleans errors
+  var teamId = enterprisePreviousCredential ? enterprisePreviousCredential.teamId : '';
+  enterpriseTeamId = teamId;
+  var teamName = enterprisePreviousCredential ? enterprisePreviousCredential.teamName : '';
+
+  // @TODO: Revoking
+
+  return setCredentials(organizationID, appStoreSubmission.id, {
+      teamId: teamId,
+      teamName: teamName
+    })
+    .then(function() {
+      return createCertificates(organizationID, appStoreSubmission.id)
+        .then(function(response) {
+          enterpriseCertificateReplaced = true;
+          $('.enterprise-previous-file-success').find('.enterprise-file-name-success').html(response.certificate.name);
+          $('.enterprise-previous-file-success').find('.enterprise-file-expire-success').html(moment(response.certificate.expiresAt).format('MMMM Do YYYY'));
+          $('.enterprise-previous-file').removeClass('show');
+          $('.enterprise-previous-file-success').addClass('show');
+          $this.html('Replace certificate');
+          $this.removeClass('disabled');
+        });
+    })
+    .catch(function(error) {
+      $this.html('Replace certificate');
+      $this.removeClass('disabled');
+      if (error.responseJSON.message) {
+        $('.replace-error').html(error.responseJSON.message);
+      }
+    });
+});
+
+$('.ent-enter-manually').on('click', function() {
+  $('.enterprise-login-details').addClass('hidden');
+  $('.enterprise-manual-details').addClass('show');
+  enterpriseManual = true;
+
+  $('#fl-ent-teamName').prop('required', true);
+  $('#fl-ent-teamId').prop('required', true);
+  $('#fl-ent-certificate-manual-details').prop('required', true);
+});
+
+$('.enterprise-back-login').on('click', function() {
+  $('.enterprise-login-details').removeClass('hidden');
+  $('.enterprise-manual-details').removeClass('show');
+  enterpriseManual = false;
+
+  $('#fl-ent-teamName').prop('required', false);
+  $('#fl-ent-teamId').prop('required', false);
+  $('#fl-ent-certificate-manual-details').prop('required', false);
 });
 /**/
 
