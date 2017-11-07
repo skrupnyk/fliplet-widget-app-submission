@@ -406,6 +406,7 @@ function requestBuild(origin, submission) {
 
   submission.data.splashScreen = appSettings.splashScreen ? appSettings.splashScreen : defaultSplashScreenData;
   submission.data.appIcon = appIcon;
+  submission.data.legacyBuild = appSettings.legacyBuild || false;
 
   Fliplet.App.Submissions.get()
     .then(function(submissions) {
