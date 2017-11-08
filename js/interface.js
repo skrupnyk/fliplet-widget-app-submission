@@ -842,6 +842,7 @@ function checkSubmissionStatus(origin, iosSubmissions) {
     submissionsToShow.forEach(function(submission) {
       var build = {};
       var appBuild;
+      var debugApp;
 
       if (submission.result.appBuild && submission.result.appBuild.files) {
         appBuild = _.find(submission.result.appBuild.files, function(file) {
