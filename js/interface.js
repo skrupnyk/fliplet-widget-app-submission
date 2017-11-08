@@ -873,7 +873,7 @@ function checkSubmissionStatus(origin, iosSubmissions) {
       build[submission.status] = true;
       build.fileUrl = appBuild ? appBuild.url : '';
 
-      if (isAdmin && isImpersonating) {
+      if (userInfo.isAdmin && userInfo.isImpersonating) {
         build.debugFileUrl = debugApp ? debugApp.url : '';
       }
 
