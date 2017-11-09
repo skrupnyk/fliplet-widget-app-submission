@@ -561,7 +561,7 @@ function savePushData() {
       }, 4000);
     });
   } else {
-    alert('Changes weren\'t saved.\nPlease fill in the Team ID and Bundle ID in the App Store tab first.');
+    alert('Changes weren\'t saved.\nPlease fill in the Team ID and Bundle ID in the App Store or Enterprise tabs depending on what submission your are creating/updating.');
   }
 }
 
