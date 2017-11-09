@@ -548,21 +548,20 @@ function savePushData() {
 
   notificationSettings = data;
 
-  if (notificationSettings.apn) {
-    Fliplet.API.request({
-      method: 'PUT',
-      url: 'v1/widget-instances/com.fliplet.push-notifications?appId=' + Fliplet.Env.get('appId'),
-      data: notificationSettings
-    }).then(function() {
-      $('.save-push-progress').addClass('saved');
+  Fliplet.API.request({
+    method: 'PUT',
+    url: 'v1/widget-instances/com.fliplet.push-notifications?appId=' + Fliplet.Env.get('appId'),
+    data: notificationSettings
+  }).then(function() {
+    $('.save-push-progress').addClass('saved');
+    if (!notificationSettings.apn) {
+      alert('You will need to fill in the Bundle ID and Team ID (App Store and Enterprise only) fields and request an app.');
+    }
 
-      setTimeout(function() {
-        $('.save-push-progress').removeClass('saved');
-      }, 4000);
-    });
-  } else {
-    alert('Changes weren\'t saved.\nPlease fill in the Team ID and Bundle ID in the App Store or Enterprise tabs depending on what submission your are creating/updating.');
-  }
+    setTimeout(function() {
+      $('.save-push-progress').removeClass('saved');
+    }, 4000);
+  });
 }
 
 function init() {
