@@ -790,6 +790,17 @@ function setCertificateP12(organizationId, id, file) {
   });
 }
 
+function revokeCertificate(organizationId, id, certId) {
+  return Fliplet.API.request({
+    method: 'DELETE',
+    url: 'v1/organizations/' + organizationId + '/credentials/credentialKey' + id + '/' + certId
+  })
+  .then(function(result) {
+    console.log(result);
+    return Promise.resolve();
+  });
+}
+
 
 function init() {
   Fliplet.Apps.get().then(function(apps) {
@@ -1271,31 +1282,39 @@ $('.appStore-replace-cert').on('click', function() {
   appStoreTeamId = teamId;
   var teamName = appStorePreviousCredential ? appStorePreviousCredential.teamName : '';
 
-  // @TODO: Revoking
-
-  return setCredentials(organizationID, appStoreSubmission.id, {
-      teamId: teamId,
-      teamName: teamName
-    })
-    .then(function() {
-      return createCertificates(organizationID, appStoreSubmission.id)
-        .then(function(response) {
-          appStoreCertificateReplaced = true;
-          $('.appStore-previous-file-success').find('.appStore-file-name-success').html(response.certificate.name);
-          $('.appStore-previous-file-success').find('.appStore-file-expire-success').html(moment(response.certificate.expiresAt).format('MMMM Do YYYY'));
-          $('.appStore-previous-file').removeClass('show');
-          $('.appStore-previous-file-success').addClass('show');
-          $this.html('Replace certificate');
-          $this.removeClass('disabled');
-        });
-    })
-    .catch(function(error) {
+  if (appStorePreviousCredential.certificate && appStorePreviousCredential.certificate.id) {
+    return revokeCertificate(organizationID, appStoreSubmission.id, appStorePreviousCredential.certificate.id)
+      .then(function() {
+        return setCredentials(organizationID, appStoreSubmission.id, {
+            teamId: teamId,
+            teamName: teamName
+          })
+          .then(function() {
+            return createCertificates(organizationID, appStoreSubmission.id)
+              .then(function(response) {
+                appStoreCertificateReplaced = true;
+                $('.appStore-previous-file-success').find('.appStore-file-name-success').html(response.certificate.name);
+                $('.appStore-previous-file-success').find('.appStore-file-expire-success').html(moment(response.certificate.expiresAt).format('MMMM Do YYYY'));
+                $('.appStore-previous-file').removeClass('show');
+                $('.appStore-previous-file-success').addClass('show');
+                $this.html('Replace certificate');
+                $this.removeClass('disabled');
+              });
+          });
+      })
+      .catch(function(error) {
+        $this.html('Replace certificate');
+        $this.removeClass('disabled');
+        if (error.responseJSON.message) {
+          $('.replace-error').html(error.responseJSON.message);
+        }
+      });
+    } else {
       $this.html('Replace certificate');
       $this.removeClass('disabled');
-      if (error.responseJSON.message) {
-        $('.replace-error').html(error.responseJSON.message);
-      }
-    });
+      $('.replace-error').html("We could not replace the certificate.\nPlease log into your https://developer.apple.com/account/ and revoke the certificate and create a new one using Fliplet.");
+    }
+    
 });
 /**/
 
@@ -1340,6 +1359,8 @@ $('.login-enterprise-button').on('click', function() {
       password: devPass
     })
     .then(function() {
+      $('[name="fl-ent-distribution"][value="generate-file"]').prop('checked', true).trigger('change');
+
       return getTeams(organizationID, appStoreSubmission.id)
         .then(function(teams) {
           var enterpriseTeams = _.filter(teams, function(team) {
@@ -1376,7 +1397,6 @@ $('.login-enterprise-button').on('click', function() {
                       $('.enterprise-previous-file').find('.enterprise-file-expire').html(moment(credential.certificate.expiresAt).format('MMMM Do YYYY'));
                     } else {
                       $('.if-enterprise-credential').addClass('hidden');
-                      $('[name="fl-ent-distribution"][value="generate-file"]').prop('checked', true).trigger('change');
                     }
 
                     $this.html('Log in');
@@ -1539,31 +1559,38 @@ $('.enterprise-replace-cert').on('click', function() {
   enterpriseTeamId = teamId;
   var teamName = enterprisePreviousCredential ? enterprisePreviousCredential.teamName : '';
 
-  // @TODO: Revoking
-
-  return setCredentials(organizationID, appStoreSubmission.id, {
-      teamId: teamId,
-      teamName: teamName
-    })
-    .then(function() {
-      return createCertificates(organizationID, appStoreSubmission.id)
-        .then(function(response) {
-          enterpriseCertificateReplaced = true;
-          $('.enterprise-previous-file-success').find('.enterprise-file-name-success').html(response.certificate.name);
-          $('.enterprise-previous-file-success').find('.enterprise-file-expire-success').html(moment(response.certificate.expiresAt).format('MMMM Do YYYY'));
-          $('.enterprise-previous-file').removeClass('show');
-          $('.enterprise-previous-file-success').addClass('show');
-          $this.html('Replace certificate');
-          $this.removeClass('disabled');
-        });
-    })
-    .catch(function(error) {
-      $this.html('Replace certificate');
-      $this.removeClass('disabled');
-      if (error.responseJSON.message) {
-        $('.replace-error').html(error.responseJSON.message);
-      }
-    });
+  if (enterprisePreviousCredential.certificate && enterprisePreviousCredential.certificate.id) {
+    return revokeCertificate(organizationID, enterpriseSubmission.id, enterprisePreviousCredential.certificate.id)
+      .then(function() {
+        return setCredentials(organizationID, enterpriseSubmission.id, {
+            teamId: teamId,
+            teamName: teamName
+          })
+          .then(function() {
+            return createCertificates(organizationID, enterpriseSubmission.id)
+              .then(function(response) {
+                enterpriseCertificateReplaced = true;
+                $('.enterprise-previous-file-success').find('.enterprise-file-name-success').html(response.certificate.name);
+                $('.enterprise-previous-file-success').find('.enterprise-file-expire-success').html(moment(response.certificate.expiresAt).format('MMMM Do YYYY'));
+                $('.enterprise-previous-file').removeClass('show');
+                $('.enterprise-previous-file-success').addClass('show');
+                $this.html('Replace certificate');
+                $this.removeClass('disabled');
+              });
+          });
+      })
+      .catch(function(error) {
+        $this.html('Replace certificate');
+        $this.removeClass('disabled');
+        if (error.responseJSON.message) {
+          $('.replace-error').html(error.responseJSON.message);
+        }
+      });
+  } else {
+    $this.html('Replace certificate');
+    $this.removeClass('disabled');
+    $('.replace-error').html("We could not replace the certificate.\nPlease log into your https://developer.apple.com/account/ and revoke the certificate and create a new one using Fliplet.");
+  }
 });
 
 $('.ent-enter-manually').on('click', function() {
