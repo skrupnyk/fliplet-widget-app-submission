@@ -112,8 +112,11 @@ function loadAppStoreData() {
     }
 
     if (name === "fl-store-versionNumber") {
-      if (typeof appStoreSubmission.result !== 'undefined' && typeof appStoreSubmission.result.versionNumber !== 'undefined' && appStoreSubmission.result.versionNumber !== '') {
-        var newVersionNumber = incrementVersionNumber(appStoreSubmission.result.versionNumber);
+      if (typeof appStoreSubmission.data[name] !== 'undefined' && appStoreSubmission.data[name] !== '') {
+        var newVersionNumber = incrementVersionNumber(appStoreSubmission.data[name]);
+        $('[name="' + name + '"]').val(newVersionNumber);
+      } else if (typeof appStoreSubmission.previousResults !== 'undefined' && typeof appStoreSubmission.previousResults.versionNumber !== 'undefined' && appStoreSubmission.previousResults.versionNumber !== '') {
+        var newVersionNumber = incrementVersionNumber(appStoreSubmission.previousResults.versionNumber);
         $('[name="' + name + '"]').val(newVersionNumber);
       } else {
         $('[name="' + name + '"]').val('1.0.0');
@@ -181,8 +184,11 @@ function loadEnterpriseData() {
       return;
     }
     if (name === "fl-ent-versionNumber") {
-      if (typeof enterpriseSubmission.result !== 'undefined' && typeof enterpriseSubmission.result.versionNumber !== 'undefined' && enterpriseSubmission.result.versionNumber !== '') {
-        var newVersionNumber = incrementVersionNumber(enterpriseSubmission.result.versionNumber);
+      if (typeof enterpriseSubmission.data[name] !== 'undefined' && enterpriseSubmission.data[name] !== '') {
+        var newVersionNumber = incrementVersionNumber(enterpriseSubmission.data[name]);
+        $('[name="' + name + '"]').val(newVersionNumber);
+      } else if (typeof enterpriseSubmission.previousResults !== 'undefined' && typeof enterpriseSubmission.previousResults.versionNumber !== 'undefined' && enterpriseSubmission.previousResults.versionNumber !== '') {
+        var newVersionNumber = incrementVersionNumber(enterpriseSubmission.previousResults.versionNumber);
         $('[name="' + name + '"]').val(newVersionNumber);
       } else {
         $('[name="' + name + '"]').val('1.0.0');
@@ -237,8 +243,11 @@ function loadUnsignedData() {
       return;
     }
     if (name === "fl-uns-versionNumber") {
-      if (typeof unsignedSubmission.result !== 'undefined' && typeof unsignedSubmission.result.versionNumber !== 'undefined' && unsignedSubmission.result.versionNumber !== '') {
-        var newVersionNumber = incrementVersionNumber(unsignedSubmission.result.versionNumber);
+      if (typeof unsignedSubmission.data[name] !== 'undefined' && unsignedSubmission.data[name] !== '') {
+        var newVersionNumber = incrementVersionNumber(unsignedSubmission.data[name]);
+        $('[name="' + name + '"]').val(newVersionNumber);
+      } else if (typeof unsignedSubmission.previousResults !== 'undefined' && typeof unsignedSubmission.previousResults.versionNumber !== 'undefined' && unsignedSubmission.previousResults.versionNumber !== '') {
+        var newVersionNumber = incrementVersionNumber(unsignedSubmission.previousResults.versionNumber);
         $('[name="' + name + '"]').val(newVersionNumber);
       } else {
         $('[name="' + name + '"]').val('1.0.0');
@@ -291,12 +300,24 @@ function submissionBuild(appSubmission, origin) {
 
     if (origin === "appStore") {
       appStoreSubmission = builtSubmission.submission;
+      // Auto increments the version number and saves the submission
+      var newVersionNumber = incrementVersionNumber(appStoreSubmission.data['fl-store-versionNumber']);
+      $('[name="fl-store-versionNumber"]').val(newVersionNumber);
+      saveAppStoreData();
     }
     if (origin === "enterprise") {
       enterpriseSubmission = builtSubmission.submission;
+      // Auto increments the version number and saves the submission
+      var newVersionNumber = incrementVersionNumber(enterpriseSubmission.data['fl-ent-versionNumber']);
+      $('[name="fl-ent-versionNumber"]').val(newVersionNumber);
+      saveEnterpriseData();
     }
     if (origin === "unsigned") {
       unsignedSubmission = builtSubmission.submission;
+      // Auto increments the version number and saves the submission
+      var newVersionNumber = incrementVersionNumber(unsignedSubmission.data['fl-uns-versionNumber']);
+      $('[name="fl-uns-versionNumber"]').val(newVersionNumber);
+      saveUnsignedData();
     }
 
     Fliplet.Studio.emit('refresh-app-submissions');
