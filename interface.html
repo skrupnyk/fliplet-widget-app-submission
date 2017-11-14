@@ -1348,6 +1348,14 @@
             \{{#if updatedAt}}<span><span class="icon"><i class="fa fa-flag-checkered"></i> Finished on:</span> \{{updatedAt}}</span>\{{/if}}
             <div class="app-build-name">There was an error building your app</div>
           </td>
+          \{{/if}} \{{#if cancelled}}
+          <td class="app-build-progress warning">
+            <div class="app-build-progress-holder"><i class="fa fa-ban"></i> Canceled</div>
+          </td>
+          <td class="app-build-details">
+            \{{#if updatedAt}}<span><span class="icon"><i class="fa fa-ban"></i> Canceled on:</span> \{{updatedAt}}</span>\{{/if}}
+            <div class="app-build-name">App build Canceled</div>
+          </td>
           \{{/if}}
           <td class="app-build-download">
             <div><i class="fa fa-cog"></i> build #\{{id}}</div>
