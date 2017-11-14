@@ -1691,7 +1691,7 @@ function checkSubmissionStatus(origin, iosSubmissions) {
     submissionsToShow.forEach(function(submission) {
       var build = {};
       var appBuild;
-      var debugApp;
+      var debugHtmlPage;
 
       if (submission.result.appBuild && submission.result.appBuild.files) {
         appBuild = _.find(submission.result.appBuild.files, function(file) {
@@ -1703,11 +1703,11 @@ function checkSubmissionStatus(origin, iosSubmissions) {
         });
       }
 
-      if (submission.result.debugApp && submission.result.debugApp.files) {
-        debugApp = _.find(submission.result.debugApp.files, function(file) {
+      if (submission.result.debugHtmlPage && submission.result.debugHtmlPage.files) {
+        debugHtmlPage = _.find(submission.result.debugHtmlPage.files, function(file) {
           var dotIndex = file.url.lastIndexOf('.');
           var ext = file.url.substring(dotIndex);
-          if (ext === '.ipa') {
+          if (ext === '.html') {
             return true;
           }
         });
@@ -1723,8 +1723,8 @@ function checkSubmissionStatus(origin, iosSubmissions) {
       build[submission.status] = true;
       build.fileUrl = appBuild ? appBuild.url : '';
 
-      if (userInfo.isAdmin && userInfo.isImpersonating) {
-        build.debugFileUrl = debugApp ? debugApp.url : '';
+      if (userInfo.user.isAdmin || userInfo.user.isImpersonating) {
+        build.debugFileUrl = debugHtmlPage ? debugHtmlPage.url : '';
       }
 
       buildsData.push(build);
@@ -1874,8 +1874,15 @@ function initialLoad(initial, timeout) {
           ]);
         }
 
-        submissionChecker(submissions);
-        return Promise.resolve();
+       return Fliplet.API.request({
+          cache: true,
+          url: 'v1/user'
+        })
+        .then(function(user) {
+          userInfo = user;
+          submissionChecker(submissions);
+          return Promise.resolve();
+        });
       })
       .then(function() {
         // Fliplet.Env.get('appId')
@@ -1898,13 +1905,6 @@ function initialLoad(initial, timeout) {
           })
           .then(function(org) {
             organizationName = org.name;
-          }),
-          Fliplet.API.request({
-            cache: true,
-            url: 'v1/user'
-          })
-          .then(function(user) {
-            userInfo = user;
           })
         ]);
       })
