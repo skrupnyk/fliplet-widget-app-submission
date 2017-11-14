@@ -863,7 +863,7 @@ function checkSubmissionStatus(origin, iosSubmissions) {
     submissionsToShow.forEach(function(submission) {
       var build = {};
       var appBuild;
-      var debugApp;
+      var debugHtmlPage;
 
       if (submission.result.appBuild && submission.result.appBuild.files) {
         appBuild = _.find(submission.result.appBuild.files, function(file) {
@@ -875,18 +875,18 @@ function checkSubmissionStatus(origin, iosSubmissions) {
         });
       }
 
-      if (submission.result.debugApp && submission.result.debugApp.files) {
-        debugApp = _.find(submission.result.debugApp.files, function(file) {
+      if (submission.result.debugHtmlPage && submission.result.debugHtmlPage.files) {
+        debugHtmlPage = _.find(submission.result.debugHtmlPage.files, function(file) {
           var dotIndex = file.url.lastIndexOf('.');
           var ext = file.url.substring(dotIndex);
-          if (ext === '.ipa') {
+          if (ext === '.html') {
             return true;
           }
         });
       }
 
       build.id = submission.id;
-      build.updatedAt = ((submission.status === 'completed' || submission.status === 'failed') && submission.updatedAt) ?
+      build.updatedAt = ((submission.status === 'completed' || submission.status === 'failed' || submission.status === "cancelled") && submission.updatedAt) ?
         moment(submission.updatedAt).format('MMM Do YYYY, h:mm:ss a') :
         '';
       build.submittedAt = ((submission.status === 'queued' || submission.status === 'submitted') && submission.submittedAt) ?
@@ -896,7 +896,7 @@ function checkSubmissionStatus(origin, iosSubmissions) {
       build.fileUrl = appBuild ? appBuild.url : '';
 
       if (userInfo.isAdmin && userInfo.isImpersonating) {
-        build.debugFileUrl = debugApp ? debugApp.url : '';
+        build.debugFileUrl = debugHtmlPage ? debugHtmlPage.url : '';
       }
 
       buildsData.push(build);
