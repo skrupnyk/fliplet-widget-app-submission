@@ -114,11 +114,9 @@ function loadAppStoreData() {
 
     if (name === "fl-store-versionNumber") {
       if (typeof appStoreSubmission.data[name] !== 'undefined' && appStoreSubmission.data[name] !== '') {
-        var newVersionNumber = incrementVersionNumber(appStoreSubmission.data[name]);
-        $('[name="' + name + '"]').val(newVersionNumber);
+        $('[name="' + name + '"]').val(appStoreSubmission.data[name]);
       } else if (typeof appStoreSubmission.previousResults !== 'undefined' && typeof appStoreSubmission.previousResults.versionNumber !== 'undefined' && appStoreSubmission.previousResults.versionNumber !== '') {
-        var newVersionNumber = incrementVersionNumber(appStoreSubmission.previousResults.versionNumber);
-        $('[name="' + name + '"]').val(newVersionNumber);
+        $('[name="' + name + '"]').val(appStoreSubmission.previousResults.versionNumber);
       } else {
         $('[name="' + name + '"]').val('1.0.0');
       }
@@ -186,11 +184,9 @@ function loadEnterpriseData() {
     }
     if (name === "fl-ent-versionNumber") {
       if (typeof enterpriseSubmission.data[name] !== 'undefined' && enterpriseSubmission.data[name] !== '') {
-        var newVersionNumber = incrementVersionNumber(enterpriseSubmission.data[name]);
-        $('[name="' + name + '"]').val(newVersionNumber);
+        $('[name="' + name + '"]').val(enterpriseSubmission.data[name]);
       } else if (typeof enterpriseSubmission.previousResults !== 'undefined' && typeof enterpriseSubmission.previousResults.versionNumber !== 'undefined' && enterpriseSubmission.previousResults.versionNumber !== '') {
-        var newVersionNumber = incrementVersionNumber(enterpriseSubmission.previousResults.versionNumber);
-        $('[name="' + name + '"]').val(newVersionNumber);
+        $('[name="' + name + '"]').val(enterpriseSubmission.previousResults.versionNumber);
       } else {
         $('[name="' + name + '"]').val('1.0.0');
       }
@@ -245,11 +241,9 @@ function loadUnsignedData() {
     }
     if (name === "fl-uns-versionNumber") {
       if (typeof unsignedSubmission.data[name] !== 'undefined' && unsignedSubmission.data[name] !== '') {
-        var newVersionNumber = incrementVersionNumber(unsignedSubmission.data[name]);
-        $('[name="' + name + '"]').val(newVersionNumber);
+        $('[name="' + name + '"]').val(unsignedSubmission.data[name]);
       } else if (typeof unsignedSubmission.previousResults !== 'undefined' && typeof unsignedSubmission.previousResults.versionNumber !== 'undefined' && unsignedSubmission.previousResults.versionNumber !== '') {
-        var newVersionNumber = incrementVersionNumber(unsignedSubmission.previousResults.versionNumber);
-        $('[name="' + name + '"]').val(newVersionNumber);
+        $('[name="' + name + '"]').val(unsignedSubmission.previousResults.versionNumber);
       } else {
         $('[name="' + name + '"]').val('1.0.0');
       }
