@@ -212,6 +212,10 @@ function loadEnterpriseData() {
       return;
     }
 
+    if (name === "fl-ent-certificate-manual-details" || name === "fl-ent-mobileprovision-manual-details") {
+      return;
+    }
+
     $('[name="' + name + '"]').val((typeof enterpriseSubmission.data[name] !== "undefined") ? enterpriseSubmission.data[name] : '');
   });
 
