@@ -204,8 +204,8 @@ function loadEnterpriseData() {
     }
 
     if (name === "fl-ent-distribution") {
-      if (appStoreSubmission.data[name]) {
-        $('[name="' + name + '"][value="' + appStoreSubmission.data[name] + '"]').prop('checked', true).trigger('change');
+      if (enterpriseSubmission.data[name]) {
+        $('[name="' + name + '"][value="' + enterpriseSubmission.data[name] + '"]').prop('checked', true).trigger('change');
       } else {
         $('[name="' + name + '"][value="generate-file"]').prop('checked', true).trigger('change');
       }
