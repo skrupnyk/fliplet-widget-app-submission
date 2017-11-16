@@ -601,7 +601,7 @@ function saveAppStoreData(request) {
     }
 
     if (name === 'fl-store-distribution') {
-      var newValue = $('name="'+name+'"'),val();
+      var newValue = $('name="'+name+'"').val();
       if (newValue === 'previous-file') {
         return pushData.apnTeamId = appStorePreviousCredential.teamId;
       }
@@ -640,7 +640,7 @@ function saveEnterpriseData(request) {
     var value = $(el).val();
 
     if (name === 'fl-ent-distribution') {
-      var newValue = $('name="'+name+'"'),val();
+      var newValue = $('name="'+name+'"').val();
       if (newValue === 'previous-file') {
         return pushData.apnTeamId = enterprisePreviousCredential.teamId;
       }
