@@ -739,7 +739,7 @@ function savePushData() {
   }).then(function() {
     $('.save-push-progress').addClass('saved');
     if (!notificationSettings.apn) {
-      alert('You will need to fill in the Bundle ID and Team ID (App Store and Enterprise only) fields and request an app.');
+      alert('Your settings have been saved!\n\nHowever push notifications will only work on App Store and Enterprise apps.\nRequest an app for one of those types and fill in the Bundle ID and Team/Team ID fields.\n\nIf you have requested an app for App Store or Enterprise before with those two fields filled in, then you don\'t need to request again.');
     }
 
     setTimeout(function() {
