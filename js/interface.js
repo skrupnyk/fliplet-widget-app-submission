@@ -518,7 +518,7 @@ function requestBuild(origin, submission) {
 
       Fliplet.App.Submissions.update(submission.id, submission.data).then(function() {
         // Check which type of certificate was given
-        if (appStoreSubmission.data['fl-store-distribution'] === 'previous-file' && appStorePreviousCredential) {
+        if (origin === "appStore" && appStoreSubmission.data['fl-store-distribution'] === 'previous-file' && appStorePreviousCredential) {
           return setCredentials(organizationID, appStoreSubmission.id, {
               teamId: appStorePreviousCredential.teamId,
               teamName: appStorePreviousCredential.teamName,
@@ -530,7 +530,9 @@ function requestBuild(origin, submission) {
             .then(function() {
               submissionBuild(submission, origin);
             });
-        } else if (appStoreSubmission.data['fl-store-distribution'] === 'upload-file') {
+        }
+
+        if (origin === "appStore" && appStoreSubmission.data['fl-store-distribution'] === 'upload-file') {
           var formData = new FormData();
           var fileName = appStoreFileField.value.replace(/\\/g, '/').replace(/.*\//, '');
 
@@ -540,6 +542,35 @@ function requestBuild(origin, submission) {
           }
 
           return setCertificateP12(organizationID, appStoreSubmission.id, formData)
+            .then(function() {
+              submissionBuild(submission, origin);
+            });
+        }
+
+        if (origin === "enterprise" && enterpriseSubmission.data['fl-ent-distribution'] === 'previous-file' && enterprisePreviousCredential) {
+          return setCredentials(organizationID, enterpriseSubmission.id, {
+              teamId: enterprisePreviousCredential.teamId,
+              teamName: enterprisePreviousCredential.teamName,
+              certSigningRequest: enterprisePreviousCredential.certSigningRequest,
+              p12: enterprisePreviousCredential.p12,
+              certificate: enterprisePreviousCredential.certificate,
+              content: enterprisePreviousCredential.content
+            })
+            .then(function() {
+              submissionBuild(submission, origin);
+            });
+        }
+
+        if (origin === "enterprise" && enterpriseSubmission.data['fl-ent-distribution'] === 'upload-file') {
+          var formData = new FormData();
+          var fileName = enterpriseFileField.value.replace(/\\/g, '/').replace(/.*\//, '');
+
+          if (enterpriseFileField.files && enterpriseFileField.files[0]) {
+            formData.append('p12', enterpriseFileField.files[0])
+            formData.append('certificateName', fileName)
+          }
+
+          return setCertificateP12(organizationID, enterpriseSubmission.id, formData)
             .then(function() {
               submissionBuild(submission, origin);
             });
@@ -570,7 +601,8 @@ function saveAppStoreData(request) {
     }
 
     if (name === 'fl-store-distribution') {
-      if (value === 'previous-file') {
+      var newValue = $('name="'+name+'"'),val();
+      if (newValue === 'previous-file') {
         return pushData.apnTeamId = appStorePreviousCredential.teamId;
       }
 
@@ -608,13 +640,14 @@ function saveEnterpriseData(request) {
     var value = $(el).val();
 
     if (name === 'fl-ent-distribution') {
-      if (value === 'previous-file') {
+      var newValue = $('name="'+name+'"'),val();
+      if (newValue === 'previous-file') {
         return pushData.apnTeamId = enterprisePreviousCredential.teamId;
       }
-      if (value === 'generate-file') {
+      if (newValue === 'generate-file') {
         return pushData.apnTeamId = $('#fl-ent-team-generate').val();
       }
-      if (value === 'upload-file') {
+      if (newValue === 'upload-file') {
         return pushData.apnTeamId = $('#fl-ent-team-upload').val();
       }
       return;
