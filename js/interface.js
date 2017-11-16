@@ -1668,6 +1668,8 @@ $('.ent-enter-manually').on('click', function() {
 
   $('#fl-ent-appDevLogin').prop('required', false);
   $('#fl-ent-appDevPass').prop('required', false);
+  $('#fl-ent-team-generate').prop('required',false);
+
   $('#fl-ent-teamName').prop('required', true);
   $('#fl-ent-teamId').prop('required', true);
   $('#fl-ent-certificate-manual-details').prop('required', true);
@@ -1681,6 +1683,8 @@ $('.enterprise-back-login').on('click', function() {
 
   $('#fl-ent-appDevLogin').prop('required', true);
   $('#fl-ent-appDevPass').prop('required', true);
+  $('#fl-ent-team-generate').prop('required',true);
+
   $('#fl-ent-teamName').prop('required', false);
   $('#fl-ent-teamId').prop('required', false);
   $('#fl-ent-certificate-manual-details').prop('required', false);
