@@ -124,7 +124,7 @@ function loadAppStoreData() {
       if (appStoreSubmission.data[name]) {
         $('[name="' + name + '"][value="' + appStoreSubmission.data[name] + '"]').prop('checked', true).trigger('change');
       } else {
-        $('[name="' + name + '"][value="previous-file"]').prop('checked', true).trigger('change');
+        $('[name="' + name + '"][value="generate-file"]').prop('checked', true).trigger('change');
       }
       return;
     }
@@ -1178,6 +1178,7 @@ $('.login-appStore-button').on('click', function() {
                         $('.appStore-certificate-expiring, .appStore-replace-element').removeClass('hidden');
                         $('.appStore-file-expire').addClass('text-warning');
                       }
+                      $('[name="fl-store-distribution"][value="previous-file"]').prop('checked', true).trigger('change');
                       $('.appStore-previous-file').find('.appStore-file-name').html(credential.certificate.name);
                       $('.appStore-previous-file').find('.appStore-file-expire').html(moment(credential.certificate.expiresAt).format('MMMM Do YYYY'));
                     } else {
