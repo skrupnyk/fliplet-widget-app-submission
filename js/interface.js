@@ -1666,9 +1666,12 @@ $('.ent-enter-manually').on('click', function() {
   $('.enterprise-manual-details').addClass('show');
   enterpriseManual = true;
 
+  $('#fl-ent-appDevLogin').prop('required', false);
+  $('#fl-ent-appDevPass').prop('required', false);
   $('#fl-ent-teamName').prop('required', true);
   $('#fl-ent-teamId').prop('required', true);
   $('#fl-ent-certificate-manual-details').prop('required', true);
+  $('#fl-ent-mobileprovision-manual-details').prop('required', true);
 });
 
 $('.enterprise-back-login').on('click', function() {
@@ -1676,9 +1679,12 @@ $('.enterprise-back-login').on('click', function() {
   $('.enterprise-manual-details').removeClass('show');
   enterpriseManual = false;
 
+  $('#fl-ent-appDevLogin').prop('required', true);
+  $('#fl-ent-appDevPass').prop('required', true);
   $('#fl-ent-teamName').prop('required', false);
   $('#fl-ent-teamId').prop('required', false);
   $('#fl-ent-certificate-manual-details').prop('required', false);
+  $('#fl-ent-mobileprovision-manual-details').prop('required', false);
 });
 /**/
 
