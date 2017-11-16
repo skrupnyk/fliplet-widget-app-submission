@@ -17,6 +17,7 @@ var appStoreTeamId = undefined;
 var enterprisePreviousCredential = undefined;
 var enterpriseFileField = undefined;
 var enterpriseFileFieldManual = undefined;
+var enterpriseFileProvisionFieldManual = undefined;
 var enterpriseTeamId = undefined;
 var enterpriseManual = false;
 var appStoreSubmission = {};
@@ -648,18 +649,23 @@ function saveEnterpriseData(request) {
 
   if (enterpriseManual) {
     var fileList = enterpriseFileFieldManual.files
+    var fileProvisionList = enterpriseFileProvisionFieldManual.files
     var file = new FormData();
 
-    if (fileList.length > 0) {
+    if (fileList.length > 0 && fileProvisionList.length > 0) {
       for (var i = 0; i < fileList.length; i++) {
-        file.append(name, fileList[i]);
+        file.append('fl-ent-certificate-manual-file', fileList[i]);
+      }
+
+      for (var i = 0; i < fileProvisionList.length; i++) {
+        file.append('fl-ent-provision-manual-file', fileProvisionList[i]);
       }
 
       uploadFilePromise = Fliplet.Media.Files.upload({
         data: file,
         appId: Fliplet.Env.get('appId')
       }).then(function(files) {
-        data['fl-ent-certificate-manual'] = files;
+        data['fl-ent-certificate-files'] = files;
         return Promise.resolve();
       });
     }
@@ -1562,6 +1568,15 @@ $('#fl-ent-certificate-manual-details').on('change', function() {
 
   if (enterpriseFileFieldManual.files && enterpriseFileFieldManual.files[0]) {
     $('#fl-ent-certificate-manual-details-label').val(fileName);
+  }
+});
+
+$('#fl-ent-mobileprovision-manual-details').on('change', function() {
+  enterpriseFileProvisionFieldManual = this;
+  var fileName = enterpriseFileProvisionFieldManual.value.replace(/\\/g, '/').replace(/.*\//, '');
+
+  if (enterpriseFileProvisionFieldManual.files && enterpriseFileProvisionFieldManual.files[0]) {
+    $('#fl-ent-mobileprovision-manual-details-label').val(fileName);
   }
 });
 
