@@ -799,7 +799,7 @@ function setCredentials(organizationId, id, data) {
 function getTeams(organizationId, id) {
   return Fliplet.API.request({
     method: 'GET',
-    url: 'v1/organizations/' + organizationId + '/credentials/credentialKey' + id + '/teams'
+    url: 'v1/organizations/' + organizationId + '/credentials/credentialKey' + id + '/teams?itunes=false'
   })
   .then(function(result) {
     return Promise.resolve(result.teams);
