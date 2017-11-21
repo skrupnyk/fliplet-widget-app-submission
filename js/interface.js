@@ -1411,7 +1411,7 @@ $('.login-enterprise-button').on('click', function() {
   }
 
   if (devEmail !== '' && devPass !== '') {
-    setCredentials(organizationID, appStoreSubmission.id, {
+    setCredentials(organizationID, enterpriseSubmission.id, {
       type: 'apple-enterprise',
       status: 'created',
       email: devEmail,
@@ -1420,7 +1420,7 @@ $('.login-enterprise-button').on('click', function() {
     .then(function() {
       $('[name="fl-ent-distribution"][value="generate-file"]').prop('checked', true).trigger('change');
 
-      return getTeams(organizationID, appStoreSubmission.id)
+      return getTeams(organizationID, enterpriseSubmission.id)
         .then(function(teams) {
           var enterpriseTeams = _.filter(teams, function(team) {
             return team.type === "In-House";
@@ -1435,7 +1435,7 @@ $('.login-enterprise-button').on('click', function() {
               type: 'apple-enterprise'
             })
             .then(function(response) {
-              var credentialKey = _.max(Object.keys(_.omit(response, 'credentialKey' + appStoreSubmission.id)), function (o) {
+              var credentialKey = _.max(Object.keys(_.omit(response, 'credentialKey' + enterpriseSubmission.id)), function (o) {
                 return response[o].verifiedAt;
               });
 
@@ -1477,7 +1477,7 @@ $('.login-enterprise-button').on('click', function() {
 
               $('.enterprise-logged-emai').html(devEmail);
               $('.enterprise-login-details').addClass('hidden');
-              $('.enterprise-logged-in, .appStore-more-options').addClass('show');
+              $('.enterprise-logged-in, .enterprise-more-options').addClass('show');
               $('#fl-ent-appDevLogin').val('');
               $('#fl-ent-appDevPass').val('');
               enterpriseLoggedIn = true;
@@ -1566,12 +1566,12 @@ $('.enterprise-generate-cert').on('click', function() {
   enterpriseTeamId = teamId;
   var teamName = $('#fl-ent-team-generate[value="' + teamId + '"]').data('team-name');
 
-  return setCredentials(organizationID, appStoreSubmission.id, {
+  return setCredentials(organizationID, enterpriseSubmission.id, {
       teamId: teamId,
       teamName: teamName
     })
     .then(function() {
-      return createCertificates(organizationID, appStoreSubmission.id)
+      return createCertificates(organizationID, enterpriseSubmission.id)
         .then(function(response) {
           enterpriseCertificateCreated = true;
           $('.enterprise-generate-file-success').find('.enterprise-file-name-success').html(response.certificate.name);
