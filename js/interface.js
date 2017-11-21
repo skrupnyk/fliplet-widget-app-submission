@@ -788,7 +788,7 @@ function savePushData() {
 function setCredentials(organizationId, id, data) {
   return Fliplet.API.request({
     method: 'PUT',
-    url: 'v1/organizations/' + organizationId + '/credentials/credentialKey' + id, 
+    url: 'v1/organizations/' + organizationId + '/credentials/submission-' + id, 
     data: data
   })
   .then(() => {
@@ -799,7 +799,7 @@ function setCredentials(organizationId, id, data) {
 function getTeams(organizationId, id) {
   return Fliplet.API.request({
     method: 'GET',
-    url: 'v1/organizations/' + organizationId + '/credentials/credentialKey' + id + '/teams?itunes=false'
+    url: 'v1/organizations/' + organizationId + '/credentials/submission-' + id + '/teams?itunes=false'
   })
   .then(function(result) {
     return Promise.resolve(result.teams);
@@ -830,7 +830,7 @@ function getCredential(organizationId, credentialKey) {
 function createCertificates(organizationId, id) {
   return Fliplet.API.request({
     method: 'POST',
-    url: 'v1/organizations/' + organizationId + '/credentials/credentialKey' + id + '/certificates'
+    url: 'v1/organizations/' + organizationId + '/credentials/submission-' + id + '/certificates'
   })
   .then(function(credential) {
     return Promise.resolve(credential);
@@ -840,7 +840,7 @@ function createCertificates(organizationId, id) {
 function setCertificateP12(organizationId, id, file) {
   return Fliplet.API.request({
     method: 'PUT',
-    url: 'v1/organizations/' + organizationId + '/credentials/credentialKey' + id + '?fileName=p12',
+    url: 'v1/organizations/' + organizationId + '/credentials/submission-' + id + '?fileName=p12',
     data: file
   })
   .then(function() {
@@ -851,7 +851,7 @@ function setCertificateP12(organizationId, id, file) {
 function revokeCertificate(organizationId, id, certId) {
   return Fliplet.API.request({
     method: 'DELETE',
-    url: 'v1/organizations/' + organizationId + '/credentials/credentialKey' + id + '/' + certId
+    url: 'v1/organizations/' + organizationId + '/credentials/submission-' + id + '/' + certId
   })
   .then(function(result) {
     console.log(result);
@@ -1165,7 +1165,7 @@ $('.login-appStore-button').on('click', function() {
               type: 'apple'
             })
             .then(function(response) {
-              var credentialKey = _.max(Object.keys(_.omit(response, 'credentialKey' + appStoreSubmission.id)), function (o) {
+              var credentialKey = _.max(Object.keys(_.omit(response, 'submission-' + appStoreSubmission.id)), function (o) {
                 return response[o].verifiedAt;
               });
 
@@ -1435,7 +1435,7 @@ $('.login-enterprise-button').on('click', function() {
               type: 'apple-enterprise'
             })
             .then(function(response) {
-              var credentialKey = _.max(Object.keys(_.omit(response, 'credentialKey' + enterpriseSubmission.id)), function (o) {
+              var credentialKey = _.max(Object.keys(_.omit(response, 'submission-' + enterpriseSubmission.id)), function (o) {
                 return response[o].verifiedAt;
               });
 
