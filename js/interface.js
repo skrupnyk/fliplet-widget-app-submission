@@ -1038,6 +1038,11 @@ $('#enterpriseConfiguration').validator().on('submit', function(event) {
 
   event.preventDefault();
 
+  if (!enterpriseManual && !enterpriseLoggedIn) {
+    alert('Please log in with the Apple Developer Account or choose to enter the data manually.');
+    return;
+  }
+
   if (appInfo && appInfo.productionAppId) {
     if (allAppData.indexOf('enterprise') > -1) {
       var requestAppConfirm;
