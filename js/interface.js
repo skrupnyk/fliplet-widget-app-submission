@@ -623,7 +623,8 @@ function saveAppStoreData(request) {
     data[name] = value;
   });
 
-  
+  data['fl-credentials'] = data.id;
+
   appStoreSubmission.data = data;
   notificationSettings = pushData;
 
@@ -718,6 +719,7 @@ function saveEnterpriseData(request) {
       }
     });
   } else {
+    data['fl-credentials'] = data.id;
     enterpriseSubmission.data = data;
     notificationSettings = pushData;
 
