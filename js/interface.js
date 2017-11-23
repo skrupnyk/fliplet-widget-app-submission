@@ -1469,8 +1469,6 @@ $('.login-enterprise-button').on('click', function() {
                     $('.enterprise-logged-emai').html(devEmail);
                     $('.enterprise-login-details').addClass('hidden');
                     $('.enterprise-logged-in, .enterprise-more-options').addClass('show');
-                    $('#fl-enterprise-appDevLogin').val('');
-                    $('#fl-enterprise-appDevPass').val('');
                     enterpriseLoggedIn = true;
                     Fliplet.Widget.autosize();
                   });
@@ -1484,8 +1482,6 @@ $('.login-enterprise-button').on('click', function() {
               $('.enterprise-logged-emai').html(devEmail);
               $('.enterprise-login-details').addClass('hidden');
               $('.enterprise-logged-in, .enterprise-more-options').addClass('show');
-              $('#fl-ent-appDevLogin').val('');
-              $('#fl-ent-appDevPass').val('');
               enterpriseLoggedIn = true;
               Fliplet.Widget.autosize();
             });
