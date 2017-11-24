@@ -373,6 +373,9 @@ function save(origin, submission) {
     })
     .then(function() {
       if (submission.status !== 'started') {
+        if(submission.data.hasOwnProperty('fl-credentials')){
+          delete submission.data['fl-credentials'];
+        }
         return Fliplet.App.Submissions.create({
             platform: 'ios',
             data: $.extend(true, submission.data, {
@@ -440,6 +443,9 @@ function requestBuild(origin, submission) {
     })
     .then(function() {
       if (submission.status !== 'started') {
+        if(submission.data.hasOwnProperty('fl-credentials')){
+          delete submission.data['fl-credentials'];
+        }
         return Fliplet.App.Submissions.create({
             platform: 'ios',
             data: $.extend(true, submission.data, {
