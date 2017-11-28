@@ -613,10 +613,11 @@ function saveAppStoreData(request) {
     if (name === 'fl-store-distribution') {
       var newValue = $('[name="'+name+'"]:checked').val();
       if (newValue === 'previous-file') {
-        return pushData.apnTeamId = appStorePreviousCredential.teamId;
+        pushData.apnTeamId = appStorePreviousCredential.teamId;
+      } else {
+        pushData.apnTeamId = appStoreTeamId;
       }
-
-      pushData.apnTeamId = appStoreTeamId;
+      data[name] = newValue;
       return;
     }
 
@@ -652,14 +653,15 @@ function saveEnterpriseData(request) {
     if (name === 'fl-ent-distribution') {
       var newValue = $('[name="'+name+'"]:checked').val();
       if (newValue === 'previous-file') {
-        return pushData.apnTeamId = enterprisePreviousCredential.teamId;
+        pushData.apnTeamId = enterprisePreviousCredential.teamId;
       }
       if (newValue === 'generate-file') {
-        return pushData.apnTeamId = $('#fl-ent-team-generate').val();
+        pushData.apnTeamId = $('#fl-ent-team-generate').val();
       }
       if (newValue === 'upload-file') {
-        return pushData.apnTeamId = $('#fl-ent-team-upload').val();
+        pushData.apnTeamId = $('#fl-ent-team-upload').val();
       }
+      data[name] = newValue;
       return;
     }
 
