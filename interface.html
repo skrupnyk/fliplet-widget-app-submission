@@ -80,13 +80,69 @@
                 </div>
                 <div class="form-group clearfix app-screenshots">
                   <div class="col-sm-4 control-label">
-                    <label>Screenshots</label>
-                    <p class="help-block label-helper"><small>Screenshots will be taken of the following screens</small></p>
-                    <p><a href="#" data-change-assets>Change</a></p>
+                    <label>App screenshots</label>
                   </div>
-                  <div class="col-sm-8 form-static">
-                    <input type="text" name="fl-store-screenshots" class="form-control-static" id="fl-store-screenshots" data-validate="true" disabled required/>
-                    <div class="help-block text-danger app-details-error">Click the change button to select the screens</div>
+                  <div class="col-sm-8">
+                    <div class="radio radio-icon">
+                      <input type="radio" id="fl-store-screenshots-new" name="fl-store-screenshots" value="new">
+                      <label for="fl-store-screenshots-new">
+                        <span class="check"><i class="fa fa-circle"></i></span> Use new screenshots
+                      </label>
+                    </div>
+
+                    <div data-item="fl-store-screenshots-new-warning" class="hidden-area warning">
+                      <p>Apple requires you to upload up to 4 screenshots of your app for mobile and tablet devices. We could not find any screenshots in your folders, please go to <a href="#" onclick="Fliplet.Studio.emit('navigate', { name: 'launchAssets' })">App Settings</a> to generate your screenshots.</p>
+                    </div>
+                    <div data-item="fl-store-screenshots-new" class="hidden-area">
+                      <p>We will use the following screenshot in your app listing in the order shown below.<br>
+                      <small>We order the screenshots alphabetically, to reorder go to <a href="#" onclick="Fliplet.Studio.emit('navigate', { name: 'fileManager' })">File Manager</a> and rename your screenshots.</small></p>
+
+                      <div class="row screenshot-previews">
+                        <div class="col-xs-12"><strong>Mobile</strong></div>
+                        <div class="col-xs-3">
+                          <img src="http://wmstatic.global.ssl.fastly.net/ml/080517-f-c5294f0b-678b-4709-82b9-ca6a3e3da978.jpg"/>
+                        </div>
+                        <div class="col-xs-3">
+                          <img src="http://wmstatic.global.ssl.fastly.net/ml/080517-f-c5294f0b-678b-4709-82b9-ca6a3e3da978.jpg"/>
+                        </div>
+                        <div class="col-xs-3">
+                          <img src="http://wmstatic.global.ssl.fastly.net/ml/080517-f-c5294f0b-678b-4709-82b9-ca6a3e3da978.jpg"/>
+                        </div>
+                        <div class="col-xs-3">
+                          <img src="http://wmstatic.global.ssl.fastly.net/ml/080517-f-c5294f0b-678b-4709-82b9-ca6a3e3da978.jpg"/>
+                        </div>
+                      </div>
+                      <div class="row screenshot-previews">
+                        <div class="col-xs-12"><strong>Tablet</strong></div>
+                        <div class="col-xs-3">
+                          <img src="https://i-cdn.phonearena.com/images/reviews/187665-image/Apple-iPad-Pro-Review-070-UI.jpg"/>
+                        </div>
+                        <div class="col-xs-3">
+                          <img src="https://i-cdn.phonearena.com/images/reviews/187665-image/Apple-iPad-Pro-Review-070-UI.jpg"/>
+                        </div>
+                        <div class="col-xs-3">
+                          <img src="https://i-cdn.phonearena.com/images/reviews/187665-image/Apple-iPad-Pro-Review-070-UI.jpg"/>
+                        </div>
+                        <div class="col-xs-3">
+                          <img src="https://i-cdn.phonearena.com/images/reviews/187665-image/Apple-iPad-Pro-Review-070-UI.jpg"/>
+                        </div>
+                      </div>
+
+                      <p>If you want to generate or upload new screenshots go to <a href="#" onclick="Fliplet.Studio.emit('navigate', { name: 'launchAssets' })">App Settings</a>.</p>
+                    </div>
+
+                    <div class="radio radio-icon">
+                      <input type="radio" id="fl-store-screenshots-existing" name="fl-store-screenshots" value="existing">
+                      <label for="fl-store-screenshots-existing">
+                        <span class="check"><i class="fa fa-circle"></i></span> Use screenshots of existing app listing
+                      </label>
+                    </div>
+
+                    <div data-item="fl-store-screenshots-existing" class="hidden-area">
+                      <p>We will not upload new screenshots, we will use the existing screenshots on the app listing. By selecting this option you are confirming that you already have an app listing on the Apple App Store and that it contains the screenshots you want to be publicaly available.</p>
+                      <p class="text-warning">The app submission will fail if the app listing doesn’t contain screenshots.</p>
+                    </div>
+
                   </div>
                 </div>
               </div>
