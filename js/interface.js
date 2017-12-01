@@ -851,7 +851,8 @@ function setCertificateP12(organizationId, id, file) {
     method: 'PUT',
     url: 'v1/organizations/' + organizationId + '/credentials/submission-' + id + '?fileName=p12',
     data: file,
-    processData: false
+    processData: false,
+    contentType: false
   })
   .then(function() {
     return Promise.resolve();
