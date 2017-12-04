@@ -516,7 +516,16 @@ function requestBuild(origin, submission) {
                 formData.append('certificateName', fileName)
               }
 
-              return setCertificateP12(organizationID, enterpriseSubmission.id, formData)
+              var teamId = $('#fl-ent-team-upload').val();
+              var teamName = $('#fl-ent-team-upload[value="' + teamId + '"]').data('team-name');
+
+              return setCredentials(organizationID, enterpriseSubmission.id, {
+                  teamId: teamId,
+                  teamName: teamName
+                })
+                .then(function() {
+                  return setCertificateP12(organizationID, enterpriseSubmission.id, formData)
+                })
                 .then(function() {
                   submissionBuild(newSubmission, origin);
                 });
