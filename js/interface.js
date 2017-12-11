@@ -32,6 +32,10 @@ var $statusUnsignedTableElement = $('.app-build-unsigned-status-holder');
 var initLoad;
 var organizationID = Fliplet.Env.get('organizationId');
 var userInfo;
+var hasFolders = false;
+var screenShotsMobile = [];
+var screenShotsTablet = [];
+var haveScreenshots = false;
 
 /* FUNCTIONS */
 String.prototype.toCamelCase = function() {
@@ -62,6 +66,10 @@ function incrementVersionNumber(versionNumber) {
   return splitNumber.join('.');
 }
 
+function checkHasScreenshots() {
+  haveScreenshots = hasFolders && screenShotsMobile.length && screenShotsTablet.length;
+}
+
 function loadAppStoreData() {
   $('#appStoreConfiguration [name]').each(function(i, el) {
     var name = $(el).attr("name");
@@ -73,8 +81,11 @@ function loadAppStoreData() {
     }
 
     if (name === "fl-store-screenshots") {
-      //$('[name="' + name + '"][value="' + appStoreSubmission.data[name] + '"]').prop('checked', true).trigger('change');
-      $('[name="' + name + '"][value="new"]').prop('checked', true).trigger('change');
+      if (appStoreSubmission.data[name]) {
+        $('[name="' + name + '"][value="' + appStoreSubmission.data[name] + '"]').prop('checked', true).trigger('change');
+      } else {
+        $('[name="' + name + '"][value="new"]').prop('checked', true).trigger('change');
+      }
       return;
     }
 
@@ -135,13 +146,16 @@ function loadAppStoreData() {
     $('[name="' + name + '"]').val((typeof appStoreSubmission.data[name] !== "undefined") ? appStoreSubmission.data[name] : '');
   });
 
-  if (appName !== '' && appIcon && (appSettings.screensToScreenshot && appSettings.screensToScreenshot.length)) {
+  if (appName !== '' && appIcon && hasFolders && screenShotsMobile.length && screenShotsTablet.length) {
     if (appSettings.splashScreen && appSettings.splashScreen.size && (appSettings.splashScreen.size[0] && appSettings.splashScreen.size[1]) < 2732) {
       $('.app-details-appStore .app-splash-screen').addClass('has-warning');
     }
     if (appSettings.iconData && appSettings.iconData.size && (appSettings.iconData.size[0] && appSettings.iconData.size[1]) < 1024) {
       $('.app-details-appStore .app-icon-name').addClass('has-error');
     }
+
+    $('.app-details-appStore .app-screenshots').removeClass('has-error');
+
     allAppData.push('appStore');
   } else {
     $('.app-details-appStore').addClass('required-fill');
@@ -155,7 +169,12 @@ function loadAppStoreData() {
     if (appSettings.splashScreen && appSettings.splashScreen.size && (appSettings.splashScreen.size[0] && appSettings.splashScreen.size[1]) < 2732) {
       $('.app-details-appStore .app-splash-screen').addClass('has-warning');
     }
-    if (!appSettings.screensToScreenshot || !appSettings.screensToScreenshot.length) {
+
+    if (hasFolders) {
+      if (screenShotsMobile.length == 0 || screenShotsTablet.length == 0) {
+        $('.app-details-appStore .app-screenshots').addClass('has-error');
+      }
+    } else {
       $('.app-details-appStore .app-screenshots').addClass('has-error');
     }
   }
@@ -911,7 +930,7 @@ function checkGroupErrors() {
 $('[name="fl-store-screenshots"]').on('change', function() {
   var value = $(this).val();
   var id = $(this).attr('id');
-  var haveScreenshots = true;
+  checkHasScreenshots();
 
   if (value === 'new' && !haveScreenshots) {
     $('[data-item="fl-store-screenshots-new-warning"]').addClass('show');
@@ -1994,11 +2013,48 @@ function initialLoad(initial, timeout) {
         ]);
       })
       .then(function() {
+        if (appSettings.folderStructure) {
+          var structure = [];
+          hasFolders = true;
+          var appleOnly = _.filter(appSettings.folderStructure, function(obj) {
+            return obj.platform === 'apple';
+          });
+
+          return Promise.all(appleOnly.map((obj) => {
+            return Fliplet.Media.Folders.get({folderId: obj.folderId})
+              .then(function(result) {
+                var tempObject = {
+                  type: obj.type,
+                  folderContent: result
+                }
+
+                structure.push(tempObject);
+                return Promise.resolve(structure);
+              });
+          }))
+          .then(function() {
+            console.log(structure);
+            structure.forEach(function(el, idx) {
+              if (el.type === 'mobile') {
+                screenShotsMobile = el.folderContent.files
+              }
+              if (el.type === 'tablet') {
+                screenShotsTablet = el.folderContent.files
+              }
+            });
+          });
+        } else {
+          hasFolders = false;
+          return;
+        }
+      })
+      .then(function() {
         return Fliplet.API.request({
           method: 'GET',
           url: 'v1/widget-instances/com.fliplet.push-notifications?appId=' + Fliplet.Env.get('appId')
         });
-      }).then(function(response) {
+      })
+      .then(function(response) {
         if (response.widgetInstance.settings && response.widgetInstance.settings) {
           notificationSettings = response.widgetInstance.settings;
         } else {
