@@ -439,7 +439,7 @@ function requestBuild(origin, submission) {
   $('.button-' + origin + '-request').html('Requesting <i class="fa fa-spinner fa-pulse fa-fw"></i>');
 
   if (origin === 'appStore') {
-    submission.data.screensToScreenshot = appSettings.screensToScreenshot;
+    submission.data.folderStructure = appSettings.folderStructure;
   }
 
   var defaultSplashScreenData = {
