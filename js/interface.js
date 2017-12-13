@@ -882,7 +882,6 @@ function revokeCertificate(organizationId, id, certId) {
     url: 'v1/organizations/' + organizationId + '/credentials/submission-' + id + '/' + certId
   })
   .then(function(result) {
-    console.log(result);
     return Promise.resolve();
   });
 }
@@ -2050,7 +2049,6 @@ function initialLoad(initial, timeout) {
               });
           }))
           .then(function() {
-            console.log(structure);
             structure.forEach(function(el, idx) {
               if (el.type === 'mobile') {
                 screenShotsMobile = el.folderContent.files
