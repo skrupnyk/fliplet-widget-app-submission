@@ -19,6 +19,7 @@
       "moment"
     ],
     "assets": [
+      "js/interface.templates.js",
       "img/app-icon.png",
       "img/splash-screen.png",
       "vendor/bootstrap-tokenfield.css",

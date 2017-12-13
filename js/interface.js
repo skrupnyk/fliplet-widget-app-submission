@@ -36,6 +36,7 @@ var hasFolders = false;
 var screenShotsMobile = [];
 var screenShotsTablet = [];
 var haveScreenshots = false;
+var screenshotValidationNotRequired = false;
 
 /* FUNCTIONS */
 String.prototype.toCamelCase = function() {
@@ -70,6 +71,11 @@ function checkHasScreenshots() {
   haveScreenshots = hasFolders && screenShotsMobile.length && screenShotsTablet.length;
 }
 
+function addThumb(thumb) {
+  var template = Fliplet.Widget.Templates['templates.thumbs'];
+  return template(thumb);
+}
+
 function loadAppStoreData() {
   $('#appStoreConfiguration [name]').each(function(i, el) {
     var name = $(el).attr("name");
@@ -83,6 +89,7 @@ function loadAppStoreData() {
     if (name === "fl-store-screenshots") {
       if (appStoreSubmission.data[name]) {
         $('[name="' + name + '"][value="' + appStoreSubmission.data[name] + '"]').prop('checked', true).trigger('change');
+        screenshotValidationNotRequired = appStoreSubmission.data[name] === 'existing'
       } else {
         $('[name="' + name + '"][value="new"]').prop('checked', true).trigger('change');
       }
@@ -146,7 +153,7 @@ function loadAppStoreData() {
     $('[name="' + name + '"]').val((typeof appStoreSubmission.data[name] !== "undefined") ? appStoreSubmission.data[name] : '');
   });
 
-  if (appName !== '' && appIcon && hasFolders && screenShotsMobile.length && screenShotsTablet.length) {
+  if (appName !== '' && appIcon && ((hasFolders && screenShotsMobile.length && screenShotsTablet.length) || screenshotValidationNotRequired)) {
     if (appSettings.splashScreen && appSettings.splashScreen.size && (appSettings.splashScreen.size[0] && appSettings.splashScreen.size[1]) < 2732) {
       $('.app-details-appStore .app-splash-screen').addClass('has-warning');
     }
@@ -943,8 +950,18 @@ $('[name="fl-store-screenshots"]').on('change', function() {
     $('[data-item="fl-store-screenshots-new"]').addClass('show');
 
     $('[data-item="fl-store-screenshots-existing"]').removeClass('show');
+
+    
+    _.take(screenShotsMobile, 4).forEach(function(thumb) {
+      $('.mobile-thumbs').append(addThumb(thumb));
+    });
+
+    _.take(screenShotsTablet, 4).forEach(function(thumb) {
+      $('.tablet-thumbs').append(addThumb(thumb));
+    });
   }
   if (value === 'existing') {
+    $('.app-details-appStore .app-screenshots').removeClass('has-error');
     $('[data-item="fl-store-screenshots-existing"]').addClass('show');
 
     $('[data-item="fl-store-screenshots-new-warning"]').removeClass('show');
