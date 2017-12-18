@@ -511,7 +511,7 @@ function requestBuild(origin, submission) {
                 .then(function() {
                   return setCredentials(organizationID, enterpriseSubmission.id, {
                     teamId: teamID,
-                    teamName: teamName;
+                    teamName: teamName
                   });
                 })
                 .then(function() {
@@ -548,7 +548,7 @@ function requestBuild(origin, submission) {
                 .then(function() {
                   return setCredentials(organizationID, enterpriseSubmission.id, {
                     teamId: teamID,
-                    teamName: teamName;
+                    teamName: teamName
                   });
                 })
                 .then(function() {
@@ -591,7 +591,7 @@ function requestBuild(origin, submission) {
             .then(function() {
               return setCredentials(organizationID, enterpriseSubmission.id, {
                 teamId: teamID,
-                teamName: teamName;
+                teamName: teamName
               });
             })
             .then(function() {
@@ -628,7 +628,7 @@ function requestBuild(origin, submission) {
             .then(function() {
               return setCredentials(organizationID, enterpriseSubmission.id, {
                 teamId: teamID,
-                teamName: teamName;
+                teamName: teamName
               });
             })
             .then(function() {
