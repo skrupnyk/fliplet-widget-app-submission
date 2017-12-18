@@ -499,6 +499,8 @@ function requestBuild(origin, submission) {
             if (origin === "appStore" && appStoreSubmission.data['fl-store-distribution'] === 'upload-file') {
               var formData = new FormData();
               var fileName = appStoreFileField.value.replace(/\\/g, '/').replace(/.*\//, '');
+              var teamID = $('#fl-store-team-upload').val();
+              var teamName = $('#fl-store-team-upload option[value="'+teamID+'"]').data('team-name');
 
               if (appStoreFileField.files && appStoreFileField.files[0]) {
                 formData.append('p12', appStoreFileField.files[0])
@@ -506,6 +508,12 @@ function requestBuild(origin, submission) {
               }
 
               return setCertificateP12(organizationID, appStoreSubmission.id, formData)
+                .then(function() {
+                  return setCredentials(organizationID, enterpriseSubmission.id, {
+                    teamId: teamID,
+                    teamName: teamName;
+                  });
+                })
                 .then(function() {
                   submissionBuild(newSubmission, origin);
                 });
@@ -528,6 +536,8 @@ function requestBuild(origin, submission) {
             if (origin === "enterprise" && enterpriseSubmission.data['fl-ent-distribution'] === 'upload-file') {
               var formData = new FormData();
               var fileName = enterpriseFileField.value.replace(/\\/g, '/').replace(/.*\//, '');
+              var teamID = $('#fl-ent-team-upload').val();
+              var teamName = $('#fl-ent-team-upload option[value="'+teamID+'"]').data('team-name');
 
               if (enterpriseFileField.files && enterpriseFileField.files[0]) {
                 formData.append('p12', enterpriseFileField.files[0])
@@ -535,6 +545,12 @@ function requestBuild(origin, submission) {
               }
 
               return setCertificateP12(organizationID, enterpriseSubmission.id, formData)
+                .then(function() {
+                  return setCredentials(organizationID, enterpriseSubmission.id, {
+                    teamId: teamID,
+                    teamName: teamName;
+                  });
+                })
                 .then(function() {
                   submissionBuild(newSubmission, origin);
                 });
@@ -563,6 +579,8 @@ function requestBuild(origin, submission) {
         if (origin === "appStore" && appStoreSubmission.data['fl-store-distribution'] === 'upload-file') {
           var formData = new FormData();
           var fileName = appStoreFileField.value.replace(/\\/g, '/').replace(/.*\//, '');
+          var teamID = $('#fl-store-team-upload').val();
+          var teamName = $('#fl-store-team-upload option[value="'+teamID+'"]').data('team-name');
 
           if (appStoreFileField.files && appStoreFileField.files[0]) {
             formData.append('p12', appStoreFileField.files[0])
@@ -570,6 +588,12 @@ function requestBuild(origin, submission) {
           }
 
           return setCertificateP12(organizationID, appStoreSubmission.id, formData)
+            .then(function() {
+              return setCredentials(organizationID, enterpriseSubmission.id, {
+                teamId: teamID,
+                teamName: teamName;
+              });
+            })
             .then(function() {
               submissionBuild(submission, origin);
             });
@@ -592,6 +616,8 @@ function requestBuild(origin, submission) {
         if (origin === "enterprise" && enterpriseSubmission.data['fl-ent-distribution'] === 'upload-file') {
           var formData = new FormData();
           var fileName = enterpriseFileField.value.replace(/\\/g, '/').replace(/.*\//, '');
+          var teamID = $('#fl-ent-team-upload').val();
+          var teamName = $('#fl-ent-team-upload option[value="'+teamID+'"]').data('team-name');
 
           if (enterpriseFileField.files && enterpriseFileField.files[0]) {
             formData.append('p12', enterpriseFileField.files[0])
@@ -599,6 +625,12 @@ function requestBuild(origin, submission) {
           }
 
           return setCertificateP12(organizationID, enterpriseSubmission.id, formData)
+            .then(function() {
+              return setCredentials(organizationID, enterpriseSubmission.id, {
+                teamId: teamID,
+                teamName: teamName;
+              });
+            })
             .then(function() {
               submissionBuild(submission, origin);
             });
@@ -632,15 +664,12 @@ function saveAppStoreData(request) {
       var newValue = $('[name="'+name+'"]:checked').val();
       if (newValue === 'previous-file') {
         pushData.apnTeamId = appStorePreviousCredential.teamId;
-        data['teamID'] = appStorePreviousCredential.teamId;
       }
       if (newValue === 'generate-file') {
         pushData.apnTeamId = $('#fl-store-team-generate').val();
-        data['teamID'] = $('#fl-store-team-generate').val();
       }
       if (newValue === 'upload-file') {
         pushData.apnTeamId = $('#fl-store-team-upload').val();
-        data['teamID'] = $('#fl-store-team-upload').val();
       }
       data[name] = newValue;
       return;
@@ -679,15 +708,12 @@ function saveEnterpriseData(request) {
       var newValue = $('[name="'+name+'"]:checked').val();
       if (newValue === 'previous-file') {
         pushData.apnTeamId = enterprisePreviousCredential.teamId;
-        data['teamID'] = enterprisePreviousCredential.teamId;
       }
       if (newValue === 'generate-file') {
         pushData.apnTeamId = $('#fl-ent-team-generate').val();
-        data['teamID'] = $('#fl-ent-team-generate').val();
       }
       if (newValue === 'upload-file') {
         pushData.apnTeamId = $('#fl-ent-team-upload').val();
-        data['teamID'] = $('#fl-ent-team-upload').val();
       }
       data[name] = newValue;
       return;
