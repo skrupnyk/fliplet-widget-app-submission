@@ -632,15 +632,15 @@ function saveAppStoreData(request) {
       var newValue = $('[name="'+name+'"]:checked').val();
       if (newValue === 'previous-file') {
         pushData.apnTeamId = appStorePreviousCredential.teamId;
-        data[teamID] = appStorePreviousCredential.teamId;
+        data['teamID'] = appStorePreviousCredential.teamId;
       }
       if (newValue === 'generate-file') {
         pushData.apnTeamId = $('#fl-store-team-generate').val();
-        data[teamID] = $('#fl-store-team-generate').val();
+        data['teamID'] = $('#fl-store-team-generate').val();
       }
       if (newValue === 'upload-file') {
         pushData.apnTeamId = $('#fl-store-team-upload').val();
-        data[teamID] = $('#fl-store-team-upload').val();
+        data['teamID'] = $('#fl-store-team-upload').val();
       }
       data[name] = newValue;
       return;
@@ -679,15 +679,15 @@ function saveEnterpriseData(request) {
       var newValue = $('[name="'+name+'"]:checked').val();
       if (newValue === 'previous-file') {
         pushData.apnTeamId = enterprisePreviousCredential.teamId;
-        data[teamID] = enterprisePreviousCredential.teamId;
+        data['teamID'] = enterprisePreviousCredential.teamId;
       }
       if (newValue === 'generate-file') {
         pushData.apnTeamId = $('#fl-ent-team-generate').val();
-        data[teamID] = $('#fl-ent-team-generate').val();
+        data['teamID'] = $('#fl-ent-team-generate').val();
       }
       if (newValue === 'upload-file') {
         pushData.apnTeamId = $('#fl-ent-team-upload').val();
-        data[teamID] = $('#fl-ent-team-upload').val();
+        data['teamID'] = $('#fl-ent-team-upload').val();
       }
       data[name] = newValue;
       return;
