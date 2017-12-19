@@ -905,6 +905,7 @@ function setCertificateP12(organizationId, id, file) {
     method: 'PUT',
     url: 'v1/organizations/' + organizationId + '/credentials/submission-' + id + '?fileName=p12',
     data: file,
+    contentType: false,
     processData: false
   })
   .then(function() {
