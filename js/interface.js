@@ -1908,7 +1908,7 @@ function submissionChecker(submissions) {
   checkSubmissionStatus("appStore", asub);
 
   asub = _.maxBy(asub, function(el) {
-    return new Date(el.updatedAt).getTime();
+    return new Date(el.createdAt).getTime();
   });
   appStoreSubmission = asub;
 
@@ -1919,7 +1919,7 @@ function submissionChecker(submissions) {
   checkSubmissionStatus("enterprise", esub);
 
   esub = _.maxBy(esub, function(el) {
-    return new Date(el.updatedAt).getTime();
+    return new Date(el.createdAt).getTime();
   });
   enterpriseSubmission = esub;
 
@@ -1930,7 +1930,7 @@ function submissionChecker(submissions) {
   checkSubmissionStatus("unsigned", usub);
 
   usub = _.maxBy(usub, function(el) {
-    return new Date(el.updatedAt).getTime();
+    return new Date(el.createdAt).getTime();
   });
   unsignedSubmission = usub;
 
