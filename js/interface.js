@@ -1292,7 +1292,7 @@ $('.login-appStore-button').on('click', function() {
                     } else if (credential.p12) {
                       $('[name="fl-store-distribution"][value="previous-file"]').prop('checked', true).trigger('change');
                       $('.appStore-previous-file').find('.appStore-file-name').html(credential.certificateName);
-                      $('.appStore-previous-file').find('.appStore-file-expire').addClass('hidden');
+                      $('.appStore-previous-file').find('.appStore-file-expire').parents('strong').addClass('hidden');
                     } else {
                       $('.if-appStore-credential').addClass('hidden');
                       $('[name="fl-store-distribution"][value="generate-file"]').prop('checked', true).trigger('change');
@@ -1564,7 +1564,7 @@ $('.login-enterprise-button').on('click', function() {
                       $('.enterprise-previous-file').find('.enterprise-file-expire').html(moment(credential.certificate.expiresAt).format('MMMM Do YYYY'));
                     } else if (credential.p12) {
                       $('.enterprise-previous-file').find('.enterprise-file-name').html(credential.certificateName);
-                      $('.enterprise-previous-file').find('.enterprise-file-expire').addClass('hidden');
+                      $('.enterprise-previous-file').find('.enterprise-file-expire').parents('strong').addClass('hidden');
                     } else {
                       $('.if-enterprise-credential').addClass('hidden');
                     }
