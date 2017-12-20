@@ -1289,6 +1289,9 @@ $('.login-appStore-button').on('click', function() {
                       $('[name="fl-store-distribution"][value="previous-file"]').prop('checked', true).trigger('change');
                       $('.appStore-previous-file').find('.appStore-file-name').html(credential.certificate.name);
                       $('.appStore-previous-file').find('.appStore-file-expire').html(moment(credential.certificate.expiresAt).format('MMMM Do YYYY'));
+                    } else if (credential.p12) {
+                      $('[name="fl-store-distribution"][value="previous-file"]').prop('checked', true).trigger('change');
+                      $('.appStore-previous-file').find('.appStore-file-name').html(credential.certificateName);
                     } else {
                       $('.if-appStore-credential').addClass('hidden');
                       $('[name="fl-store-distribution"][value="generate-file"]').prop('checked', true).trigger('change');
