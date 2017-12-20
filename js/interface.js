@@ -1562,6 +1562,9 @@ $('.login-enterprise-button').on('click', function() {
                       }
                       $('.enterprise-previous-file').find('.enterprise-file-name').html(credential.certificate.name);
                       $('.enterprise-previous-file').find('.enterprise-file-expire').html(moment(credential.certificate.expiresAt).format('MMMM Do YYYY'));
+                    } else if (credential.p12) {
+                      $('.enterprise-previous-file').find('.enterprise-file-name').html(credential.certificateName);
+                      $('.enterprise-previous-file').find('.enterprise-file-expire').addClass('hidden');
                     } else {
                       $('.if-enterprise-credential').addClass('hidden');
                     }
