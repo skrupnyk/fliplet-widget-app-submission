@@ -157,9 +157,6 @@ function loadAppStoreData() {
     if (appSettings.splashScreen && appSettings.splashScreen.size && (appSettings.splashScreen.size[0] && appSettings.splashScreen.size[1]) < 2732) {
       $('.app-details-appStore .app-splash-screen').addClass('has-warning');
     }
-    if (appSettings.iconData && appSettings.iconData.size && (appSettings.iconData.size[0] && appSettings.iconData.size[1]) < 1024) {
-      $('.app-details-appStore .app-icon-name').addClass('has-error');
-    }
 
     $('.app-details-appStore .app-screenshots').removeClass('has-error');
 
@@ -170,7 +167,7 @@ function loadAppStoreData() {
     if (appName === '') {
       $('.app-details-appStore .app-list-name').addClass('has-error');
     }
-    if (!appIcon || !appSettings.iconData || !appSettings.iconData.size || (appSettings.iconData.size[0] && appSettings.iconData.size[1]) < 1024) {
+    if (!appIcon) {
       $('.app-details-appStore .app-icon-name').addClass('has-error');
     }
     if (appSettings.splashScreen && appSettings.splashScreen.size && (appSettings.splashScreen.size[0] && appSettings.splashScreen.size[1]) < 2732) {
@@ -248,7 +245,7 @@ function loadEnterpriseData() {
   } else {
     $('.app-details-ent').addClass('required-fill');
 
-    if (!appIcon || !appSettings.iconData || !appSettings.iconData.size || (appSettings.iconData.size[0] && appSettings.iconData.size[1]) < 1024) {
+    if (!appIcon) {
       $('.app-details-ent .app-icon-name').addClass('has-error');
     }
     if (appSettings.splashScreen && appSettings.splashScreen.size && (appSettings.splashScreen.size[0] && appSettings.splashScreen.size[1]) < 2732) {
@@ -305,7 +302,7 @@ function loadUnsignedData() {
   } else {
     $('.app-details-uns').addClass('required-fill');
 
-    if (!appIcon || !appSettings.iconData || !appSettings.iconData.size || (appSettings.iconData.size[0] && appSettings.iconData.size[1]) < 1024) {
+    if (!appIcon) {
       $('.app-details-uns .app-icon-name').addClass('has-error');
     }
     if (appSettings.splashScreen && appSettings.splashScreen.size && (appSettings.splashScreen.size[0] && appSettings.splashScreen.size[1]) < 2732) {
