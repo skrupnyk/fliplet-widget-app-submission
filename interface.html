@@ -143,7 +143,7 @@
                 </div>
                 <div class="form-group clearfix">
                   <div class="col-sm-4 control-label">
-                    <label>Application Category</label>
+                    <label>Application Primary Category</label>
                     <p class="help-block label-helper"><small>The category that best describes this app. For more information, see the <a href="https://itunesconnect.apple.com/itc/static/category_definitions" target="_blank">App Store Category Definitions.</a></small></p>
                   </div>
                   <div class="col-sm-8">
@@ -183,14 +183,14 @@
                 </div>
                 <div class="form-group clearfix">
                   <div class="col-sm-4 control-label">
-                    <label>Application Subcategory</label>
-                    <p class="help-block label-helper"><small>The subcategory that best describes this app. For more information, see the <a href="https://itunesconnect.apple.com/itc/static/category_definitions" target="_blank">App Store Category Definitions.</a></small></p>
+                    <label>Application Secondary Category</label>
+                    <p class="help-block label-helper"><small>The secondary category that best describes this app. For more information, see the <a href="https://itunesconnect.apple.com/itc/static/category_definitions" target="_blank">App Store Category Definitions.</a></small></p>
                   </div>
                   <div class="col-sm-8">
                     <label for="fl-store-category2" class="select-proxy-display">
                       <span class="icon fa fa-chevron-down"></span>
                       <span class="select-value-proxy">-- Select a Subcategory</span>
-                      <select id="fl-store-category2" name="fl-store-category2" data-label="select" class="hidden-select form-control" data-error="Please select a subcategory" required>
+                      <select id="fl-store-category2" name="fl-store-category2" data-label="select" class="hidden-select form-control" data-nomatch="#fl-store-category1" data-nomatch-error="Primary and secondary categories can not be the same. Please select a different one." data-error="Please select a subcategory" required>
                         <option value="">-- Select a Subcategory</option>
                         <option value="Books">Books</option>
                         <option value="Business">Business</option>
@@ -219,6 +219,7 @@
                       </select>
                     </label>
                     <div class="help-block with-errors"></div>
+                    <p>The secondary category can not be the same as the primary category.</p>
                   </div>
                 </div>
                 <div class="form-group clearfix">
@@ -509,7 +510,7 @@
                     <p class="help-block label-helper"><small>A URL that links to your organization's support page.</small></p>
                   </div>
                   <div class="col-sm-8">
-                    <input type="text" name="fl-store-support" class="form-control" id="fl-store-support" data-error="Please enter your Support URL" required/>
+                    <input type="text" name="fl-store-support" class="form-control" id="fl-store-support" pattern="^https?:\/\/" data-error="Please enter your Support URL" required/>
                     <div class="help-block with-errors"></div>
                   </div>
                 </div>
@@ -519,7 +520,8 @@
                     <p class="help-block label-helper"><small>A URL that links to your organization's marketing website.</small></p>
                   </div>
                   <div class="col-sm-8">
-                    <input type="text" name="fl-store-marketing" class="form-control" id="fl-store-marketing" />
+                    <input type="text" name="fl-store-marketing" class="form-control" id="fl-store-marketing" pattern="^https?:\/\/" data-error="Please enter your Marketing URL" required/>
+                    <div class="help-block with-errors"></div>
                   </div>
                 </div>
                 <div class="form-group clearfix">
@@ -528,7 +530,8 @@
                     <p class="help-block label-helper"><small>A URL that links to your organization's privacy policy.</small></p>
                   </div>
                   <div class="col-sm-8">
-                    <input type="text" name="fl-store-privacy" class="form-control" id="fl-store-privacy" />
+                    <input type="text" name="fl-store-privacy" class="form-control" id="fl-store-privacy" pattern="^https?:\/\/" data-error="Please enter your Privacy Policy URL" required/>
+                    <div class="help-block with-errors"></div>
                   </div>
                 </div>
                 <div class="form-group clearfix">
@@ -561,44 +564,141 @@
             <div id="appStoreTech" class="panel-collapse collapse" role="tabpanel" aria-labelledby="appStoreTechHeading">
               <div class="panel-body">
                 <p>We will need some technical information now, such as your developer account login details. Don't worry, these details will be safe with us. We need them in order to publish your app for you.</p>
-                <div class="alert alert-warning">
-                  <p>Please consider creating a new account that is part of your developer team in order to use our system. This way you can always retract access if necessary. The account has to have <strong>Team Admin</strong> rights.</p>
-                  <p><strong>Note</strong> Two-Factor Authentication is not currently supported.</p>
+                <h3><small>Apple developer account details and distribution certificates</small></h3>
+
+                <div class="appStore-login-details">
+                  <div class="alert alert-info">
+                    <p>If you do not know what the developer account login details are please contact your organization's IT team.</p>
+                  </div>
+                  <div class="alert alert-warning">
+                    <p><strong>Note</strong> Two-Factor Authentication is not currently supported.</p>
+                  </div>
+
+                  <div class="form-group clearfix">
+                    <div class="col-sm-4 control-label">
+                      <label for="fl-store-appDevLogin">Apple Developer account login</label>
+                    </div>
+                    <div class="col-sm-8">
+                      <input type="email" class="form-control" id="fl-store-appDevLogin" data-error="Please enter a valid email address">
+                      <div class="help-block with-errors"></div>
+                    </div>
+                  </div>
+                  <div class="form-group clearfix">
+                    <div class="col-sm-4 control-label">
+                      <label for="fl-store-appDevPass">Apple Developer account password</label>
+                    </div>
+                    <div class="col-sm-8">
+                      <input type="password" class="form-control" id="fl-store-appDevPass" data-error="Please enter a password">
+                      <div class="help-block with-errors"></div>
+                      <p class="help-block label-helper"><small>This password will be encrypted, safely stored and never shared or used for purposes other than publishing this app.</small></p>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-sm-4 control-label">
+                      <label>Login to verify the account and choose the distribution certificate</label>
+                    </div>
+                    <div class="col-sm-8">
+                      <button type="button" class="btn btn-primary login-appStore-button">Log in</button>
+                      <div class="text-danger login-error"></div>
+                    </div>
+                  </div>
                 </div>
-                <div class="form-group clearfix">
+                <div class="appStore-logged-in">
+                  <div class="form-group">
+                    <div class="col-sm-4 control-label">
+                      <label>You are logged in as:</label>
+                    </div>
+                    <div class="col-sm-8">
+                      <div class="form-control-static">
+                        <span class="appStore-logged-email">app-developer@fliplet.com</span> - <a href="#" class="log-out-appStore">log out</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group appStore-more-options">
                   <div class="col-sm-4 control-label">
-                    <label for="fl-store-appDevLogin">Apple Developer account login</label>
-                    <p class="help-block"><small>Enter Apple Developer login email</small></p>
+                    <label>Provide us with a distribution certificate choosing from the following options:</label>
                   </div>
                   <div class="col-sm-8">
-                    <input type="email" name="fl-store-appDevLogin" class="form-control" id="fl-store-appDevLogin" data-error="Please enter a valid email address" required/>
-                    <div class="help-block with-errors"></div>
+                    <div class="radio radio-icon if-appStore-credential">
+                      <input type="radio" id="fl-store-distribution-1" name="fl-store-distribution" value="previous-file">
+                      <label for="fl-store-distribution-1">
+                        <span class="check"><i class="fa fa-circle"></i></span> Use distribution certificate details from your latest submission
+                      </label>
+                    </div>
+                    <div class="appStore-previous-file indented-area">
+                      <p class="appStore-certificate-expiring text-warning hidden">Your distribution certificate is about to expire.</p>
+                      <p><span class="appStore-file-name">Certificate Name</span> - <strong>Expires on <span class="appStore-file-expire">October 30th 2018</span></strong><span class="appStore-replace-element hidden"> - <a href="#" class="appStore-replace-cert">Replace certificate</a><span></p>
+                      <div class="text-danger replace-error"></div>
+                    </div>
+                    <div class="appStore-previous-file-success indented-area">
+                      <p class="text-success">Distribution certificate created successfully.</p>
+                      <p><span class="appStore-file-name-success">Certificate Name</span> - <strong>Expires on <span class="appStore-file-expire-success">October 30th 2018</span></strong></p>
+                      <div class="text-danger replace-error"></div>
+                    </div>
+                    <div class="radio radio-icon">
+                      <input type="radio" id="fl-store-distribution-2" name="fl-store-distribution" value="generate-file">
+                      <label for="fl-store-distribution-2">
+                        <span class="check"><i class="fa fa-circle"></i></span> Generate a new distribution certificate
+                      </label>
+                    </div>
+                    <div class="appStore-generate-file indented-area">
+                      <div class="form-group">
+                        <div class="col-sm-12">
+                          <label>Select a Developer Account Team</label>
+                        </div>
+                        <div class="col-sm-12">
+                          <select class="form-control appStore-team" id="fl-store-team-generate">
+                            <option value="">Selecta a team</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <div class="col-sm-12">
+                          <button type="button" class="btn btn-primary appStore-generate-cert disabled">Generate certificate</button>
+                          <div class="text-danger generate-error"></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="appStore-generate-file-success indented-area">
+                      <p class="text-success">Distribution certificate created successfully.</p>
+                      <p><span class="appStore-file-name-success">Certificate Name</span> - <strong>Expires on <span class="appStore-file-expire-success">October 30th 2018</span></strong></p>
+                    </div>
+                    <div class="radio radio-icon">
+                      <input type="radio" id="fl-store-distribution-3" name="fl-store-distribution" value="upload-file">
+                      <label for="fl-store-distribution-3">
+                        <span class="check"><i class="fa fa-circle"></i></span> Upload your own distribution certificate (.p12 file)
+                      </label>
+                    </div>
+                    <div class="appStore-upload-file indented-area">
+                      <div class="form-group">
+                        <div class="col-sm-12">
+                          <label>Select a Developer Account Team</label>
+                        </div>
+                        <div class="col-sm-12">
+                          <select class="form-control appStore-team" id="fl-store-team-upload">
+                            <option value="">Selecta a team</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="form-group appStore-upload-certificate disabled">
+                        <div class="col-sm-12">
+                          <label>Upload a .p12 file</label>
+                        </div>
+                        <div class="col-sm-12">
+                          <div class="input-group">
+                            <label class="input-group-btn">
+                              <span class="btn btn-default">Browse&hellip; <input id="fl-store-certificate" class="hidden" type="file" accept="application/keychain_access, application/x-pkcs12"></span>
+                            </label>
+                            <input type="text" class="form-control" id="fl-store-certificate-label" placeholder="Click &ldquo;Browse&rdquo; to select a new file" readonly autocomplete="off">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
-                <div class="form-group clearfix">
-                  <div class="col-sm-4 control-label">
-                    <label for="fl-store-appDevPass">Apple Developer account password</label>
-                    <p class="help-block"><small>This password will be encrypted, safely stored and never shared or used for purposes other than publishing this app.</small></p>
-                  </div>
-                  <div class="col-sm-8">
-                    <input type="password" name="_fl-store-appDevPass" class="form-control" id="fl-store-appDevPass" data-error="Please enter a password" required/>
-                    <div class="help-block with-errors"></div>
-                    <p class="text-success hidden hasPassword"><small>You have already provided a password. Enter a new password to change the saved password.</small></p>
-                  </div>
-                </div>
-                <!--
-                <div class="form-group clearfix">
-                  <div class="col-sm-4 control-label">
-                    <label for="fl-store-appDevAppPassword">Two-Factor Authentication</label>
-                    <p class="help-block"><small>If you have enabled Two-Factor Authentication, Enter your app-specific password.</small></p>
-                  </div>
-                  <div class="col-sm-8">
-                    <input type="password" name="fl-store-appDevAppPassword" class="form-control" id="fl-store-appDevAppPassword" />
-                    <div class="help-block with-errors"></div>
-                    <p class="help-block"><small>If Two-Factor-Authentication is present on the account, log into <a href="https://appleid.apple.com/account" target="_blank">https://appleid.apple.com/account</a> and generate an <a href="https://support.apple.com/en-gb/HT204397" target="_blank">App-Specific Password</a> for Fliplet.</small></p>
-                  </div>
-                </div>
-                -->
+
+                <h3><small>App version and bundle ID</small></h3>
                 <div class="form-group clearfix">
                   <div class="col-sm-4 control-label">
                     <label for="fl-store-versionNumber">App version number</label>
@@ -625,26 +725,6 @@
                       <div class="help-block with-errors"></div>
                       <p class="help-block"><small>This value needs to be unique and the structure must be <code>com.<i>organizationName</i>.<i>appName</i></code>.</small></p>
                     </div>
-                  </div>
-                </div>
-                <div class="form-group clearfix">
-                  <div class="col-sm-4 control-label">
-                    <label for="fl-store-teamId">Team ID</label>
-                    <p class="help-block label-helper"><small>You need to login into your developer account to get the Team ID. Your Team ID can be found <a href="https://developer.apple.com/account/#/membership/">here</a>.</small></p>
-                  </div>
-                  <div class="col-sm-8">
-                    <input type="text" name="fl-store-teamId" class="form-control" id="fl-store-teamId" data-error="Please enter your Team ID" required/>
-                    <div class="help-block with-errors"></div>
-                  </div>
-                </div>
-                <div class="form-group clearfix">
-                  <div class="col-sm-4 control-label">
-                    <label for="fl-store-teamName">Team Name</label>
-                    <p class="help-block label-helper"><small>You need to login into your developer account to get the Team Name. It will be under you name on the top right corner of the screen.</small></p>
-                  </div>
-                  <div class="col-sm-8">
-                    <input type="text" name="fl-store-teamName" class="form-control" id="fl-store-teamName" data-error="Please enter your Team Name" required/>
-                    <div class="help-block with-errors"></div>
                   </div>
                 </div>
               </div>
@@ -1051,31 +1131,192 @@
             <div id="enterpriseTech" class="panel-collapse collapse" role="tabpanel" aria-labelledby="enterpriseTechHeading">
               <div class="panel-body">
                 <p>We will need some technical information now, such as your developer account login details. Don't worry, these details will be safe with us. We need them in order to publish your app for you.</p>
-                <div class="alert alert-warning">
-                  <p>Please consider creating a new account that is part of your developer team in order to use our system. This way you can always retract access if necessary. The account has to have <strong>Team Admin</strong> rights.</p>
-                  <p><strong>Note</strong> Two-Factor Authentication is not currently supported.</p>
+                <h3><small>Apple developer account details and distribution certificates</small></h3>
+                <div class="enterprise-login-details">
+                  <div class="alert alert-info">
+                    <p>If you don't know what the developer account login details are please contact your organization's IT team.</p>
+                  </div>
+                  <div class="alert alert-warning">
+                    <p><strong>Note</strong> Two-Factor Authentication is not currently supported.</p>
+                  </div>
+                  <div class="form-group clearfix">
+                    <div class="col-sm-4 control-label">
+                      <label for="fl-ent-appDevLogin">Apple Developer account login</label>
+                    </div>
+                    <div class="col-sm-8">
+                      <input type="email" class="form-control" id="fl-ent-appDevLogin" data-error="Please enter a valid email address" required/>
+                      <div class="help-block with-errors"></div>
+                    </div>
+                  </div>
+                  <div class="form-group clearfix">
+                    <div class="col-sm-4 control-label">
+                      <label for="fl-ent-appDevPass">Apple Developer account password</label>
+                    </div>
+                    <div class="col-sm-8">
+                      <input type="password" class="form-control" id="fl-ent-appDevPass" data-error="Please enter a password" required/>
+                      <div class="help-block with-errors"></div>
+                      <p class="help-block label-helper"><small>This password will be encrypted, safely stored and never shared or used for purposes other than publishing this app.</small></p>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-sm-4 control-label">
+                      <label>Login to verify the account and choose the distribution certificate</label>
+                    </div>
+                    <div class="col-sm-8">
+                      <button type="button" class="btn btn-primary login-enterprise-button">Log in</button> or <a href="#" class="ent-enter-manually">Enter details manually</a>
+                      <div class="text-danger login-error"></div>
+                      <p class="help-block">If you don't want to store the Apple developer account login details in Fliplet click the <i>Enter details manually</i> link.</p>
+                    </div>
+                  </div>
                 </div>
-                <div class="form-group clearfix">
+                <div class="enterprise-manual-details">
+                  <div class="form-group">
+                    <div class="col-sm-8 col-sm-offset-4">
+                      <a href="#" class="enterprise-back-login"><i class="fa fa-chevron-left"></i> Log in using developer account login details</a>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-sm-4 control-label">
+                      <label for="fl-ent-teamName">Enter the Developer Account Team name</label>
+                    </div>
+                    <div class="col-sm-8">
+                      <input type="text" class="form-control fl-ent-teamName" id="fl-ent-teamName" name="fl-ent-teamName" data-error="Please enter your developer team name."/>
+                      <div class="help-block with-errors"></div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-sm-4 control-label">
+                      <label for="fl-ent-teamId">Enter the Developer Account Team ID</label>
+                    </div>
+                    <div class="col-sm-8">
+                      <input type="text" class="form-control fl-ent-teamId" id="fl-ent-teamId" name="fl-ent-teamId" data-error="Please enter your developer team ID."/>
+                      <div class="help-block with-errors"></div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-sm-4 control-label">
+                      <label>Upload a .p12 file</label>
+                    </div>
+                    <div class="col-sm-8">
+                      <div class="input-group">
+                        <label class="input-group-btn">
+                          <span class="btn btn-default">Browse&hellip; <input id="fl-ent-certificate-manual-details" name="fl-ent-certificate-manual-details" class="hidden" type="file" accept="application/keychain_access, application/x-pkcs12" data-error="Please upload a .p12 file."></span>
+                        </label>
+                        <input type="text" class="form-control" id="fl-ent-certificate-manual-details-label" placeholder="Click &ldquo;Browse&rdquo; to select a new file" readonly autocomplete="off">
+                      </div>
+                      <div class="help-block with-errors"></div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-sm-4 control-label">
+                      <label>Upload a .mobileprovision file</label>
+                    </div>
+                    <div class="col-sm-8">
+                      <div class="input-group">
+                        <label class="input-group-btn">
+                          <span class="btn btn-default">Browse&hellip; <input id="fl-ent-mobileprovision-manual-details" name="fl-ent-mobileprovision-manual-details" class="hidden" type="file" accept="application/x-apple-aspen-mobileprovision" data-error="Please upload a .mobileprovision file."></span>
+                        </label>
+                        <input type="text" class="form-control" id="fl-ent-mobileprovision-manual-details-label" placeholder="Click &ldquo;Browse&rdquo; to select a new file" readonly autocomplete="off">
+                      </div>
+                      <div class="help-block with-errors"></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="enterprise-logged-in">
+                  <div class="form-group">
+                    <div class="col-sm-4 control-label">
+                      <label>You are logged in as:</label>
+                    </div>
+                    <div class="col-sm-8">
+                      <div class="form-control-static">
+                        <span class="enterprise-logged-email">app-developer@fliplet.com</span> - <a href="#" class="log-out-enterprise">log out</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group enterprise-more-options">
                   <div class="col-sm-4 control-label">
-                    <label for="fl-ent-appDevLogin">Apple Developer account login</label>
-                    <p class="help-block"><small>Enter Apple Developer login email</small></p>
+                    <label>Provide us with a distribution certificate choosing from the following options:</label>
                   </div>
                   <div class="col-sm-8">
-                    <input type="email" name="fl-ent-appDevLogin" class="form-control" id="fl-ent-appDevLogin" data-error="Please enter a valid email address" required/>
-                    <div class="help-block with-errors"></div>
+                    <div class="radio radio-icon">
+                      <input type="radio" id="fl-ent-distribution-1" name="fl-ent-distribution" value="generate-file">
+                      <label for="fl-ent-distribution-1">
+                        <span class="check"><i class="fa fa-circle"></i></span> Generate a new distribution certificate
+                      </label>
+                    </div>
+                    <div class="enterprise-generate-file indented-area">
+                      <div class="form-group">
+                        <div class="col-sm-12">
+                          <label>Select a Developer Account Team</label>
+                        </div>
+                        <div class="col-sm-12">
+                          <select class="form-control enterprise-team" id="fl-ent-team-generate">
+                            <option value="">Selecta a team</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <div class="col-sm-12">
+                          <button type="button" class="btn btn-primary enterprise-generate-cert disabled">Generate certificate</button>
+                          <div class="text-danger generate-error"></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="enterprise-generate-file-success indented-area">
+                      <p class="text-success">Distribution certificate created successfully.</p>
+                      <p><span class="enterprise-file-name-success">Certificate Name</span> - <strong>Expires on <span class="enterprise-file-expire-success">October 30th 2018</span></strong></p>
+                    </div>
+                    <div class="radio radio-icon if-enterprise-credential">
+                      <input type="radio" id="fl-ent-distribution-2" name="fl-ent-distribution" value="previous-file">
+                      <label for="fl-ent-distribution-2">
+                        <span class="check"><i class="fa fa-circle"></i></span> Use distribution certificate details from your latest submission
+                      </label>
+                    </div>
+                    <div class="enterprise-previous-file indented-area">
+                      <p class="enterprise-certificate-expiring text-warning hidden">Your distribution certificate is about to expire.</p>
+                      <p><span class="enterprise-file-name">Certificate Name</span> - <strong>Expires on <span class="enterprise-file-expire">October 30th 2018</span></strong><span class="enterprise-replace-element hidden"> - <a href="#" class="enterprise-replace-cert">Replace certificate</a><span></p>
+                      <div class="text-danger replace-error"></div>
+                    </div>
+                    <div class="enterprise-previous-file-success indented-area">
+                      <p class="text-success">Distribution certificate created successfully.</p>
+                      <p><span class="enterprise-file-name-success">Certificate Name</span> - <strong>Expires on <span class="enterprise-file-expire-success">October 30th 2018</span></strong></p>
+                    </div>
+                    <div class="radio radio-icon">
+                      <input type="radio" id="fl-ent-distribution-3" name="fl-ent-distribution" value="upload-file">
+                      <label for="fl-ent-distribution-3">
+                        <span class="check"><i class="fa fa-circle"></i></span> Upload your own distribution certificate (.p12 file)
+                      </label>
+                    </div>
+                    <div class="enterprise-upload-file indented-area">
+                      <div class="form-group">
+                        <div class="col-sm-12">
+                          <label>Select a Developer Account Team</label>
+                        </div>
+                        <div class="col-sm-12">
+                          <select class="form-control enterprise-team" id="fl-ent-team-upload">
+                            <option value="">Selecta a team</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="form-group enterprise-upload-certificate disabled">
+                        <div class="col-sm-12">
+                          <label>Upload a .p12 file</label>
+                        </div>
+                        <div class="col-sm-12">
+                          <div class="input-group">
+                            <label class="input-group-btn">
+                              <span class="btn btn-default">Browse&hellip; <input id="fl-ent-certificate" class="hidden" type="file" accept="application/keychain_access, application/x-pkcs12"></span>
+                            </label>
+                            <input type="text" class="form-control" id="fl-ent-certificate-label" placeholder="Click &ldquo;Browse&rdquo; to select a new file" readonly autocomplete="off">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
-                <div class="form-group clearfix">
-                  <div class="col-sm-4 control-label">
-                    <label for="fl-ent-appDevPass">Apple Developer account password</label>
-                    <p class="help-block"><small>This password will be encrypted, safely stored and never shared or used for purposes other than publishing this app.</small></p>
-                  </div>
-                  <div class="col-sm-8">
-                    <input type="password" name="_fl-ent-appDevPass" class="form-control" id="fl-ent-appDevPass" data-error="Please enter a password" required/>
-                    <div class="help-block with-errors"></div>
-                    <p class="text-success hidden hasPassword"><small>You have already provided a password. Enter a new password to change the saved password.</small></p>
-                  </div>
-                </div>
+
+                <h3><small>App version and bundle ID</small></h3>
                 <div class="form-group clearfix">
                   <div class="col-sm-4 control-label">
                     <label for="fl-ent-versionNumber">App version number</label>
@@ -1102,16 +1343,6 @@
                       <div class="help-block with-errors"></div>
                       <p class="help-block"><small>This value needs to be unique and the structure must be <code>com.<i>organizationName</i>.<i>appName</i></code>.</small></p>
                     </div>
-                  </div>
-                </div>
-                <div class="form-group clearfix">
-                  <div class="col-sm-4 control-label">
-                    <label for="fl-ent-teamId">Team ID</label>
-                    <p class="help-block label-helper"><small>You need to login into your developer account to get the Team ID. The Team ID can be found <a href="https://developer.apple.com/account/#/membership/">here</a>.</small></p>
-                  </div>
-                  <div class="col-sm-8">
-                    <input type="text" name="fl-ent-teamId" class="form-control" id="fl-ent-teamId" data-error="Please enter your Team ID" required/>
-                    <div class="help-block with-errors"></div>
                   </div>
                 </div>
               </div>
@@ -1308,6 +1539,7 @@
           \{{#if queued}}
           <td class="app-build-progress">
             <div class="app-build-progress-holder"><i class="fa fa-minus-circle"></i> Queued</div>
+            <div class="cancel-build"><a href="#" data-cancel-build-id="\{{id}}" class="text-danger">Cancel</a></div>
           </td>
           <td class="app-build-details">
             \{{#if submittedAt}}<span><span class="icon"><i class="fa fa-clock-o"></i> Started on:</span> \{{submittedAt}}</span>\{{/if}}
@@ -1316,6 +1548,7 @@
           \{{/if}} \{{#if submitted}}
           <td class="app-build-progress info">
             <div class="app-build-progress-holder"><i class="fa fa-spinner fa-pulse fa-fw"></i> In progress</div>
+            <div class="cancel-build"><a href="#" data-cancel-build-id="\{{id}}" class="text-danger">Cancel</a></div>
           </td>
           <td class="app-build-details">
             \{{#if submittedAt}}<span><span class="icon"><i class="fa fa-clock-o"></i> Started on:</span> \{{submittedAt}}</span>\{{/if}}
@@ -1324,6 +1557,7 @@
           \{{/if}} \{{#if processing}}
           <td class="app-build-progress info">
             <div class="app-build-progress-holder"><i class="fa fa-spinner fa-pulse fa-fw"></i> In progress</div>
+            <div class="cancel-build"><a href="#" data-cancel-build-id="\{{id}}" class="text-danger">Cancel</a></div>
           </td>
           <td class="app-build-details">
             \{{#if submittedAt}}<span><span class="icon"><i class="fa fa-clock-o"></i> Started on:</span> \{{submittedAt}}</span>\{{/if}}
