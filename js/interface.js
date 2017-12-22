@@ -657,6 +657,12 @@ function saveAppStoreData(request) {
       return;
     }
 
+    if (name === 'fl-store-screenshots') {
+      var newValue = $('[name="'+name+'"]:checked').val();
+      data[name] = newValue;
+      return;
+    }
+
     if (name === 'fl-store-distribution') {
       var newValue = $('[name="'+name+'"]:checked').val();
       if (newValue === 'previous-file') {
@@ -700,6 +706,12 @@ function saveEnterpriseData(request) {
   $('#enterpriseConfiguration [name]').each(function(i, el) {
     var name = $(el).attr("name");
     var value = $(el).val();
+
+    if (name === 'fl-store-screenshots') {
+      var newValue = $('[name="'+name+'"]:checked').val();
+      data[name] = newValue;
+      return;
+    }
 
     if (name === 'fl-ent-distribution') {
       var newValue = $('[name="'+name+'"]:checked').val();
