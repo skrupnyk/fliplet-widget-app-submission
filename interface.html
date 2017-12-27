@@ -1623,7 +1623,26 @@
             \{{#if updatedAt}}<span><span class="icon"><i class="fa fa-flag-checkered"></i> Finished on:</span> \{{updatedAt}}</span>\{{/if}}
             <div class="app-build-name">App successfully built</div>
           </td>
-          \{{/if}} \{{#if failed}}
+          \{{/if}}
+          \{{#if ready-for-testing}}
+          <td class="app-build-progress info">
+            <div class="app-build-progress-holder"><i class="fa fa-bell"></i> Ready for testing</div>
+          </td>
+          <td class="app-build-details">
+            \{{#if updatedAt}}<span><span class="icon"><i class="fa fa-clock-o"></i> Ready on:</span> \{{updatedAt}}</span>\{{/if}}
+            <div class="app-build-name">App is ready to be tested</div>
+          </td>
+          \{{/if}}
+          \{{#if tested}}
+          <td class="app-build-progress info">
+            <div class="app-build-progress-holder"><i class="fa fa-check-square-o"></i> Tested</div>
+          </td>
+          <td class="app-build-details">
+            \{{#if updatedAt}}<span><span class="icon"><i class="fa fa-clock-o"></i> Finished on:</span> \{{updatedAt}}</span>\{{/if}}
+            <div class="app-build-name">App was tested</div>
+          </td>
+          \{{/if}}
+          \{{#if failed}}
           <td class="app-build-progress danger">
             <div class="app-build-progress-holder"><i class="fa fa-exclamation-circle"></i> Failed</div>
             <div class="retry-build"><a href="#" data-retry-id="\{{id}}"><i class="fa fa-repeat"></i> Try again</a></div>
