@@ -586,7 +586,7 @@ function requestBuild(origin, submission) {
 
           return setCertificateP12(organizationID, appStoreSubmission.id, formData)
             .then(function() {
-              return setCredentials(organizationID, enterpriseSubmission.id, {
+              return setCredentials(organizationID, appStoreSubmission.id, {
                 teamId: teamID,
                 teamName: teamName
               });
