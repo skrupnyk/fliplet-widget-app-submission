@@ -336,6 +336,11 @@ function submissionBuild(appSubmission, origin) {
       // Auto increments the version number and saves the submission
       var newVersionNumber = incrementVersionNumber(appStoreSubmission.data['fl-store-versionNumber']);
       $('[name="fl-store-versionNumber"]').val(newVersionNumber);
+
+      $('.appStore-login-details').removeClass('hidden');
+      $('.appStore-logged-in, .appStore-more-options').removeClass('show');
+      appStoreLoggedIn = false;
+
       saveAppStoreData();
     }
     if (origin === "enterprise") {
@@ -343,6 +348,11 @@ function submissionBuild(appSubmission, origin) {
       // Auto increments the version number and saves the submission
       var newVersionNumber = incrementVersionNumber(enterpriseSubmission.data['fl-ent-versionNumber']);
       $('[name="fl-ent-versionNumber"]').val(newVersionNumber);
+
+      $('.enterprise-login-details').removeClass('hidden');
+      $('.enterprise-logged-in, .enterprise-more-options').removeClass('show');
+      enterpriseLoggedIn = false;
+
       saveEnterpriseData();
     }
     if (origin === "unsigned") {
@@ -1591,6 +1601,8 @@ $('.login-enterprise-button').on('click', function() {
                     $('.enterprise-logged-emai').html(devEmail);
                     $('.enterprise-login-details').addClass('hidden');
                     $('.enterprise-logged-in, .enterprise-more-options').addClass('show');
+                    $('#fl-ent-appDevLogin').val('');
+                    $('#fl-ent-appDevPass').val('');
                     enterpriseLoggedIn = true;
                     Fliplet.Widget.autosize();
                   });
