@@ -1618,6 +1618,8 @@
             <div class="app-build-progress-holder"><i class="fa fa-check-circle"></i> Completed</div>
             \{{#if fileUrl}}
             <div class="download-build"><a href="\{{fileUrl}}"><i class="fa fa-download"></i> Download file</a></div>\{{/if}}
+            \{{#if debugFileUrl}}
+            <div class="download-build"><a href="\{{debugFileUrl}}"><i class="fa fa-download"></i> Download debug app</a></div>\{{/if}}
           </td>
           <td class="app-build-details">
             \{{#if updatedAt}}<span><span class="icon"><i class="fa fa-flag-checkered"></i> Finished on:</span> \{{updatedAt}}</span>\{{/if}}
@@ -1627,6 +1629,10 @@
           \{{#if ready-for-testing}}
           <td class="app-build-progress info">
             <div class="app-build-progress-holder"><i class="fa fa-bell"></i> Ready for testing</div>
+            \{{#if fileUrl}}
+            <div class="download-build"><a href="\{{fileUrl}}"><i class="fa fa-download"></i> Download file</a></div>\{{/if}}
+            \{{#if debugFileUrl}}
+            <div class="download-build"><a href="\{{debugFileUrl}}"><i class="fa fa-download"></i> Download debug app</a></div>\{{/if}}
           </td>
           <td class="app-build-details">
             \{{#if updatedAt}}<span><span class="icon"><i class="fa fa-clock-o"></i> Ready on:</span> \{{updatedAt}}</span>\{{/if}}
