@@ -1324,8 +1324,6 @@ $('.login-appStore-button').on('click', function() {
                     $('.appStore-logged-emai').html(devEmail);
                     $('.appStore-login-details').addClass('hidden');
                     $('.appStore-logged-in, .appStore-more-options').addClass('show');
-                    $('#fl-store-appDevLogin').val('');
-                    $('#fl-store-appDevPass').val('');
                     appStoreLoggedIn = true;
                     Fliplet.Widget.autosize();
                   });
@@ -1339,8 +1337,6 @@ $('.login-appStore-button').on('click', function() {
               $('.appStore-logged-emai').html(devEmail);
               $('.appStore-login-details').addClass('hidden');
               $('.appStore-logged-in, .appStore-more-options').addClass('show');
-              $('#fl-store-appDevLogin').val('');
-              $('#fl-store-appDevPass').val('');
               appStoreLoggedIn = true;
               Fliplet.Widget.autosize();
             });
@@ -1601,8 +1597,6 @@ $('.login-enterprise-button').on('click', function() {
                     $('.enterprise-logged-emai').html(devEmail);
                     $('.enterprise-login-details').addClass('hidden');
                     $('.enterprise-logged-in, .enterprise-more-options').addClass('show');
-                    $('#fl-ent-appDevLogin').val('');
-                    $('#fl-ent-appDevPass').val('');
                     enterpriseLoggedIn = true;
                     Fliplet.Widget.autosize();
                   });
