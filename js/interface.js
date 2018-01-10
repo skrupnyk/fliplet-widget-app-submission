@@ -87,12 +87,19 @@ function loadAppStoreData() {
     }
 
     if (name === "fl-store-screenshots") {
+      if ($('[name="' + name + '"][value="' + appStoreSubmission.data[name] + '"]:checked').length) {
+        return;
+      }
+
       if (appStoreSubmission.data[name]) {
         $('[name="' + name + '"][value="' + appStoreSubmission.data[name] + '"]').prop('checked', true).trigger('change');
         screenshotValidationNotRequired = appStoreSubmission.data[name] === 'existing'
+      } else if ($('[name="' + name + '"][value="new"]:checked').length) {
+        return;
       } else {
         $('[name="' + name + '"][value="new"]').prop('checked', true).trigger('change');
       }
+
       return;
     }
 
@@ -716,12 +723,6 @@ function saveEnterpriseData(request) {
   $('#enterpriseConfiguration [name]').each(function(i, el) {
     var name = $(el).attr("name");
     var value = $(el).val();
-
-    if (name === 'fl-store-screenshots') {
-      var newValue = $('[name="'+name+'"]:checked').val();
-      data[name] = newValue;
-      return;
-    }
 
     if (name === 'fl-ent-distribution') {
       var newValue = $('[name="'+name+'"]:checked').val();
