@@ -1779,8 +1779,8 @@ function checkSubmissionStatus(origin, iosSubmissions) {
             return true;
           }
         });
-      } else if (submission.previousResults.appBuild && submission.previousResults.appBuild.files) {
-        appBuild = _.find(submission.previousResults.appBuild.files, function(file) {
+      } else if (submission.data.previousResults && submission.data.previousResults.appBuild && submission.data.previousResults.appBuild.files) {
+        appBuild = _.find(submission.data.previousResults.appBuild.files, function(file) {
           var dotIndex = file.url.lastIndexOf('.');
           var ext = file.url.substring(dotIndex);
           if (ext === '.ipa') {
@@ -1797,8 +1797,8 @@ function checkSubmissionStatus(origin, iosSubmissions) {
             return true;
           }
         });
-      } else if (submission.previousResults.debugHtmlPage && submission.previousResults.debugHtmlPage.files) {
-        debugHtmlPage = _.find(submission.previousResults.debugHtmlPage.files, function(file) {
+      } else if (submission.data.previousResults && submission.data.previousResults.debugHtmlPage && submission.data.previousResults.debugHtmlPage.files) {
+        debugHtmlPage = _.find(submission.data.previousResults.debugHtmlPage.files, function(file) {
           var dotIndex = file.url.lastIndexOf('.');
           var ext = file.url.substring(dotIndex);
           if (ext === '.html') {
