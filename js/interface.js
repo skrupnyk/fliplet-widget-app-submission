@@ -1779,10 +1779,26 @@ function checkSubmissionStatus(origin, iosSubmissions) {
             return true;
           }
         });
+      } else if (submission.previousResults.appBuild && submission.previousResults.appBuild.files) {
+        appBuild = _.find(submission.previousResults.appBuild.files, function(file) {
+          var dotIndex = file.url.lastIndexOf('.');
+          var ext = file.url.substring(dotIndex);
+          if (ext === '.ipa') {
+            return true;
+          }
+        });
       }
 
       if (submission.result.debugHtmlPage && submission.result.debugHtmlPage.files) {
         debugHtmlPage = _.find(submission.result.debugHtmlPage.files, function(file) {
+          var dotIndex = file.url.lastIndexOf('.');
+          var ext = file.url.substring(dotIndex);
+          if (ext === '.html') {
+            return true;
+          }
+        });
+      } else if (submission.previousResults.debugHtmlPage && submission.previousResults.debugHtmlPage.files) {
+        debugHtmlPage = _.find(submission.previousResults.debugHtmlPage.files, function(file) {
           var dotIndex = file.url.lastIndexOf('.');
           var ext = file.url.substring(dotIndex);
           if (ext === '.html') {
