@@ -558,7 +558,16 @@ function requestBuild(origin, submission) {
                 formData.append('certificateName', fileName)
               }
 
-              return setCertificateP12(organizationID, enterpriseSubmission.id, formData)
+              var teamId = $('#fl-ent-team-upload').val();
+              var teamName = $('#fl-ent-team-upload[value="' + teamId + '"]').data('team-name');
+
+              return setCredentials(organizationID, enterpriseSubmission.id, {
+                  teamId: teamId,
+                  teamName: teamName
+                })
+                .then(function() {
+                  return setCertificateP12(organizationID, enterpriseSubmission.id, formData)
+                })
                 .then(function() {
                   return setCredentials(organizationID, enterpriseSubmission.id, {
                     teamId: teamID,
@@ -1893,10 +1902,26 @@ function checkSubmissionStatus(origin, iosSubmissions) {
             return true;
           }
         });
+      } else if (submission.data.previousResults && submission.data.previousResults.appBuild && submission.data.previousResults.appBuild.files) {
+        appBuild = _.find(submission.data.previousResults.appBuild.files, function(file) {
+          var dotIndex = file.url.lastIndexOf('.');
+          var ext = file.url.substring(dotIndex);
+          if (ext === '.ipa') {
+            return true;
+          }
+        });
       }
 
       if (submission.result.debugHtmlPage && submission.result.debugHtmlPage.files) {
         debugHtmlPage = _.find(submission.result.debugHtmlPage.files, function(file) {
+          var dotIndex = file.url.lastIndexOf('.');
+          var ext = file.url.substring(dotIndex);
+          if (ext === '.html') {
+            return true;
+          }
+        });
+      } else if (submission.data.previousResults && submission.data.previousResults.debugHtmlPage && submission.data.previousResults.debugHtmlPage.files) {
+        debugHtmlPage = _.find(submission.data.previousResults.debugHtmlPage.files, function(file) {
           var dotIndex = file.url.lastIndexOf('.');
           var ext = file.url.substring(dotIndex);
           if (ext === '.html') {
