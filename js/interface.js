@@ -1305,25 +1305,9 @@ $('.login-appStore-button').on('click', function() {
               if (credentialKey) {
                 return getCredential(organizationID, credentialKey)
                   .then(function(credential) {
-                    if (credential.certificate) {
-                      appStorePreviousCredential = credential;
-                      var expiresAt = new Date(credential.certificate.expiresAt);
-                      var todayDate = new Date();
-                      var remainingTime = (expiresAt.getTime() - todayDate.getTime())/(1000*60*60*24.0);
-
-                      if (remainingTime < 60) {
-                        $('.appStore-certificate-expiring, .appStore-replace-element').removeClass('hidden');
-                        $('.appStore-file-expire').addClass('text-warning');
-                      }
-                      $('[name="fl-store-distribution"][value="previous-file"]').prop('checked', true).trigger('change');
-                      $('.appStore-previous-file').find('.appStore-file-name').html(credential.certificate.name);
-                      $('.appStore-previous-file').find('.appStore-file-expire').html(moment(credential.certificate.expiresAt).format('MMMM Do YYYY'));
-                    } else if (credential.p12) {
-                      appStorePreviousCredential = credential;
-
-                      $('[name="fl-store-distribution"][value="previous-file"]').prop('checked', true).trigger('change');
-                      $('.appStore-previous-file').find('.appStore-file-name').html(credential.certificateName);
-                      $('.appStore-previous-file').find('.appStore-file-expire').html('N/A');
+                    appStorePreviousCredential = credential;
+                    if (credential.certificate || credential.p12) {
+                      appStorePreviousCredential = credential;                      
                     } else {
                       $('.if-appStore-credential').addClass('hidden');
                       $('[name="fl-store-distribution"][value="generate-file"]').prop('checked', true).trigger('change');
@@ -1581,26 +1565,32 @@ $('.login-enterprise-button').on('click', function() {
               if (credentialKey) {
                 return getCredential(organizationID, credentialKey)
                   .then(function(credential) {
-                    if (credential.certificate) {
+                     if (credential.certificate || credential.p12) {
                       enterprisePreviousCredential = credential;
-                      var expiresAt = new Date(credential.certificate.expiresAt);
-                      var todayDate = new Date();
-                      var remainingTime = (expiresAt.getTime() - todayDate.getTime())/(1000*60*60*24.0);
-
-                      if (remainingTime < 60) {
-                        $('.enterprise-certificate-expiring, .enterprise-replace-element').removeClass('hidden');
-                        $('.enterprise-file-expire').addClass('text-warning');
-                      }
-                      $('.enterprise-previous-file').find('.enterprise-file-name').html(credential.certificate.name);
-                      $('.enterprise-previous-file').find('.enterprise-file-expire').html(moment(credential.certificate.expiresAt).format('MMMM Do YYYY'));
-                    } else if (credential.p12) {
-                      enterprisePreviousCredential = credential;
-
-                      $('.enterprise-previous-file').find('.enterprise-file-name').html(credential.certificateName);
-                      $('.enterprise-previous-file').find('.enterprise-file-expire').html('N/A');
+                     
                     } else {
                       $('.if-enterprise-credential').addClass('hidden');
                     }
+                    // if (credential.certificate) {
+                    //   enterprisePreviousCredential = credential;
+                    //   var expiresAt = new Date(credential.certificate.expiresAt);
+                    //   var todayDate = new Date();
+                    //   var remainingTime = (expiresAt.getTime() - todayDate.getTime())/(1000*60*60*24.0);
+
+                    //   if (remainingTime < 60) {
+                    //     $('.enterprise-certificate-expiring, .enterprise-replace-element').removeClass('hidden');
+                    //     $('.enterprise-file-expire').addClass('text-warning');
+                    //   }
+                    //   $('.enterprise-previous-file').find('.enterprise-file-name').html(credential.certificate.name);
+                    //   $('.enterprise-previous-file').find('.enterprise-file-expire').html(moment(credential.certificate.expiresAt).format('MMMM Do YYYY'));
+                    // } else if (credential.p12) {
+                    //   enterprisePreviousCredential = credential;
+
+                    //   $('.enterprise-previous-file').find('.enterprise-file-name').html(credential.certificateName);
+                    //   $('.enterprise-previous-file').find('.enterprise-file-expire').html('N/A');
+                    // } else {
+                    //   $('.if-enterprise-credential').addClass('hidden');
+                    // }
 
                     $this.html('Log in');
                     $this.removeClass('disabled');
