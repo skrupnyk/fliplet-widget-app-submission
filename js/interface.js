@@ -1257,7 +1257,7 @@ $('.login-appStore-button').on('click', function() {
   $('#fl-store-appDevLogin').next('.with-errors').html('');
   $('#fl-store-appDevPass').parents('.form-group').removeClass('has-error has-danger');
   $('#fl-store-appDevPass').next('.with-errors').html('');
-  $this.next('login-error').html('');
+  $this.nextAll('login-error').html('');
   
   if (devEmail === '') {
     $('#fl-store-appDevLogin').parents('.form-group').addClass('has-error has-danger');
@@ -1305,9 +1305,9 @@ $('.login-appStore-button').on('click', function() {
               if (credentialKey) {
                 return getCredential(organizationID, credentialKey)
                   .then(function(credential) {
-                    appStorePreviousCredential = credential;
                     if (credential.certificate || credential.p12) {
-                      appStorePreviousCredential = credential;                      
+                      appStorePreviousCredential = credential;  
+                      $('[name="fl-store-distribution"][value="previous-file"]').prop('checked', true).trigger('change');                   
                     } else {
                       $('.if-appStore-credential').addClass('hidden');
                       $('[name="fl-store-distribution"][value="generate-file"]').prop('checked', true).trigger('change');
@@ -1337,8 +1337,9 @@ $('.login-appStore-button').on('click', function() {
         });
     })
     .catch(function(error) {
+      console.log(error);
       if (error.responseJSON) {
-        $this.next('.login-error').html(error.responseJSON.message);
+        $this.nextAll('.login-error').html(error.responseJSON.message);
       }
       $this.html('Log in');
       $this.removeClass('disabled');
@@ -1360,9 +1361,8 @@ $('[name="fl-store-distribution"]').on('change', function() {
   if (value === 'previous-file') {
     if (appStoreCertificateReplaced) {
       $('.appStore-previous-file-success').addClass('show');
-    } else {
-      $('.appStore-previous-file').addClass('show');
     }
+
     $('.appStore-generate-file, .appStore-generate-file-success, .appStore-upload-file').removeClass('show');
 
     $('#fl-store-team-generate').prop('required',false);
@@ -1375,7 +1375,7 @@ $('[name="fl-store-distribution"]').on('change', function() {
     } else {
       $('.appStore-generate-file').addClass('show');
     }
-    $('.appStore-previous-file, .appStore-previous-file-success, .appStore-upload-file').removeClass('show');
+    $('.appStore-previous-file-success, .appStore-upload-file').removeClass('show');
 
     $('#fl-store-team-generate').prop('required',true);
     $('#fl-store-team-upload').prop('required',false);
@@ -1383,7 +1383,7 @@ $('[name="fl-store-distribution"]').on('change', function() {
   }
   if (value === 'upload-file') {
     $('.appStore-upload-file').addClass('show');
-    $('.appStore-previous-file, .appStore-previous-file-success, .appStore-generate-file, .appStore-generate-file-success').removeClass('show');
+    $('.appStore-previous-file-success, .appStore-generate-file, .appStore-generate-file-success').removeClass('show');
 
     $('#fl-store-team-generate').prop('required',false);
     $('#fl-store-team-upload').prop('required',true);
@@ -1477,7 +1477,7 @@ $('.appStore-replace-cert').on('click', function() {
                 appStoreCertificateReplaced = true;
                 $('.appStore-previous-file-success').find('.appStore-file-name-success').html(response.certificate.name);
                 $('.appStore-previous-file-success').find('.appStore-file-expire-success').html(moment(response.certificate.expiresAt).format('MMMM Do YYYY'));
-                $('.appStore-previous-file').removeClass('show');
+                
                 $('.appStore-previous-file-success').addClass('show');
                 $this.html('Replace certificate');
                 $this.removeClass('disabled');
@@ -1515,7 +1515,7 @@ $('.login-enterprise-button').on('click', function() {
   $('#fl-ent-appDevLogin').next('.with-errors').html('');
   $('#fl-ent-appDevPass').parents('.form-group').removeClass('has-error has-danger');
   $('#fl-ent-appDevPass').next('.with-errors').html('');
-  $this.next('login-error').html('');
+  $this.nextAll('login-error').html('');
   
   if (devEmail === '') {
     $('#fl-ent-appDevLogin').parents('.form-group').addClass('has-error has-danger');
@@ -1565,32 +1565,12 @@ $('.login-enterprise-button').on('click', function() {
               if (credentialKey) {
                 return getCredential(organizationID, credentialKey)
                   .then(function(credential) {
-                     if (credential.certificate || credential.p12) {
-                      enterprisePreviousCredential = credential;
-                     
+                    if (credential.certificate || credential.p12) {
+                      enterprisePreviousCredential = credential;   
+
                     } else {
                       $('.if-enterprise-credential').addClass('hidden');
                     }
-                    // if (credential.certificate) {
-                    //   enterprisePreviousCredential = credential;
-                    //   var expiresAt = new Date(credential.certificate.expiresAt);
-                    //   var todayDate = new Date();
-                    //   var remainingTime = (expiresAt.getTime() - todayDate.getTime())/(1000*60*60*24.0);
-
-                    //   if (remainingTime < 60) {
-                    //     $('.enterprise-certificate-expiring, .enterprise-replace-element').removeClass('hidden');
-                    //     $('.enterprise-file-expire').addClass('text-warning');
-                    //   }
-                    //   $('.enterprise-previous-file').find('.enterprise-file-name').html(credential.certificate.name);
-                    //   $('.enterprise-previous-file').find('.enterprise-file-expire').html(moment(credential.certificate.expiresAt).format('MMMM Do YYYY'));
-                    // } else if (credential.p12) {
-                    //   enterprisePreviousCredential = credential;
-
-                    //   $('.enterprise-previous-file').find('.enterprise-file-name').html(credential.certificateName);
-                    //   $('.enterprise-previous-file').find('.enterprise-file-expire').html('N/A');
-                    // } else {
-                    //   $('.if-enterprise-credential').addClass('hidden');
-                    // }
 
                     $this.html('Log in');
                     $this.removeClass('disabled');
@@ -1616,8 +1596,8 @@ $('.login-enterprise-button').on('click', function() {
         });
     })
     .catch(function(error) {
-      if (error.responseJSON) {
-        $this.next('.login-error').html(error.responseJSON.message);
+      if (error.responseJSON) {        
+        $this.nextAll('.login-error').html(error.responseJSON.message);
       }
       $this.html('Log in');
       $this.removeClass('disabled');
@@ -1639,9 +1619,8 @@ $('[name="fl-ent-distribution"]').on('change', function() {
   if (value === 'previous-file') {
     if (enterpriseCertificateReplaced) {
       $('.enterprise-previous-file-success').addClass('show');
-    } else {
-      $('.enterprise-previous-file').addClass('show');
-    }
+    } 
+
     $('.enterprise-generate-file, .enterprise-generate-file-success, .enterprise-upload-file').removeClass('show');
 
     $('#fl-ent-team-generate').prop('required',false);
@@ -1654,7 +1633,7 @@ $('[name="fl-ent-distribution"]').on('change', function() {
     } else {
       $('.enterprise-generate-file').addClass('show');
     }
-    $('.enterprise-previous-file, .enterprise-previous-file-success, .enterprise-upload-file').removeClass('show');
+    $('.enterprise-previous-file-success, .enterprise-upload-file').removeClass('show');
 
     $('#fl-ent-team-generate').prop('required',true);
     $('#fl-ent-team-upload').prop('required',false);
@@ -1662,7 +1641,7 @@ $('[name="fl-ent-distribution"]').on('change', function() {
   }
   if (value === 'upload-file') {
     $('.enterprise-upload-file').addClass('show');
-    $('.enterprise-previous-file, .enterprise-previous-file-success, .enterprise-generate-file, .enterprise-generate-file-success').removeClass('show');
+    $('.enterprise-previous-file-success, .enterprise-generate-file, .enterprise-generate-file-success').removeClass('show');
 
     $('#fl-ent-team-generate').prop('required',false);
     $('#fl-ent-team-upload').prop('required',true);
@@ -1774,7 +1753,7 @@ $('.enterprise-replace-cert').on('click', function() {
                 enterpriseCertificateReplaced = true;
                 $('.enterprise-previous-file-success').find('.enterprise-file-name-success').html(response.certificate.name);
                 $('.enterprise-previous-file-success').find('.enterprise-file-expire-success').html(moment(response.certificate.expiresAt).format('MMMM Do YYYY'));
-                $('.enterprise-previous-file').removeClass('show');
+                
                 $('.enterprise-previous-file-success').addClass('show');
                 $this.html('Replace certificate');
                 $this.removeClass('disabled');
