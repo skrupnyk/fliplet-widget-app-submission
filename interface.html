@@ -1244,6 +1244,9 @@
                   <div class="form-group">
                     <div class="col-sm-4 control-label">
                       <label>Upload a .p12 file</label>
+                      <p class="help-block label-helper">
+                        <small>For more information on this topic see the <a href="https://help.apple.com/xcode/mac/current/#/dev154b28f09" target="_blank">Xcode Documentation.</a></small>
+                      </p>
                     </div>
                     <div class="col-sm-8">
                       <div class="input-group">
@@ -1258,6 +1261,9 @@
                   <div class="form-group">
                     <div class="col-sm-4 control-label">
                       <label>Upload a .mobileprovision file</label>
+                      <p class="help-block label-helper">
+                        <small>For more information on this topic see the <a href="https://help.apple.com/xcode/mac/current/#/deva899b4fe5" target="_blank">Xcode Documentation.</a></small>
+                      </p>
                     </div>
                     <div class="col-sm-8">
                       <div class="input-group">
@@ -1290,6 +1296,23 @@
                     </p>          
                   </div>
                   <div class="col-sm-8">
+                    <div class="radio radio-icon if-enterprise-credential">
+                      <input type="radio" id="fl-ent-distribution-2" name="fl-ent-distribution" value="previous-file">
+                      <label for="fl-ent-distribution-2">
+                        <span class="check"><i class="fa fa-circle"></i></span> Use distribution certificate details from your latest submissions
+                      </label>
+                    </div>
+                    <div class="enterprise-previous-file indented-area">
+                      <p class="enterprise-certificate-expiring text-warning hidden">Your distribution certificate is about to expire.</p>
+                      <p>
+                        <span class="enterprise-file-name">Certificate Name</span> - <strong>Expires on <span class="enterprise-file-expire">October 30th 2018 </span></strong><span class="enterprise-replace-element hidden"> - <a href="#" class="enterprise-replace-cert">Replace certificate</a><span>
+                      </p>
+                      <div class="text-danger replace-error"></div>
+                    </div>
+                    <div class="enterprise-previous-file-success indented-area">
+                      <p class="text-success">Distribution certificate created successfully.</p>
+                      <p><span class="enterprise-file-name-success">Certificate Name</span> - <strong>Expires on <span class="enterprise-file-expire-success">October 30th 2018</span></strong></p>
+                    </div>                  
                     <div class="radio radio-icon">
                       <input type="radio" id="fl-ent-distribution-1" name="fl-ent-distribution" value="generate-file">
                       <label for="fl-ent-distribution-1">
@@ -1321,22 +1344,7 @@
                     <div class="enterprise-generate-file-success indented-area">
                       <p class="text-success">Distribution certificate created successfully.</p>
                       <p><span class="enterprise-file-name-success">Certificate Name</span> - <strong>Expires on <span class="enterprise-file-expire-success">October 30th 2018</span></strong></p>
-                    </div>
-                    <div class="radio radio-icon if-enterprise-credential">
-                      <input type="radio" id="fl-ent-distribution-2" name="fl-ent-distribution" value="previous-file">
-                      <label for="fl-ent-distribution-2">
-                        <span class="check"><i class="fa fa-circle"></i></span> Use distribution certificate details from your latest submissions
-                      </label>
-                    </div>
-                    <div class="enterprise-previous-file indented-area">
-                      <p class="enterprise-certificate-expiring text-warning hidden">Your distribution certificate is about to expire.</p>
-                      <p><span class="enterprise-file-name">Certificate Name</span> - <strong>Expires on <span class="enterprise-file-expire">October 30th 2018</span></strong><span class="enterprise-replace-element hidden"> - <a href="#" class="enterprise-replace-cert">Replace certificate</a><span></p>
-                      <div class="text-danger replace-error"></div>
-                    </div>
-                    <div class="enterprise-previous-file-success indented-area">
-                      <p class="text-success">Distribution certificate created successfully.</p>
-                      <p><span class="enterprise-file-name-success">Certificate Name</span> - <strong>Expires on <span class="enterprise-file-expire-success">October 30th 2018</span></strong></p>
-                    </div>
+                    </div>                   
                     <div class="radio radio-icon">
                       <input type="radio" id="fl-ent-distribution-3" name="fl-ent-distribution" value="upload-file">
                       <label for="fl-ent-distribution-3">
