@@ -1298,13 +1298,29 @@ $('.login-appStore-button').on('click', function() {
               type: 'apple'
             })
             .then(function(response) {
-              var credentialKey = _.max(Object.keys(_.omit(response, 'submission-' + appStoreSubmission.id)), function (o) {
-                return response[o].verifiedAt;
-              });
+                            
+              var credentialKey = null;
+
+              if (appStoreSubmission.data['fl-credentials']) {
+                credentialKey = appStoreSubmission.data['fl-credentials'];
+              } else if(appStoreSubmission.previousSubWithCredentials) {
+                credentialKey = appStoreSubmission.previousSubWithCredentials.data['fl-credentials'];
+                appStoreSubmission.previousSubWithCredentials = null;
+              } else {
+                var submissionsWithCred = _.filter(Object.keys(response), function (o) {
+                  return response[o].hasCertificate === true;
+                });
+
+                if (submissionsWithCred) {
+                  credentialKey = _.max(submissionsWithCred, function (o) {
+                    return response[o].verifiedAt;
+                  });                    
+                }                
+              }              
 
               if (credentialKey) {
                 return getCredential(organizationID, credentialKey)
-                  .then(function(credential) {
+                  .then(function(credential) {                    
                     if (credential.certificate || credential.p12) {
                       appStorePreviousCredential = credential;  
                       $('[name="fl-store-distribution"][value="previous-file"]').prop('checked', true).trigger('change');                   
@@ -1558,18 +1574,36 @@ $('.login-enterprise-button').on('click', function() {
               type: 'apple-enterprise'
             })
             .then(function(response) {
-              var credentialKey = _.max(Object.keys(_.omit(response, 'submission-' + enterpriseSubmission.id)), function (o) {
-                return response[o].verifiedAt;
-              });
+              
+              var credentialKey = null;
+
+              if (enterpriseSubmission.data['fl-credentials']) {
+                credentialKey = enterpriseSubmission.data['fl-credentials'];
+              } else if(enterpriseSubmission.previousSubWithCredentials) {
+                credentialKey = enterpriseSubmission.previousSubWithCredentials.data['fl-credentials'];
+                enterpriseSubmission.previousSubWithCredentials = null;
+              } else {
+                var submissionsWithCred = _.filter(Object.keys(response), function (o) {
+                  return response[o].hasCertificate === true;
+                });
+
+                if (submissionsWithCred) {
+                  credentialKey = _.max(submissionsWithCred, function (o) {
+                    return response[o].updatedAt;
+                  });  
+                }
+                
+              }      
 
               if (credentialKey) {
                 return getCredential(organizationID, credentialKey)
-                  .then(function(credential) {
+                  .then(function(credential) {                    
                     if (credential.certificate || credential.p12) {
                       enterprisePreviousCredential = credential;   
-
+                      $('[name="fl-ent-distribution"][value="previous-file"]').prop('checked', true).trigger('change'); 
                     } else {
                       $('.if-enterprise-credential').addClass('hidden');
+                      $('[name="fl-ent-distribution"][value="previous-file"]').prop('checked', true).trigger('change'); 
                     }
 
                     $this.html('Log in');
@@ -1752,8 +1786,7 @@ $('.enterprise-replace-cert').on('click', function() {
               .then(function(response) {
                 enterpriseCertificateReplaced = true;
                 $('.enterprise-previous-file-success').find('.enterprise-file-name-success').html(response.certificate.name);
-                $('.enterprise-previous-file-success').find('.enterprise-file-expire-success').html(moment(response.certificate.expiresAt).format('MMMM Do YYYY'));
-                
+                $('.enterprise-previous-file-success').find('.enterprise-file-expire-success').html(moment(response.certificate.expiresAt).format('MMMM Do YYYY'));                
                 $('.enterprise-previous-file-success').addClass('show');
                 $this.html('Replace certificate');
                 $this.removeClass('disabled');
@@ -1934,6 +1967,17 @@ function submissionChecker(submissions) {
   });
   appStoreSubmission = asub;
 
+  if (appStoreSubmission.data && !appStoreSubmission.data['fl-credentials']) {
+
+    var prevSubCred = _.filter(submissions, function(submission) {
+      return submission.data && submission.data['fl-credentials'];
+    });
+
+    appStoreSubmission.previousSubWithCredentials = _.maxBy(prevSubCred, function(el) {
+      return new Date(el.createdAt).getTime();
+    });
+  }
+
   var esub = _.filter(submissions, function(submission) {
     return submission.data.submissionType === "enterprise" && submission.platform === "ios";
   });
@@ -1944,6 +1988,17 @@ function submissionChecker(submissions) {
     return new Date(el.createdAt).getTime();
   });
   enterpriseSubmission = esub;
+
+  if (enterpriseSubmission.data && !enterpriseSubmission.data['fl-credentials']) {
+
+    var prevSubCred = _.filter(submissions, function(submission) {
+      return submission.data && submission.data['fl-credentials'];
+    });
+
+    enterpriseSubmission.previousSubWithCredentials = _.maxBy(prevSubCred, function(el) {
+      return new Date(el.createdAt).getTime();
+    });
+  }
 
   var usub = _.filter(submissions, function(submission) {
     return submission.data.submissionType === "unsigned" && submission.platform === "ios";
