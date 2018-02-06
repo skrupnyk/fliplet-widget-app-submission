@@ -1,5 +1,36 @@
 /* Override */
 
+.disabled,
+.btn.disabled {
+  pointer-events: none;
+  opacity: 0.3;
+}
+
+.appStore-logged-in,
+.appStore-teams,
+.appStore-more-options,
+.appStore-previous-file,
+.appStore-previous-file-success,
+.appStore-generate-file,
+.appStore-generate-file-success,
+.appStore-upload-file,
+.enterprise-manual-details,
+.enterprise-logged-in,
+.enterprise-teams,
+.enterprise-more-options,
+.enterprise-previous-file,
+.enterprise-previous-file-success,
+.enterprise-generate-file,
+.enterprise-generate-file-success,
+.enterprise-upload-file {
+  display: none;
+}
+
+.form-control-static {
+  min-height: 30px;
+  line-height: 30px;
+}
+
 .inline-radio .radio {
   width: 33.33%;
 }
@@ -29,11 +60,11 @@
   padding-top: 4px;
 }
 
-@media (min-width: 640px) {
+/*@media (min-width: 640px) {
   .form-horizontal .control-label {
     padding-top: 12px;
   }
-}
+}*/
 
 .btn-primary.fl-green {
   background-color: #1db188;
@@ -51,10 +82,6 @@
 .btn-primary.fl-green:active:hover {
   background-color: #11674f;
   border-bottom-color: #000201;
-}
-
-.radio-icon {
-  text-align: center;
 }
 
 .form-group.has-error .control-label label {
@@ -333,13 +360,14 @@ h3 small {
 
 .app-build-status table td.app-build-progress {
   text-align: right;
-  width: 100px;
+  width: 130px;
   vertical-align: top;
   padding: 10px 0;
 }
 
 .app-build-status table td.app-build-progress .retry-build,
-.app-build-status table td.app-build-progress .download-build {
+.app-build-status table td.app-build-progress .download-build,
+.app-build-status table td.app-build-progress .cancel-build {
   font-size: 12px;
   margin-top: 5px;
   margin-right: 5px;
@@ -369,6 +397,11 @@ h3 small {
 
 .app-build-status table .app-build-progress.danger .app-build-progress-holder {
   background-color: #E03629;
+  color: #fff;
+}
+
+.app-build-status table .app-build-progress.warning .app-build-progress-holder {
+  background-color: #d37f1c;
   color: #fff;
 }
 
@@ -403,4 +436,51 @@ h3 small {
 
 .app-build-status table td.app-build-download .fa {
   color: #b5b5b5;
+}
+
+.indented-area {
+  background-color: #f2f6f7;
+  border-radius: 6px;
+  padding: 15px 15px 1px 15px;
+  margin-top: 10px;
+}
+
+.hidden-area {
+  display: none;
+  background-color: #f2f6f7;
+  border-radius: 6px;
+  padding: 15px 15px 1px 15px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  margin-left: 25px;
+}
+
+.hidden-area.warning {
+  color: #8a6d3b;
+  background-color: #fcf8e3;
+  border: 1px solid #faebcc;
+}
+
+.radio.radio-icon ~ .radio.radio-icon,
+.checkbox.checkbox-icon ~ .checkbox.checkbox-icon {
+  margin-top: 5px;
+}
+
+.screenshot-previews {
+  margin-bottom: 20px;
+}
+
+.screenshot-previews.row {
+  margin-left: -5px;
+  margin-right: -5px;
+}
+
+.screenshot-previews .col-xs-3,
+.screenshot-previews .col-xs-12 {
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.screenshot-previews img {
+  border: 1px solid #F0F0F0;
 }

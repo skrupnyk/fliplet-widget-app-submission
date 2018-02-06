@@ -80,13 +80,47 @@
                 </div>
                 <div class="form-group clearfix app-screenshots">
                   <div class="col-sm-4 control-label">
-                    <label>Screenshots</label>
-                    <p class="help-block label-helper"><small>Screenshots will be taken of the following screens</small></p>
-                    <p><a href="#" data-change-assets>Change</a></p>
+                    <label>App screenshots</label>
                   </div>
-                  <div class="col-sm-8 form-static">
-                    <input type="text" name="fl-store-screenshots" class="form-control-static" id="fl-store-screenshots" data-validate="true" disabled required/>
-                    <div class="help-block text-danger app-details-error">Click the change button to select the screens</div>
+                  <div class="col-sm-8">
+                    <div class="radio radio-icon">
+                      <input type="radio" id="fl-store-screenshots-new" name="fl-store-screenshots" value="new">
+                      <label for="fl-store-screenshots-new">
+                        <span class="check"><i class="fa fa-circle"></i></span> Use new screenshots
+                      </label>
+                    </div>
+
+                    <div data-item="fl-store-screenshots-new-warning" class="hidden-area warning">
+                      <p>Apple requires you to upload up to 4 screenshots of your app for mobile and tablet devices. We could not find any screenshots in your folders, please go to <a href="#" onclick="Fliplet.Studio.emit('navigate', { name: 'launchAssets' })">App Settings</a> to generate your screenshots.</p>
+                    </div>
+                    <div data-item="fl-store-screenshots-new" class="hidden-area">
+                      <p>We will use the following screenshot in your app listing in the order shown below.<br>
+                      <small>We order the screenshots alphabetically, to reorder go to <a href="#" onclick="Fliplet.Studio.emit('navigate', { name: 'fileManager' })">File Manager</a> and rename your screenshots.</small></p>
+
+                      <div class="row screenshot-previews">
+                        <div class="col-xs-12"><strong>Mobile</strong></div>
+                        <div class="mobile-thumbs"></div>
+                      </div>
+                      <div class="row screenshot-previews">
+                        <div class="col-xs-12"><strong>Tablet</strong></div>
+                        <div class="tablet-thumbs"></div>
+                      </div>
+
+                      <p>If you want to generate or upload new screenshots go to <a href="#" onclick="Fliplet.Studio.emit('navigate', { name: 'launchAssets' })">App Settings</a>.</p>
+                    </div>
+
+                    <div class="radio radio-icon">
+                      <input type="radio" id="fl-store-screenshots-existing" name="fl-store-screenshots" value="existing">
+                      <label for="fl-store-screenshots-existing">
+                        <span class="check"><i class="fa fa-circle"></i></span> Use screenshots of existing app listing
+                      </label>
+                    </div>
+
+                    <div data-item="fl-store-screenshots-existing" class="hidden-area">
+                      <p>We will not upload new screenshots, we will use the existing screenshots on the app listing. By selecting this option you are confirming that you already have an app listing on the Apple App Store and that it contains the screenshots you want to be publicaly available.</p>
+                      <p class="text-warning">The app submission will fail if the app listing doesn’t contain screenshots.</p>
+                    </div>
+
                   </div>
                 </div>
               </div>
@@ -113,7 +147,7 @@
                 <div class="form-group clearfix">
                   <div class="col-sm-4 control-label">
                     <label for="fl-store-subtitle">App subtitle</label>
-                    <p class="help-block label-helper"><small>A summary of your app that will appear under your app’s name on the App Store for customers with devices running iOS 11 or later - Optional</small></p>
+                    <p class="help-block label-helper"><small>A summary of your app that will appear under your app’s name on the App Store for customers with devices running iOS 11 or later - Optional</small></p>
                   </div>
                   <div class="col-sm-8">
                     <input type="text" name="fl-store-subtitle" class="form-control" id="fl-store-subtitle" maxlength="30" />
@@ -126,9 +160,9 @@
                     <p class="help-block label-helper"><small>Provide an engaging description that highlights the benefits and functionality of your app. Only first sentence will be visible on the App Store without expanding.</small></p>
                   </div>
                   <div class="col-sm-8">
-                    <textarea name="fl-store-description" class="form-control" id="fl-store-description" rows="8" maxlength="4000" data-error="Please enter a description for your app" required></textarea>
+                    <textarea name="fl-store-description" class="form-control" id="fl-store-description" rows="8" minlength="10" maxlength="4000" data-error="Please enter a description for your app with at least 10 up to 4000 characters" required></textarea>
                     <div class="help-block with-errors"></div>
-                    <p class="help-block"><small>Descriptions are limited to 4000 characters.</small></p>
+                    <p class="help-block"><small>Descriptions are limited from 10 to 4000 characters.</small></p>
                   </div>
                 </div>
                 <div class="form-group clearfix">
@@ -143,13 +177,11 @@
                 </div>
                 <div class="form-group clearfix">
                   <div class="col-sm-4 control-label">
-                    <label>Application Category</label>
+                    <label>Application Primary Category</label>
                     <p class="help-block label-helper"><small>The category that best describes this app. For more information, see the <a href="https://itunesconnect.apple.com/itc/static/category_definitions" target="_blank">App Store Category Definitions.</a></small></p>
                   </div>
                   <div class="col-sm-8">
                     <label for="fl-store-category1" class="select-proxy-display">
-                      <span class="icon fa fa-chevron-down"></span>
-                      <span class="select-value-proxy">-- Primary Category</span>
                       <select id="fl-store-category1" name="fl-store-category1" data-label="select" class="hidden-select form-control" data-error="Please select a category" required>
                         <option value="">-- Primary Category</option>
                         <option value="Book">Books</option>
@@ -177,20 +209,20 @@
                         <option value="Travel">Travel</option>
                         <option value="Utilities">Utilities</option>
                       </select>
+                      <span class="icon fa fa-chevron-down"></span>
+                      <span class="select-value-proxy">-- Primary Category</span>
                     </label>
                     <div class="help-block with-errors"></div>
                   </div>
                 </div>
                 <div class="form-group clearfix">
                   <div class="col-sm-4 control-label">
-                    <label>Application Subcategory</label>
-                    <p class="help-block label-helper"><small>The subcategory that best describes this app. For more information, see the <a href="https://itunesconnect.apple.com/itc/static/category_definitions" target="_blank">App Store Category Definitions.</a></small></p>
+                    <label>Application Secondary Category</label>
+                    <p class="help-block label-helper"><small>The secondary category that best describes this app. For more information, see the <a href="https://itunesconnect.apple.com/itc/static/category_definitions" target="_blank">App Store Category Definitions.</a></small></p>
                   </div>
                   <div class="col-sm-8">
                     <label for="fl-store-category2" class="select-proxy-display">
-                      <span class="icon fa fa-chevron-down"></span>
-                      <span class="select-value-proxy">-- Select a Subcategory</span>
-                      <select id="fl-store-category2" name="fl-store-category2" data-label="select" class="hidden-select form-control" data-error="Please select a subcategory" required>
+                      <select id="fl-store-category2" name="fl-store-category2" data-label="select" class="hidden-select form-control" data-nomatch="#fl-store-category1" data-nomatch-error="Primary and secondary categories can not be the same. Please select a different one." data-error="Please select a subcategory" required>
                         <option value="">-- Select a Subcategory</option>
                         <option value="Book">Books</option>
                         <option value="Business">Business</option>
@@ -217,8 +249,11 @@
                         <option value="Travel">Travel</option>
                         <option value="Utilities">Utilities</option>
                       </select>
+                      <span class="icon fa fa-chevron-down"></span>
+                      <span class="select-value-proxy">-- Select a Subcategory</span>
                     </label>
                     <div class="help-block with-errors"></div>
+                    <p>The secondary category can not be the same as the primary category.</p>
                   </div>
                 </div>
                 <div class="form-group clearfix">
@@ -227,8 +262,6 @@
                   </div>
                   <div class="col-sm-8">
                     <label for="fl-store-language" class="select-proxy-display">
-                    <span class="icon fa fa-chevron-down"></span>
-                    <span class="select-value-proxy">English</span>
                     <select id="fl-store-language" name="fl-store-language" data-label="select" class="hidden-select form-control" data-error="Please select a language" required>
                       <option value="">-- Select a language</option>
                       <option value="Afrikanns">Afrikanns</option>
@@ -304,6 +337,8 @@
                       <option value="Welsh">Welsh</option>
                       <option value="Xhosa">Xhosa</option>
                     </select>
+                    <span class="icon fa fa-chevron-down"></span>
+                    <span class="select-value-proxy">English</span>
                   </label>
                     <div class="help-block with-errors"></div>
                   </div>
@@ -326,162 +361,162 @@
                   <div class="col-sm-8">
                     <select id="fl-store-availability" name="fl-store-availability" data-size="10" data-live-search="true" data-actions-box="true" data-none-selected-text="Select from the list of countries" multiple class="form-control selectpicker" data-error="Please select at least one country"
                       required>
-                    <option value="Albania">Albania</option>
-                    <option value="Algeria">Algeria</option>
-                    <option value="Angola">Angola</option>
-                    <option value="Anguilla">Anguilla</option>
-                    <option value="Antigua and Barbuda">Antigua and Barbuda</option>
-                    <option value="Argentina">Argentina</option>
-                    <option value="Armenia">Armenia</option>
-                    <option value="Australia">Australia</option>
-                    <option value="Austria">Austria</option>
-                    <option value="Azerbaijan">Azerbaijan</option>
-                    <option value="Bahamas">Bahamas</option>
-                    <option value="Bahrain">Bahrain</option>
-                    <option value="Barbados">Barbados</option>
-                    <option value="Belarus">Belarus</option>
-                    <option value="Belgium">Belgium</option>
-                    <option value="Belize">Belize</option>
-                    <option value="Benin">Benin</option>
-                    <option value="Bermuda">Bermuda</option>
-                    <option value="Bhutan">Bhutan</option>
-                    <option value="Bolivia">Bolivia</option>
-                    <option value="Botswana">Botswana</option>
-                    <option value="Brazil">Brazil</option>
-                    <option value="Brunei Darussalam">Brunei Darussalam</option>
-                    <option value="Bulgaria">Bulgaria</option>
-                    <option value="Burkina Faso">Burkina Faso</option>
-                    <option value="Cambodia">Cambodia</option>
-                    <option value="Canada">Canada</option>
-                    <option value="Cape Verde">Cape Verde</option>
-                    <option value="Cayman Islands">Cayman Islands</option>
-                    <option value="Chad">Chad</option>
-                    <option value="Chile">Chile</option>
-                    <option value="China">China</option>
-                    <option value="Colombia">Colombia</option>
-                    <option value="Congo, Republic of">Congo, Republic of</option>
-                    <option value="Costa Rica">Costa Rica</option>
-                    <option value="Croatia">Croatia</option>
-                    <option value="Cyprus">Cyprus</option>
-                    <option value="Czech Republic">Czech Republic</option>
-                    <option value="Denmark">Denmark</option>
-                    <option value="Dominica">Dominica</option>
-                    <option value="Dominican Republic">Dominican Republic</option>
-                    <option value="Ecuador">Ecuador</option>
-                    <option value="Egypt">Egypt</option>
-                    <option value="El Salvador">El Salvador</option>
-                    <option value="Estonia">Estonia</option>
-                    <option value="Fiji">Fiji</option>
-                    <option value="Finland">Finland</option>
-                    <option value="France">France</option>
-                    <option value="Gambia">Gambia</option>
-                    <option value="Germany">Germany</option>
-                    <option value="Ghana">Ghana</option>
-                    <option value="Greece">Greece</option>
-                    <option value="Grenada">Grenada</option>
-                    <option value="Guatemala">Guatemala</option>
-                    <option value="Guinea-Bissau">Guinea-Bissau</option>
-                    <option value="Guyana">Guyana</option>
-                    <option value="Honduras">Honduras</option>
-                    <option value="Hong Kong">Hong Kong</option>
-                    <option value="Hungary">Hungary</option>
-                    <option value="Iceland">Iceland</option>
-                    <option value="India">India</option>
-                    <option value="Indonesia">Indonesia</option>
-                    <option value="Ireland">Ireland</option>
-                    <option value="Israel">Israel</option>
-                    <option value="Italy">Italy</option>
-                    <option value="Jamaica">Jamaica</option>
-                    <option value="Japan">Japan</option>
-                    <option value="Jordan">Jordan</option>
-                    <option value="Kazakhstan">Kazakhstan</option>
-                    <option value="Kenya">Kenya</option>
-                    <option value="Korea, Republic Of">Korea, Republic Of</option>
-                    <option value="Kuwait">Kuwait</option>
-                    <option value="Kyrgyzstan">Kyrgyzstan</option>
-                    <option value="Lao People's Democratic Republic">Lao People's Democratic Republic</option>
-                    <option value="Latvia">Latvia</option>
-                    <option value="Lebanon">Lebanon</option>
-                    <option value="Liberia">Liberia</option>
-                    <option value="Lithuania">Lithuania</option>
-                    <option value="Luxembourg">Luxembourg</option>
-                    <option value="Macau">Macau</option>
-                    <option value="Macedonia, The Former Yugoslav Republic Of">Macedonia, The Former Yugoslav Republic Of</option>
-                    <option value="Madagascar">Madagascar</option>
-                    <option value="Malawi">Malawi</option>
-                    <option value="Malaysia">Malaysia</option>
-                    <option value="Mali">Mali</option>
-                    <option value="Malta">Malta</option>
-                    <option value="Mauritania">Mauritania</option>
-                    <option value="Mauritius">Mauritius</option>
-                    <option value="Mexico">Mexico</option>
-                    <option value="Micronesia, Federated States of">Micronesia, Federated States of</option>
-                    <option value="Moldova, Republic Of">Moldova, Republic Of</option>
-                    <option value="Mongolia">Mongolia</option>
-                    <option value="Montserrat">Montserrat</option>
-                    <option value="Mozambique">Mozambique</option>
-                    <option value="Namibia">Namibia</option>
-                    <option value="Nepal">Nepal</option>
-                    <option value="Netherlands">Netherlands</option>
-                    <option value="New Zealand">New Zealand</option>
-                    <option value="Nicaragua">Nicaragua</option>
-                    <option value="Niger">Niger</option>
-                    <option value="Nigeria">Nigeria</option>
-                    <option value="Norway">Norway</option>
-                    <option value="Oman">Oman</option>
-                    <option value="Pakistan">Pakistan</option>
-                    <option value="Palau">Palau</option>
-                    <option value="Panama">Panama</option>
-                    <option value="Papua New Guinea">Papua New Guinea</option>
-                    <option value="Paraguay">Paraguay</option>
-                    <option value="Peru">Peru</option>
-                    <option value="Philippines">Philippines</option>
-                    <option value="Poland">Poland</option>
-                    <option value="Portugal">Portugal</option>
-                    <option value="Qatar">Qatar</option>
-                    <option value="Romania">Romania</option>
-                    <option value="Russia">Russia</option>
-                    <option value="Saint Lucia">Saint Lucia</option>
-                    <option value="Saudi Arabia">Saudi Arabia</option>
-                    <option value="Senegal">Senegal</option>
-                    <option value="Seychelles">Seychelles</option>
-                    <option value="Sierra Leone">Sierra Leone</option>
-                    <option value="Singapore">Singapore</option>
-                    <option value="Slovakia">Slovakia</option>
-                    <option value="Slovenia">Slovenia</option>
-                    <option value="Solomon Islands">Solomon Islands</option>
-                    <option value="South Africa">South Africa</option>
-                    <option value="Spain">Spain</option>
-                    <option value="Sri Lanka">Sri Lanka</option>
-                    <option value="St. Kitts and Nevis">St. Kitts and Nevis</option>
-                    <option value="St. Vincent and The Grenadines">St. Vincent and The Grenadines</option>
-                    <option value="Suriname">Suriname</option>
-                    <option value="Swaziland">Swaziland</option>
-                    <option value="Sweden">Sweden</option>
-                    <option value="Switzerland">Switzerland</option>
-                    <option value="São Tomé and Príncipe">São Tomé and Príncipe</option>
-                    <option value="Taiwan">Taiwan</option>
-                    <option value="Tajikistan">Tajikistan</option>
-                    <option value="Tanzania, United Republic Of">Tanzania, United Republic Of</option>
-                    <option value="Thailand">Thailand</option>
-                    <option value="Trinidad and Tobago">Trinidad and Tobago</option>
-                    <option value="Tunisia">Tunisia</option>
-                    <option value="Turkey">Turkey</option>
-                    <option value="Turkmenistan">Turkmenistan</option>
-                    <option value="Turks and Caicos">Turks and Caicos</option>
-                    <option value="Uganda">Uganda</option>
-                    <option value="Ukraine">Ukraine</option>
-                    <option value="United Arab Emirates">United Arab Emirates</option>
-                    <option value="United Kingdom">United Kingdom</option>
-                    <option value="United States">United States</option>
-                    <option value="Uruguay">Uruguay</option>
-                    <option value="Uzbekistan">Uzbekistan</option>
-                    <option value="Venezuela">Venezuela</option>
-                    <option value="Vietnam">Vietnam</option>
-                    <option value="Virgin Islands, British">Virgin Islands, British</option>
-                    <option value="Yemen">Yemen</option>
-                    <option value="Zimbabwe">Zimbabwe</option>
-                  </select>
+                      <option value="Albania">Albania</option>
+                      <option value="Algeria">Algeria</option>
+                      <option value="Angola">Angola</option>
+                      <option value="Anguilla">Anguilla</option>
+                      <option value="Antigua and Barbuda">Antigua and Barbuda</option>
+                      <option value="Argentina">Argentina</option>
+                      <option value="Armenia">Armenia</option>
+                      <option value="Australia">Australia</option>
+                      <option value="Austria">Austria</option>
+                      <option value="Azerbaijan">Azerbaijan</option>
+                      <option value="Bahamas">Bahamas</option>
+                      <option value="Bahrain">Bahrain</option>
+                      <option value="Barbados">Barbados</option>
+                      <option value="Belarus">Belarus</option>
+                      <option value="Belgium">Belgium</option>
+                      <option value="Belize">Belize</option>
+                      <option value="Benin">Benin</option>
+                      <option value="Bermuda">Bermuda</option>
+                      <option value="Bhutan">Bhutan</option>
+                      <option value="Bolivia">Bolivia</option>
+                      <option value="Botswana">Botswana</option>
+                      <option value="Brazil">Brazil</option>
+                      <option value="Brunei Darussalam">Brunei Darussalam</option>
+                      <option value="Bulgaria">Bulgaria</option>
+                      <option value="Burkina Faso">Burkina Faso</option>
+                      <option value="Cambodia">Cambodia</option>
+                      <option value="Canada">Canada</option>
+                      <option value="Cape Verde">Cape Verde</option>
+                      <option value="Cayman Islands">Cayman Islands</option>
+                      <option value="Chad">Chad</option>
+                      <option value="Chile">Chile</option>
+                      <option value="China">China</option>
+                      <option value="Colombia">Colombia</option>
+                      <option value="Congo, Republic of">Congo, Republic of</option>
+                      <option value="Costa Rica">Costa Rica</option>
+                      <option value="Croatia">Croatia</option>
+                      <option value="Cyprus">Cyprus</option>
+                      <option value="Czech Republic">Czech Republic</option>
+                      <option value="Denmark">Denmark</option>
+                      <option value="Dominica">Dominica</option>
+                      <option value="Dominican Republic">Dominican Republic</option>
+                      <option value="Ecuador">Ecuador</option>
+                      <option value="Egypt">Egypt</option>
+                      <option value="El Salvador">El Salvador</option>
+                      <option value="Estonia">Estonia</option>
+                      <option value="Fiji">Fiji</option>
+                      <option value="Finland">Finland</option>
+                      <option value="France">France</option>
+                      <option value="Gambia">Gambia</option>
+                      <option value="Germany">Germany</option>
+                      <option value="Ghana">Ghana</option>
+                      <option value="Greece">Greece</option>
+                      <option value="Grenada">Grenada</option>
+                      <option value="Guatemala">Guatemala</option>
+                      <option value="Guinea-Bissau">Guinea-Bissau</option>
+                      <option value="Guyana">Guyana</option>
+                      <option value="Honduras">Honduras</option>
+                      <option value="Hong Kong">Hong Kong</option>
+                      <option value="Hungary">Hungary</option>
+                      <option value="Iceland">Iceland</option>
+                      <option value="India">India</option>
+                      <option value="Indonesia">Indonesia</option>
+                      <option value="Ireland">Ireland</option>
+                      <option value="Israel">Israel</option>
+                      <option value="Italy">Italy</option>
+                      <option value="Jamaica">Jamaica</option>
+                      <option value="Japan">Japan</option>
+                      <option value="Jordan">Jordan</option>
+                      <option value="Kazakhstan">Kazakhstan</option>
+                      <option value="Kenya">Kenya</option>
+                      <option value="Korea, Republic Of">Korea, Republic Of</option>
+                      <option value="Kuwait">Kuwait</option>
+                      <option value="Kyrgyzstan">Kyrgyzstan</option>
+                      <option value="Lao People's Democratic Republic">Lao People's Democratic Republic</option>
+                      <option value="Latvia">Latvia</option>
+                      <option value="Lebanon">Lebanon</option>
+                      <option value="Liberia">Liberia</option>
+                      <option value="Lithuania">Lithuania</option>
+                      <option value="Luxembourg">Luxembourg</option>
+                      <option value="Macau">Macau</option>
+                      <option value="Macedonia, The Former Yugoslav Republic Of">Macedonia, The Former Yugoslav Republic Of</option>
+                      <option value="Madagascar">Madagascar</option>
+                      <option value="Malawi">Malawi</option>
+                      <option value="Malaysia">Malaysia</option>
+                      <option value="Mali">Mali</option>
+                      <option value="Malta">Malta</option>
+                      <option value="Mauritania">Mauritania</option>
+                      <option value="Mauritius">Mauritius</option>
+                      <option value="Mexico">Mexico</option>
+                      <option value="Micronesia, Federated States of">Micronesia, Federated States of</option>
+                      <option value="Moldova, Republic Of">Moldova, Republic Of</option>
+                      <option value="Mongolia">Mongolia</option>
+                      <option value="Montserrat">Montserrat</option>
+                      <option value="Mozambique">Mozambique</option>
+                      <option value="Namibia">Namibia</option>
+                      <option value="Nepal">Nepal</option>
+                      <option value="Netherlands">Netherlands</option>
+                      <option value="New Zealand">New Zealand</option>
+                      <option value="Nicaragua">Nicaragua</option>
+                      <option value="Niger">Niger</option>
+                      <option value="Nigeria">Nigeria</option>
+                      <option value="Norway">Norway</option>
+                      <option value="Oman">Oman</option>
+                      <option value="Pakistan">Pakistan</option>
+                      <option value="Palau">Palau</option>
+                      <option value="Panama">Panama</option>
+                      <option value="Papua New Guinea">Papua New Guinea</option>
+                      <option value="Paraguay">Paraguay</option>
+                      <option value="Peru">Peru</option>
+                      <option value="Philippines">Philippines</option>
+                      <option value="Poland">Poland</option>
+                      <option value="Portugal">Portugal</option>
+                      <option value="Qatar">Qatar</option>
+                      <option value="Romania">Romania</option>
+                      <option value="Russia">Russia</option>
+                      <option value="Saint Lucia">Saint Lucia</option>
+                      <option value="Saudi Arabia">Saudi Arabia</option>
+                      <option value="Senegal">Senegal</option>
+                      <option value="Seychelles">Seychelles</option>
+                      <option value="Sierra Leone">Sierra Leone</option>
+                      <option value="Singapore">Singapore</option>
+                      <option value="Slovakia">Slovakia</option>
+                      <option value="Slovenia">Slovenia</option>
+                      <option value="Solomon Islands">Solomon Islands</option>
+                      <option value="South Africa">South Africa</option>
+                      <option value="Spain">Spain</option>
+                      <option value="Sri Lanka">Sri Lanka</option>
+                      <option value="St. Kitts and Nevis">St. Kitts and Nevis</option>
+                      <option value="St. Vincent and The Grenadines">St. Vincent and The Grenadines</option>
+                      <option value="Suriname">Suriname</option>
+                      <option value="Swaziland">Swaziland</option>
+                      <option value="Sweden">Sweden</option>
+                      <option value="Switzerland">Switzerland</option>
+                      <option value="São Tomé and Príncipe">São Tomé and Príncipe</option>
+                      <option value="Taiwan">Taiwan</option>
+                      <option value="Tajikistan">Tajikistan</option>
+                      <option value="Tanzania, United Republic Of">Tanzania, United Republic Of</option>
+                      <option value="Thailand">Thailand</option>
+                      <option value="Trinidad and Tobago">Trinidad and Tobago</option>
+                      <option value="Tunisia">Tunisia</option>
+                      <option value="Turkey">Turkey</option>
+                      <option value="Turkmenistan">Turkmenistan</option>
+                      <option value="Turks and Caicos">Turks and Caicos</option>
+                      <option value="Uganda">Uganda</option>
+                      <option value="Ukraine">Ukraine</option>
+                      <option value="United Arab Emirates">United Arab Emirates</option>
+                      <option value="United Kingdom">United Kingdom</option>
+                      <option value="United States">United States</option>
+                      <option value="Uruguay">Uruguay</option>
+                      <option value="Uzbekistan">Uzbekistan</option>
+                      <option value="Venezuela">Venezuela</option>
+                      <option value="Vietnam">Vietnam</option>
+                      <option value="Virgin Islands, British">Virgin Islands, British</option>
+                      <option value="Yemen">Yemen</option>
+                      <option value="Zimbabwe">Zimbabwe</option>
+                    </select>
                     <div class="help-block with-errors"></div>
                   </div>
                 </div>
@@ -509,7 +544,7 @@
                     <p class="help-block label-helper"><small>A URL that links to your organization's support page.</small></p>
                   </div>
                   <div class="col-sm-8">
-                    <input type="text" name="fl-store-support" class="form-control" id="fl-store-support" data-error="Please enter your Support URL" required/>
+                    <input type="text" name="fl-store-support" class="form-control" id="fl-store-support" pattern="^https?:\/\/([^ ]+)+" data-error="Please enter your Support URL" required/>
                     <div class="help-block with-errors"></div>
                   </div>
                 </div>
@@ -519,7 +554,8 @@
                     <p class="help-block label-helper"><small>A URL that links to your organization's marketing website.</small></p>
                   </div>
                   <div class="col-sm-8">
-                    <input type="text" name="fl-store-marketing" class="form-control" id="fl-store-marketing" />
+                    <input type="text" name="fl-store-marketing" class="form-control" id="fl-store-marketing" pattern="^https?:\/\/([^ ]+)+" data-error="Please enter your Marketing URL" required/>
+                    <div class="help-block with-errors"></div>
                   </div>
                 </div>
                 <div class="form-group clearfix">
@@ -528,7 +564,8 @@
                     <p class="help-block label-helper"><small>A URL that links to your organization's privacy policy.</small></p>
                   </div>
                   <div class="col-sm-8">
-                    <input type="text" name="fl-store-privacy" class="form-control" id="fl-store-privacy" />
+                    <input type="text" name="fl-store-privacy" class="form-control" id="fl-store-privacy" pattern="^https?:\/\/([^ ]+)+" data-error="Please enter your Privacy Policy URL" required/>
+                    <div class="help-block with-errors"></div>
                   </div>
                 </div>
                 <div class="form-group clearfix">
@@ -561,44 +598,140 @@
             <div id="appStoreTech" class="panel-collapse collapse" role="tabpanel" aria-labelledby="appStoreTechHeading">
               <div class="panel-body">
                 <p>We will need some technical information now, such as your developer account login details. Don't worry, these details will be safe with us. We need them in order to publish your app for you.</p>
-                <div class="alert alert-warning">
-                  <p>Please consider creating a new account that is part of your developer team in order to use our system. This way you can always retract access if necessary. The account has to have <strong>Team Admin</strong> rights.</p>
-                  <p><strong>Note</strong> Two-Factor Authentication is not currently supported.</p>
+                <h3><small>Apple developer account details and distribution certificates</small></h3>
+
+                <div class="appStore-login-details">
+                  <div class="alert alert-info">
+                    <p>If you do not know what the developer account login details are please contact your organization's IT team.</p>
+                  </div>
+                  <div class="alert alert-warning">
+                    <p><strong>Note</strong> Two-Factor Authentication is not currently supported.</p>
+                  </div>
+
+                  <div class="form-group clearfix">
+                    <div class="col-sm-4 control-label">
+                      <label for="fl-store-appDevLogin">Apple Developer account login</label>
+                    </div>
+                    <div class="col-sm-8">
+                      <input type="email" class="form-control" id="fl-store-appDevLogin" data-error="Please enter a valid email address">
+                      <div class="help-block with-errors"></div>
+                    </div>
+                  </div>
+                  <div class="form-group clearfix">
+                    <div class="col-sm-4 control-label">
+                      <label for="fl-store-appDevPass">Apple Developer account password</label>
+                    </div>
+                    <div class="col-sm-8">
+                      <input type="password" class="form-control" id="fl-store-appDevPass" data-error="Please enter a password">
+                      <div class="help-block with-errors"></div>
+                      <p class="help-block label-helper"><small>This password will be encrypted, safely stored and never shared or used for purposes other than publishing this app.</small></p>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-sm-4 control-label">
+                      <label>Login to verify the account and choose the distribution certificate</label>
+                    </div>
+                    <div class="col-sm-8">
+                      <button type="button" class="btn btn-primary login-appStore-button">Log in</button>
+                      <div class="text-danger login-error"></div>
+                    </div>
+                  </div>
                 </div>
-                <div class="form-group clearfix">
+                <div class="appStore-logged-in">
+                  <div class="form-group">
+                    <div class="col-sm-4 control-label">
+                      <label>You are logged in as:</label>
+                    </div>
+                    <div class="col-sm-8">
+                      <div class="form-control-static">
+                        <span class="appStore-logged-email">app-developer@fliplet.com</span> - <a href="#" class="log-out-appStore">log out</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="appStore-teams">
+                  <div class="form-group">
+                    <div class="col-sm-4 control-label">
+                      <label>Select a Developer Account Team</label>
+                    </div>
+                    <div class="col-sm-8">
+                       <label for="fl-ent-teams" class="select-proxy-display">
+                          <select class="hidden-select form-control appStore-team" id="fl-store-teams" data-label="select">
+                            <option value="">-- Select a team</option>
+                          </select>
+                          <span class="icon fa fa-chevron-down"></span>
+                          <span class="select-value-proxy">-- Select a team</span>
+                        </label>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group appStore-more-options">
                   <div class="col-sm-4 control-label">
-                    <label for="fl-store-appDevLogin">Apple Developer account login</label>
-                    <p class="help-block"><small>Enter Apple Developer login email</small></p>
+                    <label>Provide us with a distribution certificate choosing from the following options:</label>
+                    <p class="help-block label-helper hidden">
+                      <small>For more information on this topic see the <a href="/" target="_blank">Support Documents.</a></small>
+                    </p>
                   </div>
                   <div class="col-sm-8">
-                    <input type="email" name="fl-store-appDevLogin" class="form-control" id="fl-store-appDevLogin" data-error="Please enter a valid email address" required/>
-                    <div class="help-block with-errors"></div>
+                    <div class="radio radio-icon if-appStore-credential">
+                      <input type="radio" id="fl-store-distribution-1" name="fl-store-distribution" value="previous-file">
+                      <label for="fl-store-distribution-1">
+                        <span class="check"><i class="fa fa-circle"></i></span> Use distribution certificate details from your latest submissions
+                      </label>
+                    </div>
+                    <div class="appStore-previous-file indented-area">
+                      <p class="appStore-certificate-expiring text-warning hidden">Your distribution certificate is about to expire.</p>
+                      <p><span class="appStore-file-name">Certificate Name</span> - <strong>Expires on <span class="appStore-file-expire">October 30th 2018</span></strong><span class="appStore-replace-element hidden"> - <a href="#" class="appStore-replace-cert">Replace certificate</a><span></p>
+                      <div class="text-danger replace-error"></div>
+                    </div>
+                    <div class="appStore-previous-file-success indented-area">
+                      <p class="text-success">Distribution certificate created successfully.</p>
+                      <p><span class="appStore-file-name-success">Certificate Name</span> - <strong>Expires on <span class="appStore-file-expire-success">October 30th 2018</span></strong></p>
+                      <div class="text-danger replace-error"></div>
+                    </div>
+                    <div class="radio radio-icon">
+                      <input type="radio" id="fl-store-distribution-2" name="fl-store-distribution" value="generate-file">
+                      <label for="fl-store-distribution-2">
+                        <span class="check"><i class="fa fa-circle"></i></span> Generate a new distribution certificate
+                      </label>
+                    </div>
+                    <div class="appStore-generate-file indented-area">
+                      <div class="form-group">
+                        <div class="col-sm-12">
+                          <button type="button" class="btn btn-primary appStore-generate-cert disabled">Generate certificate</button>
+                          <div class="text-danger generate-error"></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="appStore-generate-file-success indented-area">
+                      <p class="text-success">Distribution certificate created successfully.</p>
+                      <p><span class="appStore-file-name-success">Certificate Name</span> - <strong>Expires on <span class="appStore-file-expire-success">October 30th 2018</span></strong></p>
+                    </div>
+                    <div class="radio radio-icon">
+                      <input type="radio" id="fl-store-distribution-3" name="fl-store-distribution" value="upload-file">
+                      <label for="fl-store-distribution-3">
+                        <span class="check"><i class="fa fa-circle"></i></span> Upload your own distribution certificate (.p12 file)
+                      </label>
+                    </div>
+                    <div class="appStore-upload-file indented-area">
+                      <div class="form-group appStore-upload-certificate disabled">
+                        <div class="col-sm-12">
+                          <label>Upload a .p12 file</label>
+                        </div>
+                        <div class="col-sm-12">
+                          <div class="input-group">
+                            <label class="input-group-btn">
+                              <span class="btn btn-default">Browse&hellip; <input id="fl-store-certificate" class="hidden" type="file" accept="application/keychain_access, application/x-pkcs12"></span>
+                            </label>
+                            <input type="text" class="form-control" id="fl-store-certificate-label" placeholder="Click &ldquo;Browse&rdquo; to select a new file" readonly autocomplete="off">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
-                <div class="form-group clearfix">
-                  <div class="col-sm-4 control-label">
-                    <label for="fl-store-appDevPass">Apple Developer account password</label>
-                    <p class="help-block"><small>This password will be encrypted, safely stored and never shared or used for purposes other than publishing this app.</small></p>
-                  </div>
-                  <div class="col-sm-8">
-                    <input type="password" name="_fl-store-appDevPass" class="form-control" id="fl-store-appDevPass" data-error="Please enter a password" required/>
-                    <div class="help-block with-errors"></div>
-                    <p class="text-success hidden hasPassword"><small>You have already provided a password. Enter a new password to change the saved password.</small></p>
-                  </div>
-                </div>
-                <!--
-                <div class="form-group clearfix">
-                  <div class="col-sm-4 control-label">
-                    <label for="fl-store-appDevAppPassword">Two-Factor Authentication</label>
-                    <p class="help-block"><small>If you have enabled Two-Factor Authentication, Enter your app-specific password.</small></p>
-                  </div>
-                  <div class="col-sm-8">
-                    <input type="password" name="fl-store-appDevAppPassword" class="form-control" id="fl-store-appDevAppPassword" />
-                    <div class="help-block with-errors"></div>
-                    <p class="help-block"><small>If Two-Factor-Authentication is present on the account, log into <a href="https://appleid.apple.com/account" target="_blank">https://appleid.apple.com/account</a> and generate an <a href="https://support.apple.com/en-gb/HT204397" target="_blank">App-Specific Password</a> for Fliplet.</small></p>
-                  </div>
-                </div>
-                -->
+
+                <h3><small>App version and bundle ID</small></h3>
                 <div class="form-group clearfix">
                   <div class="col-sm-4 control-label">
                     <label for="fl-store-versionNumber">App version number</label>
@@ -625,26 +758,6 @@
                       <div class="help-block with-errors"></div>
                       <p class="help-block"><small>This value needs to be unique and the structure must be <code>com.<i>organizationName</i>.<i>appName</i></code>.</small></p>
                     </div>
-                  </div>
-                </div>
-                <div class="form-group clearfix">
-                  <div class="col-sm-4 control-label">
-                    <label for="fl-store-teamId">Team ID</label>
-                    <p class="help-block label-helper"><small>You need to login into your developer account to get the Team ID. Your Team ID can be found <a href="https://developer.apple.com/account/#/membership/">here</a>.</small></p>
-                  </div>
-                  <div class="col-sm-8">
-                    <input type="text" name="fl-store-teamId" class="form-control" id="fl-store-teamId" data-error="Please enter your Team ID" required/>
-                    <div class="help-block with-errors"></div>
-                  </div>
-                </div>
-                <div class="form-group clearfix">
-                  <div class="col-sm-4 control-label">
-                    <label for="fl-store-teamName">Team Name</label>
-                    <p class="help-block label-helper"><small>You need to login into your developer account to get the Team Name. It will be under you name on the top right corner of the screen.</small></p>
-                  </div>
-                  <div class="col-sm-8">
-                    <input type="text" name="fl-store-teamName" class="form-control" id="fl-store-teamName" data-error="Please enter your Team Name" required/>
-                    <div class="help-block with-errors"></div>
                   </div>
                 </div>
               </div>
@@ -716,8 +829,6 @@
                   </div>
                   <div class="col-sm-8">
                     <label for="fl-store-userCountry" class="select-proxy-display">
-                    <span class="icon fa fa-chevron-down"></span>
-                    <span class="select-value-proxy">-- Select a country</span>
                     <select id="fl-store-userCountry" data-label="select" name="fl-store-userCountry" class="hidden-select form-control" data-error="Please enter your country" required>
                       <option value="">-- Select a country</option>
                       <option value="Albania">Albania</option>
@@ -876,6 +987,8 @@
                       <option value="Yemen">Yemen</option>
                       <option value="Zimbabwe">Zimbabwe</option>
                     </select>
+                    <span class="icon fa fa-chevron-down"></span>
+                    <span class="select-value-proxy">-- Select a country</span>
                   </label>
                     <div class="help-block with-errors"></div>
                   </div>
@@ -1051,31 +1164,202 @@
             <div id="enterpriseTech" class="panel-collapse collapse" role="tabpanel" aria-labelledby="enterpriseTechHeading">
               <div class="panel-body">
                 <p>We will need some technical information now, such as your developer account login details. Don't worry, these details will be safe with us. We need them in order to publish your app for you.</p>
-                <div class="alert alert-warning">
-                  <p>Please consider creating a new account that is part of your developer team in order to use our system. This way you can always retract access if necessary. The account has to have <strong>Team Admin</strong> rights.</p>
-                  <p><strong>Note</strong> Two-Factor Authentication is not currently supported.</p>
+                <h3><small>Apple developer account details and distribution certificates</small></h3>
+                <div class="enterprise-login-details">
+                  <div class="alert alert-info">
+                    <p>If you don't know what the developer account login details are please contact your organization's IT team.</p>
+                  </div>
+                  <div class="alert alert-warning">
+                    <p><strong>Note</strong> Two-Factor Authentication is not currently supported.</p>
+                  </div>
+                  <div class="form-group clearfix">
+                    <div class="col-sm-4 control-label">
+                      <label for="fl-ent-appDevLogin">Apple Developer account login</label>
+                    </div>
+                    <div class="col-sm-8">
+                      <input type="email" class="form-control" id="fl-ent-appDevLogin" data-error="Please enter a valid email address" required/>
+                      <div class="help-block with-errors"></div>
+                    </div>
+                  </div>
+                  <div class="form-group clearfix">
+                    <div class="col-sm-4 control-label">
+                      <label for="fl-ent-appDevPass">Apple Developer account password</label>
+                    </div>
+                    <div class="col-sm-8">
+                      <input type="password" class="form-control" id="fl-ent-appDevPass" data-error="Please enter a password" required/>
+                      <div class="help-block with-errors"></div>
+                      <p class="help-block label-helper"><small>This password will be encrypted, safely stored and never shared or used for purposes other than publishing this app.</small></p>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-sm-4 control-label">
+                      <label>Login to verify the account and choose the distribution certificate</label>
+                    </div>
+                    <div class="col-sm-8">
+                      <button type="button" class="btn btn-primary login-enterprise-button">Log in</button> or <a href="#" class="ent-enter-manually">Enter details manually</a>
+                      <div class="text-danger login-error"></div>
+                      <p class="help-block">If you don't want to store the Apple developer account login details in Fliplet click the <i>Enter details manually</i> link.</p>
+                    </div>
+                  </div>
                 </div>
-                <div class="form-group clearfix">
+                <div class="enterprise-manual-details">
+                  <div class="alert alert-info">
+                        <p>This area should only be used by people with technical knowledge on enterprise app submissions, p12 files and mobile provisioning files.</p>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-sm-8 col-sm-offset-4">
+                      <a href="#" class="enterprise-back-login"><i class="fa fa-chevron-left"></i> Log in using developer account login details</a>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-sm-4 control-label">
+                      <label for="fl-ent-teamName">Enter the Enterprise Developer Account Team name</label>
+                    </div>
+                    <div class="col-sm-8">
+                      <input type="text" class="form-control fl-ent-teamName" id="fl-ent-teamName" name="fl-ent-teamName" data-error="Please enter your developer team name."/>
+                      <div class="help-block with-errors"></div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-sm-4 control-label">
+                      <label for="fl-ent-teamId">Enter the Enterprise Developer Account Team ID</label>
+                    </div>
+                    <div class="col-sm-8">
+                      <input type="text" class="form-control fl-ent-teamId" id="fl-ent-teamId" name="fl-ent-teamId" data-error="Please enter your developer team ID."/>
+                      <div class="help-block with-errors"></div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-sm-4 control-label">
+                      <label>Upload a .p12 file</label>
+                      <p class="help-block label-helper">
+                        <small>For more information on this topic see the <a href="https://help.apple.com/xcode/mac/current/#/dev154b28f09" target="_blank">Xcode Documentation.</a></small>
+                      </p>
+                    </div>
+                    <div class="col-sm-8">
+                      <div class="input-group">
+                        <label class="input-group-btn">
+                          <span class="btn btn-default">Browse&hellip; <input id="fl-ent-certificate-manual-details" name="fl-ent-certificate-manual-details" class="hidden" type="file" accept="application/keychain_access, application/x-pkcs12" data-error="Please upload a .p12 file."></span>
+                        </label>
+                        <input type="text" class="form-control" id="fl-ent-certificate-manual-details-label" placeholder="Click &ldquo;Browse&rdquo; to select a new file" readonly autocomplete="off">
+                      </div>
+                      <div class="help-block with-errors"></div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-sm-4 control-label">
+                      <label>Upload a .mobileprovision file</label>
+                      <p class="help-block label-helper">
+                        <small>For more information on this topic see the <a href="https://help.apple.com/xcode/mac/current/#/deva899b4fe5" target="_blank">Xcode Documentation.</a></small>
+                      </p>
+                    </div>
+                    <div class="col-sm-8">
+                      <div class="input-group">
+                        <label class="input-group-btn">
+                          <span class="btn btn-default">Browse&hellip; <input id="fl-ent-mobileprovision-manual-details" name="fl-ent-mobileprovision-manual-details" class="hidden" type="file" accept="application/x-apple-aspen-mobileprovision" data-error="Please upload a .mobileprovision file."></span>
+                        </label>
+                        <input type="text" class="form-control" id="fl-ent-mobileprovision-manual-details-label" placeholder="Click &ldquo;Browse&rdquo; to select a new file" readonly autocomplete="off">
+                      </div>
+                      <div class="help-block with-errors"></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="enterprise-logged-in">
+                  <div class="form-group">
+                    <div class="col-sm-4 control-label">
+                      <label>You are logged in as:</label>
+                    </div>
+                    <div class="col-sm-8">
+                      <div class="form-control-static">
+                        <span class="enterprise-logged-email">app-developer@fliplet.com</span> - <a href="#" class="log-out-enterprise">log out</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="enterprise-teams">
+                  <div class="form-group">
+                    <div class="col-sm-4 control-label">
+                      <label>Select a Developer Account Team</label>
+                    </div>
+                    <div class="col-sm-8">
+                       <label for="fl-ent-teams" class="select-proxy-display">
+                          <select class="hidden-select form-control enterprise-team" id="fl-ent-teams" data-label="select">
+                            <option value="">-- Select a team</option>
+                          </select>
+                          <span class="icon fa fa-chevron-down"></span>
+                          <span class="select-value-proxy">-- Select a team</span>
+                        </label>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group enterprise-more-options">
                   <div class="col-sm-4 control-label">
-                    <label for="fl-ent-appDevLogin">Apple Developer account login</label>
-                    <p class="help-block"><small>Enter Apple Developer login email</small></p>
+                    <label>Provide us with a distribution certificate choosing from the following options:</label>
+                    <p class="help-block label-helper hidden">
+                      <small>For more information on this topic see the <a href="/" target="_blank">Support Documents.</a></small>
+                    </p>
                   </div>
                   <div class="col-sm-8">
-                    <input type="email" name="fl-ent-appDevLogin" class="form-control" id="fl-ent-appDevLogin" data-error="Please enter a valid email address" required/>
-                    <div class="help-block with-errors"></div>
+                    <div class="radio radio-icon if-enterprise-credential">
+                      <input type="radio" id="fl-ent-distribution-2" name="fl-ent-distribution" value="previous-file">
+                      <label for="fl-ent-distribution-2">
+                        <span class="check"><i class="fa fa-circle"></i></span> Use distribution certificate details from your latest submissions
+                      </label>
+                    </div>
+                    <div class="enterprise-previous-file indented-area">
+                      <p class="enterprise-certificate-expiring text-warning hidden">Your distribution certificate is about to expire.</p>
+                      <p>
+                        <span class="enterprise-file-name">Certificate Name</span> - <strong>Expires on <span class="enterprise-file-expire">October 30th 2018 </span></strong><span class="enterprise-replace-element hidden"> - <a href="#" class="enterprise-replace-cert">Replace certificate</a><span>
+                      </p>
+                      <div class="text-danger replace-error"></div>
+                    </div>
+                    <div class="enterprise-previous-file-success indented-area">
+                      <p class="text-success">Distribution certificate created successfully.</p>
+                      <p><span class="enterprise-file-name-success">Certificate Name</span> - <strong>Expires on <span class="enterprise-file-expire-success">October 30th 2018</span></strong></p>
+                    </div>
+                    <div class="radio radio-icon">
+                      <input type="radio" id="fl-ent-distribution-1" name="fl-ent-distribution" value="generate-file">
+                      <label for="fl-ent-distribution-1">
+                        <span class="check"><i class="fa fa-circle"></i></span> Generate a new distribution certificate
+                      </label>
+                    </div>
+                    <div class="enterprise-generate-file indented-area">
+                      <div class="form-group">
+                        <div class="col-sm-12">
+                          <button type="button" class="btn btn-primary enterprise-generate-cert disabled">Generate certificate</button>
+                          <div class="text-danger generate-error"></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="enterprise-generate-file-success indented-area">
+                      <p class="text-success">Distribution certificate created successfully.</p>
+                      <p><span class="enterprise-file-name-success">Certificate Name</span> - <strong>Expires on <span class="enterprise-file-expire-success">October 30th 2018</span></strong></p>
+                    </div>
+                    <div class="radio radio-icon">
+                      <input type="radio" id="fl-ent-distribution-3" name="fl-ent-distribution" value="upload-file">
+                      <label for="fl-ent-distribution-3">
+                        <span class="check"><i class="fa fa-circle"></i></span> Upload your own distribution certificate (.p12 file)
+                      </label>
+                    </div>
+                    <div class="enterprise-upload-file indented-area">
+                      <div class="form-group enterprise-upload-certificate disabled">
+                        <div class="col-sm-12">
+                          <label>Upload a .p12 file</label>
+                        </div>
+                        <div class="col-sm-12">
+                          <div class="input-group">
+                            <label class="input-group-btn">
+                              <span class="btn btn-default">Browse&hellip; <input id="fl-ent-certificate" class="hidden" type="file" accept="application/keychain_access, application/x-pkcs12"></span>
+                            </label>
+                            <input type="text" class="form-control" id="fl-ent-certificate-label" placeholder="Click &ldquo;Browse&rdquo; to select a new file" readonly autocomplete="off">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
-                <div class="form-group clearfix">
-                  <div class="col-sm-4 control-label">
-                    <label for="fl-ent-appDevPass">Apple Developer account password</label>
-                    <p class="help-block"><small>This password will be encrypted, safely stored and never shared or used for purposes other than publishing this app.</small></p>
-                  </div>
-                  <div class="col-sm-8">
-                    <input type="password" name="_fl-ent-appDevPass" class="form-control" id="fl-ent-appDevPass" data-error="Please enter a password" required/>
-                    <div class="help-block with-errors"></div>
-                    <p class="text-success hidden hasPassword"><small>You have already provided a password. Enter a new password to change the saved password.</small></p>
-                  </div>
-                </div>
+
+                <h3><small>App version and bundle ID</small></h3>
                 <div class="form-group clearfix">
                   <div class="col-sm-4 control-label">
                     <label for="fl-ent-versionNumber">App version number</label>
@@ -1102,16 +1386,6 @@
                       <div class="help-block with-errors"></div>
                       <p class="help-block"><small>This value needs to be unique and the structure must be <code>com.<i>organizationName</i>.<i>appName</i></code>.</small></p>
                     </div>
-                  </div>
-                </div>
-                <div class="form-group clearfix">
-                  <div class="col-sm-4 control-label">
-                    <label for="fl-ent-teamId">Team ID</label>
-                    <p class="help-block label-helper"><small>You need to login into your developer account to get the Team ID. The Team ID can be found <a href="https://developer.apple.com/account/#/membership/">here</a>.</small></p>
-                  </div>
-                  <div class="col-sm-8">
-                    <input type="text" name="fl-ent-teamId" class="form-control" id="fl-ent-teamId" data-error="Please enter your Team ID" required/>
-                    <div class="help-block with-errors"></div>
                   </div>
                 </div>
               </div>
@@ -1308,6 +1582,7 @@
           \{{#if queued}}
           <td class="app-build-progress">
             <div class="app-build-progress-holder"><i class="fa fa-minus-circle"></i> Queued</div>
+            <div class="cancel-build"><a href="#" data-cancel-build-id="\{{id}}" class="text-danger">Cancel</a></div>
           </td>
           <td class="app-build-details">
             \{{#if submittedAt}}<span><span class="icon"><i class="fa fa-clock-o"></i> Started on:</span> \{{submittedAt}}</span>\{{/if}}
@@ -1316,6 +1591,7 @@
           \{{/if}} \{{#if submitted}}
           <td class="app-build-progress info">
             <div class="app-build-progress-holder"><i class="fa fa-spinner fa-pulse fa-fw"></i> In progress</div>
+            <div class="cancel-build"><a href="#" data-cancel-build-id="\{{id}}" class="text-danger">Cancel</a></div>
           </td>
           <td class="app-build-details">
             \{{#if submittedAt}}<span><span class="icon"><i class="fa fa-clock-o"></i> Started on:</span> \{{submittedAt}}</span>\{{/if}}
@@ -1324,6 +1600,7 @@
           \{{/if}} \{{#if processing}}
           <td class="app-build-progress info">
             <div class="app-build-progress-holder"><i class="fa fa-spinner fa-pulse fa-fw"></i> In progress</div>
+            <div class="cancel-build"><a href="#" data-cancel-build-id="\{{id}}" class="text-danger">Cancel</a></div>
           </td>
           <td class="app-build-details">
             \{{#if submittedAt}}<span><span class="icon"><i class="fa fa-clock-o"></i> Started on:</span> \{{submittedAt}}</span>\{{/if}}
@@ -1334,12 +1611,37 @@
             <div class="app-build-progress-holder"><i class="fa fa-check-circle"></i> Completed</div>
             \{{#if fileUrl}}
             <div class="download-build"><a href="\{{fileUrl}}"><i class="fa fa-download"></i> Download file</a></div>\{{/if}}
+            \{{#if debugFileUrl}}
+            <div class="download-build"><a href="\{{debugFileUrl}}"><i class="fa fa-download"></i> Download debug app</a></div>\{{/if}}
           </td>
           <td class="app-build-details">
             \{{#if updatedAt}}<span><span class="icon"><i class="fa fa-flag-checkered"></i> Finished on:</span> \{{updatedAt}}</span>\{{/if}}
             <div class="app-build-name">App successfully built</div>
           </td>
-          \{{/if}} \{{#if failed}}
+          \{{/if}}
+          \{{#if ready-for-testing}}
+          <td class="app-build-progress info">
+            <div class="app-build-progress-holder"><i class="fa fa-bell"></i> Ready for testing</div>
+            \{{#if fileUrl}}
+            <div class="download-build"><a href="\{{fileUrl}}"><i class="fa fa-download"></i> Download file</a></div>\{{/if}}
+            \{{#if debugFileUrl}}
+            <div class="download-build"><a href="\{{debugFileUrl}}"><i class="fa fa-download"></i> Download debug app</a></div>\{{/if}}
+          </td>
+          <td class="app-build-details">
+            \{{#if updatedAt}}<span><span class="icon"><i class="fa fa-clock-o"></i> Ready on:</span> \{{updatedAt}}</span>\{{/if}}
+            <div class="app-build-name">App ready for testing</div>
+          </td>
+          \{{/if}}
+          \{{#if tested}}
+          <td class="app-build-progress info">
+            <div class="app-build-progress-holder"><i class="fa fa-check-square-o"></i> Tested</div>
+          </td>
+          <td class="app-build-details">
+            \{{#if updatedAt}}<span><span class="icon"><i class="fa fa-clock-o"></i> Finished on:</span> \{{updatedAt}}</span>\{{/if}}
+            <div class="app-build-name">App tested</div>
+          </td>
+          \{{/if}}
+          \{{#if failed}}
           <td class="app-build-progress danger">
             <div class="app-build-progress-holder"><i class="fa fa-exclamation-circle"></i> Failed</div>
             <div class="retry-build"><a href="#" data-retry-id="\{{id}}"><i class="fa fa-repeat"></i> Try again</a></div>
