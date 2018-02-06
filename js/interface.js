@@ -345,7 +345,7 @@ function submissionBuild(appSubmission, origin) {
       $('[name="fl-store-versionNumber"]').val(newVersionNumber);
 
       $('.appStore-login-details').removeClass('hidden');
-      $('.appStore-logged-in, .appStore-more-options').removeClass('show');
+      $('.appStore-logged-in, .appStore-more-options, .appStore-teams').removeClass('show');
       appStoreLoggedIn = false;
 
       saveAppStoreData();
@@ -357,7 +357,7 @@ function submissionBuild(appSubmission, origin) {
       $('[name="fl-ent-versionNumber"]').val(newVersionNumber);
 
       $('.enterprise-login-details').removeClass('hidden');
-      $('.enterprise-logged-in, .enterprise-more-options').removeClass('show');
+      $('.enterprise-logged-in, .enterprise-more-options, .enterprise-teams').removeClass('show');
       enterpriseLoggedIn = false;
 
       saveEnterpriseData();
@@ -513,8 +513,8 @@ function requestBuild(origin, submission) {
             if (origin === "appStore" && appStoreSubmission.data['fl-store-distribution'] === 'upload-file') {
               var formData = new FormData();
               var fileName = appStoreFileField.value.replace(/\\/g, '/').replace(/.*\//, '');
-              var teamID = $('#fl-store-team-upload').val();
-              var teamName = $('#fl-store-team-upload option[value="'+teamID+'"]').data('team-name');
+              var teamID = $('#fl-store-teams').val();
+              var teamName = $('#fl-store-teams').find(":selected").data('team-name');
 
               if (appStoreFileField.files && appStoreFileField.files[0]) {
                 formData.append('p12', appStoreFileField.files[0])
@@ -550,16 +550,14 @@ function requestBuild(origin, submission) {
             if (origin === "enterprise" && enterpriseSubmission.data['fl-ent-distribution'] === 'upload-file') {
               var formData = new FormData();
               var fileName = enterpriseFileField.value.replace(/\\/g, '/').replace(/.*\//, '');
-              var teamID = $('#fl-ent-team-upload').val();
-              var teamName = $('#fl-ent-team-upload option[value="'+teamID+'"]').data('team-name');
 
               if (enterpriseFileField.files && enterpriseFileField.files[0]) {
                 formData.append('p12', enterpriseFileField.files[0])
                 formData.append('certificateName', fileName)
               }
 
-              var teamId = $('#fl-ent-team-upload').val();
-              var teamName = $('#fl-ent-team-upload[value="' + teamId + '"]').data('team-name');
+              var teamId = $('#fl-ent-teams').val();
+              var teamName = $('#fl-ent-teams').find(":selected").data('team-name');
 
               return setCredentials(organizationID, enterpriseSubmission.id, {
                   teamId: teamId,
@@ -602,8 +600,8 @@ function requestBuild(origin, submission) {
         if (origin === "appStore" && appStoreSubmission.data['fl-store-distribution'] === 'upload-file') {
           var formData = new FormData();
           var fileName = appStoreFileField.value.replace(/\\/g, '/').replace(/.*\//, '');
-          var teamID = $('#fl-store-team-upload').val();
-          var teamName = $('#fl-store-team-upload option[value="'+teamID+'"]').data('team-name');
+          var teamID = $('#fl-store-teams').val();
+          var teamName = $('#fl-store-teams').find(":selected").data('team-name');
 
           if (appStoreFileField.files && appStoreFileField.files[0]) {
             formData.append('p12', appStoreFileField.files[0])
@@ -639,8 +637,8 @@ function requestBuild(origin, submission) {
         if (origin === "enterprise" && enterpriseSubmission.data['fl-ent-distribution'] === 'upload-file') {
           var formData = new FormData();
           var fileName = enterpriseFileField.value.replace(/\\/g, '/').replace(/.*\//, '');
-          var teamID = $('#fl-ent-team-upload').val();
-          var teamName = $('#fl-ent-team-upload option[value="'+teamID+'"]').data('team-name');
+          var teamID = $('#fl-ent-teams').val();
+          var teamName = $('#fl-ent-teams').find(":selected").data('team-name');
 
           if (enterpriseFileField.files && enterpriseFileField.files[0]) {
             formData.append('p12', enterpriseFileField.files[0])
@@ -694,12 +692,10 @@ function saveAppStoreData(request) {
       if (newValue === 'previous-file') {
         pushData.apnTeamId = appStorePreviousCredential.teamId;
       }
-      if (newValue === 'generate-file') {
-        pushData.apnTeamId = $('#fl-store-team-generate').val();
+      if (newValue === 'generate-file' || newValue === 'upload-file') {
+        pushData.apnTeamId = $('#fl-store-teams').val();
       }
-      if (newValue === 'upload-file') {
-        pushData.apnTeamId = $('#fl-store-team-upload').val();
-      }
+      
       data[name] = newValue;
       return;
     }
@@ -738,12 +734,9 @@ function saveEnterpriseData(request) {
       if (newValue === 'previous-file') {
         pushData.apnTeamId = enterprisePreviousCredential.teamId;
       }
-      if (newValue === 'generate-file') {
-        pushData.apnTeamId = $('#fl-ent-team-generate').val();
-      }
-      if (newValue === 'upload-file') {
-        pushData.apnTeamId = $('#fl-ent-team-upload').val();
-      }
+      if (newValue === 'generate-file' || newValue === 'upload-file') {
+        pushData.apnTeamId = $('#fl-ent-teams').val();
+      }      
       data[name] = newValue;
       return;
     }
@@ -907,6 +900,213 @@ function searchCredentials(organizationId, data) {
   .then(function(credentials) {
     return Promise.resolve(credentials);
   });
+}
+
+function getAppCredentials(organizationId, credentialKey, teamId) {  
+  if(credentialKey) {
+    return getCredential(organizationId, credentialKey)
+      .then(function(credential) {
+        if(credential && credential.teamId === teamId && (credential.p12 || credential.certificate)) {
+          return credential;
+        }
+
+        return;
+      });
+  }
+
+  return Promise.resolve();
+}
+
+function setAppStorePrevCredentials(credential) {
+  if (credential && (credential.certificate || credential.p12)) {
+    appStorePreviousCredential = credential;  
+    $('.if-appStore-credential').removeClass('hidden');
+    $('[name="fl-store-distribution"][value="previous-file"]').prop('checked', true).trigger('change');                   
+  } else {
+    $('.if-appStore-credential').addClass('hidden');
+    $('[name="fl-store-distribution"][value="generate-file"]').prop('checked', true).trigger('change');
+  }
+
+  Fliplet.Widget.autosize();        
+}
+
+function refreshAppStoreOptions(devEmail, devPass, selectedTeamId, selectedTeamName) {
+  if(!selectedTeamId) {
+    setAppStorePrevCredentials();
+    return;
+  }
+
+  return getAppCredentials(organizationID, 
+    appStoreSubmission.data['fl-credentials'], 
+    selectedTeamId)
+    .then(function(credential) {
+      if(credential) {
+        return credential;
+      }
+
+      return searchCredentials(organizationID, {
+        email: devEmail,
+        password: devPass,
+        type: 'apple',
+        teamId: selectedTeamId
+      })
+      .then(function(response) {             
+        var credentialKey;
+        var submissionsWithCred = _.filter(Object.keys(response), function (o) {
+          return response[o].hasCertificate === true;
+        });
+
+        if (submissionsWithCred) {
+          credentialKey = _.max(submissionsWithCred, function (o) {
+            return response[o].updatedAt;
+          });
+        }
+
+        if(credentialKey) {
+          return getCredential(organizationID, credentialKey);
+        }                
+
+        return;
+      })
+      .catch(function(error) {
+        return;
+      });
+    })         
+    .then(function(credential) {                                 
+      if(credential) {
+        return credential;
+      }
+
+      //if we dont have any credentials we need to check previous result for a credential object 
+      if(appStoreSubmission.data.previousResults && (appStoreSubmission.data.previousResults.p12 || appStoreSubmission.data.previousResults.certificate) && appStoreSubmission.data['fl-store-teamId'] === selectedTeamId) {
+        return {
+          teamId: selectedTeamId,
+          teamName: selectedTeamName,
+          certSigningRequest: appStoreSubmission.data.previousResults.certSigningRequest,
+          p12: appStoreSubmission.data.previousResults.p12,
+          certificate: appStoreSubmission.data.previousResults.certificate,
+          content: appStoreSubmission.data.previousResults.content
+        };
+      }
+
+      return getCompletedSubmissions(organizationID, devEmail, selectedTeamId, selectedTeamName);
+    })
+    .then(function(credential) {                        
+      return setAppStorePrevCredentials(credential);
+    })
+    .catch(function(error) {
+      return setAppStorePrevCredentials();
+    });
+}
+
+function setAppEnterprisePrevCredential(credential) {
+  if (credential && (credential.certificate || credential.p12)) {                    
+    enterprisePreviousCredential = credential;   
+    $('.if-enterprise-credential').removeClass('hidden');
+    $('[name="fl-ent-distribution"][value="previous-file"]').prop('checked', true).trigger('change');       
+  } else {    
+    $('.if-enterprise-credential').addClass('hidden');
+    $('[name="fl-ent-distribution"][value="generate-file"]').prop('checked', true).trigger('change');
+  }
+  
+  Fliplet.Widget.autosize();
+}
+
+function refreshAppEnterpriseOptions(devEmail, devPass, selectedTeamId, selectedTeamName) {    
+  if(!selectedTeamId) {
+    setAppEnterprisePrevCredential();
+    return;
+  }
+
+  return getAppCredentials(organizationID, 
+    enterpriseSubmission.data['fl-credentials'], 
+    selectedTeamId)
+    .then(function(credential) {
+      if(credential) {
+        return credential;
+      }
+
+      return searchCredentials(organizationID, {
+        email: devEmail,
+        password: devPass,
+        type: 'apple-enterprise',
+        teamId: selectedTeamId
+      })
+      .then(function(response) {             
+        var credentialKey;
+        var submissionsWithCred = _.filter(Object.keys(response), function (o) {
+          return response[o].hasCertificate === true;
+        });
+
+        if (submissionsWithCred) {
+          credentialKey = _.max(submissionsWithCred, function (o) {
+            return response[o].updatedAt;
+          });
+        }
+
+        if(credentialKey) {
+          return getCredential(organizationID, credentialKey);
+        }                
+
+        return;
+      })
+      .catch(function(error) {
+        return;
+      });
+    })         
+    .then(function(credential) {                                 
+      if(credential) {
+        return credential;
+      }
+
+      //if we dont have any credentials we need to check previous result for a credential object 
+      if(enterpriseSubmission.data.previousResults && (latestSubmission.data.previousResults.p12 || enterpriseSubmission.data.previousResults.certificate) && enterpriseSubmission.data['fl-ent-teamId'] === selectedTeamId) {
+        return {
+          teamId: selectedTeamId,
+          teamName: selectedTeamName,
+          certSigningRequest: enterpriseSubmission.data.previousResults.certSigningRequest,
+          p12: enterpriseSubmission.data.previousResults.p12,
+          certificate: enterpriseSubmission.data.previousResults.certificate,
+          content: enterpriseSubmission.data.previousResults.content
+        };
+      }
+
+      return getCompletedSubmissions(organizationID, devEmail, selectedTeamId, selectedTeamName);      
+    })
+    .then(function(credential) {                             
+      return setAppEnterprisePrevCredential(credential);
+    })
+    .catch(function(error) {
+      return setAppEnterprisePrevCredential();
+    });
+}
+
+function getCompletedSubmissions(organizationId, devEmail, teamId, teamName) {
+  return Fliplet.API.request({
+    method: 'GET',
+    url: 'v1/organizations/' + organizationId + '/submissions?status=completed&email=' + devEmail + '&teamId' + teamId
+  })
+  .then(function(result) {
+    if(!result.submissions) {
+      return;
+    }
+    var latestSubmission = _.maxBy(result.submissions, function(sub) {
+      return new Date(sub.updatedAt).getTime();
+    });
+
+    if(latestSubmission && latestSubmission.data.previousResults && (latestSubmission.data.previousResults.p12 || latestSubmission.data.previousResults.certificate)) {
+      return {
+        teamId: teamId,
+        teamName: teamName,
+        certSigningRequest: latestSubmission.data.previousResults.certSigningRequest,
+        p12: latestSubmission.data.previousResults.p12,
+        certificate: latestSubmission.data.previousResults.certificate,
+        content: latestSubmission.data.previousResults.content
+      };
+    }
+
+    return;
+  }); 
 }
 
 function getCredential(organizationId, credentialKey) {
@@ -1257,7 +1457,7 @@ $('.login-appStore-button').on('click', function() {
   $('#fl-store-appDevLogin').next('.with-errors').html('');
   $('#fl-store-appDevPass').parents('.form-group').removeClass('has-error has-danger');
   $('#fl-store-appDevPass').next('.with-errors').html('');
-  $this.next('login-error').html('');
+  $this.nextAll('login-error').html('');
   
   if (devEmail === '') {
     $('#fl-store-appDevLogin').parents('.form-group').addClass('has-error has-danger');
@@ -1292,69 +1492,23 @@ $('.login-appStore-button').on('click', function() {
             $('.appStore-team').append('<option value="' + team.teamId + '" data-team-name="' + team.name + '">'+ team.name +' - ' + team.teamId + '</option>');
           });
 
-          return searchCredentials(organizationID, {
-              email: devEmail,
-              password: devPass,
-              type: 'apple'
-            })
-            .then(function(response) {
-              var credentialKey = _.max(Object.keys(_.omit(response, 'submission-' + appStoreSubmission.id)), function (o) {
-                return response[o].verifiedAt;
-              });
+          $this.html('Log in');
+          $this.removeClass('disabled');
+          $('.appStore-logged-emai').html(devEmail);
+          $('.appStore-login-details').addClass('hidden');
+          $('.appStore-logged-in, .appStore-more-options, .appStore-teams').addClass('show');
+          appStoreLoggedIn = true;
+          var teamId = $('#fl-store-teams').val();
+          var teamName = teamId ? $('#fl-store-teams').find(":selected").data('team-name') : '';
 
-              if (credentialKey) {
-                return getCredential(organizationID, credentialKey)
-                  .then(function(credential) {
-                    if (credential.certificate) {
-                      appStorePreviousCredential = credential;
-                      var expiresAt = new Date(credential.certificate.expiresAt);
-                      var todayDate = new Date();
-                      var remainingTime = (expiresAt.getTime() - todayDate.getTime())/(1000*60*60*24.0);
-
-                      if (remainingTime < 60) {
-                        $('.appStore-certificate-expiring, .appStore-replace-element').removeClass('hidden');
-                        $('.appStore-file-expire').addClass('text-warning');
-                      }
-                      $('[name="fl-store-distribution"][value="previous-file"]').prop('checked', true).trigger('change');
-                      $('.appStore-previous-file').find('.appStore-file-name').html(credential.certificate.name);
-                      $('.appStore-previous-file').find('.appStore-file-expire').html(moment(credential.certificate.expiresAt).format('MMMM Do YYYY'));
-                    } else if (credential.p12) {
-                      appStorePreviousCredential = credential;
-
-                      $('[name="fl-store-distribution"][value="previous-file"]').prop('checked', true).trigger('change');
-                      $('.appStore-previous-file').find('.appStore-file-name').html(credential.certificateName);
-                      $('.appStore-previous-file').find('.appStore-file-expire').html('N/A');
-                    } else {
-                      $('.if-appStore-credential').addClass('hidden');
-                      $('[name="fl-store-distribution"][value="generate-file"]').prop('checked', true).trigger('change');
-                    }
-
-                    $this.html('Log in');
-                    $this.removeClass('disabled');
-                    $('.appStore-logged-emai').html(devEmail);
-                    $('.appStore-login-details').addClass('hidden');
-                    $('.appStore-logged-in, .appStore-more-options').addClass('show');
-                    appStoreLoggedIn = true;
-                    Fliplet.Widget.autosize();
-                  });
-              } 
-
-              $('.if-appStore-credential').addClass('hidden');
-              $('[name="fl-store-distribution"][value="generate-file"]').prop('checked', true).trigger('change');
-              $this.html('Log in');
-              $this.removeClass('disabled');
-
-              $('.appStore-logged-emai').html(devEmail);
-              $('.appStore-login-details').addClass('hidden');
-              $('.appStore-logged-in, .appStore-more-options').addClass('show');
-              appStoreLoggedIn = true;
-              Fliplet.Widget.autosize();
-            });
+          return refreshAppStoreOptions(devEmail, devPass, teamId, teamName);
         });
+         
     })
     .catch(function(error) {
+      console.log(error);
       if (error.responseJSON) {
-        $this.next('.login-error').html(error.responseJSON.message);
+        $this.nextAll('.login-error').html(error.responseJSON.message);
       }
       $this.html('Log in');
       $this.removeClass('disabled');
@@ -1367,22 +1521,20 @@ $('.log-out-appStore').on('click', function() {
   appStoreLoggedIn = false;
   $('.appStore-logged-emai').html('');
   $('.appStore-login-details').removeClass('hidden');
-  $('.appStore-logged-in, .appStore-more-options').removeClass('show');
+  $('.appStore-logged-in, .appStore-more-options, .appStore-teams').removeClass('show');
 });
 
 $('[name="fl-store-distribution"]').on('change', function() {
   var value = $(this).val();
 
+  $('#fl-store-teams').prop('required',true);
+
   if (value === 'previous-file') {
     if (appStoreCertificateReplaced) {
       $('.appStore-previous-file-success').addClass('show');
-    } else {
-      $('.appStore-previous-file').addClass('show');
     }
-    $('.appStore-generate-file, .appStore-generate-file-success, .appStore-upload-file').removeClass('show');
 
-    $('#fl-store-team-generate').prop('required',false);
-    $('#fl-store-team-upload').prop('required',false);
+    $('.appStore-generate-file, .appStore-generate-file-success, .appStore-upload-file').removeClass('show');
     $('#fl-store-certificate').prop('required',false);
   }
   if (value === 'generate-file') {
@@ -1391,41 +1543,35 @@ $('[name="fl-store-distribution"]').on('change', function() {
     } else {
       $('.appStore-generate-file').addClass('show');
     }
-    $('.appStore-previous-file, .appStore-previous-file-success, .appStore-upload-file').removeClass('show');
 
-    $('#fl-store-team-generate').prop('required',true);
-    $('#fl-store-team-upload').prop('required',false);
+    $('.appStore-previous-file-success, .appStore-upload-file').removeClass('show');   
     $('#fl-store-certificate').prop('required',false);
   }
   if (value === 'upload-file') {
     $('.appStore-upload-file').addClass('show');
-    $('.appStore-previous-file, .appStore-previous-file-success, .appStore-generate-file, .appStore-generate-file-success').removeClass('show');
-
-    $('#fl-store-team-generate').prop('required',false);
-    $('#fl-store-team-upload').prop('required',true);
+    $('.appStore-previous-file-success, .appStore-generate-file, .appStore-generate-file-success').removeClass('show');
+    
     $('#fl-store-certificate').prop('required',true);
   }
   Fliplet.Widget.autosize();
 });
 
-$('#fl-store-team-generate').on('change', function() {
+$('#fl-store-teams').on('change', function() {
   var value = $(this).val();
+  var teamName = value ? $('#fl-store-teams').find(":selected").data('team-name') : '';
 
   if (value !== '') {
     $('.appStore-generate-cert').removeClass('disabled');
-  } else {
-    $('.appStore-generate-cert').addClass('disabled');
-  }
-});
-
-$('#fl-store-team-upload').on('change', function() {
-  var value = $(this).val();
-
-  if (value !== '') {
     $('.appStore-upload-certificate').removeClass('disabled');
   } else {
+    $('.appStore-generate-cert').addClass('disabled');
     $('.appStore-upload-certificate').addClass('disabled');
   }
+
+  var devEmail = $('#fl-store-appDevLogin').val();
+  var devPass = $('#fl-store-appDevPass').val();
+
+  return refreshAppStoreOptions(devEmail, devPass, value, teamName);
 });
 
 $('.appStore-generate-cert').on('click', function() {
@@ -1433,9 +1579,9 @@ $('.appStore-generate-cert').on('click', function() {
   $(this).html('Generating...');
   $(this).addClass('disabled');
   $('.generate-error').html(''); // Cleans errors
-  var teamId = $('#fl-store-team-generate').val();
+  var teamId = $('#fl-store-teams').val();
   appStoreTeamId = teamId;
-  var teamName = $('#fl-store-team-generate[value="' + teamId + '"]').data('team-name');
+  var teamName = $('#fl-store-teams').find(":selected").data('team-name');
 
   return setCredentials(organizationID, appStoreSubmission.id, {
       teamId: teamId,
@@ -1492,8 +1638,7 @@ $('.appStore-replace-cert').on('click', function() {
               .then(function(response) {
                 appStoreCertificateReplaced = true;
                 $('.appStore-previous-file-success').find('.appStore-file-name-success').html(response.certificate.name);
-                $('.appStore-previous-file-success').find('.appStore-file-expire-success').html(moment(response.certificate.expiresAt).format('MMMM Do YYYY'));
-                $('.appStore-previous-file').removeClass('show');
+                $('.appStore-previous-file-success').find('.appStore-file-expire-success').html(moment(response.certificate.expiresAt).format('MMMM Do YYYY'));                
                 $('.appStore-previous-file-success').addClass('show');
                 $this.html('Replace certificate');
                 $this.removeClass('disabled');
@@ -1531,7 +1676,7 @@ $('.login-enterprise-button').on('click', function() {
   $('#fl-ent-appDevLogin').next('.with-errors').html('');
   $('#fl-ent-appDevPass').parents('.form-group').removeClass('has-error has-danger');
   $('#fl-ent-appDevPass').next('.with-errors').html('');
-  $this.next('login-error').html('');
+  $this.nextAll('login-error').html('');
   
   if (devEmail === '') {
     $('#fl-ent-appDevLogin').parents('.form-group').addClass('has-error has-danger');
@@ -1567,67 +1712,22 @@ $('.login-enterprise-button').on('click', function() {
           enterpriseTeams.forEach(function(team, i) {
             $('.enterprise-team').append('<option value="' + team.teamId + '" data-team-name="' + team.name + '">'+ team.name +' - ' + team.teamId + '</option>');
           });
+         
+          $this.html('Log in');
+          $this.removeClass('disabled');
+          $('.enterprise-logged-emai').html(devEmail);
+          $('.enterprise-login-details').addClass('hidden');
+          $('.enterprise-logged-in, .enterprise-more-options, .enterprise-teams').addClass('show');
+          enterpriseLoggedIn = true;
+          var teamId = $('#fl-ent-teams').val();             
+          var teamName = teamId ? $('#fl-ent-teams').find(":selected").data('team-name') : '';
 
-          return searchCredentials(organizationID, {
-              email: devEmail,
-              password: devPass,
-              type: 'apple-enterprise'
-            })
-            .then(function(response) {
-              var credentialKey = _.max(Object.keys(_.omit(response, 'submission-' + enterpriseSubmission.id)), function (o) {
-                return response[o].verifiedAt;
-              });
-
-              if (credentialKey) {
-                return getCredential(organizationID, credentialKey)
-                  .then(function(credential) {
-                    if (credential.certificate) {
-                      enterprisePreviousCredential = credential;
-                      var expiresAt = new Date(credential.certificate.expiresAt);
-                      var todayDate = new Date();
-                      var remainingTime = (expiresAt.getTime() - todayDate.getTime())/(1000*60*60*24.0);
-
-                      if (remainingTime < 60) {
-                        $('.enterprise-certificate-expiring, .enterprise-replace-element').removeClass('hidden');
-                        $('.enterprise-file-expire').addClass('text-warning');
-                      }
-                      $('.enterprise-previous-file').find('.enterprise-file-name').html(credential.certificate.name);
-                      $('.enterprise-previous-file').find('.enterprise-file-expire').html(moment(credential.certificate.expiresAt).format('MMMM Do YYYY'));
-                    } else if (credential.p12) {
-                      enterprisePreviousCredential = credential;
-
-                      $('.enterprise-previous-file').find('.enterprise-file-name').html(credential.certificateName);
-                      $('.enterprise-previous-file').find('.enterprise-file-expire').html('N/A');
-                    } else {
-                      $('.if-enterprise-credential').addClass('hidden');
-                    }
-
-                    $this.html('Log in');
-                    $this.removeClass('disabled');
-                    $('.enterprise-logged-emai').html(devEmail);
-                    $('.enterprise-login-details').addClass('hidden');
-                    $('.enterprise-logged-in, .enterprise-more-options').addClass('show');
-                    enterpriseLoggedIn = true;
-                    Fliplet.Widget.autosize();
-                  });
-              } 
-
-              $('.if-enterprise-credential').addClass('hidden');
-              $('[name="fl-ent-distribution"][value="generate-file"]').prop('checked', true).trigger('change');
-              $this.html('Log in');
-              $this.removeClass('disabled');
-
-              $('.enterprise-logged-emai').html(devEmail);
-              $('.enterprise-login-details').addClass('hidden');
-              $('.enterprise-logged-in, .enterprise-more-options').addClass('show');
-              enterpriseLoggedIn = true;
-              Fliplet.Widget.autosize();
-            });
+          return refreshAppEnterpriseOptions(devEmail, devPass, teamId, teamName);
         });
     })
     .catch(function(error) {
-      if (error.responseJSON) {
-        $this.next('.login-error').html(error.responseJSON.message);
+      if (error.responseJSON) {        
+        $this.nextAll('.login-error').html(error.responseJSON.message);
       }
       $this.html('Log in');
       $this.removeClass('disabled');
@@ -1640,23 +1740,20 @@ $('.log-out-enterprise').on('click', function() {
   enterpriseLoggedIn = false;
   $('.enterprise-logged-emai').html('');
   $('.enterprise-login-details').removeClass('hidden');
-  $('.enterprise-logged-in, .enterprise-more-options').removeClass('show');
+  $('.enterprise-logged-in, .enterprise-more-options, .enterprise-teams').removeClass('show');
 });
 
 $('[name="fl-ent-distribution"]').on('change', function() {
   var value = $(this).val();
 
+  $('#fl-ent-teams').prop('required',true);
+
   if (value === 'previous-file') {
     if (enterpriseCertificateReplaced) {
       $('.enterprise-previous-file-success').addClass('show');
-    } else {
-      $('.enterprise-previous-file').addClass('show');
-    }
-    $('.enterprise-generate-file, .enterprise-generate-file-success, .enterprise-upload-file').removeClass('show');
+    } 
 
-    $('#fl-ent-team-generate').prop('required',false);
-    $('#fl-ent-team-upload').prop('required',false);
-    $('#fl-ent-certificate').prop('required',false);
+    $('.enterprise-generate-file, .enterprise-generate-file-success, .enterprise-upload-file').removeClass('show');
   }
   if (value === 'generate-file') {
     if (enterpriseCertificateCreated) {
@@ -1664,41 +1761,34 @@ $('[name="fl-ent-distribution"]').on('change', function() {
     } else {
       $('.enterprise-generate-file').addClass('show');
     }
-    $('.enterprise-previous-file, .enterprise-previous-file-success, .enterprise-upload-file').removeClass('show');
-
-    $('#fl-ent-team-generate').prop('required',true);
-    $('#fl-ent-team-upload').prop('required',false);
+    $('.enterprise-previous-file-success, .enterprise-upload-file').removeClass('show');
     $('#fl-ent-certificate').prop('required',false);
   }
   if (value === 'upload-file') {
     $('.enterprise-upload-file').addClass('show');
-    $('.enterprise-previous-file, .enterprise-previous-file-success, .enterprise-generate-file, .enterprise-generate-file-success').removeClass('show');
-
-    $('#fl-ent-team-generate').prop('required',false);
-    $('#fl-ent-team-upload').prop('required',true);
+    $('.enterprise-previous-file-success, .enterprise-generate-file, .enterprise-generate-file-success').removeClass('show');
     $('#fl-ent-certificate').prop('required',true);
   }
   Fliplet.Widget.autosize();
 });
 
-$('#fl-ent-team-generate').on('change', function() {
+$('#fl-ent-teams').on('change', function() {
   var value = $(this).val();
+  var teamName = value ? $('#fl-ent-teams').find(":selected").data('team-name') : '';
 
   if (value !== '') {
     $('.enterprise-generate-cert').removeClass('disabled');
+    $('.enterprise-upload-certificate').removeClass('disabled');    
   } else {
     $('.enterprise-generate-cert').addClass('disabled');
-  }
-});
-
-$('#fl-ent-team-upload').on('change', function() {
-  var value = $(this).val();
-
-  if (value !== '') {
-    $('.enterprise-upload-certificate').removeClass('disabled');
-  } else {
     $('.enterprise-upload-certificate').addClass('disabled');
   }
+
+  var devEmail = $('#fl-ent-appDevLogin').val();
+  var devPass = $('#fl-ent-appDevPass').val();
+
+  
+  return refreshAppEnterpriseOptions(devEmail, devPass, value, teamName);
 });
 
 $('.enterprise-generate-cert').on('click', function() {
@@ -1706,9 +1796,9 @@ $('.enterprise-generate-cert').on('click', function() {
   $(this).html('Generating...');
   $(this).addClass('disabled');
   $('.generate-error').html(''); // Cleans errors
-  var teamId = $('#fl-ent-team-generate').val();
+  var teamId = $('#fl-ent-teams').val();
   enterpriseTeamId = teamId;
-  var teamName = $('#fl-ent-team-generate[value="' + teamId + '"]').data('team-name');
+  var teamName = $('#fl-ent-teams').find(":selected").data('team-name');
 
   return setCredentials(organizationID, enterpriseSubmission.id, {
       teamId: teamId,
@@ -1783,8 +1873,7 @@ $('.enterprise-replace-cert').on('click', function() {
               .then(function(response) {
                 enterpriseCertificateReplaced = true;
                 $('.enterprise-previous-file-success').find('.enterprise-file-name-success').html(response.certificate.name);
-                $('.enterprise-previous-file-success').find('.enterprise-file-expire-success').html(moment(response.certificate.expiresAt).format('MMMM Do YYYY'));
-                $('.enterprise-previous-file').removeClass('show');
+                $('.enterprise-previous-file-success').find('.enterprise-file-expire-success').html(moment(response.certificate.expiresAt).format('MMMM Do YYYY'));                
                 $('.enterprise-previous-file-success').addClass('show');
                 $this.html('Replace certificate');
                 $this.removeClass('disabled');
@@ -1812,7 +1901,7 @@ $('.ent-enter-manually').on('click', function() {
 
   $('#fl-ent-appDevLogin').prop('required', false);
   $('#fl-ent-appDevPass').prop('required', false);
-  $('#fl-ent-team-generate').prop('required',false);
+  $('#fl-ent-teams').prop('required',false);
 
   $('#fl-ent-teamName').prop('required', true);
   $('#fl-ent-teamId').prop('required', true);
@@ -1827,7 +1916,7 @@ $('.enterprise-back-login').on('click', function() {
 
   $('#fl-ent-appDevLogin').prop('required', true);
   $('#fl-ent-appDevPass').prop('required', true);
-  $('#fl-ent-team-generate').prop('required',true);
+  $('#fl-ent-teams').prop('required',true);
 
   $('#fl-ent-teamName').prop('required', false);
   $('#fl-ent-teamId').prop('required', false);
@@ -1965,6 +2054,24 @@ function submissionChecker(submissions) {
   });
   appStoreSubmission = asub;
 
+  if (appStoreSubmission.data && !appStoreSubmission.data['fl-credentials']) {
+
+    var prevSubCred = _.filter(submissions, function(submission) {
+      return submission.data && submission.data['fl-credentials'];
+    });
+
+    var previousSubWithCredentials = _.maxBy(prevSubCred, function(el) {
+      return new Date(el.createdAt).getTime();
+    });
+
+    if(previousSubWithCredentials) {
+      appStoreSubmission.data['fl-credentials'] = previousSubWithCredentials.data['fl-credentials'];
+    }
+    else {
+      appStoreSubmission.data['fl-credentials'] = '';
+    }    
+  }
+
   var esub = _.filter(submissions, function(submission) {
     return submission.data.submissionType === "enterprise" && submission.platform === "ios";
   });
@@ -1975,6 +2082,24 @@ function submissionChecker(submissions) {
     return new Date(el.createdAt).getTime();
   });
   enterpriseSubmission = esub;
+
+  if (enterpriseSubmission.data && !enterpriseSubmission.data['fl-credentials']) {
+
+    var prevSubCred = _.filter(submissions, function(submission) {
+      return submission.data && submission.data['fl-credentials'];
+    });
+
+    var previousSubWithCredentials = _.maxBy(prevSubCred, function(el) {
+      return new Date(el.createdAt).getTime();
+    });
+
+    if(previousSubWithCredentials) {
+      enterpriseSubmission.data['fl-credentials'] = previousSubWithCredentials.data['fl-credentials'];
+    }
+    else {
+      enterpriseSubmission.data['fl-credentials'] = '';
+    }    
+  }
 
   var usub = _.filter(submissions, function(submission) {
     return submission.data.submissionType === "unsigned" && submission.platform === "ios";
