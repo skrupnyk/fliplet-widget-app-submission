@@ -1496,10 +1496,16 @@ $('.login-appStore-button').on('click', function() {
           $this.removeClass('disabled');
           $('.appStore-logged-emai').html(devEmail);
           $('.appStore-login-details').addClass('hidden');
-          $('.appStore-logged-in, .appStore-more-options, .appStore-teams').addClass('show');
+          $('.appStore-logged-in, .appStore-teams').addClass('show');
           appStoreLoggedIn = true;
           var teamId = $('#fl-store-teams').val();
           var teamName = teamId ? $('#fl-store-teams').find(":selected").data('team-name') : '';
+
+          if(teamId) {
+            $('.appStore-more-options').addClass('show');
+          } else {
+            $('.appStore-more-options').removeClass('show');
+          }
 
           return refreshAppStoreOptions(devEmail, devPass, teamId, teamName);
         });
@@ -1561,9 +1567,11 @@ $('#fl-store-teams').on('change', function() {
   var teamName = value ? $('#fl-store-teams').find(":selected").data('team-name') : '';
 
   if (value !== '') {
+    $('.appStore-more-options').addClass('show');
     $('.appStore-generate-cert').removeClass('disabled');
     $('.appStore-upload-certificate').removeClass('disabled');
   } else {
+    $('.appStore-more-options').removeClass('show');
     $('.appStore-generate-cert').addClass('disabled');
     $('.appStore-upload-certificate').addClass('disabled');
   }
@@ -1722,6 +1730,12 @@ $('.login-enterprise-button').on('click', function() {
           var teamId = $('#fl-ent-teams').val();
           var teamName = teamId ? $('#fl-ent-teams').find(":selected").data('team-name') : '';
 
+          if(teamId) {
+            $('.enterprise-more-options').addClass('show');
+          } else {
+            $('.enterprise-more-options').removeClass('show');
+          }
+
           return refreshAppEnterpriseOptions(devEmail, devPass, teamId, teamName);
         });
     })
@@ -1777,9 +1791,11 @@ $('#fl-ent-teams').on('change', function() {
   var teamName = value ? $('#fl-ent-teams').find(":selected").data('team-name') : '';
 
   if (value !== '') {
+    $('.enterprise-more-options').addClass('show');
     $('.enterprise-generate-cert').removeClass('disabled');
     $('.enterprise-upload-certificate').removeClass('disabled');
   } else {
+    $('.enterprise-more-options').removeClass('show');
     $('.enterprise-generate-cert').addClass('disabled');
     $('.enterprise-upload-certificate').addClass('disabled');
   }
