@@ -978,13 +978,13 @@ function refreshAppStoreOptions(devEmail, devPass, selectedTeamId, selectedTeamN
       }
 
       //if we dont have any credentials we need to check previous result for a credential object
-      if(appStoreSubmission.data.previousResults && (appStoreSubmission.data.previousResults.p12 || appStoreSubmission.data.previousResults.certificate) && appStoreSubmission.data['fl-store-teamId'] === selectedTeamId) {
+      if(!_.isUndefined(appStoreSubmission.data.previousResults) && (!_.isUndefined(appStoreSubmission.data.previousResults.p12) || !_.isUndefined(appStoreSubmission.data.previousResults.certificate)) && appStoreSubmission.data['fl-store-teamId'] === selectedTeamId) {
         return {
           teamId: selectedTeamId,
           teamName: selectedTeamName,
           certSigningRequest: appStoreSubmission.data.previousResults.certSigningRequest,
-          p12: appStoreSubmission.data.previousResults.p12,
-          certificate: appStoreSubmission.data.previousResults.certificate,
+          p12: appStoreSubmission.data.previousResults.p12.files[0],
+          certificate: appStoreSubmission.data.previousResults.certificate.files[0],
           content: appStoreSubmission.data.previousResults.content
         };
       }
@@ -1060,13 +1060,13 @@ function refreshAppEnterpriseOptions(devEmail, devPass, selectedTeamId, selected
       }
 
       //if we dont have any credentials we need to check previous result for a credential object
-      if(enterpriseSubmission.data.previousResults && (latestSubmission.data.previousResults.p12 || enterpriseSubmission.data.previousResults.certificate) && enterpriseSubmission.data['fl-ent-teamId'] === selectedTeamId) {
+      if(!_.isUndefined(enterpriseSubmission.data.previousResults) && (!_.isUndefined(latestSubmission.data.previousResults.p12) || !_.isUndefined(enterpriseSubmission.data.previousResults.certificate)) && enterpriseSubmission.data['fl-ent-teamId'] === selectedTeamId) {
         return {
           teamId: selectedTeamId,
           teamName: selectedTeamName,
           certSigningRequest: enterpriseSubmission.data.previousResults.certSigningRequest,
-          p12: enterpriseSubmission.data.previousResults.p12,
-          certificate: enterpriseSubmission.data.previousResults.certificate,
+          p12: enterpriseSubmission.data.previousResults.p12.files[0],
+          certificate: enterpriseSubmission.data.previousResults.certificate.files[0],
           content: enterpriseSubmission.data.previousResults.content
         };
       }
@@ -1094,13 +1094,13 @@ function getCompletedSubmissions(organizationId, devEmail, teamId, teamName) {
       return new Date(sub.updatedAt).getTime();
     });
 
-    if(latestSubmission && latestSubmission.data.previousResults && (latestSubmission.data.previousResults.p12 || latestSubmission.data.previousResults.certificate)) {
+    if(!_.isUndefined(latestSubmission) && !_.isUndefined(latestSubmission.data.previousResults) && (!_.isUndefined(latestSubmission.data.previousResults.p12) || !_.isUndefined(latestSubmission.data.previousResults.certificate))) {
       return {
         teamId: teamId,
         teamName: teamName,
         certSigningRequest: latestSubmission.data.previousResults.certSigningRequest,
-        p12: latestSubmission.data.previousResults.p12,
-        certificate: latestSubmission.data.previousResults.certificate,
+        p12: latestSubmission.data.previousResults.p12.files[0],
+        certificate: latestSubmission.data.previousResults.certificate.files[0],
         content: latestSubmission.data.previousResults.content
       };
     }
@@ -1494,7 +1494,7 @@ $('.login-appStore-button').on('click', function() {
 
           $this.html('Log in');
           $this.removeClass('disabled');
-          $('.appStore-logged-emai').html(devEmail);
+          $('.appStore-logged-email').html(devEmail);
           $('.appStore-login-details').addClass('hidden');
           $('.appStore-logged-in, .appStore-teams').addClass('show');
           appStoreLoggedIn = true;
@@ -1525,7 +1525,7 @@ $('.login-appStore-button').on('click', function() {
 
 $('.log-out-appStore').on('click', function() {
   appStoreLoggedIn = false;
-  $('.appStore-logged-emai').html('');
+  $('.appStore-logged-email').html('');
   $('.appStore-login-details').removeClass('hidden');
   $('.appStore-logged-in, .appStore-more-options, .appStore-teams').removeClass('show');
 });
@@ -1723,7 +1723,7 @@ $('.login-enterprise-button').on('click', function() {
 
           $this.html('Log in');
           $this.removeClass('disabled');
-          $('.enterprise-logged-emai').html(devEmail);
+          $('.enterprise-logged-email').html(devEmail);
           $('.enterprise-login-details').addClass('hidden');
           $('.enterprise-logged-in, .enterprise-more-options, .enterprise-teams').addClass('show');
           enterpriseLoggedIn = true;
@@ -1752,7 +1752,7 @@ $('.login-enterprise-button').on('click', function() {
 
 $('.log-out-enterprise').on('click', function() {
   enterpriseLoggedIn = false;
-  $('.enterprise-logged-emai').html('');
+  $('.enterprise-logged-email').html('');
   $('.enterprise-login-details').removeClass('hidden');
   $('.enterprise-logged-in, .enterprise-more-options, .enterprise-teams').removeClass('show');
 });
