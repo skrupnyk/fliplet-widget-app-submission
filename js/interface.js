@@ -1060,7 +1060,7 @@ function refreshAppEnterpriseOptions(devEmail, devPass, selectedTeamId, selected
       }
 
       //if we dont have any credentials we need to check previous result for a credential object
-      if(!_.isUndefined(enterpriseSubmission.data.previousResults) && (!_.isUndefined(latestSubmission.data.previousResults.p12) || !_.isUndefined(enterpriseSubmission.data.previousResults.certificate)) && enterpriseSubmission.data['fl-ent-teamId'] === selectedTeamId) {
+      if(!_.isUndefined(enterpriseSubmission.data.previousResults) && (!_.isUndefined(enterpriseSubmission.data.previousResults.p12) || !_.isUndefined(enterpriseSubmission.data.previousResults.certificate)) && enterpriseSubmission.data['fl-ent-teamId'] === selectedTeamId) {
         return {
           teamId: selectedTeamId,
           teamName: selectedTeamName,
