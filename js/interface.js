@@ -713,6 +713,8 @@ function saveAppStoreData(request) {
   appStoreSubmission.data = data;
   notificationSettings = pushData;
 
+  savePushData(true);
+
   if (request) {
     requestBuild('appStore', appStoreSubmission);
   } else {
@@ -795,6 +797,8 @@ function saveEnterpriseData(request) {
       enterpriseSubmission.data = data;
       notificationSettings = pushData;
 
+      savePushData(true);
+
       if (request) {
         requestBuild('enterprise', enterpriseSubmission);
       } else {
@@ -805,6 +809,8 @@ function saveEnterpriseData(request) {
     data['fl-credentials'] = 'submission-' + enterpriseSubmission.id;
     enterpriseSubmission.data = data;
     notificationSettings = pushData;
+
+    savePushData(true);
 
     if (request) {
       requestBuild('enterprise', enterpriseSubmission);
@@ -833,7 +839,7 @@ function saveUnsignedData(request) {
   }
 }
 
-function savePushData() {
+function savePushData(silentSave) {
   var data = notificationSettings;
 
   $('#pushConfiguration [name]').each(function(i, el) {
@@ -860,7 +866,7 @@ function savePushData() {
     data: notificationSettings
   }).then(function() {
     $('.save-push-progress').addClass('saved');
-    if (!notificationSettings.apn) {
+    if (!notificationSettings.apn && !silentSave) {
       alert('Your settings have been saved!\n\nHowever push notifications will only work on App Store and Enterprise apps.\nRequest an app for one of those types and fill in the Bundle ID and Team/Team ID fields.\n\nYou don\'t need to request another app if you have requested an app for App Store or Enterprise before with those two fields filled in already.');
     }
 
