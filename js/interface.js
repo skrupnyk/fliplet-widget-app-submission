@@ -81,8 +81,8 @@ function loadAppStoreData() {
     var name = $(el).attr("name");
 
     /* APP NAME */
-    if (name === "fl-store-appName") {
-      $('[name="' + name + '"]').val(appName);
+    if (name === "fl-store-appName") {      
+      $('[name="' + name + '"]').val(!_.isUndefined(appStoreSubmission.data[name]) ? appStoreSubmission.data[name] : appName);
       return;
     }
 
