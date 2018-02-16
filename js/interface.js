@@ -80,9 +80,15 @@ function loadAppStoreData() {
   $('#appStoreConfiguration [name]').each(function(i, el) {
     var name = $(el).attr("name");
 
+    var hasAppId = !_.isUndefined(appStoreSubmission.data['iTunesAppId']);
+
     /* APP NAME */
     if (name === "fl-store-appName") {      
       $('[name="' + name + '"]').val(!_.isUndefined(appStoreSubmission.data[name]) ? appStoreSubmission.data[name] : appName);
+      
+      if (!_.isUndefined($('[name="' + name + '"]').val()) && hasAppId) {
+        $('[name="' + name + '"]').attr('readonly', 'readonly');
+      }
       return;
     }
 
@@ -110,6 +116,11 @@ function loadAppStoreData() {
     }
     if (name === "fl-store-userCountry" || name === "fl-store-category1" || name === "fl-store-category2" || name === "fl-store-language") {
       $('[name="' + name + '"]').val((typeof appStoreSubmission.data[name] !== "undefined") ? appStoreSubmission.data[name] : '').trigger('change');
+
+      if (name === "fl-store-language" && !_.isUndefined($('[name="' + name + '"]').val()) && hasAppId) {
+        $('[name="' + name + '"]').attr('readonly', 'readonly');
+        $('[name="' + name + '"]').attr("style", "pointer-events: none;");
+      }
       return;
     }
 
