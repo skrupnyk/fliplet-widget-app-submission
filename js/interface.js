@@ -20,6 +20,7 @@ var enterpriseFileFieldManual = undefined;
 var enterpriseFileProvisionFieldManual = undefined;
 var enterpriseTeamId = undefined;
 var enterpriseManual = false;
+var appStoreSubmissionInStore = false;
 var appStoreSubmission = {};
 var enterpriseSubmission = {};
 var unsignedSubmission = {};
@@ -117,9 +118,10 @@ function loadAppStoreData() {
     if (name === "fl-store-userCountry" || name === "fl-store-category1" || name === "fl-store-category2" || name === "fl-store-language") {
       $('[name="' + name + '"]').val((typeof appStoreSubmission.data[name] !== "undefined") ? appStoreSubmission.data[name] : '').trigger('change');
 
-      if (name === "fl-store-language" && !_.isUndefined($('[name="' + name + '"]').val()) && hasAppId) {
-        $('[name="' + name + '"]').attr('readonly', 'readonly');
-        $('[name="' + name + '"]').attr("style", "pointer-events: none;");
+      if (name === "fl-store-language" && !_.isUndefined($('[name="' + name + '"]').val()) && (hasAppId || appStoreSubmissionInStore)) {
+        $('.dll-store-language').addClass('hidden');
+        $('.fl-store-language-placeholder').removeClass('hidden');
+        //$('[name="' + name + '"]').attr("style", "pointer-events: none;");
       }
       return;
     }
@@ -2080,16 +2082,21 @@ function submissionChecker(submissions) {
     return submission.data.submissionType === "appStore" && submission.platform === "ios";
   });
 
+  var completedAsub = _.filter(asub, function(submission) {
+    return submission.data.status === "completed";
+  });
+
+  appStoreSubmissionInStore = (completedAsub.length > 0);
+
   checkSubmissionStatus("appStore", asub);
 
-  asub = _.maxBy(asub, function(el) {
+  appStoreSubmission = _.maxBy(asub, function(el) {
     return new Date(el.createdAt).getTime();
   });
-  appStoreSubmission = asub;
-
+  
   if (appStoreSubmission.data && !appStoreSubmission.data['fl-credentials']) {
 
-    var prevSubCred = _.filter(submissions, function(submission) {
+    var prevSubCred = _.filter(asub, function(submission) {
       return submission.data && submission.data['fl-credentials'];
     });
 
@@ -2111,14 +2118,13 @@ function submissionChecker(submissions) {
 
   checkSubmissionStatus("enterprise", esub);
 
-  esub = _.maxBy(esub, function(el) {
+  enterpriseSubmission = _.maxBy(esub, function(el) {
     return new Date(el.createdAt).getTime();
   });
-  enterpriseSubmission = esub;
-
+  
   if (enterpriseSubmission.data && !enterpriseSubmission.data['fl-credentials']) {
 
-    var prevSubCred = _.filter(submissions, function(submission) {
+    var prevSubCred = _.filter(esub, function(submission) {
       return submission.data && submission.data['fl-credentials'];
     });
 
