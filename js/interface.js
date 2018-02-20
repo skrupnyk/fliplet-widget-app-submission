@@ -120,8 +120,8 @@ function loadAppStoreData() {
 
       if (name === "fl-store-language" && !_.isUndefined($('[name="' + name + '"]').val()) && (hasAppId || appStoreSubmissionInStore)) {
         $('.dll-store-language').addClass('hidden');
-        $('.fl-store-language-placeholder').removeClass('hidden');
-        //$('[name="' + name + '"]').attr("style", "pointer-events: none;");
+        $('#fl-store-language').prop('required', false);
+        $('.fl-store-language-placeholder').removeClass('hidden');        
       }
       return;
     }
