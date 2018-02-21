@@ -2093,6 +2093,10 @@ function submissionChecker(submissions) {
   appStoreSubmission = _.maxBy(asub, function(el) {
     return new Date(el.createdAt).getTime();
   });
+
+  if (!appStoreSubmission) {
+    appStoreSubmission = {};
+  }
   
   if (appStoreSubmission.data && !appStoreSubmission.data['fl-credentials']) {
 
@@ -2121,6 +2125,10 @@ function submissionChecker(submissions) {
   enterpriseSubmission = _.maxBy(esub, function(el) {
     return new Date(el.createdAt).getTime();
   });
+
+  if (!enterpriseSubmission) {
+    enterpriseSubmission = {};
+  }
   
   if (enterpriseSubmission.data && !enterpriseSubmission.data['fl-credentials']) {
 
