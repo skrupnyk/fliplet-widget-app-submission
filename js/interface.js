@@ -1863,7 +1863,7 @@ $('.enterprise-generate-cert').on('click', function() {
       teamId: teamId,
       teamName: teamName
     })
-    .then(function() {
+    .then(function() {      
       return createCertificates(organizationID, enterpriseSubmission.id)
         .then(function(response) {
           enterpriseCertificateCreated = true;
@@ -2136,7 +2136,7 @@ function submissionChecker(submissions) {
       appStoreSubmission.data['fl-credentials'] = previousSubWithCredentials.data['fl-credentials'];
     }
     else {
-      appStoreSubmission.data['fl-credentials'] = '';
+      appStoreSubmission.data['fl-credentials'] = 'submission-' + appStoreSubmission.id;
     }
   }
 
@@ -2168,7 +2168,7 @@ function submissionChecker(submissions) {
       enterpriseSubmission.data['fl-credentials'] = previousSubWithCredentials.data['fl-credentials'];
     }
     else {
-      enterpriseSubmission.data['fl-credentials'] = '';
+      enterpriseSubmission.data['fl-credentials'] = 'submission-' + enterpriseSubmission.id;
     }
   }
 
