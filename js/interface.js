@@ -1348,7 +1348,19 @@ $('#appStoreConfiguration').validator().on('submit', function(event) {
 
   if (appInfo && appInfo.productionAppId) {
     if (allAppData.indexOf('appStore') > -1) {
-      if (appStoreLoggedIn) {
+      if (appStoreLoggedIn) {    
+        var certificateKind = $('[name="fl-store-distribution"]:checked').val();
+
+        if (certificateKind === 'generate-file' && !appStoreCertificateCreated) {
+          alert('You need to generate a certificate before requesting a submission');
+          return;
+        }
+
+        if (certificateKind === 'upload-file' && (!appStoreFileField.files || !appStoreFileField.files[0])){
+          alert('You need to upload a certificate before requesting a submission');
+          return;
+        }
+
         var requestAppConfirm;
 
         if (appStoreSubmission.status === "started") {
@@ -1386,6 +1398,18 @@ $('#enterpriseConfiguration').validator().on('submit', function(event) {
 
   if (!enterpriseManual && !enterpriseLoggedIn) {
     alert('Please log in with the Apple Developer Account or choose to enter the data manually.');
+    return;
+  }
+  
+  var credentialKind = $('[name="fl-ent-distribution"]:checked').val();
+
+  if (credentialKind === 'generate-file' && !enterpriseCertificateCreated) {
+    alert('You need to generate a certificate before requesting a submission');
+    return;
+  }
+
+  if (credentialKind === 'upload-file' && (!enterpriseFileField.files || !enterpriseFileField.files[0])) {
+    alert('You need to upload a certificate before requesting a submission');
     return;
   }
 
