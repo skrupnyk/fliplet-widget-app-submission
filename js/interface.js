@@ -1217,6 +1217,33 @@ function checkGroupErrors() {
   });
 }
 
+function validateScreenshots() {  
+  var imageErrors = [];
+  var supportedFormats = [[1242,2208], [2048,2732], [2732,2048]];
+  var allScreenShots = _.concat(screenShotsMobile, screenShotsTablet);
+
+  _.forEach(allScreenShots, function(screenshot, key) {
+    var supportedSize = _.find(supportedFormats, function(format) {
+      return format[0] === screenshot.size[0] && format[1] === screenshot.size[1]; 
+    });
+
+    if (!screenshot.appId && !supportedSize) {
+      imageErrors.push(screenshot.name + ' - ' + screenshot.size[0] + ' x ' + screenshot.size[1]);
+    }
+  });
+
+  if (imageErrors.length > 0) {
+    imageErrors.unshift('The following screenshots have an invalid size:');
+    imageErrors.push('Supported screenshot sizes are:');    
+    imageErrors.push('1242 x 2208 | 2048 x 2732 | 2732 x 2048');       
+    var errorMessage = _.join(imageErrors, '\n\r');
+    alert(errorMessage);
+    return false;
+  }
+
+  return true;
+}
+
 /* ATTACH LISTENERS */
 $('[name="fl-store-screenshots"]').on('change', function() {
   var value = $(this).val();
@@ -1345,6 +1372,15 @@ $('#appStoreConfiguration').validator().on('submit', function(event) {
   }
 
   event.preventDefault();
+
+  if (!haveScreenshots) {
+    alert('You need to add screenshots before submitting');
+    return;
+  }
+
+  if (!validateScreenshots()) {
+    return;
+  }
 
   if (appInfo && appInfo.productionAppId) {
     if (allAppData.indexOf('appStore') > -1) {
