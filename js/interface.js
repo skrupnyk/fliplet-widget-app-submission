@@ -2033,6 +2033,24 @@ $(document).on('click', '[data-cancel-build-id]', function() {
   })
 });
 
+$('.browse-files').on('click', function(e) {
+  e.preventDefault();
+  
+  Fliplet.Studio.emit('overlay', {
+    name: 'widget',
+    options: {
+      size: 'large',
+      package: 'com.fliplet.file-manager',
+      title: 'File Manager',
+      classes: 'data-source-overlay',
+      data: {
+        context: 'overlay',
+        appId: Fliplet.Env.get('appId')
+      }
+    }
+  });
+});
+
 /* INIT */
 $('#appStoreConfiguration, #enterpriseConfiguration, #unsignedConfiguration').validator().off('change.bs.validator focusout.bs.validator');
 $('[name="submissionType"][value="appStore"]').prop('checked', true).trigger('change');
