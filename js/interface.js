@@ -207,11 +207,15 @@ function loadAppStoreData() {
   var $loginButton = $('.login-appStore-button');
   $loginButton.html('Logging in');
   $loginButton.addClass('disabled');
+  $('#fl-store-appDevPass').addClass('disabled'); 
+  $('#fl-store-appDevLogin').addClass('disabled');
   getCredential(organizationID, appStoreSubmission.data['fl-credentials']).then(function (credential) {      
     return appStoreTeamSetup(credential.email, $loginButton);
   }).catch(function (error) {
     //we don't need to handle errors for automatic login
     $loginButton.html('Log in');
+    $('#fl-store-appDevLogin').removeClass('disabled');
+    $('#fl-store-appDevPass').removeClass('disabled'); 
     $loginButton.removeClass('disabled');
     Fliplet.Widget.autosize();
   });
@@ -226,7 +230,9 @@ function appStoreTeamSetup(devEmail, loginButton) {
       appStoreTeams.forEach(function(team, i) {
         $('.appStore-team').append('<option value="' + team.teamId + '" data-team-name="' + team.name + '">'+ team.name +' - ' + team.teamId + '</option>');
       });
-
+      
+      $('#fl-store-appDevLogin').removeClass('disabled');
+      $('#fl-store-appDevPass').removeClass('disabled'); 
       $('#fl-store-appDevLogin').val(devEmail);
       $('#fl-store-appDevPass').prop('required', false); 
       loginButton.html('Log in');
@@ -320,12 +326,16 @@ function loadEnterpriseData() {
   var $loginButton = $('.login-enterprise-button');
   $loginButton.html('Logging in');
   $loginButton.addClass('disabled');
+  $('#fl-ent-appDevLogin').addClass('disabled');
+  $('#fl-ent-appDevPass').addClass('disabled');
   getCredential(organizationID, enterpriseSubmission.data['fl-credentials']).then(function (credential) {   
     return enterpriseTeamSetup(credential.email, $loginButton);
   }).catch(function (error) {
     //we don't need to handle errors for automatic login
     $loginButton.html('Log in');
     $loginButton.removeClass('disabled');
+    $('#fl-ent-appDevLogin').removeClass('disabled');
+    $('#fl-ent-appDevPass').removeClass('disabled');
     Fliplet.Widget.autosize();
   });
 }
@@ -340,6 +350,8 @@ function enterpriseTeamSetup(devEmail, loginButton) {
         $('.enterprise-team').append('<option value="' + team.teamId + '" data-team-name="' + team.name + '">'+ team.name +' - ' + team.teamId + '</option>');
       });
 
+      $('#fl-ent-appDevLogin').removeClass('disabled');
+      $('#fl-ent-appDevPass').removeClass('disabled');
       $('#fl-ent-appDevLogin').val(devEmail);
       $('#fl-ent-appDevPass').prop('required', false);
       loginButton.html('Log in');
@@ -501,6 +513,7 @@ function save(origin, submission) {
     })
     .then(function() {
       if (submission.status !== 'started') {
+        var previousCredentials = submission.data['fl-credentials'];
         if(submission.data.hasOwnProperty('fl-credentials')){
           delete submission.data['fl-credentials'];
         }
@@ -511,24 +524,31 @@ function save(origin, submission) {
             })
           })
           .then(function(newSubmission) {
-            if (origin === "appStore") {
+            var cloneCredentialsPromise = Promise.resolve();
+
+            if (origin === "appStore") {              
+              newSubmission.data['fl-credentials'] = 'submission-' + newSubmission.id;
               appStoreSubmission = newSubmission;
+              cloneCredentialsPromise = cloneCredentials(organizationID, previousCredentials, appStoreSubmission);
             }
-            if (origin === "enterprise") {
+            if (origin === "enterprise") {              
+              newSubmission.data['fl-credentials'] = 'submission-' + newSubmission.id;
               enterpriseSubmission = newSubmission;
+              cloneCredentialsPromise = cloneCredentials(organizationID, previousCredentials, enterpriseSubmission);
             }
             if (origin === "unsigned") {
               unsignedSubmission = newSubmission;
             }
 
-            Fliplet.App.Submissions.update(newSubmission.id, newSubmission.data).then(function() {
-              $('.save-' + origin + '-progress').addClass('saved');
+            return cloneCredentialsPromise.then(function () {
+              Fliplet.App.Submissions.update(newSubmission.id, newSubmission.data).then(function() {
+                $('.save-' + origin + '-progress').addClass('saved');
 
-              setTimeout(function() {
-                $('.save-' + origin + '-progress').removeClass('saved');
-              }, 4000);
-            });
-
+                setTimeout(function() {
+                  $('.save-' + origin + '-progress').removeClass('saved');
+                }, 4000);
+              });  
+            });            
           });
       }
 
@@ -972,17 +992,22 @@ function savePushData(silentSave) {
   });
 }
 
-function cloneCredentials(organizationId, credentialKey, submission) {
+function cloneCredentials(organizationId, credentialKey, submission, saveData) {
   return Fliplet.API.request({
     method: 'POST',
     url: 'v1/organizations/' + organizationId + '/credentials/' + credentialKey + '/clone',
     data: {
       key: submission.data['fl-credentials']
     }
-  })
-  .then(() => {
-    return Fliplet.App.Submissions.update(submission.id, submission.data);
-  })
+  }).then(() => {
+    if (saveData) {
+      return Fliplet.App.Submissions.update(submission.id, submission.data);  
+    } 
+
+    return Promise.resolve();    
+  }).catch(() => {
+    //do nothing, a new credential will be created after the user logs in
+  });
 }
 
 function setCredentials(organizationId, id, data) {
@@ -2185,7 +2210,7 @@ function submissionChecker(submissions) {
     appStoreSubmission.data['fl-credentials'] = 'submission-' + appStoreSubmission.id;    
 
     if(previousSubWithCredentials) {
-      cloneAppStoreCredentialsPromise = cloneCredentials(organizationID, previousSubWithCredentials.data['fl-credentials'], appStoreSubmission);
+      cloneAppStoreCredentialsPromise = cloneCredentials(organizationID, previousSubWithCredentials.data['fl-credentials'], appStoreSubmission, true);
     }   
   }
 
@@ -2217,7 +2242,7 @@ function submissionChecker(submissions) {
     enterpriseSubmission.data['fl-credentials'] = 'submission-' + enterpriseSubmission.id;    
 
     if(previousSubWithCredentials) {
-      cloneEnterpriseCredentialsPromise = cloneCredentials(organizationID, previousSubWithCredentials.data['fl-credentials'], enterpriseSubmission);
+      cloneEnterpriseCredentialsPromise = cloneCredentials(organizationID, previousSubWithCredentials.data['fl-credentials'], enterpriseSubmission, true);
     }
   }
 
