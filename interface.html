@@ -968,6 +968,25 @@
                     <div class="help-block with-errors"></div>
                   </div>
                 </div>
+                <h3><small>Release Configuration</small></h3>
+                <p class="help-block">How will the app be submitted to review.</p>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-store-subManual">Manual submission</label>
+                    <p class="help-block label-helper">
+                      <small>With this option, Apple will review and approve your app and you'll need to go into iTunnes to manually release the app when you want.</small>
+                    </p>                    
+                  </div>
+                  <div class="col-sm-8">                    
+                    <div class="checkbox checkbox-icon">
+                      <input type="checkbox" id="fl-store-manualReview" name="fl-store-manualReview">
+                      <label for="fl-store-manualReview" class="bolder">
+                        <span class="check"><i class="fa fa-check"></i></span> Yes, i'll release it myself.
+                      </label>
+                    </div>
+                    <div class="help-block with-errors"></div>
+                  </div>
+                </div>
                 <h3><small>Reviewer Notes</small></h3>
                 <p class="help-block">Additional information about your app that can help during the review process. If your app is secured, be sure to provide login details or credentials - the reviewer needs them to test your app.</p>
                 <div class="form-group clearfix">
@@ -1034,7 +1053,7 @@
                   <div class="col-sm-8">
                     <textarea name="fl-store-revNotes" class="form-control" id="fl-store-revNotes" rows="10"></textarea>
                   </div>
-                </div>
+                </div>                
               </div>
             </div>
           </div>

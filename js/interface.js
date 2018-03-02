@@ -170,6 +170,15 @@ function loadAppStoreData() {
       return;
     }
 
+    /* Manual release */
+    if (name === "fl-store-manualReview") {
+      if (!_.isUndefined(appStoreSubmission.data[name])) {
+        $('#' + name).prop('checked', appStoreSubmission.data[name]);  
+      }      
+
+      return;
+    }
+
     $('[name="' + name + '"]').val((typeof appStoreSubmission.data[name] !== "undefined") ? appStoreSubmission.data[name] : '');
   });
 
@@ -202,6 +211,7 @@ function loadAppStoreData() {
       $('.app-details-appStore .app-screenshots').addClass('has-error');
     }
   }
+  
 }
 
 function loadEnterpriseData() {
@@ -700,9 +710,15 @@ function saveAppStoreData(request) {
       return;
     }
 
+    /* Manual release */
+    if (name === "fl-store-manualReview") {      
+      data[name] = $('[name="'+name+'"]').is(':checked');
+      return;
+    }
+
     if (name === 'fl-store-distribution') {
       var newValue = $('[name="'+name+'"]:checked').val();
-      if (newValue === 'previous-file') {
+      if (newValue === 'previous-file' && !_.isUndefined(appStorePreviousCredential)) {
         pushData.apnTeamId = appStorePreviousCredential.teamId;
       }
       if (newValue === 'generate-file' || newValue === 'upload-file') {
