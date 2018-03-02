@@ -171,7 +171,7 @@ function loadAppStoreData() {
     }
 
     /* Manual release */
-    if (name === "fl-store-manualReview") {
+    if (name === "fl-store-manualRelease") {
       if (!_.isUndefined(appStoreSubmission.data[name])) {
         $('#' + name).prop('checked', appStoreSubmission.data[name]);  
       }      
@@ -813,7 +813,7 @@ function saveAppStoreData(request) {
     }
 
     /* Manual release */
-    if (name === "fl-store-manualReview") {      
+    if (name === "fl-store-manualRelease") {      
       data[name] = $('[name="'+name+'"]').is(':checked');
       return;
     }
