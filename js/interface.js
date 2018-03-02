@@ -170,6 +170,15 @@ function loadAppStoreData() {
       return;
     }
 
+    /* Manual release */
+    if (name === "fl-store-manualReview") {
+      if (!_.isUndefined(appStoreSubmission.data[name])) {
+        $('#' + name).prop('checked', appStoreSubmission.data[name]);  
+      }      
+
+      return;
+    }
+
     $('[name="' + name + '"]').val((typeof appStoreSubmission.data[name] !== "undefined") ? appStoreSubmission.data[name] : '');
   });
 
@@ -800,6 +809,12 @@ function saveAppStoreData(request) {
     if (name === 'fl-store-screenshots') {
       var newValue = $('[name="'+name+'"]:checked').val();
       data[name] = newValue;
+      return;
+    }
+
+    /* Manual release */
+    if (name === "fl-store-manualReview") {      
+      data[name] = $('[name="'+name+'"]').is(':checked');
       return;
     }
 
