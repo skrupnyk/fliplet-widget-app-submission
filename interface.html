@@ -1,6 +1,6 @@
 <h3>iOS distribution settings</h3>
 <p>Before your app can be distributed, we need some additional information. Select the tab(s) that match how you want to distribute your app and add the data required. Once you submit your information and assets, we will process your request and distribute
-  your app in your prefered ways within 2 business days. Apple may take up to 5 days to review apps.<br><br> For more information about these fields and examples, see <a href="https://developer.apple.com/app-store/product-page/" target="_blank">Apple's official recommendations</a>.</p>
+  your app in your prefered ways within 2 business days. Apple may take up to 5 days to review apps.<br><br><b>We recommend that you read <a href="https://developer.apple.com/app-store/product-page/" target="_blank">Apple's official recommendations</a> before starting</b>.</p>
 <hr>
 <div class="form-horizontal">
   <ul class="nav nav-tabs" role="tablist">
@@ -968,6 +968,25 @@
                     <div class="help-block with-errors"></div>
                   </div>
                 </div>
+                <h3><small>Release Configuration</small></h3>
+                <p class="help-block">How will the app be submitted to review.</p>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-store-subManual">Manual submission</label>
+                    <p class="help-block label-helper">
+                      <small>With this option, Apple will review and approve your app and you'll need to go into iTunnes to manually release the app when you want.</small>
+                    </p>                    
+                  </div>
+                  <div class="col-sm-8">                    
+                    <div class="checkbox checkbox-icon">
+                      <input type="checkbox" id="fl-store-manualReview" name="fl-store-manualReview">
+                      <label for="fl-store-manualReview" class="bolder">
+                        <span class="check"><i class="fa fa-check"></i></span> Yes, i'll release it myself.
+                      </label>
+                    </div>
+                    <div class="help-block with-errors"></div>
+                  </div>
+                </div>
                 <h3><small>Reviewer Notes</small></h3>
                 <p class="help-block">Additional information about your app that can help during the review process. If your app is secured, be sure to provide login details or credentials - the reviewer needs them to test your app.</p>
                 <div class="form-group clearfix">
@@ -1034,7 +1053,7 @@
                   <div class="col-sm-8">
                     <textarea name="fl-store-revNotes" class="form-control" id="fl-store-revNotes" rows="10"></textarea>
                   </div>
-                </div>
+                </div>                
               </div>
             </div>
           </div>
