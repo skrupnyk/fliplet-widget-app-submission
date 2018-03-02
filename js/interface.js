@@ -1010,10 +1010,10 @@ function cloneCredentials(organizationId, credentialKey, submission, saveData) {
   });
 }
 
-function setCredentials(organizationId, id, data) {
+function setCredentials(organizationId, id, data, verify = true) {
   return Fliplet.API.request({
     method: 'PUT',
-    url: 'v1/organizations/' + organizationId + '/credentials/submission-' + id,
+    url: 'v1/organizations/' + organizationId + '/credentials/submission-' + id + '?verify=' + verify,
     data: data
   })
   .then(() => {
@@ -1661,9 +1661,10 @@ $('.login-appStore-button').on('click', function() {
 
 $('.log-out-appStore').on('click', function() {
   setCredentials(organizationID, appStoreSubmission.id, {  
-    email: '',
-    password: ''
-  }).then(function () {
+    email: null,
+    password: null,
+    teamId: null
+  }, false).then(function () {
     appStoreLoggedIn = false;
     $('#fl-store-appDevPass').prop('required', true);
     $('.appStore-logged-email').html('');
@@ -1866,9 +1867,10 @@ $('.login-enterprise-button').on('click', function() {
 
 $('.log-out-enterprise').on('click', function() {  
   setCredentials(organizationID, enterpriseSubmission.id, {  
-    email: '',
-    password: ''
-  }).then(function () {
+    email: null,
+    password: null,
+    teamId: null
+  }, false).then(function () {
     enterpriseLoggedIn = false;
     $('#fl-ent-appDevPass').prop('required', true);
     $('.enterprise-logged-email').html('');
