@@ -231,13 +231,10 @@ function loadAppStoreData() {
 }
 
 function appStoreTeamSetup(devEmail, loginButton) {
-  return getTeams(organizationID, appStoreSubmission.id)
-    .then(function(teams) {
-      var appStoreTeams = _.filter(teams, function(team) {
-        return team.type === "Company/Organization";
-      })
-      appStoreTeams.forEach(function(team, i) {
-        $('.appStore-team').append('<option value="' + team.teamId + '" data-team-name="' + team.name + '">'+ team.name +' - ' + team.teamId + '</option>');
+  return getTeams(organizationID, appStoreSubmission.id, true)
+    .then(function(teams) {      
+      teams.forEach(function(team, i) {
+        $('.appStore-team').append('<option value="' + team.team_id + '" data-team-name="' + team.team_name + '">'+ team.team_name +' - ' + team.team_id + '</option>');
       });
       
       $('#fl-store-appDevLogin').removeClass('disabled');
@@ -350,7 +347,7 @@ function loadEnterpriseData() {
 }
 
 function enterpriseTeamSetup(devEmail, loginButton) {
-  return getTeams(organizationID, enterpriseSubmission.id)
+  return getTeams(organizationID, enterpriseSubmission.id, false)
     .then(function(teams) {
       var enterpriseTeams = _.filter(teams, function(team) {
         return team.type === "In-House";
@@ -1036,10 +1033,10 @@ function setCredentials(organizationId, id, data, verify = true) {
   })
 }
 
-function getTeams(organizationId, id) {
+function getTeams(organizationId, id, isItunes) {
   return Fliplet.API.request({
     method: 'GET',
-    url: 'v1/organizations/' + organizationId + '/credentials/submission-' + id + '/teams?itunes=false'
+    url: 'v1/organizations/' + organizationId + '/credentials/submission-' + id + '/teams?itunes=' + isItunes
   })
   .then(function(result) {
     return Promise.resolve(result.teams);
