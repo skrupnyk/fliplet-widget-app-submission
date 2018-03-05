@@ -232,9 +232,24 @@ function loadAppStoreData() {
 
 function appStoreTeamSetup(devEmail, loginButton) {
   return getTeams(organizationID, appStoreSubmission.id, true)
-    .then(function(teams) {      
-      teams.forEach(function(team, i) {
-        $('.appStore-team').append('<option value="' + team.team_id + '" data-team-name="' + team.team_name + '">'+ team.team_name +' - ' + team.team_id + '</option>');
+    .then(function(itunesTeams) {
+      var allPromises = [];
+      var portalTeamsPromise = getTeams(organizationID, appStoreSubmission.id, false);
+      allPromises.push(portalTeamsPromise);
+      allPromises.push(Promise.resolve(itunesTeams));
+
+      return Promise.all(allPromises);
+    })
+    .then(function(teams) {
+      var appStoreTeams = _.filter(teams[0], function(team) {
+        var itunesTeam = _.find(teams[1], function(itcTeam) {
+          return itcTeam.team_name === team.name;
+        });
+
+        return team.type === "Company/Organization" && !_.isUndefined(itunesTeam);
+      })
+      appStoreTeams.forEach(function(team, i) {
+        $('.appStore-team').append('<option value="' + team.teamId + '" data-team-name="' + team.name + '">'+ team.name +' - ' + team.teamId + '</option>');
       });
       
       $('#fl-store-appDevLogin').removeClass('disabled');
