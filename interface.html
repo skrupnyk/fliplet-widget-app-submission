@@ -1618,12 +1618,15 @@
           \{{/if}}
           \{{#if failed}}
           <td class="app-build-progress danger">
-            <div class="app-build-progress-holder"><i class="fa fa-exclamation-circle"></i> Failed</div>
-            <div class="retry-build"><a href="#" data-retry-id="\{{id}}"><i class="fa fa-repeat"></i> Try again</a></div>
+            <div class="app-build-progress-holder"><i class="fa fa-exclamation-circle"></i> Failed</div>            
           </td>
           <td class="app-build-details">
             \{{#if updatedAt}}<span><span class="icon"><i class="fa fa-flag-checkered"></i> Finished on:</span> \{{updatedAt}}</span>\{{/if}}
-            <div class="app-build-name">There was an error building your app</div>
+            \{{#if message}}               
+              <div class="app-build-name">\{{message}}</div>
+            \{{else}}
+              <div class="app-build-name">There was an error building your app</div>
+            \{{/if}}            
           </td>
           \{{/if}} \{{#if cancelled}}
           <td class="app-build-progress warning">
