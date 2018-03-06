@@ -2245,6 +2245,10 @@ function checkSubmissionStatus(origin, iosSubmissions) {
       build[submission.status] = true;
       build.fileUrl = appBuild ? appBuild.url : '';
 
+      if (submission.result.message) {
+        build.message = submission.result.message;
+      }
+
       if (userInfo.user && (userInfo.user.isAdmin || userInfo.user.isImpersonating)) {
         build.debugFileUrl = debugHtmlPage ? debugHtmlPage.url : '';
       }
