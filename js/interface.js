@@ -170,6 +170,15 @@ function loadAppStoreData() {
       return;
     }
 
+    /* Manual release */
+    if (name === "fl-store-manualRelease") {
+      if (!_.isUndefined(appStoreSubmission.data[name])) {
+        $('#' + name).prop('checked', appStoreSubmission.data[name]);  
+      }      
+
+      return;
+    }
+
     $('[name="' + name + '"]').val((typeof appStoreSubmission.data[name] !== "undefined") ? appStoreSubmission.data[name] : '');
   });
 
@@ -202,10 +211,71 @@ function loadAppStoreData() {
       $('.app-details-appStore .app-screenshots').addClass('has-error');
     }
   }
+
+  //try to automaticaly login
+  var $loginButton = $('.login-appStore-button');
+  $loginButton.html('Logging in');
+  $loginButton.addClass('disabled');
+  $('#fl-store-appDevPass').addClass('disabled'); 
+  $('#fl-store-appDevLogin').addClass('disabled');
+  getCredential(organizationID, appStoreSubmission.data['fl-credentials']).then(function (credential) {      
+    return appStoreTeamSetup(credential.email, $loginButton);
+  }).catch(function (error) {
+    //we don't need to handle errors for automatic login
+    $loginButton.html('Log in');
+    $('#fl-store-appDevLogin').removeClass('disabled');
+    $('#fl-store-appDevPass').removeClass('disabled'); 
+    $loginButton.removeClass('disabled');
+    Fliplet.Widget.autosize();
+  });
+}
+
+function appStoreTeamSetup(devEmail, loginButton) {
+  return getTeams(organizationID, appStoreSubmission.id, true)
+    .then(function(itunesTeams) {
+      var allPromises = [];
+      var portalTeamsPromise = getTeams(organizationID, appStoreSubmission.id, false);
+      allPromises.push(portalTeamsPromise);
+      allPromises.push(Promise.resolve(itunesTeams));
+
+      return Promise.all(allPromises);
+    })
+    .then(function(teams) {
+      var appStoreTeams = _.filter(teams[0], function(team) {
+        var itunesTeam = _.find(teams[1], function(itcTeam) {
+          return itcTeam.team_name === team.name;
+        });
+
+        return team.type === "Company/Organization" && !_.isUndefined(itunesTeam);
+      })
+      appStoreTeams.forEach(function(team, i) {
+        $('.appStore-team').append('<option value="' + team.teamId + '" data-team-name="' + team.name + '">'+ team.name +' - ' + team.teamId + '</option>');
+      });
+      
+      $('#fl-store-appDevLogin').removeClass('disabled');
+      $('#fl-store-appDevPass').removeClass('disabled'); 
+      $('#fl-store-appDevLogin').val(devEmail);
+      $('#fl-store-appDevPass').prop('required', false); 
+      loginButton.html('Log in');
+      loginButton.removeClass('disabled');
+      $('.appStore-logged-email').html(devEmail);
+      $('.appStore-login-details').addClass('hidden');
+      $('.appStore-logged-in, .appStore-teams').addClass('show');
+      appStoreLoggedIn = true;
+      var teamId = $('#fl-store-teams').val();
+      var teamName = teamId ? $('#fl-store-teams').find(":selected").data('team-name') : '';
+
+      if(teamId) {
+        $('.appStore-more-options').addClass('show');
+      } else {
+        $('.appStore-more-options').removeClass('show');
+      }
+
+      return refreshAppStoreOptions(devEmail, teamId, teamName);
+    });
 }
 
 function loadEnterpriseData() {
-
   $('#enterpriseConfiguration [name]').each(function(i, el) {
     var name = $(el).attr("name");
 
@@ -272,6 +342,56 @@ function loadEnterpriseData() {
       $('.app-details-ent .app-splash-screen').addClass('has-warning');
     }
   }
+
+   //try to automaticaly login
+  var $loginButton = $('.login-enterprise-button');
+  $loginButton.html('Logging in');
+  $loginButton.addClass('disabled');
+  $('#fl-ent-appDevLogin').addClass('disabled');
+  $('#fl-ent-appDevPass').addClass('disabled');
+  getCredential(organizationID, enterpriseSubmission.data['fl-credentials']).then(function (credential) {   
+    return enterpriseTeamSetup(credential.email, $loginButton);
+  }).catch(function (error) {
+    //we don't need to handle errors for automatic login
+    $loginButton.html('Log in');
+    $loginButton.removeClass('disabled');
+    $('#fl-ent-appDevLogin').removeClass('disabled');
+    $('#fl-ent-appDevPass').removeClass('disabled');
+    Fliplet.Widget.autosize();
+  });
+}
+
+function enterpriseTeamSetup(devEmail, loginButton) {
+  return getTeams(organizationID, enterpriseSubmission.id, false)
+    .then(function(teams) {
+      var enterpriseTeams = _.filter(teams, function(team) {
+        return team.type === "In-House";
+      })
+      enterpriseTeams.forEach(function(team, i) {
+        $('.enterprise-team').append('<option value="' + team.teamId + '" data-team-name="' + team.name + '">'+ team.name +' - ' + team.teamId + '</option>');
+      });
+
+      $('#fl-ent-appDevLogin').removeClass('disabled');
+      $('#fl-ent-appDevPass').removeClass('disabled');
+      $('#fl-ent-appDevLogin').val(devEmail);
+      $('#fl-ent-appDevPass').prop('required', false);
+      loginButton.html('Log in');
+      loginButton.removeClass('disabled');
+      $('.enterprise-logged-email').html(devEmail);
+      $('.enterprise-login-details').addClass('hidden');
+      $('.enterprise-logged-in, .enterprise-more-options, .enterprise-teams').addClass('show');
+      enterpriseLoggedIn = true;
+      var teamId = $('#fl-ent-teams').val();
+      var teamName = teamId ? $('#fl-ent-teams').find(":selected").data('team-name') : '';
+
+      if(teamId) {
+        $('.enterprise-more-options').addClass('show');
+      } else {
+        $('.enterprise-more-options').removeClass('show');
+      }
+
+      return refreshAppEnterpriseOptions(devEmail, teamId, teamName);
+    });
 }
 
 function loadUnsignedData() {
@@ -356,12 +476,10 @@ function submissionBuild(appSubmission, origin) {
       // Auto increments the version number and saves the submission
       var newVersionNumber = incrementVersionNumber(appStoreSubmission.data['fl-store-versionNumber']);
       $('[name="fl-store-versionNumber"]').val(newVersionNumber);
-
-      $('.appStore-login-details').removeClass('hidden');
-      $('.appStore-logged-in, .appStore-more-options, .appStore-teams').removeClass('show');
-      appStoreLoggedIn = false;
-
+    
       saveAppStoreData();
+      $('#fl-store-teams').val('');
+      $('.appStore-more-options').removeClass('show');
     }
     if (origin === "enterprise") {
       enterpriseSubmission = builtSubmission.submission;
@@ -369,11 +487,9 @@ function submissionBuild(appSubmission, origin) {
       var newVersionNumber = incrementVersionNumber(enterpriseSubmission.data['fl-ent-versionNumber']);
       $('[name="fl-ent-versionNumber"]').val(newVersionNumber);
 
-      $('.enterprise-login-details').removeClass('hidden');
-      $('.enterprise-logged-in, .enterprise-more-options, .enterprise-teams').removeClass('show');
-      enterpriseLoggedIn = false;
-
       saveEnterpriseData();
+      $('#fl-ent-teams').val('');
+      $('.enterprise-more-options').removeClass('show');
     }
     if (origin === "unsigned") {
       unsignedSubmission = builtSubmission.submission;
@@ -418,6 +534,7 @@ function save(origin, submission) {
     })
     .then(function() {
       if (submission.status !== 'started') {
+        var previousCredentials = submission.data['fl-credentials'];
         if(submission.data.hasOwnProperty('fl-credentials')){
           delete submission.data['fl-credentials'];
         }
@@ -428,24 +545,31 @@ function save(origin, submission) {
             })
           })
           .then(function(newSubmission) {
-            if (origin === "appStore") {
+            var cloneCredentialsPromise = Promise.resolve();
+
+            if (origin === "appStore") {              
+              newSubmission.data['fl-credentials'] = 'submission-' + newSubmission.id;
               appStoreSubmission = newSubmission;
+              cloneCredentialsPromise = cloneCredentials(organizationID, previousCredentials, appStoreSubmission);
             }
-            if (origin === "enterprise") {
+            if (origin === "enterprise") {              
+              newSubmission.data['fl-credentials'] = 'submission-' + newSubmission.id;
               enterpriseSubmission = newSubmission;
+              cloneCredentialsPromise = cloneCredentials(organizationID, previousCredentials, enterpriseSubmission);
             }
             if (origin === "unsigned") {
               unsignedSubmission = newSubmission;
             }
 
-            Fliplet.App.Submissions.update(newSubmission.id, newSubmission.data).then(function() {
-              $('.save-' + origin + '-progress').addClass('saved');
+            return cloneCredentialsPromise.then(function () {
+              Fliplet.App.Submissions.update(newSubmission.id, newSubmission.data).then(function() {
+                $('.save-' + origin + '-progress').addClass('saved');
 
-              setTimeout(function() {
-                $('.save-' + origin + '-progress').removeClass('saved');
-              }, 4000);
-            });
-
+                setTimeout(function() {
+                  $('.save-' + origin + '-progress').removeClass('saved');
+                }, 4000);
+              });  
+            });            
           });
       }
 
@@ -700,6 +824,12 @@ function saveAppStoreData(request) {
       return;
     }
 
+    /* Manual release */
+    if (name === "fl-store-manualRelease") {      
+      data[name] = $('[name="'+name+'"]').is(':checked');
+      return;
+    }
+
     if (name === 'fl-store-distribution') {
       var newValue = $('[name="'+name+'"]:checked').val();
       if (newValue === 'previous-file') {
@@ -889,10 +1019,28 @@ function savePushData(silentSave) {
   });
 }
 
-function setCredentials(organizationId, id, data) {
+function cloneCredentials(organizationId, credentialKey, submission, saveData) {
+  return Fliplet.API.request({
+    method: 'POST',
+    url: 'v1/organizations/' + organizationId + '/credentials/' + credentialKey + '/clone',
+    data: {
+      key: submission.data['fl-credentials']
+    }
+  }).then(() => {
+    if (saveData) {
+      return Fliplet.App.Submissions.update(submission.id, submission.data);  
+    } 
+
+    return Promise.resolve();    
+  }).catch(() => {
+    //do nothing, a new credential will be created after the user logs in
+  });
+}
+
+function setCredentials(organizationId, id, data, verify = true) {
   return Fliplet.API.request({
     method: 'PUT',
-    url: 'v1/organizations/' + organizationId + '/credentials/submission-' + id,
+    url: 'v1/organizations/' + organizationId + '/credentials/submission-' + id + '?verify=' + verify,
     data: data
   })
   .then(() => {
@@ -900,10 +1048,10 @@ function setCredentials(organizationId, id, data) {
   })
 }
 
-function getTeams(organizationId, id) {
+function getTeams(organizationId, id, isItunes) {
   return Fliplet.API.request({
     method: 'GET',
-    url: 'v1/organizations/' + organizationId + '/credentials/submission-' + id + '/teams?itunes=false'
+    url: 'v1/organizations/' + organizationId + '/credentials/submission-' + id + '/teams?itunes=' + isItunes
   })
   .then(function(result) {
     return Promise.resolve(result.teams);
@@ -949,7 +1097,7 @@ function setAppStorePrevCredentials(credential) {
   Fliplet.Widget.autosize();
 }
 
-function refreshAppStoreOptions(devEmail, devPass, selectedTeamId, selectedTeamName) {
+function refreshAppStoreOptions(devEmail, selectedTeamId, selectedTeamName) {
   if(!selectedTeamId) {
     setAppStorePrevCredentials();
     return;
@@ -964,8 +1112,7 @@ function refreshAppStoreOptions(devEmail, devPass, selectedTeamId, selectedTeamN
       }
 
       return searchCredentials(organizationID, {
-        email: devEmail,
-        password: devPass,
+        email: devEmail,        
         type: 'apple',
         teamId: selectedTeamId
       })
@@ -1031,7 +1178,7 @@ function setAppEnterprisePrevCredential(credential) {
   Fliplet.Widget.autosize();
 }
 
-function refreshAppEnterpriseOptions(devEmail, devPass, selectedTeamId, selectedTeamName) {
+function refreshAppEnterpriseOptions(devEmail, selectedTeamId, selectedTeamName) {
   if(!selectedTeamId) {
     setAppEnterprisePrevCredential();
     return;
@@ -1046,8 +1193,7 @@ function refreshAppEnterpriseOptions(devEmail, devPass, selectedTeamId, selected
       }
 
       return searchCredentials(organizationID, {
-        email: devEmail,
-        password: devPass,
+        email: devEmail,        
         type: 'apple-enterprise',
         teamId: selectedTeamId
       })
@@ -1562,33 +1708,7 @@ $('.login-appStore-button').on('click', function() {
       password: devPass
     })
     .then(function() {
-      return getTeams(organizationID, appStoreSubmission.id)
-        .then(function(teams) {
-          var appStoreTeams = _.filter(teams, function(team) {
-            return team.type === "Company/Organization";
-          })
-          appStoreTeams.forEach(function(team, i) {
-            $('.appStore-team').append('<option value="' + team.teamId + '" data-team-name="' + team.name + '">'+ team.name +' - ' + team.teamId + '</option>');
-          });
-
-          $this.html('Log in');
-          $this.removeClass('disabled');
-          $('.appStore-logged-email').html(devEmail);
-          $('.appStore-login-details').addClass('hidden');
-          $('.appStore-logged-in, .appStore-teams').addClass('show');
-          appStoreLoggedIn = true;
-          var teamId = $('#fl-store-teams').val();
-          var teamName = teamId ? $('#fl-store-teams').find(":selected").data('team-name') : '';
-
-          if(teamId) {
-            $('.appStore-more-options').addClass('show');
-          } else {
-            $('.appStore-more-options').removeClass('show');
-          }
-
-          return refreshAppStoreOptions(devEmail, devPass, teamId, teamName);
-        });
-
+      return appStoreTeamSetup(devEmail, $this);
     })
     .catch(function(error) {
       console.log(error);
@@ -1603,10 +1723,17 @@ $('.login-appStore-button').on('click', function() {
 });
 
 $('.log-out-appStore').on('click', function() {
-  appStoreLoggedIn = false;
-  $('.appStore-logged-email').html('');
-  $('.appStore-login-details').removeClass('hidden');
-  $('.appStore-logged-in, .appStore-more-options, .appStore-teams').removeClass('show');
+  setCredentials(organizationID, appStoreSubmission.id, {  
+    email: null,
+    password: null,
+    teamId: null
+  }, false).then(function () {
+    appStoreLoggedIn = false;
+    $('#fl-store-appDevPass').prop('required', true);
+    $('.appStore-logged-email').html('');
+    $('.appStore-login-details').removeClass('hidden');
+    $('.appStore-logged-in, .appStore-more-options, .appStore-teams').removeClass('show');
+  });  
 });
 
 $('[name="fl-store-distribution"]').on('change', function() {
@@ -1655,10 +1782,8 @@ $('#fl-store-teams').on('change', function() {
     $('.appStore-upload-certificate').addClass('disabled');
   }
 
-  var devEmail = $('#fl-store-appDevLogin').val();
-  var devPass = $('#fl-store-appDevPass').val();
-
-  return refreshAppStoreOptions(devEmail, devPass, value, teamName);
+  var devEmail = $('#fl-store-appDevLogin').val();  
+  return refreshAppStoreOptions(devEmail, value, teamName);
 });
 
 $('.appStore-generate-cert').on('click', function() {
@@ -1790,33 +1915,7 @@ $('.login-enterprise-button').on('click', function() {
     })
     .then(function() {
       $('[name="fl-ent-distribution"][value="generate-file"]').prop('checked', true).trigger('change');
-
-      return getTeams(organizationID, enterpriseSubmission.id)
-        .then(function(teams) {
-          var enterpriseTeams = _.filter(teams, function(team) {
-            return team.type === "In-House";
-          })
-          enterpriseTeams.forEach(function(team, i) {
-            $('.enterprise-team').append('<option value="' + team.teamId + '" data-team-name="' + team.name + '">'+ team.name +' - ' + team.teamId + '</option>');
-          });
-
-          $this.html('Log in');
-          $this.removeClass('disabled');
-          $('.enterprise-logged-email').html(devEmail);
-          $('.enterprise-login-details').addClass('hidden');
-          $('.enterprise-logged-in, .enterprise-more-options, .enterprise-teams').addClass('show');
-          enterpriseLoggedIn = true;
-          var teamId = $('#fl-ent-teams').val();
-          var teamName = teamId ? $('#fl-ent-teams').find(":selected").data('team-name') : '';
-
-          if(teamId) {
-            $('.enterprise-more-options').addClass('show');
-          } else {
-            $('.enterprise-more-options').removeClass('show');
-          }
-
-          return refreshAppEnterpriseOptions(devEmail, devPass, teamId, teamName);
-        });
+      return enterpriseTeamSetup(devEmail, $this);       
     })
     .catch(function(error) {
       if (error.responseJSON) {
@@ -1829,11 +1928,18 @@ $('.login-enterprise-button').on('click', function() {
   }
 });
 
-$('.log-out-enterprise').on('click', function() {
-  enterpriseLoggedIn = false;
-  $('.enterprise-logged-email').html('');
-  $('.enterprise-login-details').removeClass('hidden');
-  $('.enterprise-logged-in, .enterprise-more-options, .enterprise-teams').removeClass('show');
+$('.log-out-enterprise').on('click', function() {  
+  setCredentials(organizationID, enterpriseSubmission.id, {  
+    email: null,
+    password: null,
+    teamId: null
+  }, false).then(function () {
+    enterpriseLoggedIn = false;
+    $('#fl-ent-appDevPass').prop('required', true);
+    $('.enterprise-logged-email').html('');
+    $('.enterprise-login-details').removeClass('hidden');
+    $('.enterprise-logged-in, .enterprise-more-options, .enterprise-teams').removeClass('show');  
+  });  
 });
 
 $('[name="fl-ent-distribution"]').on('change', function() {
@@ -1880,10 +1986,7 @@ $('#fl-ent-teams').on('change', function() {
   }
 
   var devEmail = $('#fl-ent-appDevLogin').val();
-  var devPass = $('#fl-ent-appDevPass').val();
-
-
-  return refreshAppEnterpriseOptions(devEmail, devPass, value, teamName);
+  return refreshAppEnterpriseOptions(devEmail, value, teamName);
 });
 
 $('.enterprise-generate-cert').on('click', function() {
@@ -2155,6 +2258,10 @@ function checkSubmissionStatus(origin, iosSubmissions) {
       build[submission.status] = true;
       build.fileUrl = appBuild ? appBuild.url : '';
 
+      if (submission.result.message) {
+        build.message = submission.result.message;
+      }
+
       if (userInfo.user && (userInfo.user.isAdmin || userInfo.user.isImpersonating)) {
         build.debugFileUrl = debugHtmlPage ? debugHtmlPage.url : '';
       }
@@ -2189,6 +2296,7 @@ function submissionChecker(submissions) {
     appStoreSubmission = {};
   }
   
+  var cloneAppStoreCredentialsPromise = Promise.resolve();  
   if (appStoreSubmission.data && !appStoreSubmission.data['fl-credentials']) {
 
     var prevSubCred = _.filter(asub, function(submission) {
@@ -2199,12 +2307,11 @@ function submissionChecker(submissions) {
       return new Date(el.createdAt).getTime();
     });
 
+    appStoreSubmission.data['fl-credentials'] = 'submission-' + appStoreSubmission.id;    
+
     if(previousSubWithCredentials) {
-      appStoreSubmission.data['fl-credentials'] = previousSubWithCredentials.data['fl-credentials'];
-    }
-    else {
-      appStoreSubmission.data['fl-credentials'] = 'submission-' + appStoreSubmission.id;
-    }
+      cloneAppStoreCredentialsPromise = cloneCredentials(organizationID, previousSubWithCredentials.data['fl-credentials'], appStoreSubmission, true);
+    }   
   }
 
   var esub = _.filter(submissions, function(submission) {
@@ -2221,6 +2328,7 @@ function submissionChecker(submissions) {
     enterpriseSubmission = {};
   }
   
+  var cloneEnterpriseCredentialsPromise = Promise.resolve();  
   if (enterpriseSubmission.data && !enterpriseSubmission.data['fl-credentials']) {
 
     var prevSubCred = _.filter(esub, function(submission) {
@@ -2231,11 +2339,10 @@ function submissionChecker(submissions) {
       return new Date(el.createdAt).getTime();
     });
 
+    enterpriseSubmission.data['fl-credentials'] = 'submission-' + enterpriseSubmission.id;    
+
     if(previousSubWithCredentials) {
-      enterpriseSubmission.data['fl-credentials'] = previousSubWithCredentials.data['fl-credentials'];
-    }
-    else {
-      enterpriseSubmission.data['fl-credentials'] = 'submission-' + enterpriseSubmission.id;
+      cloneEnterpriseCredentialsPromise = cloneCredentials(organizationID, previousSubWithCredentials.data['fl-credentials'], enterpriseSubmission, true);
     }
   }
 
@@ -2250,8 +2357,11 @@ function submissionChecker(submissions) {
   });
   unsignedSubmission = usub;
 
-  if (_.isEmpty(appStoreSubmission)) {
-    Fliplet.App.Submissions.create({
+  return cloneAppStoreCredentialsPromise.then(function () {
+    return cloneEnterpriseCredentialsPromise;
+  }).then(function () {
+    if (_.isEmpty(appStoreSubmission)) {
+      return Fliplet.App.Submissions.create({
         platform: 'ios',
         data: {
           submissionType: "appStore"
@@ -2259,11 +2369,14 @@ function submissionChecker(submissions) {
       })
       .then(function(submission) {
         appStoreSubmission = submission;
+        return Promise.resolve();
       });
-  }
+    }
 
-  if (_.isEmpty(enterpriseSubmission)) {
-    Fliplet.App.Submissions.create({
+    return Promise.resolve();
+  }).then(function () {
+    if (_.isEmpty(enterpriseSubmission)) {
+      return Fliplet.App.Submissions.create({
         platform: 'ios',
         data: {
           submissionType: "enterprise"
@@ -2271,11 +2384,14 @@ function submissionChecker(submissions) {
       })
       .then(function(submission) {
         enterpriseSubmission = submission;
+        return Promise.resolve();
       });
-  }
+    }
 
-  if (_.isEmpty(unsignedSubmission)) {
-    Fliplet.App.Submissions.create({
+    return Promise.resolve();
+  }).then(function () {
+    if (_.isEmpty(unsignedSubmission)) {
+      return Fliplet.App.Submissions.create({
         platform: 'ios',
         data: {
           submissionType: "unsigned"
@@ -2283,8 +2399,12 @@ function submissionChecker(submissions) {
       })
       .then(function(submission) {
         unsignedSubmission = submission;
+        return Promise.resolve();
       });
-  }
+    }
+
+    return Promise.resolve();
+  });
 }
 
 function iosSubmissionChecker(submissions) {
@@ -2360,8 +2480,7 @@ function initialLoad(initial, timeout) {
         })
         .then(function(user) {
           userInfo = user;
-          submissionChecker(submissions);
-          return Promise.resolve();
+          return submissionChecker(submissions);          
         });
       })
       .then(function() {
