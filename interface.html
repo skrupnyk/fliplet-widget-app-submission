@@ -1596,7 +1596,7 @@
           \{{/if}}
           \{{#if ready-for-testing}}
           <td class="app-build-progress info">
-            <div class="app-build-progress-holder"><i class="fa fa-bell"></i> Ready for testing</div>
+            <div class="app-build-progress-holder"><i class="fa fa-bell"></i> \{{testingStatus}}</div>
             \{{#if fileUrl}}
             <div class="download-build"><a href="\{{fileUrl}}"><i class="fa fa-download"></i> Download file</a></div>\{{/if}}
             \{{#if debugFileUrl}}
@@ -1604,7 +1604,7 @@
           </td>
           <td class="app-build-details">
             \{{#if updatedAt}}<span><span class="icon"><i class="fa fa-clock-o"></i> Ready on:</span> \{{updatedAt}}</span>\{{/if}}
-            <div class="app-build-name">App ready for testing</div>
+            <div class="app-build-name">\{{testingMessage}}</div>
           </td>
           \{{/if}}
           \{{#if tested}}

@@ -2199,6 +2199,19 @@ function checkSubmissionStatus(origin, iosSubmissions) {
       var appBuild;
       var debugHtmlPage;
 
+      // Default copy for testing status for different users
+      if (submission.status === 'ready-for-testing') {
+        if (userInfo.user && (userInfo.user.isAdmin || userInfo.user.isImpersonating)) {
+          // Fliplet users
+          build.testingStatus = 'Ready for testing';
+          build.testingMessage = 'App is ready for testing';
+        } else {
+          // Normal users
+          build.testingStatus = 'In testing';
+          build.testingMessage = 'Your app is being tested by Fliplet';
+        }
+      }
+      
       if (submission.result.appBuild && submission.result.appBuild.files) {
         appBuild = _.find(submission.result.appBuild.files, function(file) {
           var dotIndex = file.url.lastIndexOf('.');
