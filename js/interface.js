@@ -11,6 +11,8 @@ var appStoreCertificateCreated = false;
 var appStoreCertificateReplaced = false;
 var enterpriseCertificateCreated = false;
 var enterpriseCertificateReplaced = false;
+var previousAppStoreSubmission = {};
+var previousEnterpriseStoreSubmission = {};
 var appStorePreviousCredential = undefined;
 var appStoreFileField = undefined;
 var appStoreTeamId = undefined;
@@ -84,9 +86,9 @@ function loadAppStoreData() {
     var hasAppId = !_.isUndefined(appStoreSubmission.data['iTunesAppId']);
 
     /* APP NAME */
-    if (name === "fl-store-appName") {      
+    if (name === "fl-store-appName") {
       $('[name="' + name + '"]').val(!_.isUndefined(appStoreSubmission.data[name]) ? appStoreSubmission.data[name] : appName);
-      
+
       if (!_.isUndefined($('[name="' + name + '"]').val()) && hasAppId) {
         $('[name="' + name + '"]').attr('readonly', 'readonly');
       }
@@ -121,7 +123,7 @@ function loadAppStoreData() {
       if (name === "fl-store-language" && !_.isUndefined($('[name="' + name + '"]').val()) && (hasAppId || appStoreSubmissionInStore)) {
         $('.dll-store-language').addClass('hidden');
         $('#fl-store-language').prop('required', false);
-        $('.fl-store-language-placeholder').removeClass('hidden');        
+        $('.fl-store-language-placeholder').removeClass('hidden');
       }
       return;
     }
@@ -173,8 +175,8 @@ function loadAppStoreData() {
     /* Manual release */
     if (name === "fl-store-manualRelease") {
       if (!_.isUndefined(appStoreSubmission.data[name])) {
-        $('#' + name).prop('checked', appStoreSubmission.data[name]);  
-      }      
+        $('#' + name).prop('checked', appStoreSubmission.data[name]);
+      }
 
       return;
     }
@@ -216,15 +218,15 @@ function loadAppStoreData() {
   var $loginButton = $('.login-appStore-button');
   $loginButton.html('Logging in');
   $loginButton.addClass('disabled');
-  $('#fl-store-appDevPass').addClass('disabled'); 
+  $('#fl-store-appDevPass').addClass('disabled');
   $('#fl-store-appDevLogin').addClass('disabled');
-  getCredential(organizationID, appStoreSubmission.data['fl-credentials']).then(function (credential) {      
+  getCredential(organizationID, appStoreSubmission.data['fl-credentials']).then(function (credential) {
     return appStoreTeamSetup(credential.email, $loginButton);
   }).catch(function (error) {
     //we don't need to handle errors for automatic login
     $loginButton.html('Log in');
     $('#fl-store-appDevLogin').removeClass('disabled');
-    $('#fl-store-appDevPass').removeClass('disabled'); 
+    $('#fl-store-appDevPass').removeClass('disabled');
     $loginButton.removeClass('disabled');
     Fliplet.Widget.autosize();
   });
@@ -251,11 +253,11 @@ function appStoreTeamSetup(devEmail, loginButton) {
       appStoreTeams.forEach(function(team, i) {
         $('.appStore-team').append('<option value="' + team.teamId + '" data-team-name="' + team.name + '">'+ team.name +' - ' + team.teamId + '</option>');
       });
-      
+
       $('#fl-store-appDevLogin').removeClass('disabled');
-      $('#fl-store-appDevPass').removeClass('disabled'); 
+      $('#fl-store-appDevPass').removeClass('disabled');
       $('#fl-store-appDevLogin').val(devEmail);
-      $('#fl-store-appDevPass').prop('required', false); 
+      $('#fl-store-appDevPass').prop('required', false);
       loginButton.html('Log in');
       loginButton.removeClass('disabled');
       $('.appStore-logged-email').html(devEmail);
@@ -349,7 +351,7 @@ function loadEnterpriseData() {
   $loginButton.addClass('disabled');
   $('#fl-ent-appDevLogin').addClass('disabled');
   $('#fl-ent-appDevPass').addClass('disabled');
-  getCredential(organizationID, enterpriseSubmission.data['fl-credentials']).then(function (credential) {   
+  getCredential(organizationID, enterpriseSubmission.data['fl-credentials']).then(function (credential) {
     return enterpriseTeamSetup(credential.email, $loginButton);
   }).catch(function (error) {
     //we don't need to handle errors for automatic login
@@ -476,7 +478,7 @@ function submissionBuild(appSubmission, origin) {
       // Auto increments the version number and saves the submission
       var newVersionNumber = incrementVersionNumber(appStoreSubmission.data['fl-store-versionNumber']);
       $('[name="fl-store-versionNumber"]').val(newVersionNumber);
-    
+
       saveAppStoreData();
       $('#fl-store-teams').val('');
       $('.appStore-more-options').removeClass('show');
@@ -547,12 +549,12 @@ function save(origin, submission) {
           .then(function(newSubmission) {
             var cloneCredentialsPromise = Promise.resolve();
 
-            if (origin === "appStore") {              
+            if (origin === "appStore") {
               newSubmission.data['fl-credentials'] = 'submission-' + newSubmission.id;
               appStoreSubmission = newSubmission;
               cloneCredentialsPromise = cloneCredentials(organizationID, previousCredentials, appStoreSubmission);
             }
-            if (origin === "enterprise") {              
+            if (origin === "enterprise") {
               newSubmission.data['fl-credentials'] = 'submission-' + newSubmission.id;
               enterpriseSubmission = newSubmission;
               cloneCredentialsPromise = cloneCredentials(organizationID, previousCredentials, enterpriseSubmission);
@@ -568,8 +570,8 @@ function save(origin, submission) {
                 setTimeout(function() {
                   $('.save-' + origin + '-progress').removeClass('saved');
                 }, 4000);
-              });  
-            });            
+              });
+            });
           });
       }
 
@@ -825,7 +827,7 @@ function saveAppStoreData(request) {
     }
 
     /* Manual release */
-    if (name === "fl-store-manualRelease") {      
+    if (name === "fl-store-manualRelease") {
       data[name] = $('[name="'+name+'"]').is(':checked');
       return;
     }
@@ -1028,10 +1030,10 @@ function cloneCredentials(organizationId, credentialKey, submission, saveData) {
     }
   }).then(() => {
     if (saveData) {
-      return Fliplet.App.Submissions.update(submission.id, submission.data);  
-    } 
+      return Fliplet.App.Submissions.update(submission.id, submission.data);
+    }
 
-    return Promise.resolve();    
+    return Promise.resolve();
   }).catch(() => {
     //do nothing, a new credential will be created after the user logs in
   });
@@ -1112,7 +1114,7 @@ function refreshAppStoreOptions(devEmail, selectedTeamId, selectedTeamName) {
       }
 
       return searchCredentials(organizationID, {
-        email: devEmail,        
+        email: devEmail,
         type: 'apple',
         teamId: selectedTeamId
       })
@@ -1142,16 +1144,21 @@ function refreshAppStoreOptions(devEmail, selectedTeamId, selectedTeamName) {
       if(credential) {
         return credential;
       }
+      var previousResults = appStoreSubmission.data.previousResults;
+      //make sure that previous results are obtained from latest completed submission.
+      if (!_.isUndefined(previousAppStoreSubmission)) {
+        previousResults = previousAppStoreSubmission.result;
+      }
 
       //if we dont have any credentials we need to check previous result for a credential object
-      if(!_.isUndefined(appStoreSubmission.data.previousResults) && (!_.isUndefined(appStoreSubmission.data.previousResults.p12) || !_.isUndefined(appStoreSubmission.data.previousResults.certificate)) && appStoreSubmission.data['fl-store-teamId'] === selectedTeamId) {
+      if(!_.isUndefined(previousResults) && (!_.isUndefined(previousResults.p12) || !_.isUndefined(previousResults.certificate)) && appStoreSubmission.data['fl-store-teamId'] === selectedTeamId) {
         return {
           teamId: selectedTeamId,
           teamName: selectedTeamName,
-          certSigningRequest: appStoreSubmission.data.previousResults.certSigningRequest,
-          p12: appStoreSubmission.data.previousResults.p12.files[0],
-          certificate: appStoreSubmission.data.previousResults.certificate.files[0],
-          content: appStoreSubmission.data.previousResults.content
+          certSigningRequest: previousResults.certSigningRequest,
+          p12: previousResults.p12.files[0],
+          certificate: previousResults.certificate.files[0],
+          content: previousResults.content
         };
       }
 
@@ -1193,7 +1200,7 @@ function refreshAppEnterpriseOptions(devEmail, selectedTeamId, selectedTeamName)
       }
 
       return searchCredentials(organizationID, {
-        email: devEmail,        
+        email: devEmail,
         type: 'apple-enterprise',
         teamId: selectedTeamId
       })
@@ -1223,16 +1230,20 @@ function refreshAppEnterpriseOptions(devEmail, selectedTeamId, selectedTeamName)
       if(credential) {
         return credential;
       }
-
+      var previousResults = enterpriseSubmission.data.previousResults;
+      //make sure that previous results are obtained from latest completed submission.
+      if (!_.isUndefined(previousEnterpriseStoreSubmission)) {
+        previousResults = previousEnterpriseStoreSubmission.result;
+      }
       //if we dont have any credentials we need to check previous result for a credential object
-      if(!_.isUndefined(enterpriseSubmission.data.previousResults) && (!_.isUndefined(enterpriseSubmission.data.previousResults.p12) || !_.isUndefined(enterpriseSubmission.data.previousResults.certificate)) && enterpriseSubmission.data['fl-ent-teamId'] === selectedTeamId) {
+      if(!_.isUndefined(previousResults) && (!_.isUndefined(previousResults.p12) || !_.isUndefined(previousResults.certificate)) && enterpriseSubmission.data['fl-ent-teamId'] === selectedTeamId) {
         return {
           teamId: selectedTeamId,
           teamName: selectedTeamName,
-          certSigningRequest: enterpriseSubmission.data.previousResults.certSigningRequest,
-          p12: enterpriseSubmission.data.previousResults.p12.files[0],
-          certificate: enterpriseSubmission.data.previousResults.certificate.files[0],
-          content: enterpriseSubmission.data.previousResults.content
+          certSigningRequest: previousResults.certSigningRequest,
+          p12: previousResults.p12.files[0],
+          certificate: previousResults.certificate.files[0],
+          content: previousResults.content
         };
       }
 
@@ -1363,14 +1374,14 @@ function checkGroupErrors() {
   });
 }
 
-function validateScreenshots() {  
+function validateScreenshots() {
   var imageErrors = [];
   var supportedFormats = [[1242,2208], [2048,2732], [2732,2048]];
   var allScreenShots = _.concat(screenShotsMobile, screenShotsTablet);
 
   _.forEach(allScreenShots, function(screenshot, key) {
     var supportedSize = _.find(supportedFormats, function(format) {
-      return format[0] === screenshot.size[0] && format[1] === screenshot.size[1]; 
+      return format[0] === screenshot.size[0] && format[1] === screenshot.size[1];
     });
 
     if (!screenshot.appId && !supportedSize) {
@@ -1380,8 +1391,8 @@ function validateScreenshots() {
 
   if (imageErrors.length > 0) {
     imageErrors.unshift('The following screenshots have an invalid size:');
-    imageErrors.push('Supported screenshot sizes are:');    
-    imageErrors.push('1242 x 2208 | 2048 x 2732 | 2732 x 2048');       
+    imageErrors.push('Supported screenshot sizes are:');
+    imageErrors.push('1242 x 2208 | 2048 x 2732 | 2732 x 2048');
     var errorMessage = _.join(imageErrors, '\n\r');
     alert(errorMessage);
     return false;
@@ -1530,7 +1541,7 @@ $('#appStoreConfiguration').validator().on('submit', function(event) {
 
   if (appInfo && appInfo.productionAppId) {
     if (allAppData.indexOf('appStore') > -1) {
-      if (appStoreLoggedIn) {    
+      if (appStoreLoggedIn) {
         var certificateKind = $('[name="fl-store-distribution"]:checked').val();
 
         if (certificateKind === 'generate-file' && !appStoreCertificateCreated) {
@@ -1582,7 +1593,7 @@ $('#enterpriseConfiguration').validator().on('submit', function(event) {
     alert('Please log in with the Apple Developer Account or choose to enter the data manually.');
     return;
   }
-  
+
   var credentialKind = $('[name="fl-ent-distribution"]:checked').val();
 
   if (credentialKind === 'generate-file' && !enterpriseCertificateCreated) {
@@ -1723,7 +1734,7 @@ $('.login-appStore-button').on('click', function() {
 });
 
 $('.log-out-appStore').on('click', function() {
-  setCredentials(organizationID, appStoreSubmission.id, {  
+  setCredentials(organizationID, appStoreSubmission.id, {
     email: null,
     password: null,
     teamId: null
@@ -1733,7 +1744,7 @@ $('.log-out-appStore').on('click', function() {
     $('.appStore-logged-email').html('');
     $('.appStore-login-details').removeClass('hidden');
     $('.appStore-logged-in, .appStore-more-options, .appStore-teams').removeClass('show');
-  });  
+  });
 });
 
 $('[name="fl-store-distribution"]').on('change', function() {
@@ -1782,7 +1793,7 @@ $('#fl-store-teams').on('change', function() {
     $('.appStore-upload-certificate').addClass('disabled');
   }
 
-  var devEmail = $('#fl-store-appDevLogin').val();  
+  var devEmail = $('#fl-store-appDevLogin').val();
   return refreshAppStoreOptions(devEmail, value, teamName);
 });
 
@@ -1915,7 +1926,7 @@ $('.login-enterprise-button').on('click', function() {
     })
     .then(function() {
       $('[name="fl-ent-distribution"][value="generate-file"]').prop('checked', true).trigger('change');
-      return enterpriseTeamSetup(devEmail, $this);       
+      return enterpriseTeamSetup(devEmail, $this);
     })
     .catch(function(error) {
       if (error.responseJSON) {
@@ -1928,8 +1939,8 @@ $('.login-enterprise-button').on('click', function() {
   }
 });
 
-$('.log-out-enterprise').on('click', function() {  
-  setCredentials(organizationID, enterpriseSubmission.id, {  
+$('.log-out-enterprise').on('click', function() {
+  setCredentials(organizationID, enterpriseSubmission.id, {
     email: null,
     password: null,
     teamId: null
@@ -1938,8 +1949,8 @@ $('.log-out-enterprise').on('click', function() {
     $('#fl-ent-appDevPass').prop('required', true);
     $('.enterprise-logged-email').html('');
     $('.enterprise-login-details').removeClass('hidden');
-    $('.enterprise-logged-in, .enterprise-more-options, .enterprise-teams').removeClass('show');  
-  });  
+    $('.enterprise-logged-in, .enterprise-more-options, .enterprise-teams').removeClass('show');
+  });
 });
 
 $('[name="fl-ent-distribution"]').on('change', function() {
@@ -2002,7 +2013,7 @@ $('.enterprise-generate-cert').on('click', function() {
       teamId: teamId,
       teamName: teamName
     })
-    .then(function() {      
+    .then(function() {
       return createCertificates(organizationID, enterpriseSubmission.id)
         .then(function(response) {
           enterpriseCertificateCreated = true;
@@ -2138,7 +2149,7 @@ $(document).on('click', '[data-cancel-build-id]', function() {
 
 $('.browse-files').on('click', function(e) {
   e.preventDefault();
-  
+
   Fliplet.Studio.emit('overlay', {
     name: 'widget',
     options: {
@@ -2211,7 +2222,7 @@ function checkSubmissionStatus(origin, iosSubmissions) {
           build.testingMessage = 'Your app is being tested by Fliplet';
         }
       }
-      
+
       if (submission.result.appBuild && submission.result.appBuild.files) {
         appBuild = _.find(submission.result.appBuild.files, function(file) {
           var dotIndex = file.url.lastIndexOf('.');
@@ -2276,12 +2287,19 @@ function checkSubmissionStatus(origin, iosSubmissions) {
 }
 
 function submissionChecker(submissions) {
+  debugger;
+
   var asub = _.filter(submissions, function(submission) {
     return submission.data.submissionType === "appStore" && submission.platform === "ios";
   });
 
   var completedAsub = _.filter(asub, function(submission) {
-    return submission.data.status === "completed";
+    return submission.status === "completed";
+  });
+
+  //Get the Submission data from the first completed submission, it has the certification values that are in use on the app store.
+  previousAppStoreSubmission = _.minBy(completedAsub, function(el) {
+    return el.id;
   });
 
   appStoreSubmissionInStore = (completedAsub.length > 0);
@@ -2295,8 +2313,8 @@ function submissionChecker(submissions) {
   if (!appStoreSubmission) {
     appStoreSubmission = {};
   }
-  
-  var cloneAppStoreCredentialsPromise = Promise.resolve();  
+
+  var cloneAppStoreCredentialsPromise = Promise.resolve();
   if (appStoreSubmission.data && !appStoreSubmission.data['fl-credentials']) {
 
     var prevSubCred = _.filter(asub, function(submission) {
@@ -2307,15 +2325,23 @@ function submissionChecker(submissions) {
       return new Date(el.createdAt).getTime();
     });
 
-    appStoreSubmission.data['fl-credentials'] = 'submission-' + appStoreSubmission.id;    
+    appStoreSubmission.data['fl-credentials'] = 'submission-' + appStoreSubmission.id;
 
     if(previousSubWithCredentials) {
       cloneAppStoreCredentialsPromise = cloneCredentials(organizationID, previousSubWithCredentials.data['fl-credentials'], appStoreSubmission, true);
-    }   
+    }
   }
 
   var esub = _.filter(submissions, function(submission) {
     return submission.data.submissionType === "enterprise" && submission.platform === "ios";
+  });
+
+  var completedEsub = _.filter(esub, function(submission) {
+    return submission.status === "completed";
+  });
+  //Get the Submission data from the first completed submission, it has certification values that are in use on the developer portal.
+  previousEnterpriseStoreSubmission = _.minBy(completedEsub, function(el) {
+    return el.id;
   });
 
   checkSubmissionStatus("enterprise", esub);
@@ -2327,8 +2353,8 @@ function submissionChecker(submissions) {
   if (!enterpriseSubmission) {
     enterpriseSubmission = {};
   }
-  
-  var cloneEnterpriseCredentialsPromise = Promise.resolve();  
+
+  var cloneEnterpriseCredentialsPromise = Promise.resolve();
   if (enterpriseSubmission.data && !enterpriseSubmission.data['fl-credentials']) {
 
     var prevSubCred = _.filter(esub, function(submission) {
@@ -2339,7 +2365,7 @@ function submissionChecker(submissions) {
       return new Date(el.createdAt).getTime();
     });
 
-    enterpriseSubmission.data['fl-credentials'] = 'submission-' + enterpriseSubmission.id;    
+    enterpriseSubmission.data['fl-credentials'] = 'submission-' + enterpriseSubmission.id;
 
     if(previousSubWithCredentials) {
       cloneEnterpriseCredentialsPromise = cloneCredentials(organizationID, previousSubWithCredentials.data['fl-credentials'], enterpriseSubmission, true);
@@ -2480,7 +2506,7 @@ function initialLoad(initial, timeout) {
         })
         .then(function(user) {
           userInfo = user;
-          return submissionChecker(submissions);          
+          return submissionChecker(submissions);
         });
       })
       .then(function() {
