@@ -2287,8 +2287,6 @@ function checkSubmissionStatus(origin, iosSubmissions) {
 }
 
 function submissionChecker(submissions) {
-  debugger;
-
   var asub = _.filter(submissions, function(submission) {
     return submission.data.submissionType === "appStore" && submission.platform === "ios";
   });
