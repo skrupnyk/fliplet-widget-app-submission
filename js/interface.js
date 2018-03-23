@@ -1530,7 +1530,7 @@ $('#appStoreConfiguration').validator().on('submit', function(event) {
 
   event.preventDefault();
 
-  if (!haveScreenshots) {
+  if ($('[name="fl-store-screenshots"]:checked').val() === 'new' && !haveScreenshots) {
     alert('You need to add screenshots before submitting');
     return;
   }
