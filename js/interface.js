@@ -215,21 +215,32 @@ function loadAppStoreData() {
   }
 
   //try to automaticaly login
-  var $loginButton = $('.login-appStore-button');
-  $loginButton.html('Logging in');
-  $loginButton.addClass('disabled');
-  $('#fl-store-appDevPass').addClass('disabled');
-  $('#fl-store-appDevLogin').addClass('disabled');
-  getCredential(organizationID, appStoreSubmission.data['fl-credentials']).then(function (credential) {
-    return appStoreTeamSetup(credential.email, $loginButton);
-  }).catch(function (error) {
-    //we don't need to handle errors for automatic login
-    $loginButton.html('Log in');
-    $('#fl-store-appDevLogin').removeClass('disabled');
-    $('#fl-store-appDevPass').removeClass('disabled');
-    $loginButton.removeClass('disabled');
-    Fliplet.Widget.autosize();
-  });
+  if (appStoreSubmission.data && appStoreSubmission.data['fl-credentials']) {
+    var $loginButton = $('.login-appStore-button');
+    $loginButton.html('Logging in');
+    $loginButton.addClass('disabled');
+    $('#fl-store-appDevPass').addClass('disabled');
+    $('#fl-store-appDevLogin').addClass('disabled');
+    getCredential(organizationID, appStoreSubmission.data['fl-credentials']).then(function (credential) {
+      if (!credential.email || credential.email === null || typeof credential.email === 'undefined') {
+        $loginButton.html('Log in');
+        $('#fl-store-appDevLogin').removeClass('disabled');
+        $('#fl-store-appDevPass').removeClass('disabled');
+        $loginButton.removeClass('disabled');
+        Fliplet.Widget.autosize();
+        return;
+      }
+
+      return appStoreTeamSetup(credential.email, $loginButton);
+    }).catch(function (error) {
+      //we don't need to handle errors for automatic login
+      $loginButton.html('Log in');
+      $('#fl-store-appDevLogin').removeClass('disabled');
+      $('#fl-store-appDevPass').removeClass('disabled');
+      $loginButton.removeClass('disabled');
+      Fliplet.Widget.autosize();
+    });
+  }
 }
 
 function appStoreTeamSetup(devEmail, loginButton) {
@@ -345,22 +356,33 @@ function loadEnterpriseData() {
     }
   }
 
-   //try to automaticaly login
-  var $loginButton = $('.login-enterprise-button');
-  $loginButton.html('Logging in');
-  $loginButton.addClass('disabled');
-  $('#fl-ent-appDevLogin').addClass('disabled');
-  $('#fl-ent-appDevPass').addClass('disabled');
-  getCredential(organizationID, enterpriseSubmission.data['fl-credentials']).then(function (credential) {
-    return enterpriseTeamSetup(credential.email, $loginButton);
-  }).catch(function (error) {
-    //we don't need to handle errors for automatic login
-    $loginButton.html('Log in');
-    $loginButton.removeClass('disabled');
-    $('#fl-ent-appDevLogin').removeClass('disabled');
-    $('#fl-ent-appDevPass').removeClass('disabled');
-    Fliplet.Widget.autosize();
-  });
+  //try to automaticaly login
+  if (enterpriseSubmission.data && enterpriseSubmission.data['fl-credentials']) {
+    var $loginButton = $('.login-enterprise-button');
+    $loginButton.html('Logging in');
+    $loginButton.addClass('disabled');
+    $('#fl-ent-appDevLogin').addClass('disabled');
+    $('#fl-ent-appDevPass').addClass('disabled');
+    getCredential(organizationID, enterpriseSubmission.data['fl-credentials']).then(function (credential) {
+      if (!credential.email || credential.email === null || typeof credential.email === 'undefined') {
+        $loginButton.html('Log in');
+        $('#fl-ent-appDevLogin').removeClass('disabled');
+        $('#fl-ent-appDevPass').removeClass('disabled');
+        $loginButton.removeClass('disabled');
+        Fliplet.Widget.autosize();
+        return;
+      }
+
+      return enterpriseTeamSetup(credential.email, $loginButton);
+    }).catch(function (error) {
+      //we don't need to handle errors for automatic login
+      $loginButton.html('Log in');
+      $loginButton.removeClass('disabled');
+      $('#fl-ent-appDevLogin').removeClass('disabled');
+      $('#fl-ent-appDevPass').removeClass('disabled');
+      Fliplet.Widget.autosize();
+    });
+  }
 }
 
 function enterpriseTeamSetup(devEmail, loginButton) {
