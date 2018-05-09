@@ -215,7 +215,7 @@ function loadAppStoreData() {
   }
 
   //try to automaticaly login
-  if (appStoreSubmission.data && appStoreSubmission.data['fl-credentials'] && appStoreSubmission.data['fl-credentials'] !== '') {
+  if (appStoreSubmission.data && appStoreSubmission.data['fl-credentials']) {
     var $loginButton = $('.login-appStore-button');
     $loginButton.html('Logging in');
     $loginButton.addClass('disabled');
@@ -357,7 +357,7 @@ function loadEnterpriseData() {
   }
 
   //try to automaticaly login
-  if (enterpriseSubmission.data && enterpriseSubmission.data['fl-credentials'] && enterpriseSubmission.data['fl-credentials'] !== '') {
+  if (enterpriseSubmission.data && enterpriseSubmission.data['fl-credentials']) {
     var $loginButton = $('.login-enterprise-button');
     $loginButton.html('Logging in');
     $loginButton.addClass('disabled');
