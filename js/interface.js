@@ -181,6 +181,16 @@ function loadAppStoreData() {
       return;
     }
 
+    /* Review notes */
+    if (name === "fl-store-revNotes") {
+      // avoid resetting to empty string since this field has a default value
+      if (appStoreSubmission.data[name]) {
+        $('[name="' + name + '"]').val(appStoreSubmission.data[name]);
+      }
+
+      return;
+    }
+
     $('[name="' + name + '"]').val((typeof appStoreSubmission.data[name] !== "undefined") ? appStoreSubmission.data[name] : '');
   });
 
