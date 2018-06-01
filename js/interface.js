@@ -87,7 +87,14 @@ function loadAppStoreData() {
 
     /* APP NAME */
     if (name === "fl-store-appName") {
-      $('[name="' + name + '"]').val(!_.isUndefined(appStoreSubmission.data[name]) ? appStoreSubmission.data[name] : appName);
+      var storeAppName = !_.isUndefined(appStoreSubmission.data[name])
+        ? appStoreSubmission.data[name]
+        : appName;
+      var maxLength = parseInt($('[name="' + name + '"]').attr('maxlength'), 10) || -1;
+      if (maxLength > -1) {
+        storeAppName = storeAppName.substr(0, maxLength);
+      }
+      $('[name="' + name + '"]').val(storeAppName);
 
       if (!_.isUndefined($('[name="' + name + '"]').val()) && hasAppId) {
         $('[name="' + name + '"]').attr('readonly', 'readonly');
