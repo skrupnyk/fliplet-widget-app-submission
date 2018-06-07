@@ -35,7 +35,7 @@
         <!-- App Status Area -->
       </div>
       <p class="text-info">Complete this section to submit your app to the <a href="https://www.apple.com/ios/app-store/" target="_blank">Apple App Store</a>.</p>
-      <form data-disable="false" role="form" id="appStoreConfiguration">
+      <form data-disable="false" role="form" id="appStoreConfiguration" autocomplete="off">
         <div class="panel-group" id="accordionAppStore" role="tablist" aria-multiselectable="true">
           <div class="panel panel-default app-details-appStore">
             <div class="panel-heading" role="tab" id="appStoreSettingsHeading">
@@ -680,7 +680,7 @@
                             <label class="input-group-btn">
                               <span class="btn btn-default">Browse&hellip; <input id="fl-store-certificate" class="hidden" type="file" accept="application/keychain_access, application/x-pkcs12"></span>
                             </label>
-                            <input type="text" class="form-control" id="fl-store-certificate-label" placeholder="Click &ldquo;Browse&rdquo; to select a new file" readonly autocomplete="off">
+                            <input type="text" class="form-control" id="fl-store-certificate-label" placeholder="Click &ldquo;Browse&rdquo; to select a new file" readonly>
                           </div>
                         </div>
                       </div>
@@ -1046,6 +1046,9 @@
                     <input type="text" name="fl-store-revDemoPass" class="form-control" maxlength="100" id="fl-store-revDemoPass" />
                   </div>
                 </div>
+                <div class="alert alert-warning">
+                  <strong>Important warning:</strong> If the reviewer notes are incomplete or insufficient, Apple may reject the app which will cause a delay in the app launch. We have automatically loaded a suggested template in the reviewer notes. Please make sure to customize this template, or contact the Customer Success team for help.
+                </div>
                 <div class="form-group clearfix">
                   <div class="col-sm-4 control-label">
                     <label for="fl-store-revNotes">Notes</label>
@@ -1093,7 +1096,7 @@ If you have any questions please reply and I will be happy to answer any questio
         <!-- App Status Area -->
       </div>
       <p class="text-info">Complete this section to receive an app signed with <a href="https://developer.apple.com/programs/enterprise/" target="_blank">your Apple Developer Enterprise account</a> to distribute in-house apps to your employees.</p>
-      <form data-disable="false" role="form" id="enterpriseConfiguration">
+      <form data-disable="false" role="form" id="enterpriseConfiguration" autocomplete="off">
         <div class="panel-group" id="accordionEnterprise" role="tablist" aria-multiselectable="true">
           <div class="panel panel-default app-details-ent">
             <div class="panel-heading" role="tab" id="enterpriseSettingsHeading">
@@ -1233,7 +1236,7 @@ If you have any questions please reply and I will be happy to answer any questio
                         <label class="input-group-btn">
                           <span class="btn btn-default">Browse&hellip; <input id="fl-ent-certificate-manual-details" name="fl-ent-certificate-manual-details" class="hidden" type="file" accept="application/keychain_access, application/x-pkcs12" data-error="Please upload a .p12 file."></span>
                         </label>
-                        <input type="text" class="form-control" id="fl-ent-certificate-manual-details-label" placeholder="Click &ldquo;Browse&rdquo; to select a new file" readonly autocomplete="off">
+                        <input type="text" class="form-control" id="fl-ent-certificate-manual-details-label" placeholder="Click &ldquo;Browse&rdquo; to select a new file" readonly>
                       </div>
                       <div class="help-block with-errors"></div>
                     </div>
@@ -1250,7 +1253,7 @@ If you have any questions please reply and I will be happy to answer any questio
                         <label class="input-group-btn">
                           <span class="btn btn-default">Browse&hellip; <input id="fl-ent-mobileprovision-manual-details" name="fl-ent-mobileprovision-manual-details" class="hidden" type="file" accept="application/x-apple-aspen-mobileprovision" data-error="Please upload a .mobileprovision file."></span>
                         </label>
-                        <input type="text" class="form-control" id="fl-ent-mobileprovision-manual-details-label" placeholder="Click &ldquo;Browse&rdquo; to select a new file" readonly autocomplete="off">
+                        <input type="text" class="form-control" id="fl-ent-mobileprovision-manual-details-label" placeholder="Click &ldquo;Browse&rdquo; to select a new file" readonly>
                       </div>
                       <div class="help-block with-errors"></div>
                     </div>
@@ -1343,7 +1346,7 @@ If you have any questions please reply and I will be happy to answer any questio
                             <label class="input-group-btn">
                               <span class="btn btn-default">Browse&hellip; <input id="fl-ent-certificate" class="hidden" type="file" accept="application/keychain_access, application/x-pkcs12"></span>
                             </label>
-                            <input type="text" class="form-control" id="fl-ent-certificate-label" placeholder="Click &ldquo;Browse&rdquo; to select a new file" readonly autocomplete="off">
+                            <input type="text" class="form-control" id="fl-ent-certificate-label" placeholder="Click &ldquo;Browse&rdquo; to select a new file" readonly>
                           </div>
                         </div>
                       </div>
@@ -1404,7 +1407,7 @@ If you have any questions please reply and I will be happy to answer any questio
       <p class="text-info">Unsigned apps will need to be signed before they can be distributed. If you would like Fliplet to sign the app for you, please request an app via the "App Store" or "Enterprise" tabs above. If you request an unsigned app file, you will need a Mac
         or software that can resign this app for you. For more information about signing apps, please see <a href="https://developer.apple.com/library/content/documentation/Security/Conceptual/CodeSigningGuide/Procedures/Procedures.html#//apple_ref/doc/uid/TP40005929-CH4-SW7"
           target="_blank">this Apple Developer article</a>.</p>
-      <form data-disable="false" role="form" id="unsignedConfiguration">
+      <form data-disable="false" role="form" id="unsignedConfiguration" autocomplete="off">
         <div class="panel-group" id="accordionUnsigned" role="tablist" aria-multiselectable="true">
           <div class="panel panel-default app-details-uns">
             <div class="panel-heading" role="tab" id="unsignedSettingsHeading">
@@ -1513,7 +1516,7 @@ If you have any questions please reply and I will be happy to answer any questio
       </form>
     </div>
     <div role="tabpanel" class="tab-pane fl-sb-push" id="push-tab">
-      <form data-disable="false" role="form" id="pushConfiguration">
+      <form data-disable="false" role="form" id="pushConfiguration" autocomplete="off">
         <p class="text-info">You need to publish your app for these push notifications settings to be applied to your app.</p>
         <div class="panel-group" id="accordionPush" role="tablist" aria-multiselectable="true">
           <div class="panel panel-default">
