@@ -1611,7 +1611,8 @@ $('#appStoreConfiguration').validator().on('submit', function(event) {
       alert('Please configure your App Settings to contain the required information.');
     }
   } else {
-    alert('You need to publish this app first.\nGo to "Step 1. Prepare your app" to publish your app.');
+    $('.button-appStore-request').html('Please wait <i class="fa fa-spinner fa-pulse fa-fw"></i>');
+    publishApp('appStore');
   }
 
   // Gives time to Validator to apply classes
@@ -1662,7 +1663,8 @@ $('#enterpriseConfiguration').validator().on('submit', function(event) {
       alert('Please configure your App Settings to contain the required information.');
     }
   } else {
-    alert('You need to publish this app first.\nGo to "Step 1. Prepare your app" to publish your app.');
+    $('.button-enterprise-request').html('Please wait <i class="fa fa-spinner fa-pulse fa-fw"></i>');
+    publishApp('enterprise');
   }
 
   // Gives time to Validator to apply classes
@@ -1696,7 +1698,8 @@ $('#unsignedConfiguration').validator().on('submit', function(event) {
       alert('Please configure your App Settings to contain the required information.');
     }
   } else {
-    alert('You need to publish this app first.\nGo to "Step 1. Prepare your app" to publish your app.');
+    $('.button-unsigned-request').html('Please wait <i class="fa fa-spinner fa-pulse fa-fw"></i>');
+    publishApp('unsigned');
   }
 
   // Gives time to Validator to apply classes
@@ -2207,6 +2210,40 @@ $('.browse-files').on('click', function(e) {
 /* INIT */
 $('#appStoreConfiguration, #enterpriseConfiguration, #unsignedConfiguration').validator().off('change.bs.validator focusout.bs.validator');
 $('[name="submissionType"][value="appStore"]').prop('checked', true).trigger('change');
+
+function publishApp(context) {
+  var options = {
+    release: {
+      type: 'silent',
+      changelog: 'Initial version'
+    }
+  }
+  Fliplet.API.request({
+    method: 'POST',
+    url: 'v1/apps/' + Fliplet.Env.get('appId') + '/publish',
+    data: options
+  }).then((response) => {
+    // Update appInfo
+    appInfo.productionAppId = response.app.id;
+
+    switch(context) {
+      case 'appStore':
+        $('.button-appStore-request').html('Request App <i class="fa fa-paper-plane"></i>');
+        $('#appStoreConfiguration').validator().trigger('submit');
+        break;
+      case 'enterprise':
+        $('.button-enterprise-request').html('Request App <i class="fa fa-paper-plane"></i>');
+        $('#enterpriseConfiguration').validator().trigger('submit');
+        break;
+      case 'unsigned':
+        $('.button-unsigned-request').html('Request App <i class="fa fa-paper-plane"></i>');
+        $('#unsignedConfiguration').validator().trigger('submit');
+        break;
+      default:
+        break;
+    }
+  });
+}
 
 function compileStatusTable(withData, origin, buildsData) {
   if (withData) {
