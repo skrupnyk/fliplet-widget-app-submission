@@ -2378,6 +2378,9 @@ function submissionChecker(submissions) {
 
   appStoreSubmissionInStore = (completedAsub.length > 0);
 
+  asub = _.orderBy(asub, function(submission) {
+    return new Date(submission.createdAt).getTime();
+  }, ['desc']);
   checkSubmissionStatus("appStore", asub);
 
   appStoreSubmission = _.maxBy(asub, function(el) {
@@ -2418,6 +2421,9 @@ function submissionChecker(submissions) {
     return el.id;
   });
 
+  esub = _.orderBy(esub, function(submission) {
+    return new Date(submission.createdAt).getTime();
+  }, ['desc']);
   checkSubmissionStatus("enterprise", esub);
 
   enterpriseSubmission = _.maxBy(esub, function(el) {
@@ -2450,6 +2456,9 @@ function submissionChecker(submissions) {
     return submission.data.submissionType === "unsigned" && submission.platform === "ios";
   });
 
+  usub = _.orderBy(usub, function(submission) {
+    return new Date(submission.createdAt).getTime();
+  }, ['desc']);
   checkSubmissionStatus("unsigned", usub);
 
   usub = _.maxBy(usub, function(el) {
@@ -2519,6 +2528,17 @@ function iosSubmissionChecker(submissions) {
   var usub = _.filter(submissions, function(submission) {
     return submission.data.submissionType === "unsigned" && submission.platform === "ios";
   });
+
+  // Ordering
+  asub = _.orderBy(asub, function(submission) {
+    return new Date(submission.createdAt).getTime();
+  }, ['desc']);
+  esub = _.orderBy(esub, function(submission) {
+    return new Date(submission.createdAt).getTime();
+  }, ['desc']);
+  usub = _.orderBy(usub, function(submission) {
+    return new Date(submission.createdAt).getTime();
+  }, ['desc']);
 
   checkSubmissionStatus("appStore", asub);
   checkSubmissionStatus("enterprise", esub);
