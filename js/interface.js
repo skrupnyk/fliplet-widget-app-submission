@@ -1299,7 +1299,7 @@ function refreshAppEnterpriseOptions(devEmail, selectedTeamId, selectedTeamName)
 function getCompletedSubmissions(organizationId, devEmail, teamId, teamName) {
   return Fliplet.API.request({
     method: 'GET',
-    url: 'v1/organizations/' + organizationId + '/submissions?status=completed&email=' + devEmail + '&teamId' + teamId
+    url: 'v1/organizations/' + organizationId + '/submissions?status=completed&email=' + devEmail + '&teamId=' + teamId
   })
   .then(function(result) {
     if(!result.submissions) {
