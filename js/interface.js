@@ -1308,8 +1308,8 @@ function getCompletedSubmissions(organizationId, devEmail, teamId, teamName) {
     'failed',             // CI failed
     'cancelled'           // user canceled
   ];
-  var statusFilter = _.remove(statusList, function(s) {
-    return s === 'failed';
+  var statusFilter = _.filter(statusList, function(s) {
+    return s !== 'failed';
   });
   var url = [
     'v1/organizations/' + organizationId,
