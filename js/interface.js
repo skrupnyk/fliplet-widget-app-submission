@@ -1297,19 +1297,44 @@ function refreshAppEnterpriseOptions(devEmail, selectedTeamId, selectedTeamName)
 }
 
 function getCompletedSubmissions(organizationId, devEmail, teamId, teamName) {
+  var statusList = [
+    'started',            // Default status when the submission is started from the user
+    'submitted',          // Submission has been submitted
+    'queued',             // Submission has been sent tot he CI
+    'processing',         // CI is processing the submission
+    'ready-for-testing',  // AAB finished and CS should now test the build
+    'tested',             // Build marked as tested from CS. CI will get informed so can submit to store
+    'completed',          // Finished or submitted to store
+    'failed',             // CI failed
+    'cancelled'           // user canceled
+  ];
+  var statusFilter = _.remove(statusList, function(s) {
+    return s === 'failed';
+  });
+  var url = [
+    'v1/organizations/' + organizationId,
+    '/submissions?status=' + statusFilter.join(','),
+    '&email=' + devEmail,
+    '&teamId=' + teamId
+  ].join('');
   return Fliplet.API.request({
     method: 'GET',
-    url: 'v1/organizations/' + organizationId + '/submissions?status=completed&email=' + devEmail + '&teamId=' + teamId
+    url: url
   })
   .then(function(result) {
     if(!result.submissions) {
       return;
     }
-    var latestSubmission = _.maxBy(result.submissions, function(sub) {
-      return new Date(sub.updatedAt).getTime();
+
+    var sortedSubmissions = _.orderBy(result.submissions, ['updatedAt'], ['desc']);
+    var latestSubmission = _.find(sortedSubmissions, function(sub) {
+      return !_.isUndefined(latestSubmission.data.previousResults)
+        && (!_.isUndefined(latestSubmission.data.previousResults.p12)
+          || !_.isUndefined(latestSubmission.data.previousResults.certificate)
+        )
     });
 
-    if(!_.isUndefined(latestSubmission) && !_.isUndefined(latestSubmission.data.previousResults) && (!_.isUndefined(latestSubmission.data.previousResults.p12) || !_.isUndefined(latestSubmission.data.previousResults.certificate))) {
+    if(!_.isUndefined(latestSubmission)) {
       return {
         teamId: teamId,
         teamName: teamName,
