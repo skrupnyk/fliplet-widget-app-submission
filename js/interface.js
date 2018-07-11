@@ -1328,9 +1328,9 @@ function getCompletedSubmissions(organizationId, devEmail, teamId, teamName) {
 
     var sortedSubmissions = _.orderBy(result.submissions, ['updatedAt'], ['desc']);
     var latestSubmission = _.find(sortedSubmissions, function(sub) {
-      return !_.isUndefined(latestSubmission.data.previousResults)
-        && (!_.isUndefined(latestSubmission.data.previousResults.p12)
-          || !_.isUndefined(latestSubmission.data.previousResults.certificate)
+      return !_.isUndefined(sub.data.previousResults)
+        && (!_.isUndefined(sub.data.previousResults.p12)
+          || !_.isUndefined(sub.data.previousResults.certificate)
         )
     });
 
@@ -2326,37 +2326,21 @@ function checkSubmissionStatus(origin, iosSubmissions) {
 
       if (submission.result.appBuild && submission.result.appBuild.files) {
         appBuild = _.find(submission.result.appBuild.files, function(file) {
-          var dotIndex = file.url.lastIndexOf('.');
-          var ext = file.url.substring(dotIndex);
-          if (ext === '.ipa') {
-            return true;
-          }
+          return file.contentType === 'application/octet-stream';
         });
       } else if (submission.data.previousResults && submission.data.previousResults.appBuild && submission.data.previousResults.appBuild.files) {
         appBuild = _.find(submission.data.previousResults.appBuild.files, function(file) {
-          var dotIndex = file.url.lastIndexOf('.');
-          var ext = file.url.substring(dotIndex);
-          if (ext === '.ipa') {
-            return true;
-          }
+          return file.contentType === 'application/octet-stream';
         });
       }
 
       if (submission.result.debugHtmlPage && submission.result.debugHtmlPage.files) {
         debugHtmlPage = _.find(submission.result.debugHtmlPage.files, function(file) {
-          var dotIndex = file.url.lastIndexOf('.');
-          var ext = file.url.substring(dotIndex);
-          if (ext === '.html') {
-            return true;
-          }
+          return file.contentType === 'text/html';
         });
       } else if (submission.data.previousResults && submission.data.previousResults.debugHtmlPage && submission.data.previousResults.debugHtmlPage.files) {
         debugHtmlPage = _.find(submission.data.previousResults.debugHtmlPage.files, function(file) {
-          var dotIndex = file.url.lastIndexOf('.');
-          var ext = file.url.substring(dotIndex);
-          if (ext === '.html') {
-            return true;
-          }
+          return file.contentType === 'text/html';
         });
       }
 
