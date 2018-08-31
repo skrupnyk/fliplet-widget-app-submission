@@ -205,7 +205,6 @@
                         <option value="Utilities">Utilities</option>
                       </select>
                       <span class="icon fa fa-chevron-down"></span>
-                      <span class="select-value-proxy">-- Primary Category</span>
                     </label>
                     <div class="help-block with-errors"></div>
                   </div>
@@ -245,7 +244,6 @@
                         <option value="Utilities">Utilities</option>
                       </select>
                       <span class="icon fa fa-chevron-down"></span>
-                      <span class="select-value-proxy">-- Select a Subcategory</span>
                     </label>
                     <div class="help-block with-errors"></div>
                     <p>The secondary category can not be the same as the primary category.</p>
@@ -291,7 +289,6 @@
                       <option value="vi">Vietnamese</option>                      
                     </select>
                     <span class="icon fa fa-chevron-down"></span>
-                    <span class="select-value-proxy">English</span>
                   </label>
                     <div class="help-block with-errors"></div>
                   </div>
@@ -613,7 +610,6 @@
                             <option value="">-- Select a team</option>
                           </select>
                           <span class="icon fa fa-chevron-down"></span>
-                          <span class="select-value-proxy">-- Select a team</span>
                         </label>
                     </div>
                   </div>
@@ -640,7 +636,7 @@
                     <div class="appStore-previous-file-success indented-area">
                       <p class="text-success">Distribution certificate created successfully.</p>
                       <p><span class="appStore-file-name-success">Certificate Name</span> - <strong>Expires on <span class="appStore-file-expire-success">October 30th 2018</span></strong></p>
-                      <div class="text-danger replace-error"></div>
+                      <p class="text-danger replace-error"></p>
                     </div>
                     <div class="radio radio-icon">
                       <input type="radio" id="fl-store-distribution-2" name="fl-store-distribution" value="generate-file">
@@ -649,12 +645,8 @@
                       </label>
                     </div>
                     <div class="appStore-generate-file indented-area">
-                      <div class="form-group">
-                        <div class="col-sm-12">
-                          <button type="button" class="btn btn-primary appStore-generate-cert disabled">Generate certificate</button>
-                          <div class="text-danger generate-error"></div>
-                        </div>
-                      </div>
+                      <p><button type="button" class="btn btn-primary appStore-generate-cert disabled">Generate certificate</button></p>
+                      <p class="text-danger generate-error"></p>
                     </div>
                     <div class="appStore-generate-file-success indented-area">
                       <p class="text-success">Distribution certificate created successfully.</p>
@@ -667,18 +659,16 @@
                       </label>
                     </div>
                     <div class="appStore-upload-file indented-area">
-                      <div class="form-group appStore-upload-certificate disabled">
-                        <div class="col-sm-12">
-                          <label>Upload a .p12 file</label>
-                        </div>
-                        <div class="col-sm-12">
+                      <div class="appStore-upload-certificate disabled">
+                        <p><label>Upload a .p12 file</label></p>
+                        <p>
                           <div class="input-group">
                             <label class="input-group-btn">
                               <span class="btn btn-default">Browse&hellip; <input id="fl-store-certificate" class="hidden" type="file" accept="application/keychain_access, application/x-pkcs12"></span>
                             </label>
                             <input type="text" class="form-control" id="fl-store-certificate-label" placeholder="Click &ldquo;Browse&rdquo; to select a new file" readonly>
                           </div>
-                        </div>
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -941,7 +931,6 @@
                       <option value="Zimbabwe">Zimbabwe</option>
                     </select>
                     <span class="icon fa fa-chevron-down"></span>
-                    <span class="select-value-proxy">-- Select a country</span>
                   </label>
                     <div class="help-block with-errors"></div>
                   </div>
@@ -1278,7 +1267,6 @@ If you have any questions please reply and I will be happy to answer any questio
                             <option value="">-- Select a team</option>
                           </select>
                           <span class="icon fa fa-chevron-down"></span>
-                          <span class="select-value-proxy">-- Select a team</span>
                         </label>
                     </div>
                   </div>
@@ -1315,12 +1303,8 @@ If you have any questions please reply and I will be happy to answer any questio
                       </label>
                     </div>
                     <div class="enterprise-generate-file indented-area">
-                      <div class="form-group">
-                        <div class="col-sm-12">
-                          <button type="button" class="btn btn-primary enterprise-generate-cert disabled">Generate certificate</button>
-                          <div class="text-danger generate-error"></div>
-                        </div>
-                      </div>
+                      <p><button type="button" class="btn btn-primary enterprise-generate-cert disabled">Generate certificate</button></p>
+                      <p class="text-danger generate-error"></p>
                     </div>
                     <div class="enterprise-generate-file-success indented-area">
                       <p class="text-success">Distribution certificate created successfully.</p>
@@ -1333,11 +1317,11 @@ If you have any questions please reply and I will be happy to answer any questio
                       </label>
                     </div>
                     <div class="enterprise-upload-file indented-area">
-                      <div class="form-group enterprise-upload-certificate disabled">
-                        <div class="col-sm-12">
+                      <div class="enterprise-upload-certificate disabled">
+                        <p>
                           <label>Upload a .p12 file</label>
-                        </div>
-                        <div class="col-sm-12">
+                        </p>
+                        <p>
                           <div class="input-group">
                             <label class="input-group-btn">
                               <span class="btn btn-default">Browse&hellip; <input id="fl-ent-certificate" class="hidden" type="file" accept="application/keychain_access, application/x-pkcs12"></span>
@@ -1345,7 +1329,7 @@ If you have any questions please reply and I will be happy to answer any questio
                             <input type="text" class="form-control" id="fl-ent-certificate-label" placeholder="Click &ldquo;Browse&rdquo; to select a new file" readonly>
                           </div>
                         </div>
-                      </div>
+                      </p>
                     </div>
                   </div>
                 </div>
