@@ -44,7 +44,7 @@
                     <label>App store listing name</label>                                       
                   </div>
                   <div class="col-sm-8 form-static">
-                    <input type="text" name="fl-store-appName" class="form-control" id="fl-store-appName" data-validate="true" maxlength="30" required/>
+                    <input type="text" name="fl-store-appName" class="form-control" id="fl-store-appName" data-validate="true" maxlength="30" required />
                     <p class="help-block"><small>App names are limited to 30 characters.</small></p>   
                   </div>
                 </div>
@@ -134,7 +134,7 @@
                     a maximum of 13 characters</small></p>
                   </div>
                   <div class="col-sm-8">
-                    <input type="text" name="fl-store-iconName" class="form-control" id="fl-store-iconName" data-error="Please enter an app icon name" maxlength="30" required/>
+                    <input type="text" name="fl-store-iconName" class="form-control" id="fl-store-iconName" data-error="Please enter an app icon name" maxlength="30" required />
                     <div class="help-block with-errors"></div>
                     <p class="help-block"><small>App names are limited to 30 characters.</small></p>                  
                   </div>
@@ -299,7 +299,7 @@
                     <p class="help-block label-helper"><small>Keywords help determine where your app displays in search results.</small></p>
                   </div>
                   <div class="col-sm-8">
-                    <input type="text" name="fl-store-keywords" class="form-control" id="fl-store-keywords" data-error="Please enter at least one keyword" required/>
+                    <input type="text" name="fl-store-keywords" class="form-control" id="fl-store-keywords" data-error="Please enter at least one keyword" required />
                     <div class="help-block with-errors"></div>
                     <p class="help-block"><small>Type a keyword and press enter or enter a comma. Keywords are limited to 100 characters total.</small></p>
                   </div>
@@ -485,37 +485,35 @@
                   </div>
                   <div class="col-sm-8">
                     Your app rating is determined by Apple based on your app type. The app rating will be displayed on the App Store across all your platforms. Fliplet apps will be rated <strong>17+</strong> by default as it means an app can load web
-                    pages and youtube videos.
+                    pages in-app.
                   </div>
                 </div>
                 <div class="form-group clearfix">
                   <div class="col-sm-4 control-label">
-                    <label for="fl-store-support">Support URL</label>
-                    <p class="help-block label-helper"><small>A URL that links to your organization's support page.</small></p>
+                    <label for="fl-store-support">Support page URL</label>
                   </div>
                   <div class="col-sm-8">
-                    <input type="text" name="fl-store-support" class="form-control" id="fl-store-support" pattern="^https?:\/\/([^ ]+)+" data-error="Please enter your Support URL" required/>
+                    <input type="text" name="fl-store-support" class="form-control" id="fl-store-support" pattern="^https?:\/\/([^ ]+)+" data-error="Please enter your Support URL" required />
                     <div class="help-block with-errors"></div>
                   </div>
                 </div>
                 <div class="form-group clearfix">
                   <div class="col-sm-4 control-label">
-                    <label for="fl-store-marketing">Marketing URL</label>
-                    <p class="help-block label-helper"><small>A URL that links to your organization's marketing website.</small></p>
+                    <label for="fl-store-marketing">Marketing page URL</label>
                   </div>
                   <div class="col-sm-8">
-                    <input type="text" name="fl-store-marketing" class="form-control" id="fl-store-marketing" pattern="^https?:\/\/([^ ]+)+" data-error="Please enter your Marketing URL" required/>
+                    <input type="text" name="fl-store-marketing" class="form-control" id="fl-store-marketing" pattern="^https?:\/\/([^ ]+)+" data-error="Please enter your Marketing URL" required  />
                     <div class="help-block with-errors"></div>
                   </div>
                 </div>
                 <div class="form-group clearfix">
                   <div class="col-sm-4 control-label">
-                    <label for="fl-store-privacy">Privacy Policy URL</label>
-                    <p class="help-block label-helper"><small>A URL that links to your organization's privacy policy.</small></p>
+                    <label for="fl-store-privacy">Privacy policy page URL</label>
                   </div>
                   <div class="col-sm-8">
-                    <input type="text" name="fl-store-privacy" class="form-control" id="fl-store-privacy" pattern="^https?:\/\/([^ ]+)+" data-error="Please enter your Privacy Policy URL" required/>
+                    <input type="text" name="fl-store-privacy" class="form-control" id="fl-store-privacy" pattern="^https?:\/\/([^ ]+)+" data-error="Please enter your Privacy Policy URL" required />
                     <div class="help-block with-errors"></div>
+                    <div class="alert alert-warning">Starting October 3, 2018, Apple will require a privacy policy URL for all new apps and app update submissions.</div>
                   </div>
                 </div>
                 <div class="form-group clearfix">
@@ -524,7 +522,7 @@
                     <p class="help-block label-helper"><small>The name of the person or entity that owns the exclusive rights to your app, preceded by the year the rights were obtained.</small></p>
                   </div>
                   <div class="col-sm-8">
-                    <input type="text" name="fl-store-copyright" class="form-control" id="fl-store-copyright" maxlength="200" data-error="Please enter your Copyright text" required/>
+                    <input type="text" name="fl-store-copyright" class="form-control" id="fl-store-copyright" maxlength="200" data-error="Please enter your Copyright text" required />
                     <div class="help-block with-errors"></div>
                     <p class="help-block"><small>Eg: 2008 Acme Inc.</small></p>
                   </div>
@@ -681,7 +679,7 @@
                     <p class="help-block label-helper"><small>This is the version number of your app and will be displayed on the App Store listing.</small></p>
                   </div>
                   <div class="col-sm-8">
-                    <input type="text" name="fl-store-versionNumber" class="form-control" id="fl-store-versionNumber" data-error="Please enter an app version number" maxlength="64" required/>
+                    <input type="text" name="fl-store-versionNumber" class="form-control" id="fl-store-versionNumber" data-error="Please enter an app version number" maxlength="64" required />
                     <div class="help-block with-errors"></div>
                     <p class="help-block"><small>The recommended format for version number is <code>1.0.0</code>. With a maximum value of <code>99</code> per number.</small></p>
                   </div>
@@ -697,7 +695,7 @@
                   </div>
                   <div class="fl-bundleId-field">
                     <div class="col-sm-8">
-                      <input type="text" name="fl-store-bundleId" class="form-control" id="fl-store-bundleId" data-error="Please enter the Bundle ID" required/>
+                      <input type="text" name="fl-store-bundleId" class="form-control" id="fl-store-bundleId" data-error="Please enter the Bundle ID" required />
                       <div class="help-block with-errors"></div>
                       <p class="help-block"><small>This value needs to be unique and the structure must be <code>com.<i>organizationName</i>.<i>appName</i></code>.</small></p>
                     </div>
@@ -718,7 +716,7 @@
                     <label for="fl-store-fname">First Name</label>
                   </div>
                   <div class="col-sm-8">
-                    <input type="text" name="fl-store-fname" class="form-control" id="fl-store-fname" data-error="Please enter your first name" required/>
+                    <input type="text" name="fl-store-fname" class="form-control" id="fl-store-fname" data-error="Please enter your first name" required />
                     <div class="help-block with-errors"></div>
                   </div>
                 </div>
@@ -727,7 +725,7 @@
                     <label for="fl-store-lname">Last Name</label>
                   </div>
                   <div class="col-sm-8">
-                    <input type="text" name="fl-store-lname" class="form-control" id="fl-store-lname" data-error="Please enter your last name" required/>
+                    <input type="text" name="fl-store-lname" class="form-control" id="fl-store-lname" data-error="Please enter your last name" required />
                     <div class="help-block with-errors"></div>
                   </div>
                 </div>
@@ -736,7 +734,7 @@
                     <label for="fl-store-address1">Address line 1</label>
                   </div>
                   <div class="col-sm-8">
-                    <input type="text" name="fl-store-address1" class="form-control" id="fl-store-address1" data-error="Please enter your address" required/>
+                    <input type="text" name="fl-store-address1" class="form-control" id="fl-store-address1" data-error="Please enter your address" required />
                     <div class="help-block with-errors"></div>
                   </div>
                 </div>
@@ -762,7 +760,7 @@
                     <label for="fl-store-postCode">Post Code</label>
                   </div>
                   <div class="col-sm-8">
-                    <input type="text" name="fl-store-postCode" class="form-control" id="fl-store-postCode" data-error="Please enter your post code" required/>
+                    <input type="text" name="fl-store-postCode" class="form-control" id="fl-store-postCode" data-error="Please enter your post code" required />
                     <div class="help-block with-errors"></div>
                   </div>
                 </div>
@@ -940,7 +938,7 @@
                     <label for="fl-store-phone">Phone Number</label>
                   </div>
                   <div class="col-sm-8">
-                    <input type="text" name="fl-store-phone" class="form-control" id="fl-store-phone" pattern="\+[0-9 ]+" data-error="Please enter a valid phone number" required/>
+                    <input type="text" name="fl-store-phone" class="form-control" id="fl-store-phone" pattern="\+[0-9 ]+" data-error="Please enter a valid phone number" required />
                     <div class="help-block with-errors"></div>
                     <p class="help-block"><small>The phone number needs to include the area code. (Eg.: +44)</small></p>
                   </div>
@@ -950,7 +948,7 @@
                     <label for="fl-store-email">Email Address</label>
                   </div>
                   <div class="col-sm-8">
-                    <input type="email" name="fl-store-email" class="form-control" id="fl-store-email" data-error="Please enter a valid email address" required/>
+                    <input type="email" name="fl-store-email" class="form-control" id="fl-store-email" data-error="Please enter a valid email address" required />
                     <div class="help-block with-errors"></div>
                   </div>
                 </div>
@@ -980,7 +978,7 @@
                     <label for="fl-store-revFirstName">First Name</label>
                   </div>
                   <div class="col-sm-8">
-                    <input type="text" name="fl-store-revFirstName" class="form-control" id="fl-store-revFirstName" data-error="Please enter the first name" required/>
+                    <input type="text" name="fl-store-revFirstName" class="form-control" id="fl-store-revFirstName" data-error="Please enter the first name" required />
                     <div class="help-block with-errors"></div>
                   </div>
                 </div>
@@ -989,7 +987,7 @@
                     <label for="fl-store-revLastName">Last Name</label>
                   </div>
                   <div class="col-sm-8">
-                    <input type="text" name="fl-store-revLastName" class="form-control" id="fl-store-revLastName" data-error="Please enter the last name" required/>
+                    <input type="text" name="fl-store-revLastName" class="form-control" id="fl-store-revLastName" data-error="Please enter the last name" required />
                     <div class="help-block with-errors"></div>
                   </div>
                 </div>
@@ -998,7 +996,7 @@
                     <label for="fl-store-revEmail">Email Address</label>
                   </div>
                   <div class="col-sm-8">
-                    <input type="email" name="fl-store-revEmail" class="form-control" id="fl-store-revEmail" data-error="Please enter a valid email address" required/>
+                    <input type="email" name="fl-store-revEmail" class="form-control" id="fl-store-revEmail" data-error="Please enter a valid email address" required />
                     <div class="help-block with-errors"></div>
                   </div>
                 </div>
@@ -1007,7 +1005,7 @@
                     <label for="fl-store-revPhone">Phone Number</label>
                   </div>
                   <div class="col-sm-8">
-                    <input type="text" name="fl-store-revPhone" class="form-control" id="fl-store-revPhone" pattern="\+[0-9 ]+" data-error="Please enter a valid phone number" required/>
+                    <input type="text" name="fl-store-revPhone" class="form-control" id="fl-store-revPhone" pattern="\+[0-9 ]+" data-error="Please enter a valid phone number" required />
                     <p class="help-block"><small>The phone number needs to include the area code. (Eg.: +44)</small></p>
                     <div class="help-block with-errors"></div>
                   </div>
@@ -1129,7 +1127,7 @@ If you have any questions please reply and I will be happy to answer any questio
                     <p class="help-block label-helper"><small>The name below the icon on the home screen.</small></p>
                   </div>
                   <div class="col-sm-8">
-                    <input type="text" name="fl-ent-iconName" class="form-control" id="fl-ent-iconName" maxlength="30" data-error="Please enter an app icon name" required/>
+                    <input type="text" name="fl-ent-iconName" class="form-control" id="fl-ent-iconName" maxlength="30" data-error="Please enter an app icon name" required />
                     <div class="help-block with-errors"></div>
                     <p class="help-block"><small>App names are limited to 30 characters.</small></p>
                   </div>
@@ -1157,7 +1155,7 @@ If you have any questions please reply and I will be happy to answer any questio
                       <label for="fl-ent-appDevLogin">Apple Developer account login</label>
                     </div>
                     <div class="col-sm-8">
-                      <input type="email" class="form-control" id="fl-ent-appDevLogin" data-error="Please enter a valid email address" required/>
+                      <input type="email" class="form-control" id="fl-ent-appDevLogin" data-error="Please enter a valid email address" required />
                       <div class="help-block with-errors"></div>
                     </div>
                   </div>
@@ -1166,7 +1164,7 @@ If you have any questions please reply and I will be happy to answer any questio
                       <label for="fl-ent-appDevPass">Apple Developer account password</label>
                     </div>
                     <div class="col-sm-8">
-                      <input type="password" class="form-control" id="fl-ent-appDevPass" data-error="Please enter a password" required/>
+                      <input type="password" class="form-control" id="fl-ent-appDevPass" data-error="Please enter a password" required />
                       <div class="help-block with-errors"></div>
                       <p class="help-block label-helper"><small>This password will be encrypted, safely stored and never shared or used for purposes other than publishing this app.</small></p>
                     </div>
@@ -1341,7 +1339,7 @@ If you have any questions please reply and I will be happy to answer any questio
                     <p class="help-block label-helper"><small>This is the version number of your app.</small></p>
                   </div>
                   <div class="col-sm-8">
-                    <input type="text" name="fl-ent-versionNumber" class="form-control" id="fl-ent-versionNumber" data-error="Please enter an app version number" required/>
+                    <input type="text" name="fl-ent-versionNumber" class="form-control" id="fl-ent-versionNumber" data-error="Please enter an app version number" required />
                     <div class="help-block with-errors"></div>
                     <p class="help-block"><small>The recommended format for version number is <code>1.0.0</code>. With a maximum value of <code>99</code> per number.</small></p>
                   </div>
@@ -1357,7 +1355,7 @@ If you have any questions please reply and I will be happy to answer any questio
                   </div>
                   <div class="fl-bundleId-field">
                     <div class="col-sm-8">
-                      <input type="text" name="fl-ent-bundleId" class="form-control" id="fl-ent-bundleId" data-error="Please enter your Bundle ID" required/>
+                      <input type="text" name="fl-ent-bundleId" class="form-control" id="fl-ent-bundleId" data-error="Please enter your Bundle ID" required />
                       <div class="help-block with-errors"></div>
                       <p class="help-block"><small>This value needs to be unique and the structure must be <code>com.<i>organizationName</i>.<i>appName</i></code>.</small></p>
                     </div>
@@ -1435,7 +1433,7 @@ If you have any questions please reply and I will be happy to answer any questio
                     <p class="help-block label-helper"><small>The name below the icon on the home screen.</small></p>
                   </div>
                   <div class="col-sm-8">
-                    <input type="text" name="fl-uns-iconName" class="form-control" id="fl-uns-iconName" maxlength="30" data-error="Please enter an app icon name" required/>
+                    <input type="text" name="fl-uns-iconName" class="form-control" id="fl-uns-iconName" maxlength="30" data-error="Please enter an app icon name" required />
                     <div class="help-block with-errors"></div>
                     <p class="help-block"><small>App names are limited to 30 characters.</small></p>
                   </div>
@@ -1456,7 +1454,7 @@ If you have any questions please reply and I will be happy to answer any questio
                     <p class="help-block label-helper"><small>This is the version number of your app.</small></p>
                   </div>
                   <div class="col-sm-8">
-                    <input type="text" name="fl-uns-versionNumber" class="form-control" id="fl-uns-versionNumber" data-error="Please enter an app version number" required/>
+                    <input type="text" name="fl-uns-versionNumber" class="form-control" id="fl-uns-versionNumber" data-error="Please enter an app version number" required />
                     <div class="help-block with-errors"></div>
                     <p class="help-block"><small>The recommended format for version number is <code>1.0.0</code>. With a maximum value of <code>99</code> per number.</small></p>
                   </div>
@@ -1472,7 +1470,7 @@ If you have any questions please reply and I will be happy to answer any questio
                   </div>
                   <div class="fl-bundleId-field">
                     <div class="col-sm-8">
-                      <input type="text" name="fl-uns-bundleId" class="form-control" id="fl-uns-bundleId" data-error="Please enter your Bundle ID" required/>
+                      <input type="text" name="fl-uns-bundleId" class="form-control" id="fl-uns-bundleId" data-error="Please enter your Bundle ID" required />
                       <div class="help-block with-errors"></div>
                       <p class="help-block"><small>This value needs to be unique and the structure must be <code>com.<i>organizationName</i>.<i>appName</i></code>.</small></p>
                     </div>
