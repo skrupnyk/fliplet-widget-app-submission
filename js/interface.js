@@ -852,6 +852,10 @@ function saveAppStoreData(request) {
     var name = $(el).attr("name");
     var value = $(el).val();
 
+    if (typeof value === 'string') {
+      value = value.trim();
+    }
+
     /* PROCESSING KEYWORDS */
     if (name === 'fl-store-keywords') {
       var newValue = value.replace(/,\s+/g, ',');
@@ -914,6 +918,10 @@ function saveEnterpriseData(request) {
   $('#enterpriseConfiguration [name]').each(function(i, el) {
     var name = $(el).attr("name");
     var value = $(el).val();
+
+    if (typeof value === 'string') {
+      value = value.trim();
+    }
 
     if (name === 'fl-ent-distribution') {
       var newValue = $('[name="'+name+'"]:checked').val();
@@ -1011,6 +1019,10 @@ function saveUnsignedData(request) {
     var name = $(el).attr("name");
     var value = $(el).val();
 
+    if (typeof value === 'string') {
+      value = value.trim();
+    }
+
     data[name] = value;
   });
 
@@ -1025,18 +1037,21 @@ function saveUnsignedData(request) {
 
 function savePushData(silentSave) {
   var data = notificationSettings;
+  var pushDataMap = {
+    'fl-push-authKey': 'apnAuthKey',
+    'fl-push-keyId': 'apnKeyId'
+  };
 
   $('#pushConfiguration [name]').each(function(i, el) {
     var name = $(el).attr("name");
     var value = $(el).val();
 
-    if (name === 'fl-push-authKey') {
-      data.apnAuthKey = value;
-      return;
+    if (typeof value === 'string') {
+      value = value.trim();
     }
-    if (name === 'fl-push-keyId') {
-      data.apnKeyId = value;
-      return;
+
+    if (pushDataMap.hasOwnProperty(name)) {
+      data[pushDataMap[name]] = value;
     }
   });
 
