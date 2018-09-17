@@ -1044,15 +1044,17 @@ function savePushData(silentSave) {
 
   $('#pushConfiguration [name]').each(function(i, el) {
     var name = $(el).attr("name");
-    var value = $(el).val();
 
+    if (!pushDataMap.hasOwnProperty(name)) {
+      return;
+    }
+
+    var value = $(el).val();
     if (typeof value === 'string') {
       value = value.trim();
     }
 
-    if (pushDataMap.hasOwnProperty(name)) {
-      data[pushDataMap[name]] = value;
-    }
+    data[pushDataMap[name]] = value;
   });
 
   data.apn = !!((data.apnAuthKey && data.apnAuthKey !== '') && (data.apnKeyId && data.apnKeyId !== '') && (data.apnTeamId && data.apnTeamId !== '') && (data.apnTopic && data.apnTopic !== ''));
