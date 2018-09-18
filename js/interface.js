@@ -852,6 +852,10 @@ function saveAppStoreData(request) {
     var name = $(el).attr("name");
     var value = $(el).val();
 
+    if (typeof value === 'string') {
+      value = value.trim();
+    }
+
     /* PROCESSING KEYWORDS */
     if (name === 'fl-store-keywords') {
       var newValue = value.replace(/,\s+/g, ',');
@@ -914,6 +918,10 @@ function saveEnterpriseData(request) {
   $('#enterpriseConfiguration [name]').each(function(i, el) {
     var name = $(el).attr("name");
     var value = $(el).val();
+
+    if (typeof value === 'string') {
+      value = value.trim();
+    }
 
     if (name === 'fl-ent-distribution') {
       var newValue = $('[name="'+name+'"]:checked').val();
@@ -1011,6 +1019,10 @@ function saveUnsignedData(request) {
     var name = $(el).attr("name");
     var value = $(el).val();
 
+    if (typeof value === 'string') {
+      value = value.trim();
+    }
+
     data[name] = value;
   });
 
@@ -1025,19 +1037,24 @@ function saveUnsignedData(request) {
 
 function savePushData(silentSave) {
   var data = notificationSettings;
+  var pushDataMap = {
+    'fl-push-authKey': 'apnAuthKey',
+    'fl-push-keyId': 'apnKeyId'
+  };
 
   $('#pushConfiguration [name]').each(function(i, el) {
     var name = $(el).attr("name");
-    var value = $(el).val();
 
-    if (name === 'fl-push-authKey') {
-      data.apnAuthKey = value;
+    if (!pushDataMap.hasOwnProperty(name)) {
       return;
     }
-    if (name === 'fl-push-keyId') {
-      data.apnKeyId = value;
-      return;
+
+    var value = $(el).val();
+    if (typeof value === 'string') {
+      value = value.trim();
     }
+
+    data[pushDataMap[name]] = value;
   });
 
   data.apn = !!((data.apnAuthKey && data.apnAuthKey !== '') && (data.apnKeyId && data.apnKeyId !== '') && (data.apnTeamId && data.apnTeamId !== '') && (data.apnTopic && data.apnTopic !== ''));
@@ -1051,7 +1068,13 @@ function savePushData(silentSave) {
   }).then(function() {
     $('.save-push-progress').addClass('saved');
     if (!notificationSettings.apn && !silentSave) {
-      alert('Your settings have been saved!\n\nHowever push notifications will only work on App Store and Enterprise apps.\nRequest an app for one of those types and fill in the Bundle ID and Team/Team ID fields.\n\nYou don\'t need to request another app if you have requested an app for App Store or Enterprise before with those two fields filled in already.');
+      Fliplet.Modal.alert({
+        title: 'Your settings have been saved!',
+        message: [
+          'However push notifications will only work on App Store and Enterprise apps. Request an app for one of those types and fill in the Bundle ID and Team/Team ID fields.',
+          '',
+          'You don\'t need to request another app if you have requested an app for App Store or Enterprise before with those two fields filled in already.'].join('<br>')
+      });
     }
 
     setTimeout(function() {
@@ -1523,14 +1546,18 @@ $('[name="fl-store-credentials"]').on('change', function() {
 });
 
 $('.fl-sb-appStore [change-bundleid], .fl-sb-enterprise [change-bundleid], .fl-sb-unsigned [change-bundleid]').on('click', function() {
-  var changeBundleId = confirm("Are you sure you want to change the unique Bundle ID?");
+  Fliplet.Modal.confirm({
+    message: 'Are you sure you want to change the unique Bundle ID?'
+  }).then(function (confirmed) {
+    if (!confirmed) {
+      return;
+    }
 
-  if (changeBundleId) {
     $('.fl-bundleId-holder').addClass('hidden');
     $('.fl-bundleId-field').addClass('show');
 
     Fliplet.Widget.autosize();
-  }
+  });
 });
 
 $('.panel-group').on('shown.bs.collapse', '.panel-collapse', function() {
@@ -1588,14 +1615,18 @@ $('#appStoreConfiguration').validator().on('submit', function(event) {
   if (event.isDefaultPrevented()) {
     // Gives time to Validator to apply classes
     setTimeout(checkGroupErrors, 0);
-    alert('Please fill in all the required information.');
+    Fliplet.Modal.alert({
+      message: 'Please fill in all the required information.'
+    });
     return;
   }
 
   event.preventDefault();
 
   if ($('[name="fl-store-screenshots"]:checked').val() === 'new' && !haveScreenshots) {
-    alert('You need to add screenshots before submitting');
+    Fliplet.Modal.alert({
+      message: 'You need to add screenshots before submitting'
+    });
     return;
   }
 
@@ -1609,31 +1640,43 @@ $('#appStoreConfiguration').validator().on('submit', function(event) {
         var certificateKind = $('[name="fl-store-distribution"]:checked').val();
 
         if (certificateKind === 'generate-file' && !appStoreCertificateCreated) {
-          alert('You need to generate a certificate before requesting a submission');
+          Fliplet.Modal.alert({
+            message: 'You need to generate a certificate before requesting a submission'
+          });
           return;
         }
 
         if (certificateKind === 'upload-file' && (!appStoreFileField.files || !appStoreFileField.files[0])){
-          alert('You need to upload a certificate before requesting a submission');
+          Fliplet.Modal.alert({
+            message: 'You need to upload a certificate before requesting a submission'
+          });
           return;
         }
 
-        var requestAppConfirm;
+        var message = 'Are you sure you wish to update your published app?';
 
         if (appStoreSubmission.status === "started") {
-          requestAppConfirm = confirm("Are you sure you wish to request your app to be published?");
-        } else {
-          requestAppConfirm = confirm("Are you sure you wish to update your published app?");
+          message = 'Are you sure you wish to request your app to be published?';
         }
 
-        if (requestAppConfirm) {
+        Fliplet.Modal.confirm({
+          message: message
+        }).then(function (confirmed) {
+          if (!confirmed) {
+            return;
+          }
+
           saveAppStoreData(true);
-        }
+        });
       } else {
-        alert('You need to login with your Apple developer account details.\nSelect one option to provide use with a distribution certificate.');
+        Fliplet.Modal.alert({
+          message: 'You need to login with your Apple developer account details.<br>Select one option to provide use with a distribution certificate.'
+        });
       }
     } else {
-      alert('Please configure your App Settings to contain the required information.');
+      Fliplet.Modal.alert({
+        message: 'Please configure your App Settings to contain the required information.'
+      });
     }
   } else {
     $('.button-appStore-request').html('Please wait <i class="fa fa-spinner fa-pulse fa-fw"></i>');
@@ -1648,44 +1691,58 @@ $('#enterpriseConfiguration').validator().on('submit', function(event) {
   if (event.isDefaultPrevented()) {
     // Gives time to Validator to apply classes
     setTimeout(checkGroupErrors, 0);
-    alert('Please fill in all the required information.');
+    Fliplet.Modal.alert({
+      message: 'Please fill in all the required information.'
+    });
     return;
   }
 
   event.preventDefault();
 
   if (!enterpriseManual && !enterpriseLoggedIn) {
-    alert('Please log in with the Apple Developer Account or choose to enter the data manually.');
+    Fliplet.Modal.alert({
+      message: 'Please log in with the Apple Developer Account or choose to enter the data manually.'
+    });
     return;
   }
 
   var credentialKind = $('[name="fl-ent-distribution"]:checked').val();
 
   if (credentialKind === 'generate-file' && !enterpriseCertificateCreated) {
-    alert('You need to generate a certificate before requesting a submission');
+    Fliplet.Modal.alert({
+      message: 'You need to generate a certificate before requesting a submission'
+    });
     return;
   }
 
   if (credentialKind === 'upload-file' && (!enterpriseFileField.files || !enterpriseFileField.files[0])) {
-    alert('You need to upload a certificate before requesting a submission');
+    Fliplet.Modal.alert({
+      message: 'You need to upload a certificate before requesting a submission'
+    });
     return;
   }
 
   if (appInfo && appInfo.productionAppId) {
     if (allAppData.indexOf('enterprise') > -1) {
-      var requestAppConfirm;
+      var message = 'Are you sure you wish to update your published app?';
 
       if (enterpriseSubmission.status === "started") {
-        requestAppConfirm = confirm("Are you sure you wish to request your app to be published?");
-      } else {
-        requestAppConfirm = confirm("Are you sure you wish to update your published app?");
+        message = 'Are you sure you wish to request your app to be published?';
       }
 
-      if (requestAppConfirm) {
-        saveEnterpriseData(true);
-      }
+      Fliplet.Modal.confirm({
+        message: message
+      }).then(function (confirmed) {
+        if (!confirmed) {
+          return;
+        }
+
+        saveEnterpriseData(true);        
+      });
     } else {
-      alert('Please configure your App Settings to contain the required information.');
+      Fliplet.Modal.alert({
+        message: 'Please configure your App Settings to contain the required information.'
+      });
     }
   } else {
     $('.button-enterprise-request').html('Please wait <i class="fa fa-spinner fa-pulse fa-fw"></i>');
@@ -1700,7 +1757,9 @@ $('#unsignedConfiguration').validator().on('submit', function(event) {
   if (event.isDefaultPrevented()) {
     // Gives time to Validator to apply classes
     setTimeout(checkGroupErrors, 0);
-    alert('Please fill in all the required information.');
+    Fliplet.Modal.alert({
+      message: 'Please fill in all the required information.'
+    });
     return;
   }
 
@@ -1708,19 +1767,25 @@ $('#unsignedConfiguration').validator().on('submit', function(event) {
 
   if (appInfo && appInfo.productionAppId) {
     if (allAppData.indexOf('unsigned') > -1) {
-      var requestAppConfirm;
+      var message = 'Are you sure you wish to update your published app?';
 
       if (unsignedSubmission.status === "started") {
-        requestAppConfirm = confirm("Are you sure you wish to request your app to be published?");
-      } else {
-        requestAppConfirm = confirm("Are you sure you wish to update your published app?");
+        message = 'Are you sure you wish to request your app to be published?';
       }
 
-      if (requestAppConfirm) {
+      Fliplet.Modal.confirm({
+        message: message
+      }).then(function (confirmed) {
+        if (!confirmed) {
+          return;
+        }
+
         saveUnsignedData(true);
-      }
+      });
     } else {
-      alert('Please configure your App Settings to contain the required information.');
+      Fliplet.Modal.alert({
+        message: 'Please configure your App Settings to contain the required information.'
+      });
     }
   } else {
     $('.button-unsigned-request').html('Please wait <i class="fa fa-spinner fa-pulse fa-fw"></i>');
@@ -2242,7 +2307,7 @@ function publishApp(context) {
       type: 'silent',
       changelog: 'Initial version'
     }
-  }
+  };
   Fliplet.API.request({
     method: 'POST',
     url: 'v1/apps/' + Fliplet.Env.get('appId') + '/publish',

@@ -461,6 +461,12 @@ h3 small {
   border: 1px solid #faebcc;
 }
 
+.hidden-area.danger {
+  color: #a94442;
+  background-color: #f2dede;
+  border-color: #ebccd1;
+}
+
 .radio.radio-icon ~ .radio.radio-icon,
 .checkbox.checkbox-icon ~ .checkbox.checkbox-icon {
   margin-top: 5px;
