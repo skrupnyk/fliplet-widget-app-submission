@@ -277,10 +277,12 @@ function appStoreTeamSetup(devEmail, loginButton) {
         });
 
         return team.type === "Company/Organization" && !_.isUndefined(itunesTeam);
-      })
-      appStoreTeams.forEach(function(team, i) {
-        $('.appStore-team').append('<option value="' + team.teamId + '" data-team-name="' + team.name + '">'+ team.name +' - ' + team.teamId + '</option>');
       });
+      var options = [];
+      appStoreTeams.forEach(function(team, i) {
+        options.push('<option value="' + team.teamId + '" data-team-name="' + team.name + '">'+ team.name +' - ' + team.teamId + '</option>');
+      });
+      $('.appStore-team').html(options.join(''));
 
       $('#fl-store-appDevLogin').removeClass('disabled');
       $('#fl-store-appDevPass').removeClass('disabled');
@@ -408,9 +410,11 @@ function enterpriseTeamSetup(devEmail, loginButton) {
       var enterpriseTeams = _.filter(teams, function(team) {
         return team.type === "In-House";
       })
+      var options = [];
       enterpriseTeams.forEach(function(team, i) {
-        $('.enterprise-team').append('<option value="' + team.teamId + '" data-team-name="' + team.name + '">'+ team.name +' - ' + team.teamId + '</option>');
+        options.push('<option value="' + team.teamId + '" data-team-name="' + team.name + '">'+ team.name +' - ' + team.teamId + '</option>');
       });
+      $('.enterprise-team').html(options.join(''));
 
       $('#fl-ent-appDevLogin').removeClass('disabled');
       $('#fl-ent-appDevPass').removeClass('disabled');
