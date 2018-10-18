@@ -1396,7 +1396,7 @@ function createCertificates(options) {
   options = options || {};
   return Fliplet.API.request({
     method: 'POST',
-    url: 'v1/organizations/' + options.organizationId + '/credentials/submission-' + options.submissionId + '/certificates'
+    url: 'v1/organizations/' + options.organizationId + '/credentials/submission-' + options.submissionId + '/certificates',
     data: {
       inHouse: options.inHouse
     }
