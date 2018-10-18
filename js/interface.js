@@ -1392,10 +1392,14 @@ function getCredential(organizationId, credentialKey) {
   });
 }
 
-function createCertificates(organizationId, id) {
+function createCertificates(options) {
+  options = options || {};
   return Fliplet.API.request({
     method: 'POST',
-    url: 'v1/organizations/' + organizationId + '/credentials/submission-' + id + '/certificates'
+    url: 'v1/organizations/' + options.organizationId + '/credentials/submission-' + options.submissionId + '/certificates'
+    data: {
+      inHouse: options.inHouse
+    }
   })
   .then(function(credential) {
     return Promise.resolve(credential);
@@ -1953,7 +1957,10 @@ $('.appStore-generate-cert').on('click', function() {
       teamName: teamName
     })
     .then(function() {
-      return createCertificates(organizationID, appStoreSubmission.id)
+      return createCertificates({
+        organizationId: organizationID,
+        submissionId: appStoreSubmission.id
+      })
         .then(function(response) {
           appStoreCertificateCreated = true;
           $('.appStore-generate-file-success').find('.appStore-file-name-success').html(response.certificate.name);
@@ -1999,7 +2006,10 @@ $('.appStore-replace-cert').on('click', function() {
             teamName: teamName
           })
           .then(function() {
-            return createCertificates(organizationID, appStoreSubmission.id)
+            return createCertificates({
+              organizationId: organizationID,
+              submissionId: appStoreSubmission.id
+            })
               .then(function(response) {
                 appStoreCertificateReplaced = true;
                 $('.appStore-previous-file-success').find('.appStore-file-name-success').html(response.certificate.name);
@@ -2156,7 +2166,11 @@ $('.enterprise-generate-cert').on('click', function() {
       teamName: teamName
     })
     .then(function() {
-      return createCertificates(organizationID, enterpriseSubmission.id)
+      return createCertificates({
+        organizationId: organizationID,
+        submissionId: enterpriseSubmission.id,
+        inHouse: true
+      })
         .then(function(response) {
           enterpriseCertificateCreated = true;
           $('.enterprise-generate-file-success').find('.enterprise-file-name-success').html(response.certificate.name);
@@ -2220,7 +2234,11 @@ $('.enterprise-replace-cert').on('click', function() {
             teamName: teamName
           })
           .then(function() {
-            return createCertificates(organizationID, enterpriseSubmission.id)
+            return createCertificates({
+              organiazationId: organizationID,
+              submissionId: enterpriseSubmission.id,
+              inHouse: true
+            })
               .then(function(response) {
                 enterpriseCertificateReplaced = true;
                 $('.enterprise-previous-file-success').find('.enterprise-file-name-success').html(response.certificate.name);
