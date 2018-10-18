@@ -348,6 +348,7 @@ h3 small {
 
 .app-build-status table tbody td {
   height: 60px;
+  border: none;
 }
 
 .app-build-status .app-build-holder {

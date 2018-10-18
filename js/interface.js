@@ -562,7 +562,9 @@ function submissionBuild(appSubmission, origin) {
     }, 10000);
   }, function(err) {
     $('.button-' + origin + '-request').html('Request App <i class="fa fa-paper-plane"></i>');
-    alert(err.responseJSON.message);
+    Fliplet.Modal.alert({
+      message: Fliplet.parseError(err)
+    });
   });
 }
 
@@ -627,7 +629,9 @@ function save(origin, submission) {
       });
     })
     .catch(function(err) {
-      alert(err.responseJSON.message);
+      Fliplet.Modal.alert({
+        message: Fliplet.parseError(err)
+      });
     });
 }
 
@@ -844,7 +848,9 @@ function requestBuild(origin, submission) {
     })
     .catch(function(err) {
       $('.button-' + origin + '-request').html('Request App <i class="fa fa-paper-plane"></i>');
-      alert(err.responseJSON.message);
+      Fliplet.Modal.alert({
+        message: Fliplet.parseError(err)
+      });
     });
 }
 
@@ -1386,10 +1392,14 @@ function getCredential(organizationId, credentialKey) {
   });
 }
 
-function createCertificates(organizationId, id) {
+function createCertificates(options) {
+  options = options || {};
   return Fliplet.API.request({
     method: 'POST',
-    url: 'v1/organizations/' + organizationId + '/credentials/submission-' + id + '/certificates'
+    url: 'v1/organizations/' + options.organizationId + '/credentials/submission-' + options.submissionId + '/certificates',
+    data: {
+      inHouse: options.inHouse
+    }
   })
   .then(function(credential) {
     return Promise.resolve(credential);
@@ -1947,11 +1957,16 @@ $('.appStore-generate-cert').on('click', function() {
       teamName: teamName
     })
     .then(function() {
-      return createCertificates(organizationID, appStoreSubmission.id)
+      return createCertificates({
+        organizationId: organizationID,
+        submissionId: appStoreSubmission.id
+      })
         .then(function(response) {
+          var p12Url = Fliplet.Env.get('apiUrl') + 'v1/organizations/' + organizationID + '/credentials/submission-' + appStoreSubmission.id + '/download/p12'
           appStoreCertificateCreated = true;
           $('.appStore-generate-file-success').find('.appStore-file-name-success').html(response.certificate.name);
           $('.appStore-generate-file-success').find('.appStore-file-expire-success').html(moment(response.certificate.expiresAt).format('MMMM Do YYYY'));
+          $('.appStore-generate-file-success').find('.appStore-file-download-success').attr('href', p12Url);
           $('.appStore-generate-file').removeClass('show');
           $('.appStore-generate-file-success').addClass('show');
           $this.html('Generate certificate');
@@ -1993,11 +2008,16 @@ $('.appStore-replace-cert').on('click', function() {
             teamName: teamName
           })
           .then(function() {
-            return createCertificates(organizationID, appStoreSubmission.id)
+            return createCertificates({
+              organizationId: organizationID,
+              submissionId: appStoreSubmission.id
+            })
               .then(function(response) {
+                var p12Url = Fliplet.Env.get('apiUrl') + 'v1/organizations/' + organizationID + '/credentials/submission-' + appStoreSubmission.id + '/download/p12'
                 appStoreCertificateReplaced = true;
                 $('.appStore-previous-file-success').find('.appStore-file-name-success').html(response.certificate.name);
                 $('.appStore-previous-file-success').find('.appStore-file-expire-success').html(moment(response.certificate.expiresAt).format('MMMM Do YYYY'));
+                $('.appStore-previous-file-success').find('.appStore-file-download-success').attr('href', p12Url);
                 $('.appStore-previous-file-success').addClass('show');
                 $this.html('Replace certificate');
                 $this.removeClass('disabled');
@@ -2150,11 +2170,17 @@ $('.enterprise-generate-cert').on('click', function() {
       teamName: teamName
     })
     .then(function() {
-      return createCertificates(organizationID, enterpriseSubmission.id)
+      return createCertificates({
+        organizationId: organizationID,
+        submissionId: enterpriseSubmission.id,
+        inHouse: true
+      })
         .then(function(response) {
+          var p12Url = Fliplet.Env.get('apiUrl') + 'v1/organizations/' + organizationID + '/credentials/submission-' + enterpriseSubmission.id + '/download/p12'
           enterpriseCertificateCreated = true;
           $('.enterprise-generate-file-success').find('.enterprise-file-name-success').html(response.certificate.name);
           $('.enterprise-generate-file-success').find('.enterprise-file-expire-success').html(moment(response.certificate.expiresAt).format('MMMM Do YYYY'));
+          $('.enterprise-generate-file-success').find('.enterprise-file-download-success').attr('href', p12Url);
           $('.enterprise-generate-file').removeClass('show');
           $('.enterprise-generate-file-success').addClass('show');
           $this.html('Generate certificate');
@@ -2214,11 +2240,17 @@ $('.enterprise-replace-cert').on('click', function() {
             teamName: teamName
           })
           .then(function() {
-            return createCertificates(organizationID, enterpriseSubmission.id)
+            return createCertificates({
+              organiazationId: organizationID,
+              submissionId: enterpriseSubmission.id,
+              inHouse: true
+            })
               .then(function(response) {
+                var p12Url = Fliplet.Env.get('apiUrl') + 'v1/organizations/' + organizationID + '/credentials/submission-' + enterpriseSubmission.id + '/download/p12'
                 enterpriseCertificateReplaced = true;
                 $('.enterprise-previous-file-success').find('.enterprise-file-name-success').html(response.certificate.name);
                 $('.enterprise-previous-file-success').find('.enterprise-file-expire-success').html(moment(response.certificate.expiresAt).format('MMMM Do YYYY'));
+                $('.enterprise-previous-file-success').find('.enterprise-file-download-success').attr('href', p12Url);
                 $('.enterprise-previous-file-success').addClass('show');
                 $this.html('Replace certificate');
                 $this.removeClass('disabled');
