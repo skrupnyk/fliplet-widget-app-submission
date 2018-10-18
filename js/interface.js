@@ -562,7 +562,9 @@ function submissionBuild(appSubmission, origin) {
     }, 10000);
   }, function(err) {
     $('.button-' + origin + '-request').html('Request App <i class="fa fa-paper-plane"></i>');
-    alert(err.responseJSON.message);
+    Fliplet.Modal.alert({
+      message: Fliplet.parseError(err)
+    });
   });
 }
 
@@ -627,7 +629,9 @@ function save(origin, submission) {
       });
     })
     .catch(function(err) {
-      alert(err.responseJSON.message);
+      Fliplet.Modal.alert({
+        message: Fliplet.parseError(err)
+      });
     });
 }
 
@@ -844,7 +848,9 @@ function requestBuild(origin, submission) {
     })
     .catch(function(err) {
       $('.button-' + origin + '-request').html('Request App <i class="fa fa-paper-plane"></i>');
-      alert(err.responseJSON.message);
+      Fliplet.Modal.alert({
+        message: Fliplet.parseError(err)
+      });
     });
 }
 
