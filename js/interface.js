@@ -96,9 +96,10 @@ function loadAppStoreData() {
       }
       $('[name="' + name + '"]').val(storeAppName);
 
-      if (!_.isUndefined($('[name="' + name + '"]').val()) && hasAppId) {
-        $('[name="' + name + '"]').attr('readonly', 'readonly');
-      }
+      // Makes sure app store name is read-only if it's already provided
+      // if (!_.isUndefined($('[name="' + name + '"]').val()) && hasAppId) {
+      //   $('[name="' + name + '"]').prop('readonly', true);
+      // }
       return;
     }
 
