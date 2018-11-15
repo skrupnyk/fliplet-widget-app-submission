@@ -1602,9 +1602,16 @@ $('[name="fl-store-keywords"]').on('tokenfield:createtoken', function(e) {
 $('.redirectToSettings, [data-change-settings]').on('click', function(event) {
   event.preventDefault();
 
-  Fliplet.Studio.emit('navigate', {
-    name: 'appSettings',
-    params: {
+  Fliplet.Studio.emit('close-overlay', {
+    name: 'publish-apple'
+  });
+
+  Fliplet.Studio.emit('overlay', {
+    name: 'app-settings',
+    options: {
+      size: 'large',
+      title: 'App Settings',
+      section: 'appSettingsGeneral',
       appId: Fliplet.Env.get('appId')
     }
   });
@@ -1613,9 +1620,16 @@ $('.redirectToSettings, [data-change-settings]').on('click', function(event) {
 $('[data-change-assets]').on('click', function(event) {
   event.preventDefault();
 
-  Fliplet.Studio.emit('navigate', {
-    name: 'launchAssets',
-    params: {
+  Fliplet.Studio.emit('close-overlay', {
+    name: 'publish-apple'
+  });
+
+  Fliplet.Studio.emit('overlay', {
+    name: 'app-settings',
+    options: {
+      size: 'large',
+      title: 'App Settings',
+      section: 'launchAssets',
       appId: Fliplet.Env.get('appId')
     }
   });
