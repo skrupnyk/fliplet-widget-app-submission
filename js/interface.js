@@ -1112,7 +1112,8 @@ function cloneCredentials(organizationId, credentialKey, submission, saveData) {
   });
 }
 
-function setCredentials(organizationId, id, data, verify = true) {
+function setCredentials(organizationId, id, data, verify) {
+  verify = typeof verify === 'undefined' ? true : verify;
   return Fliplet.API.request({
     method: 'PUT',
     url: 'v1/organizations/' + organizationId + '/credentials/submission-' + id + '?verify=' + verify,
