@@ -1101,13 +1101,13 @@ function cloneCredentials(organizationId, credentialKey, submission, saveData) {
     data: {
       key: submission.data['fl-credentials']
     }
-  }).then(() => {
+  }).then(function() {
     if (saveData) {
       return Fliplet.App.Submissions.update(submission.id, submission.data);
     }
 
     return Promise.resolve();
-  }).catch(() => {
+  }).catch(function() {
     //do nothing, a new credential will be created after the user logs in
   });
 }
@@ -1118,7 +1118,7 @@ function setCredentials(organizationId, id, data, verify = true) {
     url: 'v1/organizations/' + organizationId + '/credentials/submission-' + id + '?verify=' + verify,
     data: data
   })
-  .then(() => {
+  .then(function() {
     return Promise.resolve();
   })
 }
@@ -2363,7 +2363,7 @@ function publishApp(context) {
     method: 'POST',
     url: 'v1/apps/' + Fliplet.Env.get('appId') + '/publish',
     data: options
-  }).then((response) => {
+  }).then(function(response) {
     // Update appInfo
     appInfo.productionAppId = response.app.id;
 
@@ -2760,7 +2760,7 @@ function initialLoad(initial, timeout) {
             return obj.platform === 'apple';
           });
 
-          return Promise.all(appleOnly.map((obj) => {
+          return Promise.all(appleOnly.map(function(obj) {
             return Fliplet.Media.Folders.get({folderId: obj.folderId})
               .then(function(result) {
                 var tempObject = {
