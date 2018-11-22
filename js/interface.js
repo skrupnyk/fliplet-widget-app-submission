@@ -936,7 +936,7 @@ function saveEnterpriseData(request) {
 
     if (name === 'fl-ent-distribution') {
       var newValue = $('[name="'+name+'"]:checked').val();
-      if (newValue === 'previous-file') {
+      if (newValue === 'previous-file' && enterprisePreviousCredential) {
         pushData.apnTeamId = enterprisePreviousCredential.teamId;
       }
       if (newValue === 'generate-file' || newValue === 'upload-file') {
