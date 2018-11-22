@@ -888,7 +888,7 @@ function saveAppStoreData(request) {
 
     if (name === 'fl-store-distribution') {
       var newValue = $('[name="'+name+'"]:checked').val();
-      if (newValue === 'previous-file') {
+      if (newValue === 'previous-file' && appStorePreviousCredential) {
         pushData.apnTeamId = appStorePreviousCredential.teamId;
       }
       if (newValue === 'generate-file' || newValue === 'upload-file') {
@@ -936,7 +936,7 @@ function saveEnterpriseData(request) {
 
     if (name === 'fl-ent-distribution') {
       var newValue = $('[name="'+name+'"]:checked').val();
-      if (newValue === 'previous-file') {
+      if (newValue === 'previous-file' && enterprisePreviousCredential) {
         pushData.apnTeamId = enterprisePreviousCredential.teamId;
       }
       if (newValue === 'generate-file' || newValue === 'upload-file') {
@@ -1767,7 +1767,7 @@ $('#enterpriseConfiguration').validator().on('submit', function(event) {
           return;
         }
 
-        saveEnterpriseData(true);        
+        saveEnterpriseData(true);
       });
     } else {
       Fliplet.Modal.alert({
