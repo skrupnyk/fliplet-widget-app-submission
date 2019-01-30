@@ -41,11 +41,11 @@
               <div class="panel-body">
                 <div class="form-group clearfix app-list-name">
                   <div class="col-sm-4 control-label">
-                    <label>App store listing name</label>                                       
+                    <label>App store listing name</label>
                   </div>
                   <div class="col-sm-8 form-static">
                     <input type="text" name="fl-store-appName" class="form-control" id="fl-store-appName" data-validate="true" maxlength="30" required />
-                    <p class="help-block"><small>App names are limited to 30 characters.</small></p>   
+                    <p class="help-block"><small>App names are limited to 30 characters.</small></p>
                   </div>
                 </div>
                 <div class="form-group clearfix app-icon-name">
@@ -136,7 +136,7 @@
                   <div class="col-sm-8">
                     <input type="text" name="fl-store-iconName" class="form-control" id="fl-store-iconName" data-error="Please enter an app icon name" maxlength="30" required />
                     <div class="help-block with-errors"></div>
-                    <p class="help-block"><small>App names are limited to 30 characters.</small></p>                  
+                    <p class="help-block"><small>App names are limited to 30 characters.</small></p>
                   </div>
                 </div>
                 <div class="form-group clearfix">
@@ -256,37 +256,37 @@
                   </div>
                   <div class="col-sm-8">
                     <span class="fl-store-language-placeholder form-control hidden">Using default language set on Itunes</span>
-                    <label for="fl-store-language" class="dll-store-language select-proxy-display">                    
+                    <label for="fl-store-language" class="dll-store-language select-proxy-display">
                     <select id="fl-store-language" name="fl-store-language" data-label="select" class="hidden-select form-control" data-error="Please select a language" required>
-                      <option value="">-- Select a language</option>                      
+                      <option value="">-- Select a language</option>
                       <option value="zh-Hant">Chinese</option>
-                      <option value="zh-Hans">Chinese (Simplified)</option>                      
+                      <option value="zh-Hans">Chinese (Simplified)</option>
                       <option value="da">Danish</option>
                       <option value="nl-NL">Dutch</option>
                       <option value="en-AU">English (Australia)</option>
                       <option value="en-CA">English (Canada)</option>
                       <option value="en-GB">English (United Kingdom)</option>
-                      <option value="en-US" selected>English (United States)</option>                                            
+                      <option value="en-US" selected>English (United States)</option>
                       <option value="fi">Finnish</option>
                       <option value="fr-CA">French (Canada)</option>
-                      <option value="fr-FR">French (France)</option>                      
+                      <option value="fr-FR">French (France)</option>
                       <option value="de-DE">German</option>
-                      <option value="el">Greek</option>                      
-                      <option value="id">Indonesian</option>                      
+                      <option value="el">Greek</option>
+                      <option value="id">Indonesian</option>
                       <option value="it">Italian</option>
-                      <option value="ja">Japanese</option>                      
-                      <option value="ko">Korean</option>                     
-                      <option value="ms">Malay</option>                      
-                      <option value="no">Norwegian</option>                      
-                      <option value="pt-BR">Portuguese (Brazil)</option>                      
-                      <option value="pt-PT">Portuguese (Portugal)</option>                      
-                      <option value="ru">Russian</option>                      
+                      <option value="ja">Japanese</option>
+                      <option value="ko">Korean</option>
+                      <option value="ms">Malay</option>
+                      <option value="no">Norwegian</option>
+                      <option value="pt-BR">Portuguese (Brazil)</option>
+                      <option value="pt-PT">Portuguese (Portugal)</option>
+                      <option value="ru">Russian</option>
                       <option value="es-MX">Spanish (Mexico)</option>
-                      <option value="es-ES">Spanish (Spain)</option>                     
-                      <option value="sv">Swedish</option>                      
-                      <option value="th">Thai</option>                      
-                      <option value="tr">Turkish</option>                      
-                      <option value="vi">Vietnamese</option>                      
+                      <option value="es-ES">Spanish (Spain)</option>
+                      <option value="sv">Swedish</option>
+                      <option value="th">Thai</option>
+                      <option value="tr">Turkish</option>
+                      <option value="vi">Vietnamese</option>
                     </select>
                     <span class="icon fa fa-chevron-down"></span>
                   </label>
@@ -958,9 +958,9 @@
                     <label for="fl-store-subManual">Manual submission</label>
                     <p class="help-block label-helper">
                       <small>With this option, Apple will review and approve your app and you'll need to go into iTunes to manually release the app when you want.</small>
-                    </p>                    
+                    </p>
                   </div>
-                  <div class="col-sm-8">                    
+                  <div class="col-sm-8">
                     <div class="checkbox checkbox-icon">
                       <input type="checkbox" id="fl-store-manualRelease" name="fl-store-manualRelease">
                       <label for="fl-store-manualRelease" class="bolder">
@@ -1055,7 +1055,7 @@ If you have any questions please reply and I will be happy to answer any questio
 [Name]
                     </textarea>
                   </div>
-                </div>                
+                </div>
               </div>
             </div>
           </div>
@@ -1615,15 +1615,15 @@ If you have any questions please reply and I will be happy to answer any questio
           \{{/if}}
           \{{#if failed}}
           <td class="app-build-progress danger">
-            <div class="app-build-progress-holder"><i class="fa fa-exclamation-circle"></i> Failed</div>            
+            <div class="app-build-progress-holder"><i class="fa fa-exclamation-circle"></i> Failed</div>
           </td>
           <td class="app-build-details">
             \{{#if updatedAt}}<span><span class="icon"><i class="fa fa-flag-checkered"></i> Finished on:</span> \{{updatedAt}}</span>\{{/if}}
-            \{{#if message}}               
+            \{{#if message}}
               <div class="app-build-name">\{{message}}</div>
             \{{else}}
               <div class="app-build-name">There was an error building your app</div>
-            \{{/if}}            
+            \{{/if}}
           </td>
           \{{/if}} \{{#if cancelled}}
           <td class="app-build-progress warning">
