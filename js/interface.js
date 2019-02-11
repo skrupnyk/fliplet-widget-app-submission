@@ -2476,10 +2476,10 @@ function checkSubmissionStatus(origin, iosSubmissions) {
 
       build.id = submission.id;
       build.updatedAt = ((submission.status === 'completed' || submission.status === 'failed' || submission.status === 'cancelled' || submission.status === 'ready-for-testing' || submission.status === 'tested') && submission.updatedAt) ?
-        moment(submission.updatedAt).format('MMM Do YYYY, HH:mm') :
+        moment(submission.updatedAt).format('MMM Do YYYY, h:mm:ss a') :
         '';
       build.submittedAt = ((submission.status === 'queued' || submission.status === 'submitted') && submission.submittedAt) ?
-        moment(submission.submittedAt).format('MMM Do YYYY, HH:mm') :
+        moment(submission.submittedAt).format('MMM Do YYYY, h:mm:ss a') :
         '';
       build[submission.status] = true;
       build.fileUrl = appBuild ? appBuild.url : '';
