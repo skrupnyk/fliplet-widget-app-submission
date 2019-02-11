@@ -1003,6 +1003,8 @@ function saveEnterpriseData(request) {
       enterpriseSubmission.data = data;
       notificationSettings = pushData;
 
+      delete enterpriseSubmission.data['fl-credentials'];
+
       savePushData(true);
 
       if (request) {
@@ -1742,18 +1744,20 @@ $('#enterpriseConfiguration').validator().on('submit', function(event) {
 
   var credentialKind = $('[name="fl-ent-distribution"]:checked').val();
 
-  if (credentialKind === 'generate-file' && !enterpriseCertificateCreated) {
-    Fliplet.Modal.alert({
-      message: 'You need to generate a certificate before requesting a submission'
-    });
-    return;
-  }
+  if (!enterpriseManual) {
+    if (credentialKind === 'generate-file' && !enterpriseCertificateCreated) {
+      Fliplet.Modal.alert({
+        message: 'You need to generate a certificate before requesting a submission'
+      });
+      return;
+    }
 
-  if (credentialKind === 'upload-file' && (!enterpriseFileField.files || !enterpriseFileField.files[0])) {
-    Fliplet.Modal.alert({
-      message: 'You need to upload a certificate before requesting a submission'
-    });
-    return;
+    if (credentialKind === 'upload-file' && (!enterpriseFileField.files || !enterpriseFileField.files[0])) {
+      Fliplet.Modal.alert({
+        message: 'You need to upload a certificate before requesting a submission'
+      });
+      return;
+    }
   }
 
   if (appInfo && appInfo.productionAppId) {
