@@ -1003,6 +1003,8 @@ function saveEnterpriseData(request) {
       enterpriseSubmission.data = data;
       notificationSettings = pushData;
 
+      delete enterpriseSubmission.data['fl-credentials'];
+
       savePushData(true);
 
       if (request) {
@@ -1742,18 +1744,20 @@ $('#enterpriseConfiguration').validator().on('submit', function(event) {
 
   var credentialKind = $('[name="fl-ent-distribution"]:checked').val();
 
-  if (credentialKind === 'generate-file' && !enterpriseCertificateCreated) {
-    Fliplet.Modal.alert({
-      message: 'You need to generate a certificate before requesting a submission'
-    });
-    return;
-  }
+  if (!enterpriseManual) {
+    if (credentialKind === 'generate-file' && !enterpriseCertificateCreated) {
+      Fliplet.Modal.alert({
+        message: 'You need to generate a certificate before requesting a submission'
+      });
+      return;
+    }
 
-  if (credentialKind === 'upload-file' && (!enterpriseFileField.files || !enterpriseFileField.files[0])) {
-    Fliplet.Modal.alert({
-      message: 'You need to upload a certificate before requesting a submission'
-    });
-    return;
+    if (credentialKind === 'upload-file' && (!enterpriseFileField.files || !enterpriseFileField.files[0])) {
+      Fliplet.Modal.alert({
+        message: 'You need to upload a certificate before requesting a submission'
+      });
+      return;
+    }
   }
 
   if (appInfo && appInfo.productionAppId) {
@@ -2472,10 +2476,10 @@ function checkSubmissionStatus(origin, iosSubmissions) {
 
       build.id = submission.id;
       build.updatedAt = ((submission.status === 'completed' || submission.status === 'failed' || submission.status === 'cancelled' || submission.status === 'ready-for-testing' || submission.status === 'tested') && submission.updatedAt) ?
-        moment(submission.updatedAt).format('MMM Do YYYY, h:mm:ss a') :
+        moment(submission.updatedAt).format('MMM Do YYYY, HH:mm') :
         '';
       build.submittedAt = ((submission.status === 'queued' || submission.status === 'submitted') && submission.submittedAt) ?
-        moment(submission.submittedAt).format('MMM Do YYYY, h:mm:ss a') :
+        moment(submission.submittedAt).format('MMM Do YYYY, HH:mm') :
         '';
       build[submission.status] = true;
       build.fileUrl = appBuild ? appBuild.url : '';
