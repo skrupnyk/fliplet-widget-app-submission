@@ -1584,7 +1584,7 @@ If you have any questions please reply and I will be happy to answer any questio
             \{{#if fileUrl}}
             <div class="download-build"><a href="\{{fileUrl}}"><i class="fa fa-download"></i> Download file</a></div>\{{/if}}
             \{{#if debugFileUrl}}
-            <div class="download-build"><a href="\{{debugFileUrl}}"><i class="fa fa-download"></i> Download debug app</a></div>\{{/if}}
+            <div class="download-build"><a href="\{{debugFileUrl}}"><i class="fa fa-download"></i> Download debug app</a></div>\{{else}}<div class="download-build">Debug app not available</div>\{{/if}}
           </td>
           <td class="app-build-details">
             \{{#if updatedAt}}<span><span class="icon"><i class="fa fa-flag-checkered"></i> Finished on:</span> \{{updatedAt}}</span>\{{/if}}
@@ -1597,7 +1597,7 @@ If you have any questions please reply and I will be happy to answer any questio
             \{{#if fileUrl}}
             <div class="download-build"><a href="\{{fileUrl}}"><i class="fa fa-download"></i> Download file</a></div>\{{/if}}
             \{{#if debugFileUrl}}
-            <div class="download-build"><a href="\{{debugFileUrl}}"><i class="fa fa-download"></i> Download debug app</a></div>\{{/if}}
+            <div class="download-build"><a href="\{{debugFileUrl}}"><i class="fa fa-download"></i> Download debug app</a></div>\{{else}}<div class="download-build">Debug app not available</div>\{{/if}}
           </td>
           <td class="app-build-details">
             \{{#if updatedAt}}<span><span class="icon"><i class="fa fa-clock-o"></i> Ready on:</span> \{{updatedAt}}</span>\{{/if}}
