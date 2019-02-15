@@ -1588,7 +1588,7 @@ $('.panel-group').on('shown.bs.collapse', '.panel-collapse', function() {
     Fliplet.Widget.autosize();
   });
 
-$('a[data-toggle="tab"').on('shown.bs.tab', function() {
+$('a[data-toggle="tab"]').on('shown.bs.tab', function() {
     Fliplet.Widget.autosize();
   })
   .on('hidden.bs.tab', function() {
