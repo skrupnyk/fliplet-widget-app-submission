@@ -40,6 +40,7 @@ var screenShotsMobile = [];
 var screenShotsTablet = [];
 var haveScreenshots = false;
 var screenshotValidationNotRequired = false;
+var socket = Fliplet.Socket({ login: true });
 
 /* FUNCTIONS */
 String.prototype.toCamelCase = function() {
@@ -2822,3 +2823,12 @@ function initialLoad(initial, timeout) {
 
 // Start
 initLoad = initialLoad(true, 0);
+
+// Listen for 2FA code when requested
+socket.on('aab.apple.login.2fa', function (data) {
+  // Ask user for code
+  var code = prompt('Please type the 2FA code to log in');
+
+  // Notify requester with the code
+  socket.to(data.clientId).emit('aab.apple.login.2fa.code', code);
+});
