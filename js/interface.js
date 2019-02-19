@@ -2856,7 +2856,7 @@ socket.on('aab.apple.login.2fa', function (data) {
     }
 
     // Notify requester with the code
-    // @Question What happens when 2FA fails?
+    // @Question What happens when 2FA succeeds/fails?
     socket.to(data.clientId).emit('aab.apple.login.2fa.code', code);
   });
 });
