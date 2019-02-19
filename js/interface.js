@@ -2824,11 +2824,39 @@ function initialLoad(initial, timeout) {
 // Start
 initLoad = initialLoad(true, 0);
 
+// @TODO Move function
+function prompt2FACode() {
+  // @TODO Update Fliplet.Modal in fliplet-api for simpler call
+  return Fliplet.Modal.prompt({
+    title: 'Please enter the verification code to verify your login'
+  }).then(function (code) {
+    if (code === null) {
+      return null;
+    }
+
+    if (code === '') {
+      return Fliplet.Modal.alert({
+        message: 'You must enter the verifiaction code to log in'
+      }).then(function () {
+        return prompt2FACode();
+      });
+    }
+
+    return code;
+  });
+}
+
 // Listen for 2FA code when requested
 socket.on('aab.apple.login.2fa', function (data) {
   // Ask user for code
-  var code = prompt('Please type the 2FA code to log in');
+  prompt2FACode().then(function (code) {
+    if (code === null) {
+      // @TODO Cancels login
+      return;
+    }
 
-  // Notify requester with the code
-  socket.to(data.clientId).emit('aab.apple.login.2fa.code', code);
+    // Notify requester with the code
+    // @Question What happens when 2FA fails?
+    socket.to(data.clientId).emit('aab.apple.login.2fa.code', code);
+  });
 });
