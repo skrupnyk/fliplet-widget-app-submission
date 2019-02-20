@@ -1990,7 +1990,7 @@ function select2FAMethod(data) {
       return Fliplet.Modal.alert({
         message: 'You must select a device to verify your identity'
       }).then(function () {
-        return select2FAMethod();
+        return select2FAMethod(data);
       });
     }
 
