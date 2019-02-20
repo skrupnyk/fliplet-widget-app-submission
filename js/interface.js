@@ -1518,7 +1518,8 @@ function publishApp(context) {
       changelog: 'Initial version'
     }
   };
-  Fliplet.API.request({
+
+  return Fliplet.API.request({
     method: 'POST',
     url: 'v1/apps/' + Fliplet.Env.get('appId') + '/publish',
     data: options
@@ -1545,6 +1546,9 @@ function publishApp(context) {
       default:
         break;
     }
+  }).catch(function (err) {
+    Fliplet.Modal.alert({ message: Fliplet.parseError(err) });
+    return Promise.reject(err);
   });
 }
 
@@ -2232,9 +2236,14 @@ $('#appStoreConfiguration').validator().on('submit', function(event) {
       });
     }
   } else {
+    var initialHtml = $('.button-appStore-request').html();
     $('.button-appStore-request').html('Please wait <i class="fa fa-spinner fa-pulse fa-fw"></i>');
     $('.button-appStore-request').prop('disabled', true);
-    publishApp('appStore');
+
+    publishApp('appStore').catch(function () {
+      $('.button-appStore-request').html(initialHtml);
+      $('.button-appStore-request').prop('disabled', false);
+    });;
   }
 
   // Gives time to Validator to apply classes
@@ -2307,9 +2316,14 @@ $('#enterpriseConfiguration').validator().on('submit', function(event) {
       });
     }
   } else {
+    var initialHtml = $('.button-enterprise-request').html();
     $('.button-enterprise-request').html('Please wait <i class="fa fa-spinner fa-pulse fa-fw"></i>');
     $('.button-enterprise-request').prop('disabled', true);
-    publishApp('enterprise');
+
+    publishApp('enterprise').catch(function () {
+      $('.button-enterprise-request').html(initialHtml);
+      $('.button-enterprise-request').prop('disabled', false);
+    });
   }
 
   // Gives time to Validator to apply classes
@@ -2351,9 +2365,14 @@ $('#unsignedConfiguration').validator().on('submit', function(event) {
       });
     }
   } else {
+    var initialHtml = $('.button-unsigned-request').html();
     $('.button-unsigned-request').html('Please wait <i class="fa fa-spinner fa-pulse fa-fw"></i>');
     $('.button-unsigned-request').prop('disabled', true);
-    publishApp('unsigned');
+
+    publishApp('unsigned').catch(function () {
+      $('.button-unsigned-request').html(initialHtml);
+      $('.button-unsigned-request').prop('disabled', false);
+    });
   }
 
   // Gives time to Validator to apply classes
