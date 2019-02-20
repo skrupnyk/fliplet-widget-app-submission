@@ -2851,7 +2851,7 @@ socket.on('aab.apple.login.2fa', function (data) {
   // Ask user for code
   prompt2FACode().then(function (code) {
     if (code === null) {
-      // @TODO Cancels login
+      socket.to(data.clientId).emit('aab.apple.login.2fa.cancel', code);
       return;
     }
 
