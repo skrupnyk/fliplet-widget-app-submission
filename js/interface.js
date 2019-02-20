@@ -2836,7 +2836,7 @@ function prompt2FACode() {
 
     if (code === '') {
       return Fliplet.Modal.alert({
-        message: 'You must enter the verifiaction code to log in'
+        message: 'You must enter the verification code to log in'
       }).then(function () {
         return prompt2FACode();
       });
