@@ -2430,9 +2430,7 @@ $('.login-appStore-button').on('click', function() {
       })
       .catch(function(error) {
         console.log(error);
-        if (error.responseJSON) {
-          $this.nextAll('.login-error').html(error.responseJSON.message);
-        }
+        $this.nextAll('.login-error').html(Fliplet.parseError(error));
         $this.html('Log in');
         $this.removeClass('disabled');
         Fliplet.Widget.autosize();
@@ -2537,9 +2535,8 @@ $('.appStore-generate-cert').on('click', function() {
     .catch(function(error) {
       $this.html('Generate certificate');
       $this.removeClass('disabled');
-      if (error.responseJSON.message) {
-        $('.generate-error').html(error.responseJSON.message);
-      }
+      console.log(error);
+      $('.generate-error').html(Fliplet.parseError(error));
     });
 });
 
@@ -2588,9 +2585,8 @@ $('.appStore-replace-cert').on('click', function() {
       .catch(function(error) {
         $this.html('Replace certificate');
         $this.removeClass('disabled');
-        if (error.responseJSON.message) {
-          $('.replace-error').html(error.responseJSON.message);
-        }
+        console.log(error);
+        $('.replace-error').html(Fliplet.parseError(error));
       });
     } else {
       $this.html('Replace certificate');
@@ -2645,9 +2641,8 @@ $('.login-enterprise-button').on('click', function() {
       return enterpriseTeamSetup(devEmail, $this);
     })
     .catch(function(error) {
-      if (error.responseJSON) {
-        $this.nextAll('.login-error').html(error.responseJSON.message);
-      }
+      console.log(error);
+      $this.nextAll('.login-error').html(Fliplet.parseError(error));
       $this.html('Log in');
       $this.removeClass('disabled');
       Fliplet.Widget.autosize();
@@ -2750,9 +2745,8 @@ $('.enterprise-generate-cert').on('click', function() {
     .catch(function(error) {
       $this.html('Generate certificate');
       $this.removeClass('disabled');
-      if (error.responseJSON.message) {
-        $('.generate-error').html(error.responseJSON.message);
-      }
+      console.log(error);
+      $('.generate-error').html(Fliplet.parseError(error));
     });
 });
 
@@ -2820,9 +2814,8 @@ $('.enterprise-replace-cert').on('click', function() {
       .catch(function(error) {
         $this.html('Replace certificate');
         $this.removeClass('disabled');
-        if (error.responseJSON.message) {
-          $('.replace-error').html(error.responseJSON.message);
-        }
+        console.log(error);
+        $('.replace-error').html(Fliplet.parseError(error));
       });
   } else {
     $this.html('Replace certificate');
