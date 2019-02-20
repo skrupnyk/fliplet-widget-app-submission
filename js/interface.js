@@ -1852,7 +1852,6 @@ function initialLoad(initial, timeout) {
   } else {
     getSubmissions()
       .then(function(submissions) {
-
         if (!submissions.length) {
           return Promise.all([
             Fliplet.App.Submissions.create({
