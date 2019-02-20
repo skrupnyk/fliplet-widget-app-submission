@@ -1989,7 +1989,7 @@ function select2FAMethod(data) {
 
     if (selection === '') {
       return Fliplet.Modal.alert({
-        message: 'You must select a device to continue.'
+        message: 'You must choose a device to continue.'
       }).then(function () {
         return select2FAMethod(data);
       });
