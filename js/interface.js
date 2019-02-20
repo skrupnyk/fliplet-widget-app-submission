@@ -1967,8 +1967,38 @@ function initialLoad(initial, timeout) {
   }
 }
 
+function select2FAMethod(data) {
+  data = data || {};
+
+  var options = _.map(data.devices, function (value, index) {
+    return {
+      text: value,
+      value: index + 1
+    };
+  });
+
+  return Fliplet.Modal.prompt({
+    title: 'Please select a device to verify your identity',
+    inputType: 'select',
+    inputOptions: options
+  }).then(function (selection) {
+    if (selection === null) {
+      return null;
+    }
+
+    if (selection === '') {
+      return Fliplet.Modal.alert({
+        message: 'You must select a device to verify your identity'
+      }).then(function () {
+        return select2FAMethod();
+      });
+    }
+
+    return selection;
+  });
+}
+
 function prompt2FA() {
-  // @TODO Update Fliplet.Modal in fliplet-api for simpler call
   return Fliplet.Modal.prompt({
     title: 'Please enter the verification code to verify your login'
   }).then(function (code) {
@@ -2886,10 +2916,14 @@ socket.on('aab.apple.login.2fa', function (data) {
 socket.on('aab.apple.login.2fa.devices', function (data) {
   console.log('Devices', data.devices);
 
-  // @TODO: select device
-  // Selected index should start from 1, not 0
+  select2FAMethod(data).then(function (selection) {
+    if (selection === null) {
+      on2FACancel();
+      return;
+    }
 
-  socket.to(data.clientId).emit('aab.apple.login.2fa.device', 1);
+    socket.to(data.clientId).emit('aab.apple.login.2fa.device', selection);
+  });
 });
 
 // Listen for a 2FA code successfully entered
