@@ -2128,6 +2128,12 @@ $('#appStoreConfiguration, #enterpriseConfiguration, #unsignedConfiguration').on
 });
 
 $('#appStoreConfiguration').validator().on('submit', function(event) {
+  if (_.includes(['fl-store-appDevLogin', 'fl-store-appDevPass'], document.activeElement.id)) {
+    // User submitted app store login form
+    $('.login-appStore-button').trigger('click');
+    return;
+  }
+
   if (event.isDefaultPrevented()) {
     // Gives time to Validator to apply classes
     setTimeout(checkGroupErrors, 0);
@@ -2205,6 +2211,12 @@ $('#appStoreConfiguration').validator().on('submit', function(event) {
 });
 
 $('#enterpriseConfiguration').validator().on('submit', function(event) {
+  if (_.includes(['fl-ent-appDevLogin', 'fl-ent-appDevPass'], document.activeElement.id)) {
+    // User submitted enterprise login form
+    $('.login-enterprise-button').trigger('click');
+    return;
+  }
+
   if (event.isDefaultPrevented()) {
     // Gives time to Validator to apply classes
     setTimeout(checkGroupErrors, 0);
