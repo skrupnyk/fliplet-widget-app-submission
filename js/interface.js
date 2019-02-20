@@ -40,7 +40,11 @@ var screenShotsMobile = [];
 var screenShotsTablet = [];
 var haveScreenshots = false;
 var screenshotValidationNotRequired = false;
-var socket = Fliplet.Socket({ login: true });
+
+var socket = Fliplet.Socket({
+  transports: ['polling'], // avoid being blocked by AdBlockers
+  login: true
+});
 
 /* FUNCTIONS */
 String.prototype.toCamelCase = function() {
