@@ -50,12 +50,12 @@ String.prototype.toCamelCase = function() {
   }).replace(/([^A-Z-a-z])/g, '').toLowerCase();
 };
 
-var createBundleID = function(orgName, appName) {
+function createBundleID(orgName, appName) {
   return $.ajax({
     url: "https://itunes.apple.com/lookup?bundleId=com." + orgName + "." + appName,
     dataType: "jsonp"
   });
-};
+}
 
 function incrementVersionNumber(versionNumber) {
   var splitNumber = versionNumber.split('.');
@@ -1510,6 +1510,484 @@ function validateScreenshots() {
   return true;
 }
 
+function publishApp(context) {
+  var options = {
+    release: {
+      type: 'silent',
+      changelog: 'Initial version'
+    }
+  };
+  Fliplet.API.request({
+    method: 'POST',
+    url: 'v1/apps/' + Fliplet.Env.get('appId') + '/publish',
+    data: options
+  }).then(function(response) {
+    // Update appInfo
+    appInfo.productionAppId = response.app.id;
+
+    switch(context) {
+      case 'appStore':
+        $('.button-appStore-request').html('Request App <i class="fa fa-paper-plane"></i>');
+        $('.button-appStore-request').prop('disabled', false);
+        $('#appStoreConfiguration').validator().trigger('submit');
+        break;
+      case 'enterprise':
+        $('.button-enterprise-request').html('Request App <i class="fa fa-paper-plane"></i>');
+        $('.button-enterprise-request').prop('disabled', false);
+        $('#enterpriseConfiguration').validator().trigger('submit');
+        break;
+      case 'unsigned':
+        $('.button-unsigned-request').html('Request App <i class="fa fa-paper-plane"></i>');
+        $('.button-unsigned-request').prop('disabled', false);
+        $('#unsignedConfiguration').validator().trigger('submit');
+        break;
+      default:
+        break;
+    }
+  });
+}
+
+function compileStatusTable(withData, origin, buildsData) {
+  if (withData) {
+    var template = Handlebars.compile(statusTableTemplate);
+    var html = template(buildsData);
+
+    if (origin === "appStore") {
+      $statusAppStoreTableElement.html(html);
+    }
+    if (origin === "enterprise") {
+      $statusEnterpriseTableElement.html(html);
+    }
+    if (origin === "unsigned") {
+      $statusUnsignedTableElement.html(html);
+    }
+  } else {
+    if (origin === "appStore") {
+      $statusAppStoreTableElement.html('');
+    }
+    if (origin === "enterprise") {
+      $statusEnterpriseTableElement.html('');
+    }
+    if (origin === "unsigned") {
+      $statusUnsignedTableElement.html('');
+    }
+  }
+
+  Fliplet.Widget.autosize();
+}
+
+function checkSubmissionStatus(origin, iosSubmissions) {
+  var submissionsToShow = _.filter(iosSubmissions, function(submission) {
+    return submission.status === "queued" || submission.status === "submitted" || submission.status === "processing" || submission.status === "completed" || submission.status === "failed" || submission.status === "cancelled" || submission.status === "ready-for-testing" || submission.status === "tested";
+  });
+
+  var buildsData = [];
+  if (submissionsToShow.length) {
+    submissionsToShow.forEach(function(submission) {
+      var build = {};
+      var appBuild;
+      var debugHtmlPage;
+
+      // Default copy for testing status for different users
+      if (submission.status === 'ready-for-testing') {
+        if (userInfo.user && (userInfo.user.isAdmin || userInfo.user.isImpersonating)) {
+          // Fliplet users
+          build.testingStatus = 'Ready for testing';
+          build.testingMessage = 'App is ready for testing';
+        } else {
+          // Normal users
+          build.testingStatus = 'In testing';
+          build.testingMessage = 'Your app is being tested by Fliplet';
+        }
+      }
+
+      if (submission.result.appBuild && submission.result.appBuild.files) {
+        appBuild = _.find(submission.result.appBuild.files, function(file) {
+          return file.contentType === 'application/octet-stream';
+        });
+      } else if (submission.data.previousResults && submission.data.previousResults.appBuild && submission.data.previousResults.appBuild.files) {
+        appBuild = _.find(submission.data.previousResults.appBuild.files, function(file) {
+          return file.contentType === 'application/octet-stream';
+        });
+      }
+
+      if (submission.result.debugHtmlPage && submission.result.debugHtmlPage.files) {
+        debugHtmlPage = _.find(submission.result.debugHtmlPage.files, function(file) {
+          return file.contentType === 'text/html';
+        });
+      } else if (submission.data.previousResults && submission.data.previousResults.debugHtmlPage && submission.data.previousResults.debugHtmlPage.files) {
+        debugHtmlPage = _.find(submission.data.previousResults.debugHtmlPage.files, function(file) {
+          return file.contentType === 'text/html';
+        });
+      }
+
+      build.id = submission.id;
+      build.updatedAt = ((submission.status === 'completed' || submission.status === 'failed' || submission.status === 'cancelled' || submission.status === 'ready-for-testing' || submission.status === 'tested') && submission.updatedAt) ?
+        moment(submission.updatedAt).format('MMM Do YYYY, h:mm:ss a') :
+        '';
+      build.submittedAt = ((submission.status === 'queued' || submission.status === 'submitted') && submission.submittedAt) ?
+        moment(submission.submittedAt).format('MMM Do YYYY, h:mm:ss a') :
+        '';
+      build[submission.status] = true;
+      build.fileUrl = appBuild ? appBuild.url : '';
+
+      if (submission.result.message) {
+        build.message = submission.result.message;
+      }
+
+      if (userInfo.user && (userInfo.user.isAdmin || userInfo.user.isImpersonating)) {
+        build.debugFileUrl = debugHtmlPage ? debugHtmlPage.url : '';
+      }
+
+      buildsData.push(build);
+    });
+
+    compileStatusTable(true, origin, buildsData);
+  } else {
+    compileStatusTable(false, origin);
+  }
+}
+
+function submissionChecker(submissions) {
+  var asub = _.filter(submissions, function(submission) {
+    return submission.data.submissionType === "appStore" && submission.platform === "ios";
+  });
+
+  var completedAsub = _.filter(asub, function(submission) {
+    return submission.status === "completed";
+  });
+
+  //Get the Submission data from the first completed submission, it has the certification values that are in use on the app store.
+  previousAppStoreSubmission = _.minBy(completedAsub, function(el) {
+    return el.id;
+  });
+
+  appStoreSubmissionInStore = (completedAsub.length > 0);
+
+  asub = _.orderBy(asub, function(submission) {
+    return new Date(submission.createdAt).getTime();
+  }, ['desc']);
+  checkSubmissionStatus("appStore", asub);
+
+  appStoreSubmission = _.maxBy(asub, function(el) {
+    return new Date(el.createdAt).getTime();
+  });
+
+  if (!appStoreSubmission) {
+    appStoreSubmission = {};
+  }
+
+  var cloneAppStoreCredentialsPromise = Promise.resolve();
+  if (appStoreSubmission.data && !appStoreSubmission.data['fl-credentials']) {
+
+    var prevSubCred = _.filter(asub, function(submission) {
+      return submission.data && submission.data['fl-credentials'];
+    });
+
+    var previousSubWithCredentials = _.maxBy(prevSubCred, function(el) {
+      return new Date(el.createdAt).getTime();
+    });
+
+    appStoreSubmission.data['fl-credentials'] = 'submission-' + appStoreSubmission.id;
+
+    if(previousSubWithCredentials) {
+      cloneAppStoreCredentialsPromise = cloneCredentials(organizationID, previousSubWithCredentials.data['fl-credentials'], appStoreSubmission, true);
+    }
+  }
+
+  var esub = _.filter(submissions, function(submission) {
+    return submission.data.submissionType === "enterprise" && submission.platform === "ios";
+  });
+
+  var completedEsub = _.filter(esub, function(submission) {
+    return submission.status === "completed";
+  });
+  //Get the Submission data from the first completed submission, it has certification values that are in use on the developer portal.
+  previousEnterpriseStoreSubmission = _.minBy(completedEsub, function(el) {
+    return el.id;
+  });
+
+  esub = _.orderBy(esub, function(submission) {
+    return new Date(submission.createdAt).getTime();
+  }, ['desc']);
+  checkSubmissionStatus("enterprise", esub);
+
+  enterpriseSubmission = _.maxBy(esub, function(el) {
+    return new Date(el.createdAt).getTime();
+  });
+
+  if (!enterpriseSubmission) {
+    enterpriseSubmission = {};
+  }
+
+  var cloneEnterpriseCredentialsPromise = Promise.resolve();
+  if (enterpriseSubmission.data && !enterpriseSubmission.data['fl-credentials']) {
+
+    var prevSubCred = _.filter(esub, function(submission) {
+      return submission.data && submission.data['fl-credentials'];
+    });
+
+    var previousSubWithCredentials = _.maxBy(prevSubCred, function(el) {
+      return new Date(el.createdAt).getTime();
+    });
+
+    enterpriseSubmission.data['fl-credentials'] = 'submission-' + enterpriseSubmission.id;
+
+    if(previousSubWithCredentials) {
+      cloneEnterpriseCredentialsPromise = cloneCredentials(organizationID, previousSubWithCredentials.data['fl-credentials'], enterpriseSubmission, true);
+    }
+  }
+
+  var usub = _.filter(submissions, function(submission) {
+    return submission.data.submissionType === "unsigned" && submission.platform === "ios";
+  });
+
+  usub = _.orderBy(usub, function(submission) {
+    return new Date(submission.createdAt).getTime();
+  }, ['desc']);
+  checkSubmissionStatus("unsigned", usub);
+
+  usub = _.maxBy(usub, function(el) {
+    return new Date(el.createdAt).getTime();
+  });
+  unsignedSubmission = usub;
+
+  return cloneAppStoreCredentialsPromise.then(function () {
+    return cloneEnterpriseCredentialsPromise;
+  }).then(function () {
+    if (_.isEmpty(appStoreSubmission)) {
+      return Fliplet.App.Submissions.create({
+        platform: 'ios',
+        data: {
+          submissionType: "appStore"
+        }
+      })
+      .then(function(submission) {
+        appStoreSubmission = submission;
+        return Promise.resolve();
+      });
+    }
+
+    return Promise.resolve();
+  }).then(function () {
+    if (_.isEmpty(enterpriseSubmission)) {
+      return Fliplet.App.Submissions.create({
+        platform: 'ios',
+        data: {
+          submissionType: "enterprise"
+        }
+      })
+      .then(function(submission) {
+        enterpriseSubmission = submission;
+        return Promise.resolve();
+      });
+    }
+
+    return Promise.resolve();
+  }).then(function () {
+    if (_.isEmpty(unsignedSubmission)) {
+      return Fliplet.App.Submissions.create({
+        platform: 'ios',
+        data: {
+          submissionType: "unsigned"
+        }
+      })
+      .then(function(submission) {
+        unsignedSubmission = submission;
+        return Promise.resolve();
+      });
+    }
+
+    return Promise.resolve();
+  });
+}
+
+function iosSubmissionChecker(submissions) {
+  var asub = _.filter(submissions, function(submission) {
+    return submission.data.submissionType === "appStore" && submission.platform === "ios";
+  });
+
+  var esub = _.filter(submissions, function(submission) {
+    return submission.data.submissionType === "enterprise" && submission.platform === "ios";
+  });
+
+  var usub = _.filter(submissions, function(submission) {
+    return submission.data.submissionType === "unsigned" && submission.platform === "ios";
+  });
+
+  // Ordering
+  asub = _.orderBy(asub, function(submission) {
+    return new Date(submission.createdAt).getTime();
+  }, ['desc']);
+  esub = _.orderBy(esub, function(submission) {
+    return new Date(submission.createdAt).getTime();
+  }, ['desc']);
+  usub = _.orderBy(usub, function(submission) {
+    return new Date(submission.createdAt).getTime();
+  }, ['desc']);
+
+  checkSubmissionStatus("appStore", asub);
+  checkSubmissionStatus("enterprise", esub);
+  checkSubmissionStatus("unsigned", usub);
+}
+
+function getSubmissions() {
+  return Fliplet.App.Submissions.get();
+}
+
+function initialLoad(initial, timeout) {
+  if (!initial) {
+    initLoad = setTimeout(function() {
+      getSubmissions()
+        .then(function(submissions) {
+          iosSubmissionChecker(submissions);
+          initialLoad(false, 15000);
+        });
+    }, timeout);
+  } else {
+    getSubmissions()
+      .then(function(submissions) {
+
+        if (!submissions.length) {
+          return Promise.all([
+            Fliplet.App.Submissions.create({
+              platform: 'ios',
+              data: {
+                submissionType: "appStore"
+              }
+            })
+            .then(function(submission) {
+              appStoreSubmission = submission;
+            }),
+            Fliplet.App.Submissions.create({
+              platform: 'ios',
+              data: {
+                submissionType: "unsigned"
+              }
+            })
+            .then(function(submission) {
+              unsignedSubmission = submission;
+            }),
+            Fliplet.App.Submissions.create({
+              platform: 'ios',
+              data: {
+                submissionType: "enterprise"
+              }
+            })
+            .then(function(submission) {
+              enterpriseSubmission = submission;
+            })
+          ]);
+        }
+
+       return Fliplet.API.request({
+          cache: true,
+          url: 'v1/user'
+        })
+        .then(function(user) {
+          userInfo = user;
+          return submissionChecker(submissions);
+        });
+      })
+      .then(function() {
+        // Fliplet.Env.get('appId')
+        // Fliplet.Env.get('appName')
+        // Fliplet.Env.get('appSettings')
+
+        return Promise.all([
+          Fliplet.API.request({
+            method: 'GET',
+            url: 'v1/apps/' + Fliplet.Env.get('appId')
+          })
+          .then(function(result) {
+            appName = result.app.name;
+            appIcon = result.app.icon;
+            appSettings = result.app.settings;
+          }),
+          Fliplet.API.request({
+            method: 'GET',
+            url: 'v1/organizations/' + Fliplet.Env.get('organizationId')
+          })
+          .then(function(org) {
+            organizationName = org.name;
+          })
+        ]);
+      })
+      .then(function() {
+        if (appSettings.folderStructure) {
+          var structure = [];
+          hasFolders = true;
+          var appleOnly = _.filter(appSettings.folderStructure, function(obj) {
+            return obj.platform === 'apple';
+          });
+
+          return Promise.all(appleOnly.map(function(obj) {
+            return Fliplet.Media.Folders.get({folderId: obj.folderId})
+              .then(function(result) {
+                var tempObject = {
+                  type: obj.type,
+                  folderContent: result
+                }
+
+                structure.push(tempObject);
+                return Promise.resolve(structure);
+              });
+          }))
+          .then(function() {
+            structure.forEach(function(el, idx) {
+              if (el.type === 'mobile') {
+                screenShotsMobile = el.folderContent.files
+              }
+              if (el.type === 'tablet') {
+                screenShotsTablet = el.folderContent.files
+              }
+            });
+          });
+        } else {
+          hasFolders = false;
+          return;
+        }
+      })
+      .then(function() {
+        return Fliplet.API.request({
+          method: 'GET',
+          url: 'v1/widget-instances/com.fliplet.push-notifications?appId=' + Fliplet.Env.get('appId')
+        });
+      })
+      .then(function(response) {
+        if (response.widgetInstance.settings && response.widgetInstance.settings) {
+          notificationSettings = response.widgetInstance.settings;
+        } else {
+          notificationSettings = {};
+        }
+
+        init();
+        initialLoad(false, 5000);
+      });
+  }
+}
+
+function prompt2FACode() {
+  // @TODO Update Fliplet.Modal in fliplet-api for simpler call
+  return Fliplet.Modal.prompt({
+    title: 'Please enter the verification code to verify your login'
+  }).then(function (code) {
+    if (code === null) {
+      return null;
+    }
+
+    if (code === '') {
+      return Fliplet.Modal.alert({
+        message: 'You must enter the verification code to log in'
+      }).then(function () {
+        return prompt2FACode();
+      });
+    }
+
+    return code;
+  });
+}
+
 /* ATTACH LISTENERS */
 $('[name="fl-store-screenshots"]').on('change', function() {
   var value = $(this).val();
@@ -1582,14 +2060,16 @@ $('.fl-sb-appStore [change-bundleid], .fl-sb-enterprise [change-bundleid], .fl-s
   });
 });
 
-$('.panel-group').on('shown.bs.collapse', '.panel-collapse', function() {
+$('.panel-group')
+  .on('shown.bs.collapse', '.panel-collapse', function() {
     Fliplet.Widget.autosize();
   })
   .on('hidden.bs.collapse', '.panel-collapse', function() {
     Fliplet.Widget.autosize();
   });
 
-$('a[data-toggle="tab"]').on('shown.bs.tab', function() {
+$('a[data-toggle="tab"]')
+  .on('shown.bs.tab', function() {
     Fliplet.Widget.autosize();
   })
   .on('hidden.bs.tab', function() {
@@ -2063,7 +2543,6 @@ $('.appStore-replace-cert').on('click', function() {
       $this.removeClass('disabled');
       $('.replace-error').html("We could not replace the certificate.\nPlease log into your https://developer.apple.com/account/ and revoke the certificate and create a new one using Fliplet.");
     }
-
 });
 /**/
 
@@ -2364,487 +2843,8 @@ $('.browse-files').on('click', function(e) {
 $('#appStoreConfiguration, #enterpriseConfiguration, #unsignedConfiguration').validator().off('change.bs.validator focusout.bs.validator');
 $('[name="submissionType"][value="appStore"]').prop('checked', true).trigger('change');
 
-function publishApp(context) {
-  var options = {
-    release: {
-      type: 'silent',
-      changelog: 'Initial version'
-    }
-  };
-  Fliplet.API.request({
-    method: 'POST',
-    url: 'v1/apps/' + Fliplet.Env.get('appId') + '/publish',
-    data: options
-  }).then(function(response) {
-    // Update appInfo
-    appInfo.productionAppId = response.app.id;
-
-    switch(context) {
-      case 'appStore':
-        $('.button-appStore-request').html('Request App <i class="fa fa-paper-plane"></i>');
-        $('.button-appStore-request').prop('disabled', false);
-        $('#appStoreConfiguration').validator().trigger('submit');
-        break;
-      case 'enterprise':
-        $('.button-enterprise-request').html('Request App <i class="fa fa-paper-plane"></i>');
-        $('.button-enterprise-request').prop('disabled', false);
-        $('#enterpriseConfiguration').validator().trigger('submit');
-        break;
-      case 'unsigned':
-        $('.button-unsigned-request').html('Request App <i class="fa fa-paper-plane"></i>');
-        $('.button-unsigned-request').prop('disabled', false);
-        $('#unsignedConfiguration').validator().trigger('submit');
-        break;
-      default:
-        break;
-    }
-  });
-}
-
-function compileStatusTable(withData, origin, buildsData) {
-  if (withData) {
-    var template = Handlebars.compile(statusTableTemplate);
-    var html = template(buildsData);
-
-    if (origin === "appStore") {
-      $statusAppStoreTableElement.html(html);
-    }
-    if (origin === "enterprise") {
-      $statusEnterpriseTableElement.html(html);
-    }
-    if (origin === "unsigned") {
-      $statusUnsignedTableElement.html(html);
-    }
-  } else {
-    if (origin === "appStore") {
-      $statusAppStoreTableElement.html('');
-    }
-    if (origin === "enterprise") {
-      $statusEnterpriseTableElement.html('');
-    }
-    if (origin === "unsigned") {
-      $statusUnsignedTableElement.html('');
-    }
-  }
-
-  Fliplet.Widget.autosize();
-}
-
-function checkSubmissionStatus(origin, iosSubmissions) {
-  var submissionsToShow = _.filter(iosSubmissions, function(submission) {
-    return submission.status === "queued" || submission.status === "submitted" || submission.status === "processing" || submission.status === "completed" || submission.status === "failed" || submission.status === "cancelled" || submission.status === "ready-for-testing" || submission.status === "tested";
-  });
-
-  var buildsData = [];
-  if (submissionsToShow.length) {
-    submissionsToShow.forEach(function(submission) {
-      var build = {};
-      var appBuild;
-      var debugHtmlPage;
-
-      // Default copy for testing status for different users
-      if (submission.status === 'ready-for-testing') {
-        if (userInfo.user && (userInfo.user.isAdmin || userInfo.user.isImpersonating)) {
-          // Fliplet users
-          build.testingStatus = 'Ready for testing';
-          build.testingMessage = 'App is ready for testing';
-        } else {
-          // Normal users
-          build.testingStatus = 'In testing';
-          build.testingMessage = 'Your app is being tested by Fliplet';
-        }
-      }
-
-      if (submission.result.appBuild && submission.result.appBuild.files) {
-        appBuild = _.find(submission.result.appBuild.files, function(file) {
-          return file.contentType === 'application/octet-stream';
-        });
-      } else if (submission.data.previousResults && submission.data.previousResults.appBuild && submission.data.previousResults.appBuild.files) {
-        appBuild = _.find(submission.data.previousResults.appBuild.files, function(file) {
-          return file.contentType === 'application/octet-stream';
-        });
-      }
-
-      if (submission.result.debugHtmlPage && submission.result.debugHtmlPage.files) {
-        debugHtmlPage = _.find(submission.result.debugHtmlPage.files, function(file) {
-          return file.contentType === 'text/html';
-        });
-      } else if (submission.data.previousResults && submission.data.previousResults.debugHtmlPage && submission.data.previousResults.debugHtmlPage.files) {
-        debugHtmlPage = _.find(submission.data.previousResults.debugHtmlPage.files, function(file) {
-          return file.contentType === 'text/html';
-        });
-      }
-
-      build.id = submission.id;
-      build.updatedAt = ((submission.status === 'completed' || submission.status === 'failed' || submission.status === 'cancelled' || submission.status === 'ready-for-testing' || submission.status === 'tested') && submission.updatedAt) ?
-        moment(submission.updatedAt).format('MMM Do YYYY, h:mm:ss a') :
-        '';
-      build.submittedAt = ((submission.status === 'queued' || submission.status === 'submitted') && submission.submittedAt) ?
-        moment(submission.submittedAt).format('MMM Do YYYY, h:mm:ss a') :
-        '';
-      build[submission.status] = true;
-      build.fileUrl = appBuild ? appBuild.url : '';
-
-      if (submission.result.message) {
-        build.message = submission.result.message;
-      }
-
-      if (userInfo.user && (userInfo.user.isAdmin || userInfo.user.isImpersonating)) {
-        build.debugFileUrl = debugHtmlPage ? debugHtmlPage.url : '';
-      }
-
-      buildsData.push(build);
-    });
-
-    compileStatusTable(true, origin, buildsData);
-  } else {
-    compileStatusTable(false, origin);
-  }
-}
-
-function submissionChecker(submissions) {
-  var asub = _.filter(submissions, function(submission) {
-    return submission.data.submissionType === "appStore" && submission.platform === "ios";
-  });
-
-  var completedAsub = _.filter(asub, function(submission) {
-    return submission.status === "completed";
-  });
-
-  //Get the Submission data from the first completed submission, it has the certification values that are in use on the app store.
-  previousAppStoreSubmission = _.minBy(completedAsub, function(el) {
-    return el.id;
-  });
-
-  appStoreSubmissionInStore = (completedAsub.length > 0);
-
-  asub = _.orderBy(asub, function(submission) {
-    return new Date(submission.createdAt).getTime();
-  }, ['desc']);
-  checkSubmissionStatus("appStore", asub);
-
-  appStoreSubmission = _.maxBy(asub, function(el) {
-    return new Date(el.createdAt).getTime();
-  });
-
-  if (!appStoreSubmission) {
-    appStoreSubmission = {};
-  }
-
-  var cloneAppStoreCredentialsPromise = Promise.resolve();
-  if (appStoreSubmission.data && !appStoreSubmission.data['fl-credentials']) {
-
-    var prevSubCred = _.filter(asub, function(submission) {
-      return submission.data && submission.data['fl-credentials'];
-    });
-
-    var previousSubWithCredentials = _.maxBy(prevSubCred, function(el) {
-      return new Date(el.createdAt).getTime();
-    });
-
-    appStoreSubmission.data['fl-credentials'] = 'submission-' + appStoreSubmission.id;
-
-    if(previousSubWithCredentials) {
-      cloneAppStoreCredentialsPromise = cloneCredentials(organizationID, previousSubWithCredentials.data['fl-credentials'], appStoreSubmission, true);
-    }
-  }
-
-  var esub = _.filter(submissions, function(submission) {
-    return submission.data.submissionType === "enterprise" && submission.platform === "ios";
-  });
-
-  var completedEsub = _.filter(esub, function(submission) {
-    return submission.status === "completed";
-  });
-  //Get the Submission data from the first completed submission, it has certification values that are in use on the developer portal.
-  previousEnterpriseStoreSubmission = _.minBy(completedEsub, function(el) {
-    return el.id;
-  });
-
-  esub = _.orderBy(esub, function(submission) {
-    return new Date(submission.createdAt).getTime();
-  }, ['desc']);
-  checkSubmissionStatus("enterprise", esub);
-
-  enterpriseSubmission = _.maxBy(esub, function(el) {
-    return new Date(el.createdAt).getTime();
-  });
-
-  if (!enterpriseSubmission) {
-    enterpriseSubmission = {};
-  }
-
-  var cloneEnterpriseCredentialsPromise = Promise.resolve();
-  if (enterpriseSubmission.data && !enterpriseSubmission.data['fl-credentials']) {
-
-    var prevSubCred = _.filter(esub, function(submission) {
-      return submission.data && submission.data['fl-credentials'];
-    });
-
-    var previousSubWithCredentials = _.maxBy(prevSubCred, function(el) {
-      return new Date(el.createdAt).getTime();
-    });
-
-    enterpriseSubmission.data['fl-credentials'] = 'submission-' + enterpriseSubmission.id;
-
-    if(previousSubWithCredentials) {
-      cloneEnterpriseCredentialsPromise = cloneCredentials(organizationID, previousSubWithCredentials.data['fl-credentials'], enterpriseSubmission, true);
-    }
-  }
-
-  var usub = _.filter(submissions, function(submission) {
-    return submission.data.submissionType === "unsigned" && submission.platform === "ios";
-  });
-
-  usub = _.orderBy(usub, function(submission) {
-    return new Date(submission.createdAt).getTime();
-  }, ['desc']);
-  checkSubmissionStatus("unsigned", usub);
-
-  usub = _.maxBy(usub, function(el) {
-    return new Date(el.createdAt).getTime();
-  });
-  unsignedSubmission = usub;
-
-  return cloneAppStoreCredentialsPromise.then(function () {
-    return cloneEnterpriseCredentialsPromise;
-  }).then(function () {
-    if (_.isEmpty(appStoreSubmission)) {
-      return Fliplet.App.Submissions.create({
-        platform: 'ios',
-        data: {
-          submissionType: "appStore"
-        }
-      })
-      .then(function(submission) {
-        appStoreSubmission = submission;
-        return Promise.resolve();
-      });
-    }
-
-    return Promise.resolve();
-  }).then(function () {
-    if (_.isEmpty(enterpriseSubmission)) {
-      return Fliplet.App.Submissions.create({
-        platform: 'ios',
-        data: {
-          submissionType: "enterprise"
-        }
-      })
-      .then(function(submission) {
-        enterpriseSubmission = submission;
-        return Promise.resolve();
-      });
-    }
-
-    return Promise.resolve();
-  }).then(function () {
-    if (_.isEmpty(unsignedSubmission)) {
-      return Fliplet.App.Submissions.create({
-        platform: 'ios',
-        data: {
-          submissionType: "unsigned"
-        }
-      })
-      .then(function(submission) {
-        unsignedSubmission = submission;
-        return Promise.resolve();
-      });
-    }
-
-    return Promise.resolve();
-  });
-}
-
-function iosSubmissionChecker(submissions) {
-  var asub = _.filter(submissions, function(submission) {
-    return submission.data.submissionType === "appStore" && submission.platform === "ios";
-  });
-
-  var esub = _.filter(submissions, function(submission) {
-    return submission.data.submissionType === "enterprise" && submission.platform === "ios";
-  });
-
-  var usub = _.filter(submissions, function(submission) {
-    return submission.data.submissionType === "unsigned" && submission.platform === "ios";
-  });
-
-  // Ordering
-  asub = _.orderBy(asub, function(submission) {
-    return new Date(submission.createdAt).getTime();
-  }, ['desc']);
-  esub = _.orderBy(esub, function(submission) {
-    return new Date(submission.createdAt).getTime();
-  }, ['desc']);
-  usub = _.orderBy(usub, function(submission) {
-    return new Date(submission.createdAt).getTime();
-  }, ['desc']);
-
-  checkSubmissionStatus("appStore", asub);
-  checkSubmissionStatus("enterprise", esub);
-  checkSubmissionStatus("unsigned", usub);
-}
-
-function getSubmissions() {
-  return Fliplet.App.Submissions.get();
-}
-
-function initialLoad(initial, timeout) {
-  if (!initial) {
-    initLoad = setTimeout(function() {
-      getSubmissions()
-        .then(function(submissions) {
-          iosSubmissionChecker(submissions);
-          initialLoad(false, 15000);
-        });
-    }, timeout);
-  } else {
-    getSubmissions()
-      .then(function(submissions) {
-
-        if (!submissions.length) {
-          return Promise.all([
-            Fliplet.App.Submissions.create({
-              platform: 'ios',
-              data: {
-                submissionType: "appStore"
-              }
-            })
-            .then(function(submission) {
-              appStoreSubmission = submission;
-            }),
-            Fliplet.App.Submissions.create({
-              platform: 'ios',
-              data: {
-                submissionType: "unsigned"
-              }
-            })
-            .then(function(submission) {
-              unsignedSubmission = submission;
-            }),
-            Fliplet.App.Submissions.create({
-              platform: 'ios',
-              data: {
-                submissionType: "enterprise"
-              }
-            })
-            .then(function(submission) {
-              enterpriseSubmission = submission;
-            })
-          ]);
-        }
-
-       return Fliplet.API.request({
-          cache: true,
-          url: 'v1/user'
-        })
-        .then(function(user) {
-          userInfo = user;
-          return submissionChecker(submissions);
-        });
-      })
-      .then(function() {
-        // Fliplet.Env.get('appId')
-        // Fliplet.Env.get('appName')
-        // Fliplet.Env.get('appSettings')
-
-        return Promise.all([
-          Fliplet.API.request({
-            method: 'GET',
-            url: 'v1/apps/' + Fliplet.Env.get('appId')
-          })
-          .then(function(result) {
-            appName = result.app.name;
-            appIcon = result.app.icon;
-            appSettings = result.app.settings;
-          }),
-          Fliplet.API.request({
-            method: 'GET',
-            url: 'v1/organizations/' + Fliplet.Env.get('organizationId')
-          })
-          .then(function(org) {
-            organizationName = org.name;
-          })
-        ]);
-      })
-      .then(function() {
-        if (appSettings.folderStructure) {
-          var structure = [];
-          hasFolders = true;
-          var appleOnly = _.filter(appSettings.folderStructure, function(obj) {
-            return obj.platform === 'apple';
-          });
-
-          return Promise.all(appleOnly.map(function(obj) {
-            return Fliplet.Media.Folders.get({folderId: obj.folderId})
-              .then(function(result) {
-                var tempObject = {
-                  type: obj.type,
-                  folderContent: result
-                }
-
-                structure.push(tempObject);
-                return Promise.resolve(structure);
-              });
-          }))
-          .then(function() {
-            structure.forEach(function(el, idx) {
-              if (el.type === 'mobile') {
-                screenShotsMobile = el.folderContent.files
-              }
-              if (el.type === 'tablet') {
-                screenShotsTablet = el.folderContent.files
-              }
-            });
-          });
-        } else {
-          hasFolders = false;
-          return;
-        }
-      })
-      .then(function() {
-        return Fliplet.API.request({
-          method: 'GET',
-          url: 'v1/widget-instances/com.fliplet.push-notifications?appId=' + Fliplet.Env.get('appId')
-        });
-      })
-      .then(function(response) {
-        if (response.widgetInstance.settings && response.widgetInstance.settings) {
-          notificationSettings = response.widgetInstance.settings;
-        } else {
-          notificationSettings = {};
-        }
-
-        init();
-        initialLoad(false, 5000);
-      });
-  }
-}
-
 // Start
 initLoad = initialLoad(true, 0);
-
-// @TODO Move function
-function prompt2FACode() {
-  // @TODO Update Fliplet.Modal in fliplet-api for simpler call
-  return Fliplet.Modal.prompt({
-    title: 'Please enter the verification code to verify your login'
-  }).then(function (code) {
-    if (code === null) {
-      return null;
-    }
-
-    if (code === '') {
-      return Fliplet.Modal.alert({
-        message: 'You must enter the verification code to log in'
-      }).then(function () {
-        return prompt2FACode();
-      });
-    }
-
-    return code;
-  });
-}
 
 // Listen for 2FA code when requested
 socket.on('aab.apple.login.2fa', function (data) {
