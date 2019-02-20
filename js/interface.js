@@ -442,7 +442,6 @@ function enterpriseTeamSetup(devEmail, loginButton) {
 }
 
 function loadUnsignedData() {
-
   $('#unsignedConfiguration [name]').each(function(i, el) {
     var name = $(el).attr("name");
 
@@ -2905,8 +2904,6 @@ socket.on('aab.apple.login.2fa', function (data) {
 });
 
 socket.on('aab.apple.login.2fa.devices', function (data) {
-  console.log('Devices', data.devices);
-
   select2FAMethod(data).then(function (selection) {
     if (selection === null) {
       on2FACancel();
