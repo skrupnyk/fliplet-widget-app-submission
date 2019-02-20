@@ -1967,7 +1967,7 @@ function initialLoad(initial, timeout) {
   }
 }
 
-function prompt2FACode() {
+function prompt2FA() {
   // @TODO Update Fliplet.Modal in fliplet-api for simpler call
   return Fliplet.Modal.prompt({
     title: 'Please enter the verification code to verify your login'
@@ -1980,12 +1980,24 @@ function prompt2FACode() {
       return Fliplet.Modal.alert({
         message: 'You must enter the verification code to log in'
       }).then(function () {
-        return prompt2FACode();
+        return prompt2FA();
       });
     }
 
     return code;
   });
+}
+
+function on2FASuccess(data) {
+  console.log('2FA success', data);
+}
+
+function on2FAFail(data) {
+  console.log('2FA fail', data);
+}
+
+function on2FACancel() {
+
 }
 
 /* ATTACH LISTENERS */
@@ -2861,24 +2873,18 @@ initLoad = initialLoad(true, 0);
 // Listen for 2FA code when requested
 socket.on('aab.apple.login.2fa', function (data) {
   // Ask user for code
-  prompt2FACode().then(function (code) {
+  prompt2FA().then(function (code) {
     if (code === null) {
-      socket.to(data.clientId).emit('aab.apple.login.2fa.cancel');
+      on2FACancel();
       return;
     }
 
-    // Notify requester with the code
-    // @Question What happens when 2FA succeeds/fails?
     socket.to(data.clientId).emit('aab.apple.login.2fa.code', code);
   });
 });
 
 // Listen for a 2FA code successfully entered
-socket.on('aab.apple.login.2fa.success', function () {
-  console.log('2FA code is correct');
-});
+socket.on('aab.apple.login.2fa.success', on2FASuccess);
 
 // Listen for a wrong 2FA code
-socket.on('aab.apple.login.2fa.failure', function () {
-  console.log('2FA code is wrong');
-});
+socket.on('aab.apple.login.2fa.failure', on2FAFail);
