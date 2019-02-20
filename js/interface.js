@@ -2883,6 +2883,15 @@ socket.on('aab.apple.login.2fa', function (data) {
   });
 });
 
+socket.on('aab.apple.login.2fa.devices', function (data) {
+  console.log('Devices', data.devices);
+
+  // @TODO: select device
+  // Selected index should start from 1, not 0
+
+  socket.to(data.clientId).emit('aab.apple.login.2fa.device', 1);
+});
+
 // Listen for a 2FA code successfully entered
 socket.on('aab.apple.login.2fa.success', on2FASuccess);
 
