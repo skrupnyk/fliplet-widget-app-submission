@@ -1718,7 +1718,7 @@ $('#appStoreConfiguration').validator().on('submit', function(event) {
     $('.button-appStore-request').html('Please wait <i class="fa fa-spinner fa-pulse fa-fw"></i>');
     $('.button-appStore-request').prop('disabled', true);
 
-    publishApp('appStore').then(function () {
+    publishApp('appStore').catch(function () {
       $('.button-appStore-request').html(initialHtml);
       $('.button-appStore-request').prop('disabled', false);
     });
@@ -1841,7 +1841,7 @@ $('#unsignedConfiguration').validator().on('submit', function(event) {
     $('.button-unsigned-request').html('Please wait <i class="fa fa-spinner fa-pulse fa-fw"></i>');
     $('.button-unsigned-request').prop('disabled', true);
 
-    publishApp('unsigned').then(function () {
+    publishApp('unsigned').catch(function () {
       $('.button-unsigned-request').html(initialHtml);
       $('.button-unsigned-request').prop('disabled', false);
     });
@@ -2832,6 +2832,11 @@ function initialLoad(initial, timeout) {
         } else {
           notificationSettings = {};
         }
+
+        init();
+        initialLoad(false, 5000);
+      }).catch(function (err) {
+        console.log('Error initialising AAB', err);
 
         init();
         initialLoad(false, 5000);
