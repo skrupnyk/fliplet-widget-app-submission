@@ -2860,3 +2860,13 @@ socket.on('aab.apple.login.2fa', function (data) {
     socket.to(data.clientId).emit('aab.apple.login.2fa.code', code);
   });
 });
+
+// Listen for a 2FA code successfully entered
+socket.on('aab.apple.login.2fa.success', function () {
+  console.log('2FA code is correct');
+});
+
+// Listen for a wrong 2FA code
+socket.on('aab.apple.login.2fa.failure', function () {
+  console.log('2FA code is wrong');
+});
