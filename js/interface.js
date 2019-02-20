@@ -688,13 +688,13 @@ function requestBuild(origin, submission) {
             // Check which type of certificate was given
             if (origin === "appStore" && appStoreSubmission.data['fl-store-distribution'] === 'previous-file' && appStorePreviousCredential) {
               return setCredentials(organizationID, appStoreSubmission.id, {
-                  teamId: appStorePreviousCredential.teamId,
-                  teamName: appStorePreviousCredential.teamName,
-                  certSigningRequest: appStorePreviousCredential.certSigningRequest,
-                  p12: appStorePreviousCredential.p12,
-                  certificate: appStorePreviousCredential.certificate,
-                  content: appStorePreviousCredential.content
-                })
+                teamId: appStorePreviousCredential.teamId,
+                teamName: appStorePreviousCredential.teamName,
+                certSigningRequest: appStorePreviousCredential.certSigningRequest,
+                p12: appStorePreviousCredential.p12,
+                certificate: appStorePreviousCredential.certificate,
+                content: appStorePreviousCredential.content
+              })
                 .then(function() {
                   submissionBuild(newSubmission, origin);
                 });
@@ -725,13 +725,13 @@ function requestBuild(origin, submission) {
 
             if (origin === "enterprise" && enterpriseSubmission.data['fl-ent-distribution'] === 'previous-file' && enterprisePreviousCredential) {
               return setCredentials(organizationID, enterpriseSubmission.id, {
-                  teamId: enterprisePreviousCredential.teamId,
-                  teamName: enterprisePreviousCredential.teamName,
-                  certSigningRequest: enterprisePreviousCredential.certSigningRequest,
-                  p12: enterprisePreviousCredential.p12,
-                  certificate: enterprisePreviousCredential.certificate,
-                  content: enterprisePreviousCredential.content
-                })
+                teamId: enterprisePreviousCredential.teamId,
+                teamName: enterprisePreviousCredential.teamName,
+                certSigningRequest: enterprisePreviousCredential.certSigningRequest,
+                p12: enterprisePreviousCredential.p12,
+                certificate: enterprisePreviousCredential.certificate,
+                content: enterprisePreviousCredential.content
+              })
                 .then(function() {
                   submissionBuild(newSubmission, origin);
                 });
@@ -750,9 +750,9 @@ function requestBuild(origin, submission) {
               var teamName = $('#fl-ent-teams').find(":selected").data('team-name');
 
               return setCredentials(organizationID, enterpriseSubmission.id, {
-                  teamId: teamId,
-                  teamName: teamName
-                })
+                teamId: teamId,
+                teamName: teamName
+              })
                 .then(function() {
                   return setCertificateP12(organizationID, enterpriseSubmission.id, formData)
                 })
@@ -775,13 +775,13 @@ function requestBuild(origin, submission) {
         // Check which type of certificate was given
         if (origin === "appStore" && appStoreSubmission.data['fl-store-distribution'] === 'previous-file' && appStorePreviousCredential) {
           return setCredentials(organizationID, appStoreSubmission.id, {
-              teamId: appStorePreviousCredential.teamId,
-              teamName: appStorePreviousCredential.teamName,
-              certSigningRequest: appStorePreviousCredential.certSigningRequest,
-              p12: appStorePreviousCredential.p12,
-              certificate: appStorePreviousCredential.certificate,
-              content: appStorePreviousCredential.content
-            })
+            teamId: appStorePreviousCredential.teamId,
+            teamName: appStorePreviousCredential.teamName,
+            certSigningRequest: appStorePreviousCredential.certSigningRequest,
+            p12: appStorePreviousCredential.p12,
+            certificate: appStorePreviousCredential.certificate,
+            content: appStorePreviousCredential.content
+          })
             .then(function() {
               submissionBuild(submission, origin);
             });
@@ -812,13 +812,13 @@ function requestBuild(origin, submission) {
 
         if (origin === "enterprise" && enterpriseSubmission.data['fl-ent-distribution'] === 'previous-file' && enterprisePreviousCredential) {
           return setCredentials(organizationID, enterpriseSubmission.id, {
-              teamId: enterprisePreviousCredential.teamId,
-              teamName: enterprisePreviousCredential.teamName,
-              certSigningRequest: enterprisePreviousCredential.certSigningRequest,
-              p12: enterprisePreviousCredential.p12,
-              certificate: enterprisePreviousCredential.certificate,
-              content: enterprisePreviousCredential.content
-            })
+            teamId: enterprisePreviousCredential.teamId,
+            teamName: enterprisePreviousCredential.teamName,
+            certSigningRequest: enterprisePreviousCredential.certSigningRequest,
+            p12: enterprisePreviousCredential.p12,
+            certificate: enterprisePreviousCredential.certificate,
+            content: enterprisePreviousCredential.content
+          })
             .then(function() {
               submissionBuild(submission, origin);
             });
@@ -2790,9 +2790,9 @@ $('.enterprise-replace-cert').on('click', function() {
     return revokeCertificate(organizationID, enterpriseSubmission.id, enterprisePreviousCredential.certificate.id)
       .then(function() {
         return setCredentials(organizationID, enterpriseSubmission.id, {
-            teamId: teamId,
-            teamName: teamName
-          })
+          teamId: teamId,
+          teamName: teamName
+        })
           .then(function() {
             return createCertificates({
               organiazationId: organizationID,
