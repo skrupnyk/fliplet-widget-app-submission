@@ -2383,18 +2383,18 @@ $('.login-appStore-button').on('click', function() {
       email: devEmail,
       password: devPass
     })
-    .then(function() {
-      return appStoreTeamSetup(devEmail, $this);
-    })
-    .catch(function(error) {
-      console.log(error);
-      if (error.responseJSON) {
-        $this.nextAll('.login-error').html(error.responseJSON.message);
-      }
-      $this.html('Log in');
-      $this.removeClass('disabled');
-      Fliplet.Widget.autosize();
-    });
+      .then(function() {
+        return appStoreTeamSetup(devEmail, $this);
+      })
+      .catch(function(error) {
+        console.log(error);
+        if (error.responseJSON) {
+          $this.nextAll('.login-error').html(error.responseJSON.message);
+        }
+        $this.html('Log in');
+        $this.removeClass('disabled');
+        Fliplet.Widget.autosize();
+      });
   }
 });
 
