@@ -1979,7 +1979,7 @@ function select2FAMethod(data) {
   });
 
   return Fliplet.Modal.prompt({
-    title: 'Please select a device to verify your identity',
+    title: 'Your Apple ID is protected with two-step verification. Choose a trusted device to receive a verification code.',
     inputType: 'select',
     inputOptions: options
   }).then(function (selection) {
@@ -1989,7 +1989,7 @@ function select2FAMethod(data) {
 
     if (selection === '') {
       return Fliplet.Modal.alert({
-        message: 'You must select a device to verify your identity'
+        message: 'You must select a device to continue.'
       }).then(function () {
         return select2FAMethod(data);
       });
@@ -1999,9 +1999,9 @@ function select2FAMethod(data) {
   });
 }
 
-function prompt2FA() {
+function prompt2FA(data) {
   return Fliplet.Modal.prompt({
-    title: 'Please enter the verification code to verify your login'
+    title: 'A message with a verification code has been sent to your devices. Please enter the code to continue.'
   }).then(function (code) {
     if (code === null) {
       return null;
@@ -2009,9 +2009,9 @@ function prompt2FA() {
 
     if (code === '') {
       return Fliplet.Modal.alert({
-        message: 'You must enter the verification code to log in'
+        message: 'You must enter the verification code to continue.'
       }).then(function () {
-        return prompt2FA();
+        return prompt2FA(data);
       });
     }
 
@@ -2885,7 +2885,7 @@ initLoad = initialLoad(true, 0);
 // Listen for 2FA code when requested
 socket.on('aab.apple.login.2fa', function (data) {
   // Ask user for code
-  prompt2FA().then(function (code) {
+  prompt2FA(data).then(function (code) {
     if (code === null) {
       socket.to(data.clientId).emit('aab.apple.login.2fa.cancel');
       return;
