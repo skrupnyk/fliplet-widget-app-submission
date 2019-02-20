@@ -1968,7 +1968,7 @@ function initialLoad(initial, timeout) {
   }
 }
 
-function select2FAMethod(data) {
+function select2FADevice(data) {
   data = data || {};
 
   var options = _.map(data.devices, function (value, index) {
@@ -1991,7 +1991,7 @@ function select2FAMethod(data) {
       return Fliplet.Modal.alert({
         message: 'You must choose a device to continue.'
       }).then(function () {
-        return select2FAMethod(data);
+        return select2FADevice(data);
       });
     }
 
@@ -1999,9 +1999,9 @@ function select2FAMethod(data) {
   });
 }
 
-function prompt2FA(data) {
+function prompt2FA() {
   return Fliplet.Modal.prompt({
-    title: 'A message with a verification code has been sent to your devices. Please enter the code to continue.'
+    title: 'A message with a verification code has been sent to your devices. Please enter the code to continue.<br><br>If you are not certain which devices to check, please contact your Apple account administrator or IT team.'
   }).then(function (code) {
     if (code === null) {
       return null;
@@ -2011,7 +2011,7 @@ function prompt2FA(data) {
       return Fliplet.Modal.alert({
         message: 'You must enter the verification code to continue.'
       }).then(function () {
-        return prompt2FA(data);
+        return prompt2FA();
       });
     }
 
@@ -2883,25 +2883,30 @@ $('[name="submissionType"][value="appStore"]').prop('checked', true).trigger('ch
 initLoad = initialLoad(true, 0);
 
 // Listen for 2FA code when requested
-socket.on('aab.apple.login.2fa', function (data) {
+socket.on('aab.apple.login.2fa', function () {
   // Ask user for code
-  prompt2FA(data).then(function (code) {
+  prompt2FA().then(function (code) {
     if (code === null) {
       socket.to(data.clientId).emit('aab.apple.login.2fa.cancel');
       return;
     }
 
     socket.to(data.clientId).emit('aab.apple.login.2fa.code', code);
+  }).catch(function () {
+    socket.to(data.clientId).emit('aab.apple.login.2fa.cancel');
   });
 });
 
 socket.on('aab.apple.login.2fa.devices', function (data) {
-  select2FAMethod(data).then(function (selection) {
+  // Ask user to select device
+  select2FADevice(data).then(function (selection) {
     if (selection === null) {
       socket.to(data.clientId).emit('aab.apple.login.2fa.cancel');
       return;
     }
 
     socket.to(data.clientId).emit('aab.apple.login.2fa.device', selection);
+  }).catch(function () {
+    socket.to(data.clientId).emit('aab.apple.login.2fa.cancel');
   });
 });
