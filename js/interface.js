@@ -2019,18 +2019,6 @@ function prompt2FA() {
   });
 }
 
-function on2FASuccess(data) {
-  console.log('2FA success', data);
-}
-
-function on2FAFail(data) {
-  console.log('2FA fail', data);
-}
-
-function on2FACancel() {
-
-}
-
 /* ATTACH LISTENERS */
 $('[name="fl-store-screenshots"]').on('change', function() {
   var value = $(this).val();
@@ -2899,7 +2887,7 @@ socket.on('aab.apple.login.2fa', function (data) {
   // Ask user for code
   prompt2FA().then(function (code) {
     if (code === null) {
-      on2FACancel();
+      socket.to(data.clientId).emit('aab.apple.login.2fa.cancel');
       return;
     }
 
@@ -2910,16 +2898,10 @@ socket.on('aab.apple.login.2fa', function (data) {
 socket.on('aab.apple.login.2fa.devices', function (data) {
   select2FAMethod(data).then(function (selection) {
     if (selection === null) {
-      on2FACancel();
+      socket.to(data.clientId).emit('aab.apple.login.2fa.cancel');
       return;
     }
 
     socket.to(data.clientId).emit('aab.apple.login.2fa.device', selection);
   });
 });
-
-// Listen for a 2FA code successfully entered
-socket.on('aab.apple.login.2fa.success', on2FASuccess);
-
-// Listen for a wrong 2FA code
-socket.on('aab.apple.login.2fa.failure', on2FAFail);
