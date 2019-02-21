@@ -2006,7 +2006,7 @@ function select2FADevice(data) {
 
 function prompt2FA() {
   return Fliplet.Modal.prompt({
-    title: 'A message with a verification code has been sent to your devices. Please enter the code to continue.<div class="alert alert-info alert-sm"><strong>Note:</strong> If you are not certain which devices to check, please contact your Apple account administrator or IT team.</div>',
+    title: 'Apple has sent a verification code to your devices. Please enter the code to continue.<div class="alert alert-info alert-sm"><strong>Note:</strong> If you don\'t receive the code, please check your Apple account settings.</div>',
     size: 'small'
   }).then(function (code) {
     if (code === null) {
