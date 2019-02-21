@@ -1983,6 +1983,7 @@ function select2FADevice(data) {
 
   return Fliplet.Modal.prompt({
     title: 'Your Apple ID is protected with two-step verification. Choose a trusted device to receive a verification code.',
+    size: 'small',
     inputType: 'select',
     inputOptions: options
   }).then(function (selection) {
@@ -1992,7 +1993,8 @@ function select2FADevice(data) {
 
     if (selection === '') {
       return Fliplet.Modal.alert({
-        message: 'You must choose a device to continue.'
+        message: 'You must choose a device to continue.',
+        size: 'small'
       }).then(function () {
         return select2FADevice(data);
       });
@@ -2004,7 +2006,8 @@ function select2FADevice(data) {
 
 function prompt2FA() {
   return Fliplet.Modal.prompt({
-    title: 'A message with a verification code has been sent to your devices. Please enter the code to continue.<br><br>If you are not certain which devices to check, please contact your Apple account administrator or IT team.'
+    title: 'A message with a verification code has been sent to your devices. Please enter the code to continue.<div class="alert alert-info alert-sm"><strong>Note:</strong> If you are not certain which devices to check, please contact your Apple account administrator or IT team.</div>',
+    size: 'small'
   }).then(function (code) {
     if (code === null) {
       return null;
@@ -2012,7 +2015,8 @@ function prompt2FA() {
 
     if (code === '') {
       return Fliplet.Modal.alert({
-        message: 'You must enter the verification code to continue.'
+        message: 'You must enter the verification code to continue.',
+        size: 'small'
       }).then(function () {
         return prompt2FA();
       });
