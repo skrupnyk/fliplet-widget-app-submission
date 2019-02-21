@@ -2905,7 +2905,7 @@ $('[name="submissionType"][value="appStore"]').prop('checked', true).trigger('ch
 initLoad = initialLoad(true, 0);
 
 // Listen for 2FA code when requested
-socket.on('aab.apple.login.2fa', function () {
+socket.on('aab.apple.login.2fa', function (data) {
   // Ask user for code
   prompt2FA().then(function (code) {
     if (code === null) {
