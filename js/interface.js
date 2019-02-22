@@ -40,6 +40,7 @@ var screenShotsMobile = [];
 var screenShotsTablet = [];
 var haveScreenshots = false;
 var screenshotValidationNotRequired = false;
+var spinner = '<i class="fa fa-spinner fa-pulse fa-fw fa-lg"></i>';
 
 var socket = Fliplet.Socket({
   transports: ['polling'], // avoid being blocked by AdBlockers
@@ -241,7 +242,7 @@ function loadAppStoreData() {
   if (appStoreSubmission.data && appStoreSubmission.data['fl-credentials']) {
     // Submission data contains credential key
     var $loginButton = $('.login-appStore-button');
-    $loginButton.html('Logging in...');
+    $loginButton.html('Logging in' + spinner);
     $loginButton.addClass('disabled');
     $('#fl-store-appDevPass').addClass('disabled');
     $('#fl-store-appDevLogin').addClass('disabled');
@@ -258,7 +259,9 @@ function loadAppStoreData() {
           return;
         }
 
-        return appStoreTeamSetup(credential.email, $loginButton);
+        $loginButton.html('Log in');
+        $loginButton.removeClass('disabled');
+        return appStoreTeamSetup(credential.email);
       })
       .catch(function (error) {
         // Allow users to manually log in if an error is encountered
@@ -267,20 +270,36 @@ function loadAppStoreData() {
         $('#fl-store-appDevPass').removeClass('disabled');
         $loginButton.removeClass('disabled');
         Fliplet.Widget.autosize();
-
-        console.error('Error retrieving previous app store submission credentials', error);
       });
   }
 }
 
-function appStoreTeamSetup(devEmail, loginButton) {
-  return Promise.all([
-    getTeams(appStoreSubmission.id, false),
-    getTeams(appStoreSubmission.id, true)
-  ])
+function clearAppStoreCredentials() {
+  return setCredentials(appStoreSubmission.id, {
+    email: null,
+    password: null,
+    teamId: null
+  }, false).then(function () {
+    appStoreLoggedIn = false;
+    $('#fl-store-appDevPass').prop('required', true);
+    $('.appStore-logged-email').html('');
+    $('.appStore-login-details').removeClass('hidden');
+    $('.appStore-logged-in, .appStore-more-options, .appStore-teams').removeClass('show');
+  });
+}
+
+function loadAppStoreTeams(devEmail) {
+  // We're avoiding making both calls in one go with Promise.all() to avoid 2FA requests being received twice
+  return getTeams(appStoreSubmission.id, true)
+    .then(function (itunesTeams) {
+      return Promise.all([
+        Promise.resolve(itunesTeams),
+        getTeams(appStoreSubmission.id, false)
+      ]);
+    })
     .then(function (teams) {
-      var appStoreTeams =  teams[0];
-      var itunesTeams =  teams[1];
+      var itunesTeams = teams[0];
+      var appStoreTeams = teams[1];
 
       appStoreTeams = _.filter(appStoreTeams, function(team) {
         var itunesTeam = _.find(itunesTeams, function(itcTeam) {
@@ -292,19 +311,11 @@ function appStoreTeamSetup(devEmail, loginButton) {
 
       var options = ['<option value="">-- Select a team</option>'];
       appStoreTeams.forEach(function(team, i) {
-        options.push('<option value="' + team.teamId + '" data-team-name="' + team.name + '">'+ team.name +' - ' + team.teamId + '</option>');
+        options.push('<option value="' + team.teamId + '" data-team-name="' + team.name + '">'+ team.name + ' - ' + team.teamId + '</option>');
       });
-      $('#fl-store-teams').html(options.join(''));
+      $('#fl-load-store-teams').hide();
+      $('#fl-store-teams').html(options.join('')).parent().show();
 
-      $('#fl-store-appDevLogin').removeClass('disabled');
-      $('#fl-store-appDevPass').removeClass('disabled');
-      $('#fl-store-appDevLogin').val(devEmail);
-      $('#fl-store-appDevPass').prop('required', false);
-      loginButton.html('Log in');
-      loginButton.removeClass('disabled');
-      $('.appStore-logged-email').html(devEmail);
-      $('.appStore-login-details').addClass('hidden');
-      $('.appStore-logged-in, .appStore-teams').addClass('show');
       appStoreLoggedIn = true;
       var teamId = $('#fl-store-teams').val();
       var teamName = teamId ? $('#fl-store-teams').find(":selected").data('team-name') : '';
@@ -317,6 +328,24 @@ function appStoreTeamSetup(devEmail, loginButton) {
 
       return refreshAppStoreOptions(devEmail, teamId, teamName);
     });
+}
+
+function appStoreTeamSetup(devEmail, loadTeams) {
+  var load = Promise.resolve();
+
+  if (loadTeams) {
+    load = loadAppStoreTeams(devEmail);
+  }
+
+  return load.then(function () {
+    $('#fl-store-appDevLogin').removeClass('disabled');
+    $('#fl-store-appDevPass').removeClass('disabled');
+    $('#fl-store-appDevLogin').val(devEmail);
+    $('#fl-store-appDevPass').prop('required', false);
+    $('.appStore-logged-email').html(devEmail);
+    $('.appStore-login-details').addClass('hidden');
+    $('.appStore-logged-in, .appStore-teams').addClass('show');
+  });
 }
 
 function loadEnterpriseData() {
@@ -391,7 +420,7 @@ function loadEnterpriseData() {
   if (enterpriseSubmission.data && enterpriseSubmission.data['fl-credentials']) {
     // Submission data contains credential key
     var $loginButton = $('.login-enterprise-button');
-    $loginButton.html('Logging in...');
+    $loginButton.html('Logging in' + spinner);
     $loginButton.addClass('disabled');
     $('#fl-ent-appDevLogin').addClass('disabled');
     $('#fl-ent-appDevPass').addClass('disabled');
@@ -406,7 +435,9 @@ function loadEnterpriseData() {
         return;
       }
 
-      return enterpriseTeamSetup(credential.email, $loginButton);
+      $loginButton.html('Log in');
+      $loginButton.removeClass('disabled');
+      return enterpriseTeamSetup(credential.email);
     }).catch(function (error) {
       // Allow users to manually log in if an error is encountered
       $loginButton.html('Log in');
@@ -420,7 +451,21 @@ function loadEnterpriseData() {
   }
 }
 
-function enterpriseTeamSetup(devEmail, loginButton) {
+function clearEnterpriseCredentials() {
+  return setCredentials(enterpriseSubmission.id, {
+    email: null,
+    password: null,
+    teamId: null
+  }, false).then(function () {
+    enterpriseLoggedIn = false;
+    $('#fl-ent-appDevPass').prop('required', true);
+    $('.enterprise-logged-email').html('');
+    $('.enterprise-login-details').removeClass('hidden');
+    $('.enterprise-logged-in, .enterprise-more-options, .enterprise-teams').removeClass('show');
+  });
+}
+
+function loadEnterpriseTeams(devEmail) {
   return getTeams(enterpriseSubmission.id, false)
     .then(function(teams) {
       var enterpriseTeams = _.filter(teams, function(team) {
@@ -430,17 +475,9 @@ function enterpriseTeamSetup(devEmail, loginButton) {
       enterpriseTeams.forEach(function(team, i) {
         options.push('<option value="' + team.teamId + '" data-team-name="' + team.name + '">'+ team.name +' - ' + team.teamId + '</option>');
       });
-      $('#fl-ent-teams').html(options.join(''));
+      $('#fl-load-ent-teams').hide();
+      $('#fl-ent-teams').html(options.join('')).parent().show();
 
-      $('#fl-ent-appDevLogin').removeClass('disabled');
-      $('#fl-ent-appDevPass').removeClass('disabled');
-      $('#fl-ent-appDevLogin').val(devEmail);
-      $('#fl-ent-appDevPass').prop('required', false);
-      loginButton.html('Log in');
-      loginButton.removeClass('disabled');
-      $('.enterprise-logged-email').html(devEmail);
-      $('.enterprise-login-details').addClass('hidden');
-      $('.enterprise-logged-in, .enterprise-more-options, .enterprise-teams').addClass('show');
       enterpriseLoggedIn = true;
       var teamId = $('#fl-ent-teams').val();
       var teamName = teamId ? $('#fl-ent-teams').find(":selected").data('team-name') : '';
@@ -453,6 +490,24 @@ function enterpriseTeamSetup(devEmail, loginButton) {
 
       return refreshAppEnterpriseOptions(devEmail, teamId, teamName);
     });
+}
+
+function enterpriseTeamSetup(devEmail, loadTeams) {
+  var load = Promise.resolve();
+
+  if (loadTeams) {
+    load = loadEnterpriseTeams(devEmail);
+  }
+
+  return load.then(function () {
+    $('#fl-ent-appDevLogin').removeClass('disabled');
+    $('#fl-ent-appDevPass').removeClass('disabled');
+    $('#fl-ent-appDevLogin').val(devEmail);
+    $('#fl-ent-appDevPass').prop('required', false);
+    $('.enterprise-logged-email').html(devEmail);
+    $('.enterprise-login-details').addClass('hidden');
+    $('.enterprise-logged-in, .enterprise-teams').addClass('show');
+  });
 }
 
 function loadUnsignedData() {
@@ -653,7 +708,7 @@ function save(origin, submission) {
 }
 
 function requestBuild(origin, submission) {
-  $('.button-' + origin + '-request').html('Requesting <i class="fa fa-spinner fa-pulse fa-fw"></i>');
+  $('.button-' + origin + '-request').html('Requesting' + spinner);
 
   if (origin === 'appStore') {
     submission.data.folderStructure = appSettings.folderStructure;
@@ -2255,7 +2310,7 @@ $('#appStoreConfiguration').validator().on('submit', function(event) {
     }
   } else {
     var initialHtml = $('.button-appStore-request').html();
-    $('.button-appStore-request').html('Please wait <i class="fa fa-spinner fa-pulse fa-fw"></i>');
+    $('.button-appStore-request').html('Please wait' + spinner);
     $('.button-appStore-request').prop('disabled', true);
 
     publishApp('appStore').catch(function () {
@@ -2335,7 +2390,7 @@ $('#enterpriseConfiguration').validator().on('submit', function(event) {
     }
   } else {
     var initialHtml = $('.button-enterprise-request').html();
-    $('.button-enterprise-request').html('Please wait <i class="fa fa-spinner fa-pulse fa-fw"></i>');
+    $('.button-enterprise-request').html('Please wait' + spinner);
     $('.button-enterprise-request').prop('disabled', true);
 
     publishApp('enterprise').catch(function () {
@@ -2384,7 +2439,7 @@ $('#unsignedConfiguration').validator().on('submit', function(event) {
     }
   } else {
     var initialHtml = $('.button-unsigned-request').html();
-    $('.button-unsigned-request').html('Please wait <i class="fa fa-spinner fa-pulse fa-fw"></i>');
+    $('.button-unsigned-request').html('Please wait' + spinner);
     $('.button-unsigned-request').prop('disabled', true);
 
     publishApp('unsigned').catch(function () {
@@ -2414,7 +2469,7 @@ $('[data-push-save]').on('click', function() {
 /* Credentials and Certificates App Store */
 $('.login-appStore-button').on('click', function() {
   var $this = $(this);
-  $(this).html('Logging in...');
+  $(this).html('Logging in' + spinner);
   $(this).addClass('disabled');
   var devEmail = $('#fl-store-appDevLogin').val();
   var devPass = $('#fl-store-appDevPass').val();
@@ -2452,11 +2507,24 @@ $('.login-appStore-button').on('click', function() {
       password: devPass
     })
       .then(function() {
-        return appStoreTeamSetup(devEmail, $this);
+        $this.html('Log in');
+        $this.removeClass('disabled');
+        return appStoreTeamSetup(devEmail, true);
       })
       .catch(function(error) {
-        console.log(error);
-        $this.nextAll('.login-error').html(Fliplet.parseError(error));
+        var message = 'Unable to log in';
+
+        if (Fliplet.parseError(error)) {
+          message += '<div class="alert alert-info alert-sm">' + Fliplet.parseError(error) + '</div>'
+        }
+
+        Fliplet.Modal.alert({
+          message: message,
+          size: 'small'
+        });
+
+        $('.appStore-login-details').removeClass('hidden');
+        $('.appStore-logged-in, .appStore-teams').removeClass('show');
         $this.html('Log in');
         $this.removeClass('disabled');
         Fliplet.Widget.autosize();
@@ -2465,17 +2533,7 @@ $('.login-appStore-button').on('click', function() {
 });
 
 $('.log-out-appStore').on('click', function() {
-  setCredentials(appStoreSubmission.id, {
-    email: null,
-    password: null,
-    teamId: null
-  }, false).then(function () {
-    appStoreLoggedIn = false;
-    $('#fl-store-appDevPass').prop('required', true);
-    $('.appStore-logged-email').html('');
-    $('.appStore-login-details').removeClass('hidden');
-    $('.appStore-logged-in, .appStore-more-options, .appStore-teams').removeClass('show');
-  });
+  clearAppStoreCredentials();
 });
 
 $('[name="fl-store-distribution"]').on('change', function() {
@@ -2510,6 +2568,35 @@ $('[name="fl-store-distribution"]').on('change', function() {
   Fliplet.Widget.autosize();
 });
 
+$('#fl-load-store-teams').on('click', function (e) {
+  e.preventDefault();
+  var $button = $(this);
+  var initialLabel = $button.html();
+  $button.html('Loading' + spinner).addClass('disabled');
+  loadAppStoreTeams($('.appStore-logged-email').text())
+    .then(function () {
+      $button.html(initialLabel).removeClass('disabled');
+    })
+    .catch(function (error) {
+      $button.html(initialLabel).removeClass('disabled');
+
+      var message = 'Unable to load teams';
+
+      if (Fliplet.parseError(error)) {
+        message += '<div class="alert alert-info alert-sm">' + Fliplet.parseError(error) + '</div>'
+      }
+
+      Fliplet.Modal.alert({
+        message: message,
+        size: 'small'
+      });
+
+      if (error && Fliplet.parseError(error).match(/^The email or password you entered .+ are wrong/)) {
+        clearAppStoreCredentials();
+      }
+    });
+});
+
 $('#fl-store-teams').on('change', function() {
   var value = $(this).val();
   var teamName = value ? $('#fl-store-teams').find(":selected").data('team-name') : '';
@@ -2530,7 +2617,7 @@ $('#fl-store-teams').on('change', function() {
 
 $('.appStore-generate-cert').on('click', function() {
   var $this = $(this);
-  $(this).html('Generating...');
+  $(this).html('Generating' + spinner);
   $(this).addClass('disabled');
   $('.generate-error').html(''); // Cleans errors
   var teamId = $('#fl-store-teams').val();
@@ -2577,7 +2664,7 @@ $('#fl-store-certificate').on('change', function() {
 
 $('.appStore-replace-cert').on('click', function() {
   var $this = $(this);
-  $(this).html('Replacing...');
+  $(this).html('Replacing' + spinner);
   $(this).addClass('disabled');
   $('.replace-error').html(''); // Cleans errors
   var teamId = appStorePreviousCredential ? appStorePreviousCredential.teamId : '';
@@ -2625,7 +2712,7 @@ $('.appStore-replace-cert').on('click', function() {
 /* Credentials and Certificates Enterprise */
 $('.login-enterprise-button').on('click', function() {
   var $this = $(this);
-  $(this).html('Logging in...');
+  $(this).html('Logging in' + spinner);
   $(this).addClass('disabled');
   var devEmail = $('#fl-ent-appDevLogin').val();
   var devPass = $('#fl-ent-appDevPass').val();
@@ -2664,11 +2751,24 @@ $('.login-enterprise-button').on('click', function() {
     })
     .then(function() {
       $('[name="fl-ent-distribution"][value="generate-file"]').prop('checked', true).trigger('change');
-      return enterpriseTeamSetup(devEmail, $this);
+      $this.html('Log in');
+      $this.removeClass('disabled');
+      return enterpriseTeamSetup(devEmail, true);
     })
     .catch(function(error) {
-      console.log(error);
-      $this.nextAll('.login-error').html(Fliplet.parseError(error));
+      var message = 'Unable to log in';
+
+      if (Fliplet.parseError(error)) {
+        message += '<div class="alert alert-info alert-sm">' + Fliplet.parseError(error) + '</div>'
+      }
+
+      Fliplet.Modal.alert({
+        message: message,
+        size: 'small'
+      });
+
+      $('.enterprise-login-details').removeClass('hidden');
+      $('.enterprise-logged-in, .enterprise-more-options, .enterprise-teams').removeClass('show');
       $this.html('Log in');
       $this.removeClass('disabled');
       Fliplet.Widget.autosize();
@@ -2677,17 +2777,7 @@ $('.login-enterprise-button').on('click', function() {
 });
 
 $('.log-out-enterprise').on('click', function() {
-  setCredentials(enterpriseSubmission.id, {
-    email: null,
-    password: null,
-    teamId: null
-  }, false).then(function () {
-    enterpriseLoggedIn = false;
-    $('#fl-ent-appDevPass').prop('required', true);
-    $('.enterprise-logged-email').html('');
-    $('.enterprise-login-details').removeClass('hidden');
-    $('.enterprise-logged-in, .enterprise-more-options, .enterprise-teams').removeClass('show');
-  });
+  clearEnterpriseCredentials();
 });
 
 $('[name="fl-ent-distribution"]').on('change', function() {
@@ -2719,6 +2809,35 @@ $('[name="fl-ent-distribution"]').on('change', function() {
   Fliplet.Widget.autosize();
 });
 
+$('#fl-load-ent-teams').on('click', function (e) {
+  e.preventDefault();
+  var $button = $(this);
+  var initialLabel = $button.html();
+  $button.html('Loading' + spinner).addClass('disabled');
+  loadEnterpriseTeams($('.enterprise-logged-email').text())
+    .then(function () {
+      $button.html(initialLabel).removeClass('disabled');
+    })
+    .catch(function (error) {
+      $button.html(initialLabel).removeClass('disabled');
+
+      var message = 'Unable to load teams';
+
+      if (Fliplet.parseError(error)) {
+        message += '<div class="alert alert-info alert-sm">' + Fliplet.parseError(error) + '</div>'
+      }
+
+      Fliplet.Modal.alert({
+        message: message,
+        size: 'small'
+      });
+
+      if (error && Fliplet.parseError(error).match(/^The email or password you entered .+ are wrong/)) {
+        clearEnterpriseCredentials();
+      }
+    });
+});
+
 $('#fl-ent-teams').on('change', function() {
   var value = $(this).val();
   var teamName = value ? $('#fl-ent-teams').find(":selected").data('team-name') : '';
@@ -2739,7 +2858,7 @@ $('#fl-ent-teams').on('change', function() {
 
 $('.enterprise-generate-cert').on('click', function() {
   var $this = $(this);
-  $(this).html('Generating...');
+  $(this).html('Generating' + spinner);
   $(this).addClass('disabled');
   $('.generate-error').html(''); // Cleans errors
   var teamId = $('#fl-ent-teams').val();
@@ -2805,7 +2924,7 @@ $('#fl-ent-mobileprovision-manual-details').on('change', function() {
 
 $('.enterprise-replace-cert').on('click', function() {
   var $this = $(this);
-  $(this).html('Replacing...');
+  $(this).html('Replacing' + spinner);
   $(this).addClass('disabled');
   $('.replace-error').html(''); // Cleans errors
   var teamId = enterprisePreviousCredential ? enterprisePreviousCredential.teamId : '';
