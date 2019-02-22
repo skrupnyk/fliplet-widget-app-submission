@@ -22,7 +22,9 @@
 .enterprise-previous-file-success,
 .enterprise-generate-file,
 .enterprise-generate-file-success,
-.enterprise-upload-file {
+.enterprise-upload-file,
+.select-proxy-display[for="fl-store-teams"],
+.select-proxy-display[for="fl-ent-teams"] {
   display: none;
 }
 

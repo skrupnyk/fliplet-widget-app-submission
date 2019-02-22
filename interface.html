@@ -551,9 +551,6 @@
                   <div class="alert alert-info">
                     <p>If you do not know what the developer account login details are please contact your organization's IT team.</p>
                   </div>
-                  <div class="alert alert-warning">
-                    <p><strong>Note</strong> If your account has Two-Factor Authentication enabled and you can't turn it off, please ask IT to <a href="https://help.fliplet.com/article/39-how-to-configure-your-apple-developer-accounts" target="_blank">create a secondary account without 2FA</a> to be used with Fliplet.</p>
-                  </div>
 
                   <div class="form-group clearfix">
                     <div class="col-sm-4 control-label">
@@ -602,12 +599,13 @@
                       <label>Select a Developer Account Team</label>
                     </div>
                     <div class="col-sm-8">
-                       <label for="fl-store-teams" class="select-proxy-display">
-                          <select class="hidden-select form-control appStore-team" id="fl-store-teams" data-label="select">
-                            <option value="">-- Select a team</option>
-                          </select>
-                          <span class="icon fa fa-chevron-down"></span>
-                        </label>
+                      <a class="btn btn-secondary" id="fl-load-store-teams" href="#">Load teams</a>
+                      <label for="fl-store-teams" class="select-proxy-display">
+                        <select class="hidden-select form-control appStore-team" id="fl-store-teams" data-label="select">
+                          <option value="">-- Select a team</option>
+                        </select>
+                        <span class="icon fa fa-chevron-down"></span>
+                      </label>
                     </div>
                   </div>
                 </div>
@@ -1146,9 +1144,6 @@ If you have any questions please reply and I will be happy to answer any questio
                   <div class="alert alert-info">
                     <p>If you don't know what the developer account login details are please contact your organization's IT team.</p>
                   </div>
-                  <div class="alert alert-warning">
-                    <p><strong>Note</strong> Two-Factor Authentication is not currently supported.</p>
-                  </div>
                   <div class="form-group clearfix">
                     <div class="col-sm-4 control-label">
                       <label for="fl-ent-appDevLogin">Apple Developer account login</label>
@@ -1259,12 +1254,13 @@ If you have any questions please reply and I will be happy to answer any questio
                       <label>Select a Developer Account Team</label>
                     </div>
                     <div class="col-sm-8">
-                       <label for="fl-ent-teams" class="select-proxy-display">
-                          <select class="hidden-select form-control enterprise-team" id="fl-ent-teams" data-label="select">
-                            <option value="">-- Select a team</option>
-                          </select>
-                          <span class="icon fa fa-chevron-down"></span>
-                        </label>
+                      <a class="btn btn-secondary" id="fl-load-ent-teams" href="#">Load teams</a>
+                      <label for="fl-ent-teams" class="select-proxy-display">
+                        <select class="hidden-select form-control enterprise-team" id="fl-ent-teams" data-label="select">
+                          <option value="">-- Select a team</option>
+                        </select>
+                        <span class="icon fa fa-chevron-down"></span>
+                      </label>
                     </div>
                   </div>
                 </div>
