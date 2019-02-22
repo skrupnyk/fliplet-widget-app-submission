@@ -242,7 +242,7 @@ function loadAppStoreData() {
   if (appStoreSubmission.data && appStoreSubmission.data['fl-credentials']) {
     // Submission data contains credential key
     var $loginButton = $('.login-appStore-button');
-    $loginButton.html('Logging in' + spinner);
+    $loginButton.html('Logging in ' + spinner);
     $loginButton.addClass('disabled');
     $('#fl-store-appDevPass').addClass('disabled');
     $('#fl-store-appDevLogin').addClass('disabled');
@@ -421,7 +421,7 @@ function loadEnterpriseData() {
   if (enterpriseSubmission.data && enterpriseSubmission.data['fl-credentials']) {
     // Submission data contains credential key
     var $loginButton = $('.login-enterprise-button');
-    $loginButton.html('Logging in' + spinner);
+    $loginButton.html('Logging in ' + spinner);
     $loginButton.addClass('disabled');
     $('#fl-ent-appDevLogin').addClass('disabled');
     $('#fl-ent-appDevPass').addClass('disabled');
@@ -710,7 +710,7 @@ function save(origin, submission) {
 }
 
 function requestBuild(origin, submission) {
-  $('.button-' + origin + '-request').html('Requesting' + spinner);
+  $('.button-' + origin + '-request').html('Requesting ' + spinner);
 
   if (origin === 'appStore') {
     submission.data.folderStructure = appSettings.folderStructure;
@@ -2110,6 +2110,7 @@ $('[name="fl-store-screenshots"]').on('change', function () {
     $('[data-item="fl-store-screenshots-new"]').removeClass('show');
     $('[data-item="fl-store-screenshots-existing"]').removeClass('show');
   }
+
   if (value === 'new' && haveScreenshots) {
     $('[data-item="fl-store-screenshots-new-warning"]').removeClass('show');
     $('[data-item="fl-store-screenshots-new"]').addClass('show');
@@ -2125,6 +2126,7 @@ $('[name="fl-store-screenshots"]').on('change', function () {
       $('.tablet-thumbs').append(addThumb(thumb));
     });
   }
+
   if (value === 'existing') {
     $('.app-details-appStore .app-screenshots').removeClass('has-error');
     $('[data-item="fl-store-screenshots-existing"]').addClass('show');
@@ -2312,7 +2314,7 @@ $('#appStoreConfiguration').validator().on('submit', function (event) {
     }
   } else {
     var initialHtml = $('.button-appStore-request').html();
-    $('.button-appStore-request').html('Please wait' + spinner);
+    $('.button-appStore-request').html('Please wait ' + spinner);
     $('.button-appStore-request').prop('disabled', true);
 
     publishApp('appStore').catch(function () {
@@ -2392,7 +2394,7 @@ $('#enterpriseConfiguration').validator().on('submit', function (event) {
     }
   } else {
     var initialHtml = $('.button-enterprise-request').html();
-    $('.button-enterprise-request').html('Please wait' + spinner);
+    $('.button-enterprise-request').html('Please wait ' + spinner);
     $('.button-enterprise-request').prop('disabled', true);
 
     publishApp('enterprise').catch(function () {
@@ -2441,7 +2443,7 @@ $('#unsignedConfiguration').validator().on('submit', function (event) {
     }
   } else {
     var initialHtml = $('.button-unsigned-request').html();
-    $('.button-unsigned-request').html('Please wait' + spinner);
+    $('.button-unsigned-request').html('Please wait ' + spinner);
     $('.button-unsigned-request').prop('disabled', true);
 
     publishApp('unsigned').catch(function () {
@@ -2471,7 +2473,7 @@ $('[data-push-save]').on('click', function () {
 /* Credentials and Certificates App Store */
 $('.login-appStore-button').on('click', function () {
   var $this = $(this);
-  $(this).html('Logging in' + spinner);
+  $(this).html('Logging in ' + spinner);
   $(this).addClass('disabled');
   var devEmail = $('#fl-store-appDevLogin').val();
   var devPass = $('#fl-store-appDevPass').val();
@@ -2576,7 +2578,7 @@ $('#fl-load-store-teams').on('click', function (e) {
   e.preventDefault();
   var $button = $(this);
   var initialLabel = $button.html();
-  $button.html('Loading' + spinner).addClass('disabled');
+  $button.html('Loading ' + spinner).addClass('disabled');
   loadAppStoreTeams($('.appStore-logged-email').text())
     .then(function () {
       $button.html(initialLabel).removeClass('disabled');
@@ -2621,7 +2623,7 @@ $('#fl-store-teams').on('change', function () {
 
 $('.appStore-generate-cert').on('click', function () {
   var $this = $(this);
-  $(this).html('Generating' + spinner);
+  $(this).html('Generating ' + spinner);
   $(this).addClass('disabled');
   $('.generate-error').html(''); // Cleans errors
   var teamId = $('#fl-store-teams').val();
@@ -2668,7 +2670,7 @@ $('#fl-store-certificate').on('change', function () {
 
 $('.appStore-replace-cert').on('click', function () {
   var $this = $(this);
-  $(this).html('Replacing' + spinner);
+  $(this).html('Replacing ' + spinner);
   $(this).addClass('disabled');
   $('.replace-error').html(''); // Cleans errors
   var teamId = appStorePreviousCredential ? appStorePreviousCredential.teamId : '';
@@ -2716,7 +2718,7 @@ $('.appStore-replace-cert').on('click', function () {
 /* Credentials and Certificates Enterprise */
 $('.login-enterprise-button').on('click', function () {
   var $this = $(this);
-  $(this).html('Logging in' + spinner);
+  $(this).html('Logging in ' + spinner);
   $(this).addClass('disabled');
   var devEmail = $('#fl-ent-appDevLogin').val();
   var devPass = $('#fl-ent-appDevPass').val();
@@ -2819,7 +2821,7 @@ $('#fl-load-ent-teams').on('click', function (e) {
   e.preventDefault();
   var $button = $(this);
   var initialLabel = $button.html();
-  $button.html('Loading' + spinner).addClass('disabled');
+  $button.html('Loading ' + spinner).addClass('disabled');
   loadEnterpriseTeams($('.enterprise-logged-email').text())
     .then(function () {
       $button.html(initialLabel).removeClass('disabled');
@@ -2864,7 +2866,7 @@ $('#fl-ent-teams').on('change', function () {
 
 $('.enterprise-generate-cert').on('click', function () {
   var $this = $(this);
-  $(this).html('Generating' + spinner);
+  $(this).html('Generating ' + spinner);
   $(this).addClass('disabled');
   $('.generate-error').html(''); // Cleans errors
   var teamId = $('#fl-ent-teams').val();
@@ -2930,7 +2932,7 @@ $('#fl-ent-mobileprovision-manual-details').on('change', function () {
 
 $('.enterprise-replace-cert').on('click', function () {
   var $this = $(this);
-  $(this).html('Replacing' + spinner);
+  $(this).html('Replacing ' + spinner);
   $(this).addClass('disabled');
   $('.replace-error').html(''); // Cleans errors
   var teamId = enterprisePreviousCredential ? enterprisePreviousCredential.teamId : '';
