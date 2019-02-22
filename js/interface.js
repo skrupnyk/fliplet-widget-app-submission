@@ -217,8 +217,6 @@ function loadAppStoreData() {
 
     allAppData.push('appStore');
   } else {
-    $('.app-details-appStore').addClass('required-fill');
-
     if (appName === '') {
       $('.app-details-appStore .app-list-name').addClass('has-error');
     }
@@ -229,11 +227,12 @@ function loadAppStoreData() {
       $('.app-details-appStore .app-splash-screen').addClass('has-warning');
     }
 
-    if (hasFolders) {
-      if (screenShotsMobile.length == 0 || screenShotsTablet.length == 0) {
-        $('.app-details-appStore .app-screenshots').addClass('has-error');
-      }
-    } else {
+    if ($('[name="fl-store-screenshots"]:checked').val() === 'new'
+      && (!hasFolders
+        || !screenShotsMobile.length
+        || !screenShotsTablet.length
+      )
+    ) {
       $('.app-details-appStore .app-screenshots').addClass('has-error');
     }
   }
