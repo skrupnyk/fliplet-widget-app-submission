@@ -279,13 +279,14 @@ function clearAppStoreCredentials() {
     email: null,
     password: null,
     teamId: null
-  }, false).then(function () {
-    appStoreLoggedIn = false;
-    $('#fl-store-appDevPass').prop('required', true);
-    $('.appStore-logged-email').html('');
-    $('.appStore-login-details').removeClass('hidden');
-    $('.appStore-logged-in, .appStore-more-options, .appStore-teams').removeClass('show');
-  });
+  }, false)
+    .then(function () {
+      appStoreLoggedIn = false;
+      $('#fl-store-appDevPass').prop('required', true);
+      $('.appStore-logged-email').html('');
+      $('.appStore-login-details').removeClass('hidden');
+      $('.appStore-logged-in, .appStore-more-options, .appStore-teams').removeClass('show');
+    });
 }
 
 function loadAppStoreTeams(devEmail) {
@@ -456,13 +457,14 @@ function clearEnterpriseCredentials() {
     email: null,
     password: null,
     teamId: null
-  }, false).then(function () {
-    enterpriseLoggedIn = false;
-    $('#fl-ent-appDevPass').prop('required', true);
-    $('.enterprise-logged-email').html('');
-    $('.enterprise-login-details').removeClass('hidden');
-    $('.enterprise-logged-in, .enterprise-more-options, .enterprise-teams').removeClass('show');
-  });
+  }, false)
+    .then(function () {
+      enterpriseLoggedIn = false;
+      $('#fl-ent-appDevPass').prop('required', true);
+      $('.enterprise-logged-email').html('');
+      $('.enterprise-login-details').removeClass('hidden');
+      $('.enterprise-logged-in, .enterprise-more-options, .enterprise-teams').removeClass('show');
+    });
 }
 
 function loadEnterpriseTeams(devEmail) {
@@ -2507,9 +2509,11 @@ $('.login-appStore-button').on('click', function () {
       password: devPass
     })
       .then(function () {
+        return appStoreTeamSetup(devEmail, true);
+      })
+      .then(function () {
         $this.html('Log in');
         $this.removeClass('disabled');
-        return appStoreTeamSetup(devEmail, true);
       })
       .catch(function (error) {
         var message = 'Unable to log in';
@@ -2750,10 +2754,12 @@ $('.login-enterprise-button').on('click', function () {
       password: devPass
     })
     .then(function () {
+      return enterpriseTeamSetup(devEmail, true);
+    })
+    .then(function () {
       $('[name="fl-ent-distribution"][value="generate-file"]').prop('checked', true).trigger('change');
       $this.html('Log in');
       $this.removeClass('disabled');
-      return enterpriseTeamSetup(devEmail, true);
     })
     .catch(function (error) {
       var message = 'Unable to log in';
