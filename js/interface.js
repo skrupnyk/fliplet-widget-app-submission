@@ -237,53 +237,59 @@ function loadAppStoreData() {
     }
   }
 
-  //try to automaticaly login
+  // Try to automatically login
   if (appStoreSubmission.data && appStoreSubmission.data['fl-credentials']) {
+    // Submission data contains credential key
     var $loginButton = $('.login-appStore-button');
-    $loginButton.html('Logging in');
+    $loginButton.html('Logging in...');
     $loginButton.addClass('disabled');
     $('#fl-store-appDevPass').addClass('disabled');
     $('#fl-store-appDevLogin').addClass('disabled');
-    getCredential(organizationID, appStoreSubmission.data['fl-credentials']).then(function (credential) {
-      if (!credential.email || credential.email === null || typeof credential.email === 'undefined') {
+
+    getCredential(appStoreSubmission.data['fl-credentials'])
+      .then(function (credential) {
+        if (!credential || !credential.email) {
+          // Allow users to manually log in if no email is found in credential
+          $loginButton.html('Log in');
+          $('#fl-store-appDevLogin').removeClass('disabled');
+          $('#fl-store-appDevPass').removeClass('disabled');
+          $loginButton.removeClass('disabled');
+          Fliplet.Widget.autosize();
+          return;
+        }
+
+        return appStoreTeamSetup(credential.email, $loginButton);
+      })
+      .catch(function (error) {
+        // Allow users to manually log in if an error is encountered
         $loginButton.html('Log in');
         $('#fl-store-appDevLogin').removeClass('disabled');
         $('#fl-store-appDevPass').removeClass('disabled');
         $loginButton.removeClass('disabled');
         Fliplet.Widget.autosize();
-        return;
-      }
 
-      return appStoreTeamSetup(credential.email, $loginButton);
-    }).catch(function (error) {
-      //we don't need to handle errors for automatic login
-      $loginButton.html('Log in');
-      $('#fl-store-appDevLogin').removeClass('disabled');
-      $('#fl-store-appDevPass').removeClass('disabled');
-      $loginButton.removeClass('disabled');
-      Fliplet.Widget.autosize();
-    });
+        console.error('Error retrieving previous app store submission credentials', error);
+      });
   }
 }
 
 function appStoreTeamSetup(devEmail, loginButton) {
-  return getTeams(organizationID, appStoreSubmission.id, true)
-    .then(function(itunesTeams) {
-      var allPromises = [];
-      var portalTeamsPromise = getTeams(organizationID, appStoreSubmission.id, false);
-      allPromises.push(portalTeamsPromise);
-      allPromises.push(Promise.resolve(itunesTeams));
+  return Promise.all([
+    getTeams(appStoreSubmission.id, false),
+    getTeams(appStoreSubmission.id, true)
+  ])
+    .then(function (teams) {
+      var appStoreTeams =  teams[0];
+      var itunesTeams =  teams[1];
 
-      return Promise.all(allPromises);
-    })
-    .then(function(teams) {
-      var appStoreTeams = _.filter(teams[0], function(team) {
-        var itunesTeam = _.find(teams[1], function(itcTeam) {
+      appStoreTeams = _.filter(appStoreTeams, function(team) {
+        var itunesTeam = _.find(itunesTeams, function(itcTeam) {
           return itcTeam.team_name === team.name;
         });
 
         return team.type === "Company/Organization" && !_.isUndefined(itunesTeam);
       });
+
       var options = ['<option value="">-- Select a team</option>'];
       appStoreTeams.forEach(function(team, i) {
         options.push('<option value="' + team.teamId + '" data-team-name="' + team.name + '">'+ team.name +' - ' + team.teamId + '</option>');
@@ -381,15 +387,17 @@ function loadEnterpriseData() {
     }
   }
 
-  //try to automaticaly login
+  // Try to automatically login
   if (enterpriseSubmission.data && enterpriseSubmission.data['fl-credentials']) {
+    // Submission data contains credential key
     var $loginButton = $('.login-enterprise-button');
-    $loginButton.html('Logging in');
+    $loginButton.html('Logging in...');
     $loginButton.addClass('disabled');
     $('#fl-ent-appDevLogin').addClass('disabled');
     $('#fl-ent-appDevPass').addClass('disabled');
-    getCredential(organizationID, enterpriseSubmission.data['fl-credentials']).then(function (credential) {
-      if (!credential.email || credential.email === null || typeof credential.email === 'undefined') {
+
+    getCredential(enterpriseSubmission.data['fl-credentials']).then(function (credential) {
+      if (!credential || !credential.email) {
         $loginButton.html('Log in');
         $('#fl-ent-appDevLogin').removeClass('disabled');
         $('#fl-ent-appDevPass').removeClass('disabled');
@@ -400,18 +408,20 @@ function loadEnterpriseData() {
 
       return enterpriseTeamSetup(credential.email, $loginButton);
     }).catch(function (error) {
-      //we don't need to handle errors for automatic login
+      // Allow users to manually log in if an error is encountered
       $loginButton.html('Log in');
+      $('#fl-store-appDevLogin').removeClass('disabled');
+      $('#fl-store-appDevPass').removeClass('disabled');
       $loginButton.removeClass('disabled');
-      $('#fl-ent-appDevLogin').removeClass('disabled');
-      $('#fl-ent-appDevPass').removeClass('disabled');
       Fliplet.Widget.autosize();
+
+      console.error('Error retrieving previous enterprise submission credentials', error);
     });
   }
 }
 
 function enterpriseTeamSetup(devEmail, loginButton) {
-  return getTeams(organizationID, enterpriseSubmission.id, false)
+  return getTeams(enterpriseSubmission.id, false)
     .then(function(teams) {
       var enterpriseTeams = _.filter(teams, function(team) {
         return team.type === "In-House";
@@ -604,12 +614,12 @@ function save(origin, submission) {
             if (origin === "appStore") {
               newSubmission.data['fl-credentials'] = 'submission-' + newSubmission.id;
               appStoreSubmission = newSubmission;
-              cloneCredentialsPromise = cloneCredentials(organizationID, previousCredentials, appStoreSubmission);
+              cloneCredentialsPromise = cloneCredentials(previousCredentials, appStoreSubmission);
             }
             if (origin === "enterprise") {
               newSubmission.data['fl-credentials'] = 'submission-' + newSubmission.id;
               enterpriseSubmission = newSubmission;
-              cloneCredentialsPromise = cloneCredentials(organizationID, previousCredentials, enterpriseSubmission);
+              cloneCredentialsPromise = cloneCredentials(previousCredentials, enterpriseSubmission);
             }
             if (origin === "unsigned") {
               unsignedSubmission = newSubmission;
@@ -690,7 +700,7 @@ function requestBuild(origin, submission) {
 
             // Check which type of certificate was given
             if (origin === "appStore" && appStoreSubmission.data['fl-store-distribution'] === 'previous-file' && appStorePreviousCredential) {
-              return setCredentials(organizationID, appStoreSubmission.id, {
+              return setCredentials(appStoreSubmission.id, {
                 teamId: appStorePreviousCredential.teamId,
                 teamName: appStorePreviousCredential.teamName,
                 certSigningRequest: appStorePreviousCredential.certSigningRequest,
@@ -714,9 +724,9 @@ function requestBuild(origin, submission) {
                 formData.append('certificateName', fileName)
               }
 
-              return setCertificateP12(organizationID, appStoreSubmission.id, formData)
+              return setCertificateP12(appStoreSubmission.id, formData)
                 .then(function() {
-                  return setCredentials(organizationID, appStoreSubmission.id, {
+                  return setCredentials(appStoreSubmission.id, {
                     teamId: teamID,
                     teamName: teamName
                   });
@@ -727,7 +737,7 @@ function requestBuild(origin, submission) {
             }
 
             if (origin === "enterprise" && enterpriseSubmission.data['fl-ent-distribution'] === 'previous-file' && enterprisePreviousCredential) {
-              return setCredentials(organizationID, enterpriseSubmission.id, {
+              return setCredentials(enterpriseSubmission.id, {
                 teamId: enterprisePreviousCredential.teamId,
                 teamName: enterprisePreviousCredential.teamName,
                 certSigningRequest: enterprisePreviousCredential.certSigningRequest,
@@ -752,15 +762,15 @@ function requestBuild(origin, submission) {
               var teamId = $('#fl-ent-teams').val();
               var teamName = $('#fl-ent-teams').find(":selected").data('team-name');
 
-              return setCredentials(organizationID, enterpriseSubmission.id, {
+              return setCredentials(enterpriseSubmission.id, {
                 teamId: teamId,
                 teamName: teamName
               })
                 .then(function() {
-                  return setCertificateP12(organizationID, enterpriseSubmission.id, formData)
+                  return setCertificateP12(enterpriseSubmission.id, formData)
                 })
                 .then(function() {
-                  return setCredentials(organizationID, enterpriseSubmission.id, {
+                  return setCredentials(enterpriseSubmission.id, {
                     teamId: teamID,
                     teamName: teamName
                   });
@@ -777,7 +787,7 @@ function requestBuild(origin, submission) {
       Fliplet.App.Submissions.update(submission.id, submission.data).then(function() {
         // Check which type of certificate was given
         if (origin === "appStore" && appStoreSubmission.data['fl-store-distribution'] === 'previous-file' && appStorePreviousCredential) {
-          return setCredentials(organizationID, appStoreSubmission.id, {
+          return setCredentials(appStoreSubmission.id, {
             teamId: appStorePreviousCredential.teamId,
             teamName: appStorePreviousCredential.teamName,
             certSigningRequest: appStorePreviousCredential.certSigningRequest,
@@ -801,9 +811,9 @@ function requestBuild(origin, submission) {
             formData.append('certificateName', fileName)
           }
 
-          return setCertificateP12(organizationID, appStoreSubmission.id, formData)
+          return setCertificateP12(appStoreSubmission.id, formData)
             .then(function() {
-              return setCredentials(organizationID, appStoreSubmission.id, {
+              return setCredentials(appStoreSubmission.id, {
                 teamId: teamID,
                 teamName: teamName
               });
@@ -814,7 +824,7 @@ function requestBuild(origin, submission) {
         }
 
         if (origin === "enterprise" && enterpriseSubmission.data['fl-ent-distribution'] === 'previous-file' && enterprisePreviousCredential) {
-          return setCredentials(organizationID, enterpriseSubmission.id, {
+          return setCredentials(enterpriseSubmission.id, {
             teamId: enterprisePreviousCredential.teamId,
             teamName: enterprisePreviousCredential.teamName,
             certSigningRequest: enterprisePreviousCredential.certSigningRequest,
@@ -838,9 +848,9 @@ function requestBuild(origin, submission) {
             formData.append('certificateName', fileName)
           }
 
-          return setCertificateP12(organizationID, enterpriseSubmission.id, formData)
+          return setCertificateP12(enterpriseSubmission.id, formData)
             .then(function() {
-              return setCredentials(organizationID, enterpriseSubmission.id, {
+              return setCredentials(enterpriseSubmission.id, {
                 teamId: teamID,
                 teamName: teamName
               });
@@ -1103,10 +1113,10 @@ function savePushData(silentSave) {
   });
 }
 
-function cloneCredentials(organizationId, credentialKey, submission, saveData) {
+function cloneCredentials(credentialKey, submission, saveData) {
   return Fliplet.API.request({
     method: 'POST',
-    url: 'v1/organizations/' + organizationId + '/credentials/' + credentialKey + '/clone',
+    url: 'v1/organizations/' + organizationID + '/credentials/' + credentialKey + '/clone',
     data: {
       key: submission.data['fl-credentials']
     }
@@ -1116,35 +1126,33 @@ function cloneCredentials(organizationId, credentialKey, submission, saveData) {
     }
 
     return Promise.resolve();
-  }).catch(function() {
-    //do nothing, a new credential will be created after the user logs in
   });
 }
 
-function setCredentials(organizationId, id, data, verify) {
+function setCredentials(id, data, verify) {
   verify = typeof verify === 'undefined' ? true : verify;
 
   return Fliplet.API.request({
     method: 'PUT',
-    url: 'v1/organizations/' + organizationId + '/credentials/submission-' + id + '?verify=' + verify,
+    url: 'v1/organizations/' + organizationID + '/credentials/submission-' + id + '?verify=' + verify,
     data: data
   });
 }
 
-function getTeams(organizationId, id, isItunes) {
+function getTeams(id, isItunes) {
   return Fliplet.API.request({
     method: 'GET',
-    url: 'v1/organizations/' + organizationId + '/credentials/submission-' + id + '/teams?itunes=' + isItunes
+    url: 'v1/organizations/' + organizationID + '/credentials/submission-' + id + '/teams?itunes=' + isItunes
   })
   .then(function(result) {
     return Promise.resolve(result.teams);
   });
 }
 
-function searchCredentials(organizationId, data) {
+function searchCredentials(data) {
   return Fliplet.API.request({
     method: 'POST',
-    url: 'v1/organizations/' + organizationId + '/credentials/search',
+    url: 'v1/organizations/' + organizationID + '/credentials/search',
     data: data
   })
   .then(function(credentials) {
@@ -1152,9 +1160,9 @@ function searchCredentials(organizationId, data) {
   });
 }
 
-function getAppCredentials(organizationId, credentialKey, teamId) {
+function getAppCredentials(credentialKey, teamId) {
   if(credentialKey) {
-    return getCredential(organizationId, credentialKey)
+    return getCredential(credentialKey)
       .then(function(credential) {
         if(credential && credential.teamId === teamId && (credential.p12 || credential.certificate)) {
           return credential;
@@ -1186,15 +1194,14 @@ function refreshAppStoreOptions(devEmail, selectedTeamId, selectedTeamName) {
     return;
   }
 
-  return getAppCredentials(organizationID,
-    appStoreSubmission.data['fl-credentials'],
+  return getAppCredentials(appStoreSubmission.data['fl-credentials'],
     selectedTeamId)
     .then(function(credential) {
       if(credential) {
         return credential;
       }
 
-      return searchCredentials(organizationID, {
+      return searchCredentials({
         email: devEmail,
         type: 'apple',
         teamId: selectedTeamId
@@ -1212,7 +1219,7 @@ function refreshAppStoreOptions(devEmail, selectedTeamId, selectedTeamName) {
         }
 
         if(credentialKey) {
-          return getCredential(organizationID, credentialKey);
+          return getCredential(credentialKey);
         }
 
         return;
@@ -1225,6 +1232,7 @@ function refreshAppStoreOptions(devEmail, selectedTeamId, selectedTeamName) {
       if(credential) {
         return credential;
       }
+
       var previousResults = appStoreSubmission.data.previousResults;
       //make sure that previous results are obtained from latest completed submission.
       if (!_.isUndefined(previousAppStoreSubmission)) {
@@ -1243,7 +1251,7 @@ function refreshAppStoreOptions(devEmail, selectedTeamId, selectedTeamName) {
         };
       }
 
-      return getCompletedSubmissions(organizationID, devEmail, selectedTeamId, selectedTeamName);
+      return getCompletedSubmissions(devEmail, selectedTeamId, selectedTeamName);
     })
     .then(function(credential) {
       return setAppStorePrevCredentials(credential);
@@ -1272,15 +1280,14 @@ function refreshAppEnterpriseOptions(devEmail, selectedTeamId, selectedTeamName)
     return;
   }
 
-  return getAppCredentials(organizationID,
-    enterpriseSubmission.data['fl-credentials'],
+  return getAppCredentials(enterpriseSubmission.data['fl-credentials'],
     selectedTeamId)
     .then(function(credential) {
       if(credential) {
         return credential;
       }
 
-      return searchCredentials(organizationID, {
+      return searchCredentials({
         email: devEmail,
         type: 'apple-enterprise',
         teamId: selectedTeamId
@@ -1298,7 +1305,7 @@ function refreshAppEnterpriseOptions(devEmail, selectedTeamId, selectedTeamName)
         }
 
         if(credentialKey) {
-          return getCredential(organizationID, credentialKey);
+          return getCredential(credentialKey);
         }
 
         return;
@@ -1311,11 +1318,13 @@ function refreshAppEnterpriseOptions(devEmail, selectedTeamId, selectedTeamName)
       if(credential) {
         return credential;
       }
+
       var previousResults = enterpriseSubmission.data.previousResults;
       //make sure that previous results are obtained from latest completed submission.
       if (!_.isUndefined(previousEnterpriseStoreSubmission)) {
         previousResults = previousEnterpriseStoreSubmission.result;
       }
+
       //if we dont have any credentials we need to check previous result for a credential object
       if(!_.isUndefined(previousResults) && (!_.isUndefined(previousResults.p12) || !_.isUndefined(previousResults.certificate)) && enterpriseSubmission.data['fl-ent-teamId'] === selectedTeamId) {
         return {
@@ -1328,7 +1337,7 @@ function refreshAppEnterpriseOptions(devEmail, selectedTeamId, selectedTeamName)
         };
       }
 
-      return getCompletedSubmissions(organizationID, devEmail, selectedTeamId, selectedTeamName);
+      return getCompletedSubmissions(devEmail, selectedTeamId, selectedTeamName);
     })
     .then(function(credential) {
       return setAppEnterprisePrevCredential(credential);
@@ -1338,7 +1347,7 @@ function refreshAppEnterpriseOptions(devEmail, selectedTeamId, selectedTeamName)
     });
 }
 
-function getCompletedSubmissions(organizationId, devEmail, teamId, teamName) {
+function getCompletedSubmissions(devEmail, teamId, teamName) {
   var statusList = [
     'started',            // Default status when the submission is started from the user
     'submitted',          // Submission has been submitted
@@ -1354,7 +1363,7 @@ function getCompletedSubmissions(organizationId, devEmail, teamId, teamName) {
     return s !== 'failed';
   });
   var url = [
-    'v1/organizations/' + organizationId,
+    'v1/organizations/' + organizationID,
     '/submissions?status=' + statusFilter.join(','),
     '&email=' + devEmail,
     '&teamId=' + teamId
@@ -1391,13 +1400,24 @@ function getCompletedSubmissions(organizationId, devEmail, teamId, teamName) {
   });
 }
 
-function getCredential(organizationId, credentialKey) {
+function getCredential(credentialKey) {
   return Fliplet.API.request({
     method: 'GET',
-    url: 'v1/organizations/' + organizationId + '/credentials/' + credentialKey
+    url: 'v1/organizations/' + organizationID + '/credentials/' + credentialKey
   })
   .then(function(credential) {
+    if (!credential || !credential.email) {
+      return Promise.resolve();
+    }
+
     return Promise.resolve(credential);
+  })
+  .catch(function (error) {
+    if (error && error.status === 404) {
+      return Promise.resolve();
+    }
+
+    return Promise.reject(error);
   });
 }
 
@@ -1415,29 +1435,22 @@ function createCertificates(options) {
   });
 }
 
-function setCertificateP12(organizationId, id, file) {
+function setCertificateP12(id, file) {
   return Fliplet.API.request({
     method: 'PUT',
-    url: 'v1/organizations/' + organizationId + '/credentials/submission-' + id + '?fileName=p12',
+    url: 'v1/organizations/' + organizationID + '/credentials/submission-' + id + '?fileName=p12',
     data: file,
     contentType: false,
     processData: false
-  })
-  .then(function() {
-    return Promise.resolve();
   });
 }
 
-function revokeCertificate(organizationId, id, certId) {
+function revokeCertificate(id, certId) {
   return Fliplet.API.request({
     method: 'DELETE',
-    url: 'v1/organizations/' + organizationId + '/credentials/submission-' + id + '/' + certId
-  })
-  .then(function(result) {
-    return Promise.resolve();
+    url: 'v1/organizations/' + organizationID + '/credentials/submission-' + id + '/' + certId
   });
 }
-
 
 function init() {
   Fliplet.Apps.get().then(function(apps) {
@@ -1696,7 +1709,7 @@ function submissionChecker(submissions) {
     appStoreSubmission.data['fl-credentials'] = 'submission-' + appStoreSubmission.id;
 
     if(previousSubWithCredentials) {
-      cloneAppStoreCredentialsPromise = cloneCredentials(organizationID, previousSubWithCredentials.data['fl-credentials'], appStoreSubmission, true);
+      cloneAppStoreCredentialsPromise = cloneCredentials(previousSubWithCredentials.data['fl-credentials'], appStoreSubmission, true);
     }
   }
 
@@ -1739,7 +1752,7 @@ function submissionChecker(submissions) {
     enterpriseSubmission.data['fl-credentials'] = 'submission-' + enterpriseSubmission.id;
 
     if(previousSubWithCredentials) {
-      cloneEnterpriseCredentialsPromise = cloneCredentials(organizationID, previousSubWithCredentials.data['fl-credentials'], enterpriseSubmission, true);
+      cloneEnterpriseCredentialsPromise = cloneCredentials(previousSubWithCredentials.data['fl-credentials'], enterpriseSubmission, true);
     }
   }
 
@@ -1910,7 +1923,7 @@ function initialLoad(initial, timeout) {
           }),
           Fliplet.API.request({
             method: 'GET',
-            url: 'v1/organizations/' + Fliplet.Env.get('organizationId')
+            url: 'v1/organizations/' + organizationID
           })
           .then(function(org) {
             organizationName = org.name;
@@ -2430,7 +2443,7 @@ $('.login-appStore-button').on('click', function() {
   }
 
   if (devEmail !== '' && devPass !== '') {
-    setCredentials(organizationID, appStoreSubmission.id, {
+    setCredentials(appStoreSubmission.id, {
       type: 'apple',
       status: 'created',
       email: devEmail,
@@ -2450,7 +2463,7 @@ $('.login-appStore-button').on('click', function() {
 });
 
 $('.log-out-appStore').on('click', function() {
-  setCredentials(organizationID, appStoreSubmission.id, {
+  setCredentials(appStoreSubmission.id, {
     email: null,
     password: null,
     teamId: null
@@ -2522,7 +2535,7 @@ $('.appStore-generate-cert').on('click', function() {
   appStoreTeamId = teamId;
   var teamName = $('#fl-store-teams').find(":selected").data('team-name');
 
-  return setCredentials(organizationID, appStoreSubmission.id, {
+  return setCredentials(appStoreSubmission.id, {
       teamId: teamId,
       teamName: teamName
     })
@@ -2570,9 +2583,9 @@ $('.appStore-replace-cert').on('click', function() {
   var teamName = appStorePreviousCredential ? appStorePreviousCredential.teamName : '';
 
   if (appStorePreviousCredential.certificate && appStorePreviousCredential.certificate.id) {
-    return revokeCertificate(organizationID, appStoreSubmission.id, appStorePreviousCredential.certificate.id)
+    return revokeCertificate(appStoreSubmission.id, appStorePreviousCredential.certificate.id)
       .then(function() {
-        return setCredentials(organizationID, appStoreSubmission.id, {
+        return setCredentials(appStoreSubmission.id, {
             teamId: teamId,
             teamName: teamName
           })
@@ -2641,7 +2654,7 @@ $('.login-enterprise-button').on('click', function() {
   }
 
   if (devEmail !== '' && devPass !== '') {
-    setCredentials(organizationID, enterpriseSubmission.id, {
+    setCredentials(enterpriseSubmission.id, {
       type: 'apple-enterprise',
       status: 'created',
       email: devEmail,
@@ -2662,7 +2675,7 @@ $('.login-enterprise-button').on('click', function() {
 });
 
 $('.log-out-enterprise').on('click', function() {
-  setCredentials(organizationID, enterpriseSubmission.id, {
+  setCredentials(enterpriseSubmission.id, {
     email: null,
     password: null,
     teamId: null
@@ -2731,7 +2744,7 @@ $('.enterprise-generate-cert').on('click', function() {
   enterpriseTeamId = teamId;
   var teamName = $('#fl-ent-teams').find(":selected").data('team-name');
 
-  return setCredentials(organizationID, enterpriseSubmission.id, {
+  return setCredentials(enterpriseSubmission.id, {
       teamId: teamId,
       teamName: teamName
     })
@@ -2798,9 +2811,9 @@ $('.enterprise-replace-cert').on('click', function() {
   var teamName = enterprisePreviousCredential ? enterprisePreviousCredential.teamName : '';
 
   if (enterprisePreviousCredential.certificate && enterprisePreviousCredential.certificate.id) {
-    return revokeCertificate(organizationID, enterpriseSubmission.id, enterprisePreviousCredential.certificate.id)
+    return revokeCertificate(enterpriseSubmission.id, enterprisePreviousCredential.certificate.id)
       .then(function() {
-        return setCredentials(organizationID, enterpriseSubmission.id, {
+        return setCredentials(enterpriseSubmission.id, {
           teamId: teamId,
           teamName: teamName
         })
