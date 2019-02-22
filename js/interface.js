@@ -1407,6 +1407,7 @@ function getCredential(credentialKey) {
   })
   .then(function(credential) {
     if (!credential || !credential.email) {
+      // Valid credential email not found
       return Promise.resolve();
     }
 
@@ -1414,6 +1415,7 @@ function getCredential(credentialKey) {
   })
   .catch(function (error) {
     if (error && error.status === 404) {
+      // Credential not found
       return Promise.resolve();
     }
 
