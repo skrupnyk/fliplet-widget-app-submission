@@ -2079,7 +2079,7 @@ function prompt2FA() {
   var region = Fliplet.Env.get('user').auth_token.substr(0, 2);
   var serverLocations = {
     eu: 'Dublin, Ireland',
-    us: 'San Francisco, California'
+    us: 'San Francisco, US'
   };
 
   return Fliplet.Modal.prompt({
