@@ -2076,14 +2076,20 @@ function select2FADevice(data) {
 }
 
 function prompt2FA() {
-  var region = Fliplet.Env.get('user').auth_token.substr(0, 2);
+  var region = Fliplet.User.getAuthToken().substr(0, 2);
   var serverLocations = {
     eu: 'Dublin, Ireland',
     us: 'San Francisco, US'
   };
 
   return Fliplet.Modal.prompt({
-    title: 'Apple has sent a verification code to your devices from <strong>' + serverLocations[region] + '</strong>. Please enter the code to continue.<div class="alert alert-info alert-sm"><strong>Note:</strong> If you don\'t receive the code, please check your Apple account settings.</div>',
+    title: [
+      'Apple has sent a verification code to your devices from ',
+      serverLocations[region]
+        ? '<strong>' + serverLocations[region] + '</strong>'
+        : 'one of Fliplet\'s server locations',
+      '. Please enter the code to continue.<div class="alert alert-info alert-sm"><strong>Note:</strong> If you don\'t receive the code, please check your Apple account settings.</div>'
+    ].join(''),
     size: 'small'
   }).then(function (code) {
     if (code === null) {
