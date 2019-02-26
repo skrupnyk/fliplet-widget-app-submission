@@ -2535,6 +2535,7 @@ $('.login-appStore-button').on('click', function () {
           message += '<div class="alert alert-info alert-sm">' + Fliplet.parseError(error) + '</div>'
         }
 
+        Fliplet.Modal.hideAll();
         Fliplet.Modal.alert({
           message: message,
           size: 'small'
@@ -2603,6 +2604,7 @@ $('#fl-load-store-teams').on('click', function (e) {
         message += '<div class="alert alert-info alert-sm">' + Fliplet.parseError(error) + '</div>'
       }
 
+      Fliplet.Modal.hideAll();
       Fliplet.Modal.alert({
         message: message,
         size: 'small'
@@ -2781,6 +2783,7 @@ $('.login-enterprise-button').on('click', function () {
         message += '<div class="alert alert-info alert-sm">' + Fliplet.parseError(error) + '</div>'
       }
 
+      Fliplet.Modal.hideAll();
       Fliplet.Modal.alert({
         message: message,
         size: 'small'
@@ -2846,6 +2849,7 @@ $('#fl-load-ent-teams').on('click', function (e) {
         message += '<div class="alert alert-info alert-sm">' + Fliplet.parseError(error) + '</div>'
       }
 
+      Fliplet.Modal.hideAll();
       Fliplet.Modal.alert({
         message: message,
         size: 'small'
