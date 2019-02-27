@@ -43,7 +43,6 @@ var screenshotValidationNotRequired = false;
 var spinner = '<i class="fa fa-spinner fa-pulse fa-fw fa-lg"></i>';
 
 var socket = Fliplet.Socket({
-  transports: ['polling'], // avoid being blocked by AdBlockers
   login: true
 });
 
