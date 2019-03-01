@@ -62,6 +62,10 @@
   padding-top: 4px;
 }
 
+.bs-actionsbox .btn-group button {
+  margin-top: 0;
+}
+
 /*@media (min-width: 640px) {
   .form-horizontal .control-label {
     padding-top: 12px;
