@@ -247,6 +247,10 @@ function loadAppStoreData() {
 
     getCredential(appStoreSubmission.data['fl-credentials'])
       .then(function (credential) {
+        if (credential && credential.appPassword) {
+          $('#fl-store-appPassword').val(credential.appPassword);
+        }
+
         if (!credential || !credential.email) {
           // Allow users to manually log in if no email is found in credential
           $loginButton.html('Log in');
@@ -681,18 +685,23 @@ function save(origin, submission) {
             }
 
             return cloneCredentialsPromise.then(function () {
-              Fliplet.App.Submissions.update(newSubmission.id, newSubmission.data).then(function () {
-                $('.save-' + origin + '-progress').addClass('saved');
+              return Fliplet.App.Submissions.update(newSubmission.id, newSubmission.data);
+            }).then(function () {
+              $('.save-' + origin + '-progress').addClass('saved');
 
-                setTimeout(function () {
-                  $('.save-' + origin + '-progress').removeClass('saved');
-                }, 4000);
-              });
+              setTimeout(function () {
+                $('.save-' + origin + '-progress').removeClass('saved');
+              }, 4000);
             });
           });
       }
 
-      Fliplet.App.Submissions.update(submission.id, submission.data).then(function () {
+      // Save app-specific password before saving remaining submission data
+      return setCredentials(submission.id, {
+        appPassword: $('#fl-store-appPassword').val().trim()
+      }).then(function () {
+        return Fliplet.App.Submissions.update(submission.id, submission.data)
+      }).then(function () {
         $('.save-' + origin + '-progress').addClass('saved');
 
         setTimeout(function () {
@@ -839,7 +848,11 @@ function requestBuild(origin, submission) {
           });
       }
 
-      Fliplet.App.Submissions.update(submission.id, submission.data).then(function () {
+      setCredentials(appStoreSubmission.id, {
+        appPassword: $('#fl-store-appPassword').val().trim()
+      }).then(function () {
+        return Fliplet.App.Submissions.update(submission.id, submission.data);
+      }).then(function () {
         // Check which type of certificate was given
         if (origin === "appStore" && appStoreSubmission.data['fl-store-distribution'] === 'previous-file' && appStorePreviousCredential) {
           return setCredentials(appStoreSubmission.id, {
@@ -937,6 +950,12 @@ function saveAppStoreData(request) {
 
     if (typeof value === 'string') {
       value = value.trim();
+    }
+
+    if (name === 'fl-store-appPassword') {
+      // Skip saving app-specific password
+      // This will be saved in credentials
+      return;
     }
 
     /* PROCESSING KEYWORDS */
