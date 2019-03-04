@@ -699,7 +699,7 @@ function save(origin, submission) {
       // Save app-specific password before saving remaining submission data
       return setCredentials(submission.id, {
         appPassword: $('#fl-store-appPassword').val().trim()
-      }).then(function () {
+      }, false).then(function () {
         return Fliplet.App.Submissions.update(submission.id, submission.data)
       }).then(function () {
         $('.save-' + origin + '-progress').addClass('saved');
