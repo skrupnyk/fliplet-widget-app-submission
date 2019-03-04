@@ -240,38 +240,26 @@ function loadAppStoreData() {
   if (appStoreSubmission.data && appStoreSubmission.data['fl-credentials']) {
     // Submission data contains credential key
     var $loginButton = $('.login-appStore-button');
-    $loginButton.html('Logging in ' + spinner);
-    $loginButton.addClass('disabled');
-    $('#fl-store-appDevPass').addClass('disabled');
-    $('#fl-store-appDevLogin').addClass('disabled');
+    toggleLoginForm('enterprise', 'logging-in');
 
     getCredential(appStoreSubmission.data['fl-credentials'])
       .then(function (credential) {
         if (credential && credential.appPassword) {
+          // Restore app-specific password
           $('#fl-store-appPassword').val(credential.appPassword);
         }
 
         if (!credential || !credential.email) {
           // Allow users to manually log in if no email is found in credential
-          $loginButton.html('Log in');
-          $('#fl-store-appDevLogin').removeClass('disabled');
-          $('#fl-store-appDevPass').removeClass('disabled');
-          $loginButton.removeClass('disabled');
-          Fliplet.Widget.autosize();
+          toggleLoginForm('app-store', 'login');
           return;
         }
 
-        $loginButton.html('Log in');
-        $loginButton.removeClass('disabled');
         return appStoreTeamSetup(credential.email);
       })
       .catch(function (error) {
         // Allow users to manually log in if an error is encountered
-        $loginButton.html('Log in');
-        $('#fl-store-appDevLogin').removeClass('disabled');
-        $('#fl-store-appDevPass').removeClass('disabled');
-        $loginButton.removeClass('disabled');
-        Fliplet.Widget.autosize();
+        toggleLoginForm('app-store', 'login');
       });
   }
 }
@@ -284,10 +272,7 @@ function clearAppStoreCredentials() {
   }, false)
     .then(function () {
       appStoreLoggedIn = false;
-      $('#fl-store-appDevPass').prop('required', true);
-      $('.appStore-logged-email').html('');
-      $('.appStore-login-details').removeClass('hidden');
-      $('.appStore-logged-in, .appStore-more-options, .appStore-teams').removeClass('show');
+      toggleLoginForm('app-store', 'login');
     });
 }
 
@@ -333,21 +318,15 @@ function loadAppStoreTeams(devEmail) {
     });
 }
 
-function appStoreTeamSetup(devEmail, loadTeams) {
+function appStoreTeamSetup(email, loadTeams) {
   var load = Promise.resolve();
 
   if (loadTeams) {
-    load = loadAppStoreTeams(devEmail);
+    load = loadAppStoreTeams(email);
   }
 
   return load.then(function () {
-    $('#fl-store-appDevLogin').removeClass('disabled');
-    $('#fl-store-appDevPass').removeClass('disabled');
-    $('#fl-store-appDevLogin').val(devEmail);
-    $('#fl-store-appDevPass').prop('required', false);
-    $('.appStore-logged-email').html(devEmail);
-    $('.appStore-login-details').addClass('hidden');
-    $('.appStore-logged-in, .appStore-teams').addClass('show');
+    toggleLoginForm('app-store', 'logged-in', { email: email });
   });
 }
 
@@ -423,31 +402,18 @@ function loadEnterpriseData() {
   if (enterpriseSubmission.data && enterpriseSubmission.data['fl-credentials']) {
     // Submission data contains credential key
     var $loginButton = $('.login-enterprise-button');
-    $loginButton.html('Logging in ' + spinner);
-    $loginButton.addClass('disabled');
-    $('#fl-ent-appDevLogin').addClass('disabled');
-    $('#fl-ent-appDevPass').addClass('disabled');
+    toggleLoginForm('enterprise', 'logging-in');
 
     getCredential(enterpriseSubmission.data['fl-credentials']).then(function (credential) {
       if (!credential || !credential.email) {
-        $loginButton.html('Log in');
-        $('#fl-ent-appDevLogin').removeClass('disabled');
-        $('#fl-ent-appDevPass').removeClass('disabled');
-        $loginButton.removeClass('disabled');
-        Fliplet.Widget.autosize();
+        toggleLoginForm('enterprise', 'login');
         return;
       }
 
-      $loginButton.html('Log in');
-      $loginButton.removeClass('disabled');
       return enterpriseTeamSetup(credential.email);
     }).catch(function (error) {
       // Allow users to manually log in if an error is encountered
-      $loginButton.html('Log in');
-      $('#fl-store-appDevLogin').removeClass('disabled');
-      $('#fl-store-appDevPass').removeClass('disabled');
-      $loginButton.removeClass('disabled');
-      Fliplet.Widget.autosize();
+      toggleLoginForm('enterprise', 'login');
 
       console.error('Error retrieving previous enterprise submission credentials', error);
     });
@@ -462,10 +428,7 @@ function clearEnterpriseCredentials() {
   }, false)
     .then(function () {
       enterpriseLoggedIn = false;
-      $('#fl-ent-appDevPass').prop('required', true);
-      $('.enterprise-logged-email').html('');
-      $('.enterprise-login-details').removeClass('hidden');
-      $('.enterprise-logged-in, .enterprise-more-options, .enterprise-teams').removeClass('show');
+      toggleLoginForm('enterprise', 'login');
     });
 }
 
@@ -496,21 +459,15 @@ function loadEnterpriseTeams(devEmail) {
     });
 }
 
-function enterpriseTeamSetup(devEmail, loadTeams) {
+function enterpriseTeamSetup(email, loadTeams) {
   var load = Promise.resolve();
 
   if (loadTeams) {
-    load = loadEnterpriseTeams(devEmail);
+    load = loadEnterpriseTeams(email);
   }
 
   return load.then(function () {
-    $('#fl-ent-appDevLogin').removeClass('disabled');
-    $('#fl-ent-appDevPass').removeClass('disabled');
-    $('#fl-ent-appDevLogin').val(devEmail);
-    $('#fl-ent-appDevPass').prop('required', false);
-    $('.enterprise-logged-email').html(devEmail);
-    $('.enterprise-login-details').addClass('hidden');
-    $('.enterprise-logged-in, .enterprise-teams').addClass('show');
+    toggleLoginForm('enterprise', 'logged-in', { email: email });
   });
 }
 
@@ -2127,6 +2084,77 @@ function prompt2FA() {
   });
 }
 
+function toggleLoginForm(form, state, data) {
+  // form @param (String) app-store | enterprise
+  // state @param (String) login | 2fa-device | 2fa-code | logged-in
+  // data @param (Object) Data for configuring forms (Optional)
+
+  var selectors = {
+    'app-store': {
+      emailField: '#fl-store-appDevLogin',
+      passwordField: '#fl-store-appDevPass',
+      loginButton: '.login-appStore-button',
+      loginDetails: '.appStore-login-details',
+      loggedInEmail: '.appStore-logged-email',
+      loggedIn: '.appStore-logged-in',
+      moreOptions: '.appStore-more-options',
+      teams: '.appStore-teams'
+    },
+    enterprise: {
+      emailField: '#fl-ent-appDevLogin',
+      passwordField: '#fl-ent-appDevPass',
+      loginButton: '.login-enterprise-button',
+      loginDetails: '.enterprise-login-details',
+      loggedInEmail: '.enterprise-logged-email',
+      loggedIn: '.enterprise-logged-in',
+      moreOptions: '.enterprise-more-options',
+      teams: '.enterprise-teams'
+    }
+  };
+
+  if (!Object.keys(selectors).indexOf(form) === -1) {
+    // Invalid form
+    return;
+  }
+
+  var sel = selectors[form];
+  data = data || {};
+
+  switch (state) {
+    case 'login':
+      $([sel.emailField, sel.passwordField].join(',')).prop({
+        readonly: false,
+        required: true
+      });
+      $(sel.loginButton).html('Log in').removeClass('disabled');
+      $(sel.loggedInEmail).html('');
+      $(sel.loginDetails).removeClass('hidden');
+      $([sel.loggedIn, sel.moreOptions, sel.teams].join(',')).removeClass('show');
+      break;
+    case 'logging-in':
+      $(sel.loginButton).html('Logging in ' + spinner).addClass('disabled');
+      $([sel.emailField, sel.passwordField].join(',')).prop({
+        readonly: true
+      });
+      break;
+    case '2fa-device':
+      break;
+    case '2fa-code':
+      break;
+    case 'logged-in':
+      $([sel.emailField, sel.passwordField].join(',')).prop({
+        required: false
+      });
+      $(sel.emailField).val(data.email);
+      $(sel.loggedInEmail).html(data.email);
+      $(sel.loginDetails).addClass('hidden');
+      $([sel.loggedIn, sel.teams].join(',')).addClass('show');
+      break;
+  }
+
+  Fliplet.Widget.autosize();
+}
+
 /* ATTACH LISTENERS */
 $('[name="fl-store-screenshots"]').on('change', function () {
   var value = $(this).val();
@@ -2502,8 +2530,6 @@ $('[data-push-save]').on('click', function () {
 /* Credentials and Certificates App Store */
 $('.login-appStore-button').on('click', function () {
   var $this = $(this);
-  $(this).html('Logging in ' + spinner);
-  $(this).addClass('disabled');
   var devEmail = $('#fl-store-appDevLogin').val();
   var devPass = $('#fl-store-appDevPass').val();
   var emailError = $('#fl-store-appDevLogin').data('error');
@@ -2516,20 +2542,18 @@ $('.login-appStore-button').on('click', function () {
   $('#fl-store-appDevPass').next('.with-errors').html('');
   $this.nextAll('login-error').html('');
 
+  toggleLoginForm('app-store', 'logging-in');
+
   if (devEmail === '') {
     $('#fl-store-appDevLogin').parents('.form-group').addClass('has-error has-danger');
     $('#fl-store-appDevLogin').next('.with-errors').html(emailError);
-    $(this).html('Log in');
-    $(this).removeClass('disabled');
-    Fliplet.Widget.autosize();
+    toggleLoginForm('app-store', 'login');
   }
 
   if (devPass === '') {
     $('#fl-store-appDevPass').parents('.form-group').addClass('has-error has-danger');
     $('#fl-store-appDevPass').next('.with-errors').html(passError);
-    $(this).html('Log in');
-    $(this).removeClass('disabled');
-    Fliplet.Widget.autosize();
+    toggleLoginForm('app-store', 'login');
   }
 
   if (devEmail !== '' && devPass !== '') {
@@ -2541,10 +2565,6 @@ $('.login-appStore-button').on('click', function () {
     })
       .then(function () {
         return appStoreTeamSetup(devEmail, true);
-      })
-      .then(function () {
-        $this.html('Log in');
-        $this.removeClass('disabled');
       })
       .catch(function (error) {
         var message = 'Unable to log in';
@@ -2559,11 +2579,7 @@ $('.login-appStore-button').on('click', function () {
           size: 'small'
         });
 
-        $('.appStore-login-details').removeClass('hidden');
-        $('.appStore-logged-in, .appStore-teams').removeClass('show');
-        $this.html('Log in');
-        $this.removeClass('disabled');
-        Fliplet.Widget.autosize();
+        toggleLoginForm('app-store', 'login');
       });
   }
 });
@@ -2749,8 +2765,6 @@ $('.appStore-replace-cert').on('click', function () {
 /* Credentials and Certificates Enterprise */
 $('.login-enterprise-button').on('click', function () {
   var $this = $(this);
-  $(this).html('Logging in ' + spinner);
-  $(this).addClass('disabled');
   var devEmail = $('#fl-ent-appDevLogin').val();
   var devPass = $('#fl-ent-appDevPass').val();
   var emailError = $('#fl-ent-distributionnt-appDevLogin').data('error');
@@ -2763,20 +2777,18 @@ $('.login-enterprise-button').on('click', function () {
   $('#fl-ent-appDevPass').next('.with-errors').html('');
   $this.nextAll('login-error').html('');
 
+  toggleLoginForm('enterprise', 'logging-in');
+
   if (devEmail === '') {
     $('#fl-ent-appDevLogin').parents('.form-group').addClass('has-error has-danger');
     $('#fl-ent-appDevLogin').next('.with-errors').html(emailError);
-    $(this).html('Log in');
-    $(this).removeClass('disabled');
-    Fliplet.Widget.autosize();
+    toggleLoginForm('enterprise', 'login');
   }
 
   if (devPass === '') {
     $('#fl-ent-appDevPass').parents('.form-group').addClass('has-error has-danger');
     $('#fl-ent-appDevPass').next('.with-errors').html(passError);
-    $(this).html('Log in');
-    $(this).removeClass('disabled');
-    Fliplet.Widget.autosize();
+    toggleLoginForm('enterprise', 'login');
   }
 
   if (devEmail !== '' && devPass !== '') {
@@ -2791,8 +2803,6 @@ $('.login-enterprise-button').on('click', function () {
     })
     .then(function () {
       $('[name="fl-ent-distribution"][value="generate-file"]').prop('checked', true).trigger('change');
-      $this.html('Log in');
-      $this.removeClass('disabled');
     })
     .catch(function (error) {
       var message = 'Unable to log in';
@@ -2807,11 +2817,7 @@ $('.login-enterprise-button').on('click', function () {
         size: 'small'
       });
 
-      $('.enterprise-login-details').removeClass('hidden');
-      $('.enterprise-logged-in, .enterprise-more-options, .enterprise-teams').removeClass('show');
-      $this.html('Log in');
-      $this.removeClass('disabled');
-      Fliplet.Widget.autosize();
+      toggleLoginForm('enterprise', 'login');
     });
   }
 });
