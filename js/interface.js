@@ -2047,7 +2047,7 @@ function getCurrentLoginForm() {
 
 function toggleLoginForm(form, state, data) {
   // form @param (String) app-store | enterprise
-  // state @param (String) login | logging-in | 2fa-device | 2fa-waiting | 2fa-code | 2fa-verifying | 2fa-sms | logged-in
+  // state @param (String) login | logging-in | 2fa-device | 2fa-waiting | 2fa-code | 2fa-verifying | logged-in
   // data @param (Object) Data for configuring forms (Optional)
 
   var selectors = {
@@ -2144,13 +2144,12 @@ function toggleLoginForm(form, state, data) {
         required: true,
         readonly: false
       }).focus();
+      // Show SMS option if allowed
+      $(sel.mfaSms)[data.smsAllowed ? 'addClass' : 'removeClass']('show');
       $(sel.mfaCodeButton).html('Verify').prop('disabled', false);
       $([sel.emailField, sel.passwordField, sel.mfaDeviceField].join(',')).prop('required', false);
       $(sel.loginDetails).addClass('hidden');
-      $([sel.mfaDevices, sel.mfaSms, sel.mfaCodeWaiting, sel.loggedIn, sel.moreOptions, sel.teams].join(',')).removeClass('show');
-      break;
-    case '2fa-sms':
-      $(sel.mfaSms).addClass('show');
+      $([sel.mfaDevices, sel.mfaCodeWaiting, sel.loggedIn, sel.moreOptions, sel.teams].join(',')).removeClass('show');
       break;
     case '2fa-verifying':
       $(sel.mfaCodeField).prop('readonly', true);
@@ -3141,20 +3140,13 @@ $('.browse-files').on('click', function (e) {
 socket.on('aab.apple.login.2fa', function (data) {
   socketClientId = data.clientId;
   // Ask user for code
-  toggleLoginForm(getCurrentLoginForm(), '2fa-code');
+  toggleLoginForm(getCurrentLoginForm(), '2fa-code', data);
 });
 
 socket.on('aab.apple.login.2fa.devices', function (data) {
   socketClientId = data.clientId;
   // Ask user for device
   toggleLoginForm(getCurrentLoginForm(), '2fa-device', data);
-});
-
-socket.on('aab.apple.login.2fa.sms.allowed', function () {
-  // Add SMS option
-  setTimeout(function () {
-    toggleLoginForm(getCurrentLoginForm(), '2fa-sms');
-  }, 2000);
 });
 
 /* INIT */
