@@ -523,7 +523,7 @@
                   <div class="col-sm-8">
                     <input type="text" name="fl-store-copyright" class="form-control" id="fl-store-copyright" maxlength="200" data-error="Please enter your Copyright text" required />
                     <div class="help-block with-errors"></div>
-                    <p class="help-block"><small>Eg: 2008 Acme Inc.</small></p>
+                    <p class="help-block"><small>e.g. 2008 Acme Inc.</small></p>
                   </div>
                 </div>
                 <div class="form-group clearfix">
@@ -580,6 +580,43 @@
                     <div class="col-sm-8">
                       <button type="button" class="btn btn-primary login-appStore-button">Log in</button>
                       <div class="text-danger login-error"></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="appStore-login-2fa-devices">
+                  <div class="alert alert-info">
+                    <p>Your Apple ID is protected with two-step verification.</p>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-sm-4 control-label">
+                      <label>Select a trusted number to receive a verification code</label>
+                    </div>
+                    <div class="col-sm-8">
+                      <div class="btn-group-vertical btn-block" id="fl-store-2fa-select"></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="appStore-login-2fa-waiting">
+                  <div class="text-center"><i class="fa fa-spinner fa-pulse fa-lg"></i></div>
+                </div>
+                <div class="appStore-login-2fa-code">
+                  <div class="alert alert-info">
+                    <p>Apple has sent a verification code to your device(s) from <span class="region-server-location">one of Fliplet's server locations</span>. Please enter the code to continue.</p>
+                    <p><strong>Note:</strong> If you don't receive the code, please check your Apple account settings.</p>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-sm-4 control-label">
+                      <label>Verify your identity</label>
+                    </div>
+                    <div class="col-sm-8">
+                      <input type="text" class="form-control" id="fl-store-2fa-code" data-error="You must enter the verification code to continue" placeholder="Enter the verification code" required>
+                      <p class="help-block appStore-2fa-sms"><strong>Did not get a verification code?</strong> <a href="#">Get a text message with a code</a></p>
+                      <div class="help-block with-errors"></div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-sm-8 col-sm-offset-4">
+                      <button type="button" class="btn btn-primary 2fa-code-store-button">Verify</button>
                     </div>
                   </div>
                 </div>
@@ -952,7 +989,7 @@
                   <div class="col-sm-8">
                     <input type="text" name="fl-store-phone" class="form-control" id="fl-store-phone" pattern="\+[0-9 ]+" data-error="Please enter a valid phone number" required />
                     <div class="help-block with-errors"></div>
-                    <p class="help-block"><small>The phone number needs to include the area code. (Eg.: +44)</small></p>
+                    <p class="help-block"><small>The phone number needs to include the area code. (e.g. +44)</small></p>
                   </div>
                 </div>
                 <div class="form-group clearfix">
@@ -1018,7 +1055,7 @@
                   </div>
                   <div class="col-sm-8">
                     <input type="text" name="fl-store-revPhone" class="form-control" id="fl-store-revPhone" pattern="\+[0-9 ]+" data-error="Please enter a valid phone number" required />
-                    <p class="help-block"><small>The phone number needs to include the area code. (Eg.: +44)</small></p>
+                    <p class="help-block"><small>The phone number needs to include the area code. (e.g. +44)</small></p>
                     <div class="help-block with-errors"></div>
                   </div>
                 </div>
@@ -1189,6 +1226,43 @@ If you have any questions please reply and I will be happy to answer any questio
                       <button type="button" class="btn btn-primary login-enterprise-button">Log in</button> or <a href="#" class="ent-enter-manually">Enter details manually</a>
                       <div class="text-danger login-error"></div>
                       <p class="help-block">If you don't want to store the Apple developer account login details in Fliplet click the <i>Enter details manually</i> link.</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="enterprise-login-2fa-devices">
+                  <div class="alert alert-info">
+                    <p>Your Apple ID is protected with two-step verification.</p>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-sm-4 control-label">
+                      <label>Select a trusted number to receive a verification code</label>
+                    </div>
+                    <div class="col-sm-8">
+                      <div class="btn-group-vertical btn-block" id="fl-ent-2fa-select"></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="enterprise-login-2fa-waiting">
+                  <div class="text-center"><i class="fa fa-spinner fa-pulse fa-lg"></i></div>
+                </div>
+                <div class="enterprise-login-2fa-code">
+                  <div class="alert alert-info">
+                    <p>Apple has sent a verification code to your device(s) from <span class="region-server-location">one of Fliplet's server locations</span>. Please enter the code to continue.</p>
+                    <p><strong>Note:</strong> If you don't receive the code, please check your Apple account settings.</p>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-sm-4 control-label">
+                      <label>Verify your identity</label>
+                    </div>
+                    <div class="col-sm-8">
+                      <input type="text" class="form-control" id="fl-ent-2fa-code" data-error="You must enter the verification code to continue" placeholder="Enter the verification code" required>
+                      <p class="help-block enterprise-2fa-sms"><strong>Did not get a verification code?</strong> <a href="#">Get a text message with a code</a></p>
+                      <div class="help-block with-errors"></div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-sm-8 col-sm-offset-4">
+                      <button type="button" class="btn btn-primary 2fa-code-ent-button">Verify</button>
                     </div>
                   </div>
                 </div>

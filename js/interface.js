@@ -45,6 +45,7 @@ var spinner = '<i class="fa fa-spinner fa-pulse fa-fw fa-lg"></i>';
 var socket = Fliplet.Socket({
   login: true
 });
+var socketClientId;
 
 /* FUNCTIONS */
 String.prototype.toCamelCase = function () {
@@ -2017,76 +2018,36 @@ function initialLoad(initial, timeout) {
   }
 }
 
-function select2FADevice(data) {
-  data = data || {};
-
-  var options = _.map(data.devices, function (value, index) {
-    return {
-      text: value,
-      value: index + 1
-    };
-  });
-
-  return Fliplet.Modal.prompt({
-    title: 'Your Apple ID is protected with two-step verification. Choose a trusted device to receive a verification code.',
-    size: 'small',
-    inputType: 'select',
-    inputOptions: options
-  }).then(function (selection) {
-    if (selection === null) {
-      return null;
-    }
-
-    if (selection === '') {
-      return Fliplet.Modal.alert({
-        message: 'You must choose a device to continue.',
-        size: 'small'
-      }).then(function () {
-        return select2FADevice(data);
-      });
-    }
-
-    return selection;
-  });
-}
-
-function prompt2FA() {
+function updateServerLocation() {
   var region = Fliplet.User.getAuthToken().substr(0, 2);
   var serverLocations = {
     eu: 'Dublin, Ireland',
     us: 'San Francisco, US'
   };
 
-  return Fliplet.Modal.prompt({
-    title: [
-      'Apple has sent a verification code to your devices from ',
-      serverLocations[region]
-        ? '<strong>' + serverLocations[region] + '</strong>'
-        : 'one of Fliplet\'s server locations',
-      '. Please enter the code to continue.<div class="alert alert-info alert-sm"><strong>Note:</strong> If you don\'t receive the code, please check your Apple account settings.</div>'
-    ].join(''),
-    size: 'small'
-  }).then(function (code) {
-    if (code === null) {
-      return null;
-    }
+  if (serverLocations[region]) {
+    $('.region-server-location').html(serverLocations[region]);
+  }
+}
 
-    if (code === '') {
-      return Fliplet.Modal.alert({
-        message: 'You must enter the verification code to continue.',
-        size: 'small'
-      }).then(function () {
-        return prompt2FA();
-      });
-    }
+function getCurrentLoginForm() {
+  var id = $('.nav-tabs > li.active').prop('id');
 
-    return code;
-  });
+  if (!id) {
+    return;
+  }
+
+  var ids = {
+    'appstore-control': 'app-store',
+    'enterprise-control': 'enterprise'
+  };
+
+  return ids[id];
 }
 
 function toggleLoginForm(form, state, data) {
   // form @param (String) app-store | enterprise
-  // state @param (String) login | 2fa-device | 2fa-code | logged-in
+  // state @param (String) login | logging-in | 2fa-device | 2fa-waiting | 2fa-code | 2fa-verifying | 2fa-sms | logged-in
   // data @param (Object) Data for configuring forms (Optional)
 
   var selectors = {
@@ -2094,6 +2055,14 @@ function toggleLoginForm(form, state, data) {
       emailField: '#fl-store-appDevLogin',
       passwordField: '#fl-store-appDevPass',
       loginButton: '.login-appStore-button',
+      mfaDevices: '.appStore-login-2fa-devices',
+      mfaDeviceField: '#fl-store-2fa-select',
+      mfaDeviceName: 'fl-store-device',
+      mfaCodeWaiting: '.appStore-login-2fa-waiting',
+      mfaCode: '.appStore-login-2fa-code',
+      mfaSms: '.appStore-2fa-sms',
+      mfaCodeField: '#fl-store-2fa-code',
+      mfaCodeButton: '.2fa-code-store-button',
       loginDetails: '.appStore-login-details',
       loggedInEmail: '.appStore-logged-email',
       loggedIn: '.appStore-logged-in',
@@ -2104,6 +2073,14 @@ function toggleLoginForm(form, state, data) {
       emailField: '#fl-ent-appDevLogin',
       passwordField: '#fl-ent-appDevPass',
       loginButton: '.login-enterprise-button',
+      mfaDevices: '.enterprise-login-2fa-devices',
+      mfaDeviceField: '#fl-ent-2fa-select',
+      mfaDeviceName: 'fl-ent-device',
+      mfaCodeWaiting: '.enterprise-login-2fa-waiting',
+      mfaCode: '.enterprise-login-2fa-code',
+      mfaSms: '.enterprise-2fa-sms',
+      mfaCodeField: '#fl-ent-2fa-code',
+      mfaCodeButton: '.2fa-code-ent-button',
       loginDetails: '.enterprise-login-details',
       loggedInEmail: '.enterprise-logged-email',
       loggedIn: '.enterprise-logged-in',
@@ -2126,29 +2103,68 @@ function toggleLoginForm(form, state, data) {
         readonly: false,
         required: true
       });
+      $([sel.mfaDeviceField, sel.mfaCodeField].join(',')).prop('required', false);
       $(sel.loginButton).html('Log in').removeClass('disabled');
-      $(sel.loggedInEmail).html('');
       $(sel.loginDetails).removeClass('hidden');
-      $([sel.loggedIn, sel.moreOptions, sel.teams].join(',')).removeClass('show');
+      $([sel.mfaDevices, sel.mfaCode, sel.loggedIn, sel.moreOptions, sel.teams].join(',')).removeClass('show');
       break;
     case 'logging-in':
-      $(sel.loginButton).html('Logging in ' + spinner).addClass('disabled');
       $([sel.emailField, sel.passwordField].join(',')).prop({
         readonly: true
       });
+      $(sel.loginButton).html('Logging in ' + spinner).addClass('disabled');
+      $(sel.loginDetails).removeClass('hidden');
+      $([sel.mfaDevices, sel.mfaCode, sel.loggedIn, sel.moreOptions, sel.teams].join(',')).removeClass('show');
       break;
     case '2fa-device':
+      var options = _.map(_.get(data, 'devices', []), function eachDevice(device, i) {
+        return  [
+          '<span class="btn btn-secondary btn-lg">',
+          '<input type="radio" name="' + sel.mfaDeviceName + '" value="' + (i+1) + '" />' + device,
+          '</span>'
+        ].join('');
+      }).join('');
+      $([sel.emailField, sel.passwordField, sel.mfaCodeField].join(',')).prop({
+        required: false
+      });
+      $(sel.mfaDeviceField).html(options).find('input').prop('required', true);
+      $([sel.emailField, sel.passwordField, sel.mfaCodeField].join(',')).prop('required', false);
+      $(sel.mfaDevices).addClass('show');
+      $(sel.loginDetails).addClass('hidden');
+      $([sel.mfaCode, sel.loggedIn, sel.moreOptions, sel.teams].join(',')).removeClass('show');
+      break;
+    case '2fa-waiting':
+      $(sel.mfaCodeWaiting).addClass('show');
+      $([sel.mfaDeviceField, sel.mfaCodeField].join(',')).prop('required', false);
+      $([sel.mfaCode, sel.mfaDevices, sel.mfaSms].join(',')).removeClass('show');
       break;
     case '2fa-code':
+      $(sel.mfaCode).addClass('show');
+      $(sel.mfaCodeField).val('').prop({
+        required: true,
+        readonly: false
+      }).focus();
+      $(sel.mfaCodeButton).html('Verify').prop('disabled', false);
+      $([sel.emailField, sel.passwordField, sel.mfaDeviceField].join(',')).prop('required', false);
+      $(sel.loginDetails).addClass('hidden');
+      $([sel.mfaDevices, sel.mfaSms, sel.mfaCodeWaiting, sel.loggedIn, sel.moreOptions, sel.teams].join(',')).removeClass('show');
+      break;
+    case '2fa-sms':
+      $(sel.mfaSms).addClass('show');
+      break;
+    case '2fa-verifying':
+      $(sel.mfaCodeField).prop('readonly', true);
+      $(sel.mfaCodeButton).html('Verifying ' + spinner).prop('disabled', true);
       break;
     case 'logged-in':
-      $([sel.emailField, sel.passwordField].join(',')).prop({
+      $([sel.emailField, sel.passwordField, sel.mfaDeviceField, sel.mfaCodeField].join(',')).prop({
         required: false
       });
       $(sel.emailField).val(data.email);
       $(sel.loggedInEmail).html(data.email);
       $(sel.loginDetails).addClass('hidden');
       $([sel.loggedIn, sel.teams].join(',')).addClass('show');
+      $([sel.mfaDevices, sel.mfaCode].join(',')).removeClass('show');
       break;
   }
 
@@ -2156,6 +2172,28 @@ function toggleLoginForm(form, state, data) {
 }
 
 /* ATTACH LISTENERS */
+
+$('[data-toggle="tooltip"]').tooltip();
+
+$('.appStore-2fa-sms, .enterprise-2fa-sms').find('a').on('click', function (e) {
+  e.preventDefault();
+  // Send SMS request via socket
+  toggleLoginForm(getCurrentLoginForm(), '2fa-waiting');
+  socket.to(socketClientId).emit('aab.apple.login.2fa.sms');
+});
+
+$('#fl-store-2fa-select, #fl-ent-2fa-select').on('change', function (e) {
+  // Send device selection via socket
+  toggleLoginForm(getCurrentLoginForm(), '2fa-waiting');
+  socket.to(socketClientId).emit('aab.apple.login.2fa.device', e.target.value);
+});
+
+$('.2fa-code-store-button, .2fa-code-ent-button').on('click', function (e) {
+  var code = $(this).parents('.form-group').prev().find('.form-control').val();
+  toggleLoginForm(getCurrentLoginForm(), '2fa-verifying');
+  socket.to(socketClientId).emit('aab.apple.login.2fa.code', code);
+});
+
 $('[name="fl-store-screenshots"]').on('change', function () {
   var value = $(this).val();
   var id = $(this).attr('id');
@@ -2240,6 +2278,7 @@ $('.panel-group')
 $('a[data-toggle="tab"]')
   .on('shown.bs.tab', function () {
     Fliplet.Widget.autosize();
+    socket.to(socketClientId).emit('aab.apple.login.2fa.cancel');
   })
   .on('hidden.bs.tab', function () {
     Fliplet.Widget.autosize();
@@ -2300,6 +2339,12 @@ $('#appStoreConfiguration').validator().on('submit', function (event) {
   if (_.includes(['fl-store-appDevLogin', 'fl-store-appDevPass'], document.activeElement.id)) {
     // User submitted app store login form
     $('.login-appStore-button').trigger('click');
+    return;
+  }
+
+  if (document.activeElement.id === 'fl-store-2fa-code') {
+    // User submitted app store login form
+    $('.2fa-code-store-button').trigger('click');
     return;
   }
 
@@ -2388,6 +2433,12 @@ $('#enterpriseConfiguration').validator().on('submit', function (event) {
   if (_.includes(['fl-ent-appDevLogin', 'fl-ent-appDevPass'], document.activeElement.id)) {
     // User submitted enterprise login form
     $('.login-enterprise-button').trigger('click');
+    return;
+  }
+
+  if (document.activeElement.id === 'fl-ent-2fa-code') {
+    // User submitted app store login form
+    $('.2fa-code-ent-button').trigger('click');
     return;
   }
 
@@ -3078,38 +3129,31 @@ $('.browse-files').on('click', function (e) {
   });
 });
 
+// Listen for 2FA code when requested
+socket.on('aab.apple.login.2fa', function (data) {
+  socketClientId = data.clientId;
+  // Ask user for code
+  toggleLoginForm(getCurrentLoginForm(), '2fa-code');
+});
+
+socket.on('aab.apple.login.2fa.devices', function (data) {
+  socketClientId = data.clientId;
+  // Ask user for device
+  toggleLoginForm(getCurrentLoginForm(), '2fa-device', data);
+});
+
+socket.on('aab.apple.login.2fa.sms.allowed', function () {
+  // Add SMS option
+  setTimeout(function () {
+    toggleLoginForm(getCurrentLoginForm(), '2fa-sms');
+  }, 2000);
+});
+
 /* INIT */
 $('#appStoreConfiguration, #enterpriseConfiguration, #unsignedConfiguration').validator().off('change.bs.validator focusout.bs.validator');
 $('[name="submissionType"][value="appStore"]').prop('checked', true).trigger('change');
 
+updateServerLocation();
+
 // Start
 initLoad = initialLoad(true, 0);
-
-// Listen for 2FA code when requested
-socket.on('aab.apple.login.2fa', function (data) {
-  // Ask user for code
-  prompt2FA().then(function (code) {
-    if (code === null) {
-      socket.to(data.clientId).emit('aab.apple.login.2fa.cancel');
-      return;
-    }
-
-    socket.to(data.clientId).emit('aab.apple.login.2fa.code', code);
-  }).catch(function () {
-    socket.to(data.clientId).emit('aab.apple.login.2fa.cancel');
-  });
-});
-
-socket.on('aab.apple.login.2fa.devices', function (data) {
-  // Ask user to select device
-  select2FADevice(data).then(function (selection) {
-    if (selection === null) {
-      socket.to(data.clientId).emit('aab.apple.login.2fa.cancel');
-      return;
-    }
-
-    socket.to(data.clientId).emit('aab.apple.login.2fa.device', selection);
-  }).catch(function () {
-    socket.to(data.clientId).emit('aab.apple.login.2fa.cancel');
-  });
-});
