@@ -2045,7 +2045,7 @@ function getCurrentLoginForm() {
   return ids[id];
 }
 
-function getSelectors(selectors, keys) {
+function mapSelectors(selectors, keys) {
   selectors = selectors || {};
 
   if (typeof keys === 'string') {
@@ -2111,22 +2111,22 @@ function toggleLoginForm(form, state, data) {
 
   switch (state) {
     case 'login':
-      $(getSelectors(sel, ['emailField', 'passwordField'])).prop({
+      $(mapSelectors(sel, ['emailField', 'passwordField'])).prop({
         readonly: false,
         required: true
       });
-      $(getSelectors(sel, ['mfaDeviceField', 'mfaCodeField'])).prop('required', false);
+      $(mapSelectors(sel, ['mfaDeviceField', 'mfaCodeField'])).prop('required', false);
       $(sel.loginButton).html('Log in').removeClass('disabled');
       $(sel.loginDetails).removeClass('hidden');
-      $(getSelectors(sel, ['mfaDevices', 'mfaCode', 'loggedIn', 'moreOptions', 'teams'])).removeClass('show');
+      $(mapSelectors(sel, ['mfaDevices', 'mfaCode', 'loggedIn', 'moreOptions', 'teams'])).removeClass('show');
       break;
     case 'logging-in':
-      $(getSelectors(['emailField', 'passwordField'])).prop({
+      $(mapSelectors(['emailField', 'passwordField'])).prop({
         readonly: true
       });
       $(sel.loginButton).html('Logging in ' + spinner).addClass('disabled');
       $(sel.loginDetails).removeClass('hidden');
-      $(getSelectors(sel, ['mfaDevices', 'mfaCode', 'loggedIn', 'moreOptions', 'teams'])).removeClass('show');
+      $(mapSelectors(sel, ['mfaDevices', 'mfaCode', 'loggedIn', 'moreOptions', 'teams'])).removeClass('show');
       break;
     case '2fa-device':
       var options = _.map(_.get(data, 'devices', []), function eachDevice(device, i) {
@@ -2136,19 +2136,19 @@ function toggleLoginForm(form, state, data) {
           '</span>'
         ].join('');
       }).join('');
-      $(getSelectors(sel, ['emailField', 'passwordField', 'mfaCodeField'])).prop({
+      $(mapSelectors(sel, ['emailField', 'passwordField', 'mfaCodeField'])).prop({
         required: false
       });
       $(sel.mfaDeviceField).html(options).find('input').prop('required', true);
-      $(getSelectors(sel, ['emailField', 'passwordField', 'mfaCodeField'])).prop('required', false);
+      $(mapSelectors(sel, ['emailField', 'passwordField', 'mfaCodeField'])).prop('required', false);
       $(sel.mfaDevices).addClass('show');
       $(sel.loginDetails).addClass('hidden');
-      $(getSelectors(sel, ['mfaCodeWaiting', 'mfaCode', 'loggedIn', 'moreOptions', 'teams'])).removeClass('show');
+      $(mapSelectors(sel, ['mfaCodeWaiting', 'mfaCode', 'loggedIn', 'moreOptions', 'teams'])).removeClass('show');
       break;
     case '2fa-waiting':
       $(sel.mfaCodeWaiting).addClass('show');
-      $(getSelectors(sel, ['mfaDeviceField', 'mfaCodeField'])).prop('required', false);
-      $(getSelectors(sel, ['mfaCode', 'mfaDevices', 'mfaSms'])).removeClass('show');
+      $(mapSelectors(sel, ['mfaDeviceField', 'mfaCodeField'])).prop('required', false);
+      $(mapSelectors(sel, ['mfaCode', 'mfaDevices', 'mfaSms'])).removeClass('show');
       break;
     case '2fa-code':
       $(sel.mfaCode).addClass('show');
@@ -2159,23 +2159,23 @@ function toggleLoginForm(form, state, data) {
       // Show SMS option if allowed
       $(sel.mfaSms)[data.smsAllowed ? 'addClass' : 'removeClass']('show');
       $(sel.mfaCodeButton).html('Verify').prop('disabled', false);
-      $(getSelectors(sel, 'emailField, passwordField, mfaDeviceField')).prop('required', false);
+      $(mapSelectors(sel, 'emailField, passwordField, mfaDeviceField')).prop('required', false);
       $(sel.loginDetails).addClass('hidden');
-      $(getSelectors(sel, ['mfaDevices', 'mfaCodeWaiting', 'loggedIn', 'moreOptions', 'teams'])).removeClass('show');
+      $(mapSelectors(sel, ['mfaDevices', 'mfaCodeWaiting', 'loggedIn', 'moreOptions', 'teams'])).removeClass('show');
       break;
     case '2fa-verifying':
       $(sel.mfaCodeField).prop('readonly', true);
       $(sel.mfaCodeButton).html('Verifying ' + spinner).prop('disabled', true);
       break;
     case 'logged-in':
-      $(getSelectors(sel, ['emailField', 'passwordField', 'mfaDeviceField', 'mfaCodeField'])).prop({
+      $(mapSelectors(sel, ['emailField', 'passwordField', 'mfaDeviceField', 'mfaCodeField'])).prop({
         required: false
       });
       $(sel.emailField).val(data.email);
       $(sel.loggedInEmail).html(data.email);
       $(sel.loginDetails).addClass('hidden');
-      $(getSelectors(sel, ['loggedIn', 'teams'])).addClass('show');
-      $(getSelectors(sel, ['mfaDevices', 'mfaCode'])).removeClass('show');
+      $(mapSelectors(sel, ['loggedIn', 'teams'])).addClass('show');
+      $(mapSelectors(sel, ['mfaDevices', 'mfaCode'])).removeClass('show');
       break;
   }
 
