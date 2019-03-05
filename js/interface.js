@@ -2190,6 +2190,14 @@ $('#fl-store-2fa-select, #fl-ent-2fa-select').on('change', function (e) {
 
 $('.2fa-code-store-button, .2fa-code-ent-button').on('click', function (e) {
   var code = $(this).parents('.form-group').prev().find('.form-control').val();
+
+  if (!code) {
+    Fliplet.Modal.alert({
+      message: 'You must enter the verification code to continue'
+    });
+    return;
+  }
+
   toggleLoginForm(getCurrentLoginForm(), '2fa-verifying');
   socket.to(socketClientId).emit('aab.apple.login.2fa.code', code);
 });
