@@ -2285,7 +2285,10 @@ $('.panel-group')
 $('a[data-toggle="tab"]')
   .on('shown.bs.tab', function () {
     Fliplet.Widget.autosize();
-    socket.to(socketClientId).emit('aab.apple.login.2fa.cancel');
+
+    if (socketClientId) {
+      socket.to(socketClientId).emit('aab.apple.login.2fa.cancel');
+    }
   })
   .on('hidden.bs.tab', function () {
     Fliplet.Widget.autosize();
