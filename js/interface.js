@@ -808,7 +808,7 @@ function requestBuild(origin, submission) {
 
       setCredentials(appStoreSubmission.id, {
         appPassword: $('#fl-store-appPassword').val().trim()
-      }).then(function () {
+      }, false).then(function () {
         return Fliplet.App.Submissions.update(submission.id, submission.data);
       }).then(function () {
         // Check which type of certificate was given
