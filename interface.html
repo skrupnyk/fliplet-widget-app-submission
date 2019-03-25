@@ -84,23 +84,13 @@
                       </label>
                     </div>
 
-                    <div data-item="fl-store-screenshots-new-warning" class="hidden-area danger">
-                      <p>Apple requires you to upload up to 4 screenshots of your app for mobile and tablet devices. We could not find any screenshots in your folders, please go to <a href="#" onclick="Fliplet.Studio.emit('navigate', { name: 'launchAssets' })">App Settings</a> to generate your screenshots.</p>
+                    <div data-item="fl-store-screenshots-new-warning" class="alert alert-inset alert-danger hidden">
+                      <p>Apple requires you to upload up to 4 screenshots of your app for all the device types listed below. Please go to <a href="#" data-change-assets>App Settings</a> to generate your screenshots.</p>
                     </div>
-                    <div data-item="fl-store-screenshots-new" class="hidden-area">
-                      <p>We will use the following screenshot in your app listing in the order shown below.<br>
-                      <small>We order the screenshots alphabetically, to reorder go to <a href="#" class="browse-files">File Manager</a> and rename your screenshots.</small></p>
-
-                      <div class="row screenshot-previews">
-                        <div class="col-xs-12"><strong>Mobile</strong></div>
-                        <div class="mobile-thumbs"></div>
-                      </div>
-                      <div class="row screenshot-previews">
-                        <div class="col-xs-12"><strong>Tablet</strong></div>
-                        <div class="tablet-thumbs"></div>
-                      </div>
-
-                      <p>If you want to generate or upload new screenshots go to <a href="#" onclick="Fliplet.Studio.emit('navigate', { name: 'launchAssets' })">App Settings</a>.</p>
+                    <div data-item="fl-store-screenshots-mobilex-missing" class="alert alert-inset alert-warning hidden">Starting <strong>March 27, 2019</strong> all new apps and app updates for iPhone or iPad need to include screenshots for the iPhone 6.5-inch display.</div>
+                    <div data-item="fl-store-screenshots-new" class="alert alert-inset alert-info hidden">
+                      <p>We will use the following screenshots in your app listing in the order shown below. <strong>Screenshots are uploaded alphabetically.</strong> To reorder them, go to <a href="#" class="browse-files">File Manager</a> and rename your screenshots. To generate or upload new screenshots go to <a href="#" data-change-assets>App Settings</a>.</p>
+                      <div class="screenshot-thumb-containers"></div>
                     </div>
 
                     <div class="radio radio-icon">
@@ -110,9 +100,9 @@
                       </label>
                     </div>
 
-                    <div data-item="fl-store-screenshots-existing" class="hidden-area">
-                      <p>We will not upload new screenshots, we will use the existing screenshots on the app listing. By selecting this option you are confirming that you already have an app listing on the Apple App Store and that it contains the screenshots you want to be publicaly available.</p>
-                      <p class="text-warning">The app submission will fail if the app listing doesn’t contain screenshots.</p>
+                    <div data-item="fl-store-screenshots-existing" class="alert alert-inset alert-warning hidden">
+                      <p>Apple will use the existing screenshots on the app listing and we will not upload new screenshots. By selecting this option you are confirming that you already have an app listing on the Apple App Store and that it contains the screenshots you want to be publicly available.</p>
+                      <p><strong>The app submission will fail if the app listing doesn’t contain all required screenshots.</strong></p>
                     </div>
 
                   </div>
