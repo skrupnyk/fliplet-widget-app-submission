@@ -1,0 +1,6 @@
+{{#each this}}
+<div class="row screenshot-previews">
+  <div class="col-xs-12"><p><strong>{{ name }}</strong><br>{{#each sizes}}{{#unless @first}} or {{/unless}}{{this.[0]}} &times; {{this.[1]}}{{/each}}</p></div>
+  <div class="thumbs" data-type="{{ type }}"></div>
+</div>
+{{/each}}

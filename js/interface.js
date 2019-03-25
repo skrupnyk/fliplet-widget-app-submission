@@ -36,9 +36,28 @@ var initLoad;
 var organizationID = Fliplet.Env.get('organizationId');
 var userInfo;
 var hasFolders = false;
-var screenShotsMobile = [];
-var screenShotsTablet = [];
-var haveScreenshots = false;
+// Each collection requirement will need to match at least one of the width/height sizes
+var screenshotRequirements = [
+  {
+    type: 'mobile',
+    name: 'iPhone 5.5-inch Display',
+    sizes: [[1242, 2208]],
+    screenshots: []
+  },
+  {
+    type: 'mobilex',
+    name: 'iPhone 6.5-inch Display',
+    sizes: [[1242, 2688]],
+    screenshots: []
+  },
+  {
+    type: 'tablet',
+    name: 'iPad Pro 12.9-inch Display',
+    sizes: [[2048, 2732], [2732, 2048]],
+    screenshots: []
+  }
+];
+var hasAllScreenshots = false;
 var screenshotValidationNotRequired = false;
 var spinner = '<i class="fa fa-spinner fa-pulse fa-fw fa-lg"></i>';
 
@@ -76,8 +95,11 @@ function incrementVersionNumber(versionNumber) {
   return splitNumber.join('.');
 }
 
-function checkHasScreenshots() {
-  haveScreenshots = hasFolders && screenShotsMobile.length && screenShotsTablet.length;
+function checkHasAllScreenshots() {
+  hasAllScreenshots = hasFolders && _.every(screenshotRequirements, function (req) {
+    return req.screenshots.length;
+  });
+  return hasAllScreenshots;
 }
 
 function addThumb(thumb) {
@@ -85,7 +107,18 @@ function addThumb(thumb) {
   return template(thumb);
 }
 
+function addNoScreenshotWarning(req) {
+  var template = Fliplet.Widget.Templates['templates.no-thumb'];
+  return template(req);
+}
+
+function addScreenshotThumbContainers() {
+  var template = Fliplet.Widget.Templates['templates.thumb-containers'];
+  $('.screenshot-thumb-containers').html(template(screenshotRequirements));
+}
+
 function loadAppStoreData() {
+  addScreenshotThumbContainers();
   $('#appStoreConfiguration [name]').each(function (i, el) {
     var name = $(el).attr("name");
 
@@ -208,7 +241,7 @@ function loadAppStoreData() {
     $('[name="' + name + '"]').val((typeof appStoreSubmission.data[name] !== "undefined") ? appStoreSubmission.data[name] : '');
   });
 
-  if (appName !== '' && appIcon && ((hasFolders && screenShotsMobile.length && screenShotsTablet.length) || screenshotValidationNotRequired)) {
+  if (appName !== '' && appIcon && (checkHasAllScreenshots() || screenshotValidationNotRequired)) {
     if (appSettings.splashScreen && appSettings.splashScreen.size && (appSettings.splashScreen.size[0] && appSettings.splashScreen.size[1]) < 2732) {
       $('.app-details-appStore .app-splash-screen').addClass('has-warning');
     }
@@ -228,10 +261,9 @@ function loadAppStoreData() {
     }
 
     if ($('[name="fl-store-screenshots"]:checked').val() === 'new'
-      && (!hasFolders
-        || !screenShotsMobile.length
-        || !screenShotsTablet.length
-      )
+      && (!hasFolders || _.some(screenshotRequirements, function (req) {
+        return !req.screenshots.length;
+      }))
     ) {
       $('.app-details-appStore .app-screenshots').addClass('has-error');
     }
@@ -1533,25 +1565,34 @@ function checkGroupErrors() {
 
 function validateScreenshots() {
   var imageErrors = [];
-  var supportedFormats = [[1242,2208], [2048,2732], [2732,2048]];
-  var allScreenShots = _.concat(screenShotsMobile, screenShotsTablet);
-
-  _.forEach(allScreenShots, function (screenshot, key) {
-    var supportedSize = _.find(supportedFormats, function (format) {
-      return format[0] === screenshot.size[0] && format[1] === screenshot.size[1];
+  var supportedFormats = _.uniqBy(_.concat.apply(null, _.map(screenshotRequirements, 'sizes')),
+    function (req) {
+      return req[0] + ' x ' + req[1];
     });
 
-    if (!screenshot.appId && !supportedSize) {
+  _.forEach(screenshotRequirements, function (req) {
+    _.forEach(req.screenshots, function (screenshot) {
+      var supportedSize = _.some(req.sizes, function (size) {
+        return size[0] === screenshot.size[0] && size[1] === screenshot.size[1];
+      });
+
+      if (screenshot.appId && supportedSize) {
+        return;
+      }
+
       imageErrors.push(screenshot.name + ' - ' + screenshot.size[0] + ' x ' + screenshot.size[1]);
-    }
+    });
   });
 
   if (imageErrors.length > 0) {
-    imageErrors.unshift('The following screenshots have an invalid size:');
     imageErrors.push('Supported screenshot sizes are:');
-    imageErrors.push('1242 x 2208 | 2048 x 2732 | 2732 x 2048');
-    var errorMessage = _.join(imageErrors, '\n\r');
-    alert(errorMessage);
+    imageErrors.push(_.map(supportedFormats, function (format) {
+      return format[0] + ' &times; ' + format[1];
+    }).join(' | '));
+    Fliplet.Modal.alert({
+      title: 'The following screenshots have an invalid size',
+      message: _.join(imageErrors, '<br>')
+    });
     return false;
   }
 
@@ -1985,12 +2026,13 @@ function initialLoad(initial, timeout) {
               });
           }))
           .then(function () {
-            structure.forEach(function (el, idx) {
-              if (el.type === 'mobile') {
-                screenShotsMobile = el.folderContent.files
-              }
-              if (el.type === 'tablet') {
-                screenShotsTablet = el.folderContent.files
+            structure.forEach(function (el) {
+              var idx = _.findIndex(screenshotRequirements, {
+                type: el.type
+              });
+
+              if (idx > -1) {
+                screenshotRequirements[idx].screenshots = el.folderContent.files;
               }
             });
           });
@@ -2214,39 +2256,33 @@ $('.2fa-code-store-button, .2fa-code-ent-button').on('click', function (e) {
 });
 
 $('[name="fl-store-screenshots"]').on('change', function () {
-  var value = $(this).val();
   var id = $(this).attr('id');
-  checkHasScreenshots();
 
-  if (value === 'new' && !haveScreenshots) {
-    $('[data-item="fl-store-screenshots-new-warning"]').addClass('show');
+  switch ($(this).val()) {
+    case 'new':
+      _.forEach(screenshotRequirements, function (req) {
+        var $thumbContainer = $('.thumbs[data-type="' + req.type + '"]');
+        $thumbContainer.html('');
 
-    $('[data-item="fl-store-screenshots-new"]').removeClass('show');
-    $('[data-item="fl-store-screenshots-existing"]').removeClass('show');
-  }
+        if (!req.screenshots.length) {
+          $thumbContainer.append(addNoScreenshotWarning(req));
+          return;
+        }
 
-  if (value === 'new' && haveScreenshots) {
-    $('[data-item="fl-store-screenshots-new-warning"]').removeClass('show');
-    $('[data-item="fl-store-screenshots-new"]').addClass('show');
+        _.forEach(_.take(req.screenshots, 4), function (thumb) {
+          $thumbContainer.append(addThumb(thumb));
+        });
+      });
 
-    $('[data-item="fl-store-screenshots-existing"]').removeClass('show');
-
-
-    _.take(screenShotsMobile, 4).forEach(function (thumb) {
-      $('.mobile-thumbs').append(addThumb(thumb));
-    });
-
-    _.take(screenShotsTablet, 4).forEach(function (thumb) {
-      $('.tablet-thumbs').append(addThumb(thumb));
-    });
-  }
-
-  if (value === 'existing') {
-    $('.app-details-appStore .app-screenshots').removeClass('has-error');
-    $('[data-item="fl-store-screenshots-existing"]').addClass('show');
-
-    $('[data-item="fl-store-screenshots-new-warning"]').removeClass('show');
-    $('[data-item="fl-store-screenshots-new"]').removeClass('show');
+      $('[data-item="fl-store-screenshots-new"]').removeClass('hidden');
+      $('[data-item="fl-store-screenshots-existing"]').addClass('hidden');
+      break;
+    case 'existing':
+      $('.app-details-appStore .app-screenshots').removeClass('has-error');
+      $('[data-item="fl-store-screenshots-existing"]').removeClass('hidden');
+      $('[data-item="fl-store-screenshots-new-warning"]').addClass('hidden');
+      $('[data-item="fl-store-screenshots-new"]').addClass('hidden');
+      break;
   }
 });
 
@@ -2334,7 +2370,7 @@ $('.redirectToSettings, [data-change-settings]').on('click', function (event) {
   });
 });
 
-$('[data-change-assets]').on('click', function (event) {
+$(document).on('click', '[data-change-assets]', function (event) {
   event.preventDefault();
 
   Fliplet.Studio.emit('close-overlay', {
@@ -2381,7 +2417,7 @@ $('#appStoreConfiguration').validator().on('submit', function (event) {
 
   event.preventDefault();
 
-  if ($('[name="fl-store-screenshots"]:checked').val() === 'new' && !haveScreenshots) {
+  if ($('[name="fl-store-screenshots"]:checked').val() === 'new' && !hasAllScreenshots) {
     Fliplet.Modal.alert({
       message: 'You need to add screenshots before submitting'
     });
