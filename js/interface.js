@@ -40,19 +40,19 @@ var hasFolders = false;
 var screenshotRequirements = [
   {
     type: 'mobile',
-    name: 'iPhone 5.5-inch Display',
+    name: 'iPhone 5.5-inch',
     sizes: [[1242, 2208]],
     screenshots: []
   },
   {
     type: 'mobilex',
-    name: 'iPhone 6.5-inch Display',
+    name: 'iPhone 6.5-inch',
     sizes: [[1242, 2688]],
     screenshots: []
   },
   {
     type: 'tablet',
-    name: 'iPad Pro 12.9-inch Display',
+    name: 'iPad Pro 12.9-inch',
     sizes: [[2048, 2732], [2732, 2048]],
     screenshots: []
   }
