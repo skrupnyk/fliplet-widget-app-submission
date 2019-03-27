@@ -1579,6 +1579,7 @@ function validateScreenshots() {
       // @BUG This should be using the && logic operator. Otherwise, it's ignoring the size check.
       //      However, there's an API bug where sizes are not stored using the correct pixel sizes,
       //      so we're allowing this bug for now.
+      //      https://github.com/Fliplet/fliplet-studio/issues/4109
       if (screenshot.appId || supportedSize) {
         return;
       }
