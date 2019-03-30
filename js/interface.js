@@ -1439,19 +1439,20 @@ function getCompletedSubmissions(devEmail, teamId, teamName) {
 }
 
 function getCredential(credentialKey) {
+    return Promise.resolve();
+  }
+
   return Fliplet.API.request({
     method: 'GET',
     url: 'v1/organizations/' + organizationID + '/credentials/' + credentialKey
-  })
-  .then(function (credential) {
+  }).then(function (credential) {
     if (!credential || !credential.email) {
       // Valid credential email not found
       return Promise.resolve();
     }
 
     return Promise.resolve(credential);
-  })
-  .catch(function (error) {
+  }).catch(function (error) {
     if (error && error.status === 404) {
       // Credential not found
       return Promise.resolve();
