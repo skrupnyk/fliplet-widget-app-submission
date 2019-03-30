@@ -1439,6 +1439,7 @@ function getCompletedSubmissions(devEmail, teamId, teamName) {
 }
 
 function getCredential(credentialKey) {
+  if (!credentialKey) {
     return Promise.resolve();
   }
 
