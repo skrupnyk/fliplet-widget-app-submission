@@ -1218,9 +1218,25 @@ function searchCredentials(data) {
     method: 'POST',
     url: 'v1/organizations/' + organizationID + '/credentials/search',
     data: data
-  })
-  .then(function (credentials) {
-    return Promise.resolve(credentials);
+  }).then(function (response) {
+    if (!response) {
+      return;
+    }
+
+    var credentialKey;
+    var submissionsWithCred = _.filter(Object.keys(response), function (o) {
+      return response[o].hasCertificate === true;
+    });
+
+    credentialKey = _.max(submissionsWithCred, function (o) {
+      return response[o].updatedAt;
+    });
+
+    if (!credentialKey) {
+      return;
+    }
+
+    return getCredential(credentialKey);
   });
 }
 
@@ -1269,27 +1285,6 @@ function refreshAppStoreOptions(devEmail, selectedTeamId, selectedTeamName) {
         email: devEmail,
         type: 'apple',
         teamId: selectedTeamId
-      })
-      .then(function (response) {
-        var credentialKey;
-        var submissionsWithCred = _.filter(Object.keys(response), function (o) {
-          return response[o].hasCertificate === true;
-        });
-
-        if (submissionsWithCred) {
-          credentialKey = _.max(submissionsWithCred, function (o) {
-            return response[o].updatedAt;
-          });
-        }
-
-        if (credentialKey) {
-          return getCredential(credentialKey);
-        }
-
-        return;
-      })
-      .catch(function (error) {
-        return;
       });
     })
     .then(function (credential) {
@@ -1355,27 +1350,6 @@ function refreshAppEnterpriseOptions(devEmail, selectedTeamId, selectedTeamName)
         email: devEmail,
         type: 'apple-enterprise',
         teamId: selectedTeamId
-      })
-      .then(function (response) {
-        var credentialKey;
-        var submissionsWithCred = _.filter(Object.keys(response), function (o) {
-          return response[o].hasCertificate === true;
-        });
-
-        if (submissionsWithCred) {
-          credentialKey = _.max(submissionsWithCred, function (o) {
-            return response[o].updatedAt;
-          });
-        }
-
-        if (credentialKey) {
-          return getCredential(credentialKey);
-        }
-
-        return;
-      })
-      .catch(function (error) {
-        return;
       });
     })
     .then(function (credential) {
