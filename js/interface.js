@@ -1218,9 +1218,25 @@ function searchCredentials(data) {
     method: 'POST',
     url: 'v1/organizations/' + organizationID + '/credentials/search',
     data: data
-  })
-  .then(function (credentials) {
-    return Promise.resolve(credentials);
+  }).then(function (response) {
+    if (!response) {
+      return;
+    }
+
+    var credentialKey;
+    var submissionsWithCred = _.filter(Object.keys(response), function (o) {
+      return response[o].hasCertificate === true;
+    });
+
+    credentialKey = _.max(submissionsWithCred, function (o) {
+      return response[o].updatedAt;
+    });
+
+    if (!credentialKey) {
+      return;
+    }
+
+    return getCredential(credentialKey);
   });
 }
 
@@ -1269,27 +1285,6 @@ function refreshAppStoreOptions(devEmail, selectedTeamId, selectedTeamName) {
         email: devEmail,
         type: 'apple',
         teamId: selectedTeamId
-      })
-      .then(function (response) {
-        var credentialKey;
-        var submissionsWithCred = _.filter(Object.keys(response), function (o) {
-          return response[o].hasCertificate === true;
-        });
-
-        if (submissionsWithCred) {
-          credentialKey = _.max(submissionsWithCred, function (o) {
-            return response[o].updatedAt;
-          });
-        }
-
-        if (credentialKey) {
-          return getCredential(credentialKey);
-        }
-
-        return;
-      })
-      .catch(function (error) {
-        return;
       });
     })
     .then(function (credential) {
@@ -1355,27 +1350,6 @@ function refreshAppEnterpriseOptions(devEmail, selectedTeamId, selectedTeamName)
         email: devEmail,
         type: 'apple-enterprise',
         teamId: selectedTeamId
-      })
-      .then(function (response) {
-        var credentialKey;
-        var submissionsWithCred = _.filter(Object.keys(response), function (o) {
-          return response[o].hasCertificate === true;
-        });
-
-        if (submissionsWithCred) {
-          credentialKey = _.max(submissionsWithCred, function (o) {
-            return response[o].updatedAt;
-          });
-        }
-
-        if (credentialKey) {
-          return getCredential(credentialKey);
-        }
-
-        return;
-      })
-      .catch(function (error) {
-        return;
       });
     })
     .then(function (credential) {
@@ -1465,19 +1439,21 @@ function getCompletedSubmissions(devEmail, teamId, teamName) {
 }
 
 function getCredential(credentialKey) {
+  if (!credentialKey) {
+    return Promise.resolve();
+  }
+
   return Fliplet.API.request({
     method: 'GET',
     url: 'v1/organizations/' + organizationID + '/credentials/' + credentialKey
-  })
-  .then(function (credential) {
+  }).then(function (credential) {
     if (!credential || !credential.email) {
       // Valid credential email not found
       return Promise.resolve();
     }
 
     return Promise.resolve(credential);
-  })
-  .catch(function (error) {
+  }).catch(function (error) {
     if (error && error.status === 404) {
       // Credential not found
       return Promise.resolve();
