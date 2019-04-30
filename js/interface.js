@@ -61,8 +61,9 @@ var hasAllScreenshots = false;
 var screenshotValidationNotRequired = false;
 var spinner = '<i class="fa fa-spinner fa-pulse fa-fw fa-lg"></i>';
 
+var socketRequiresLogin = true;
 var socket = Fliplet.Socket({
-  login: true
+  login: socketRequiresLogin
 });
 var socketClientId;
 
@@ -73,6 +74,29 @@ String.prototype.toCamelCase = function () {
     return p1.toLowerCase();
   }).replace(/([^A-Z-a-z])/g, '').toLowerCase();
 };
+
+function socketIsReady() {
+  return socket.connected && (!socketRequiresLogin || socket.loggedIn);
+}
+
+function waitForSocketConnection() {
+  if (socketIsReady()) {
+    return Promise.resolve();
+  }
+
+  var interval;
+
+  return new Promise(function (resolve) {
+    interval = setInterval(function () {
+      if (!socketIsReady()) {
+        return;
+      }
+
+      clearInterval(interval);
+      resolve();
+    }, 200);
+  });
+}
 
 function createBundleID(orgName, appName) {
   return $.ajax({
@@ -1196,19 +1220,22 @@ function cloneCredentials(credentialKey, submission, saveData) {
 function setCredentials(id, data, verify) {
   verify = typeof verify === 'undefined' ? true : verify;
 
-  return Fliplet.API.request({
-    method: 'PUT',
-    url: 'v1/organizations/' + organizationID + '/credentials/submission-' + id + '?verify=' + verify,
-    data: data
+  return waitForSocketConnection().then(function () {
+    return Fliplet.API.request({
+      method: 'PUT',
+      url: 'v1/organizations/' + organizationID + '/credentials/submission-' + id + '?verify=' + verify,
+      data: data
+    });
   });
 }
 
 function getTeams(id, isItunes) {
-  return Fliplet.API.request({
-    method: 'GET',
-    url: 'v1/organizations/' + organizationID + '/credentials/submission-' + id + '/teams?itunes=' + isItunes
-  })
-  .then(function (result) {
+  return waitForSocketConnection().then(function () {
+    return Fliplet.API.request({
+      method: 'GET',
+      url: 'v1/organizations/' + organizationID + '/credentials/submission-' + id + '/teams?itunes=' + isItunes
+    });
+  }).then(function (result) {
     return Promise.resolve(result.teams);
   });
 }
