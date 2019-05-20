@@ -106,7 +106,7 @@ function createBundleID(orgName, appName) {
 }
 
 function incrementVersionNumber(versionNumber) {
-  var splitNumber = versionNumber.split('.');
+  var splitNumber = _.compact(versionNumber.split('.'));
   var arrLength = splitNumber.length;
 
   while (arrLength--) {
@@ -1566,6 +1566,10 @@ function checkGroupErrors() {
   });
 }
 
+function isValidVersion(version) {
+  return /^[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{1,2}$/.test(version);
+}
+
 function validateScreenshots() {
   var imageErrors = [];
   var supportedFormats = _.uniqBy(_.concat.apply(null, _.map(screenshotRequirements, 'sizes')),
@@ -2424,6 +2428,13 @@ $('#appStoreConfiguration').validator().on('submit', function (event) {
 
   event.preventDefault();
 
+  if (!isValidVersion($('[name="fl-store-versionNumber"]').val())) {
+    Fliplet.Modal.alert({
+      message: 'The version number is incorrect: you must use a period-separated list of three non-negative integers.'
+    });
+    return;
+  }
+
   if ($('[name="fl-store-screenshots"]:checked').val() === 'new' && !hasAllScreenshots) {
     Fliplet.Modal.alert({
       message: 'You need to add screenshots before submitting'
@@ -2518,6 +2529,13 @@ $('#enterpriseConfiguration').validator().on('submit', function (event) {
 
   event.preventDefault();
 
+  if (!isValidVersion($('[name="fl-ent-versionNumber"]').val())) {
+    Fliplet.Modal.alert({
+      message: 'The version number is incorrect: you must use a period-separated list of three non-negative integers.'
+    });
+    return;
+  }
+
   if (!enterpriseManual && !enterpriseLoggedIn) {
     Fliplet.Modal.alert({
       message: 'Please log in with the Apple Developer Account or choose to enter the data manually.'
@@ -2591,6 +2609,13 @@ $('#unsignedConfiguration').validator().on('submit', function (event) {
   }
 
   event.preventDefault();
+
+  if (!isValidVersion($('[name="fl-uns-versionNumber"]').val())) {
+    Fliplet.Modal.alert({
+      message: 'The version number is incorrect: you must use a period-separated list of three non-negative integers.'
+    });
+    return;
+  }
 
   if (appInfo && appInfo.productionAppId) {
     if (allAppData.indexOf('unsigned') > -1) {
