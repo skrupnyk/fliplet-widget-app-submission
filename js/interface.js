@@ -70,7 +70,7 @@ var socketClientId;
 /* ERROR MESSAGES */
 
 var ERRORS = {
-  INVALID_VERSION: 'The version number is incorrect: you must use a period-separated list of three non-negative integers.'
+  INVALID_VERSION: 'The version number is incorrect. Please use a 3-part version number such as 1.0.0 where each part is no larger than 99.'
 };
 
 /* FUNCTIONS */
