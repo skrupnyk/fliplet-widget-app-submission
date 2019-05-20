@@ -67,6 +67,12 @@ var socket = Fliplet.Socket({
 });
 var socketClientId;
 
+/* ERROR MESSAGES */
+
+var ERRORS = {
+  INVALID_VERSION: 'The version number is incorrect: you must use a period-separated list of three non-negative integers.'
+};
+
 /* FUNCTIONS */
 String.prototype.toCamelCase = function () {
   return this.replace(/^([A-Z])|[^A-Za-z]+(\w)/g, function (match, p1, p2, offset) {
@@ -2430,7 +2436,7 @@ $('#appStoreConfiguration').validator().on('submit', function (event) {
 
   if (!isValidVersion($('[name="fl-store-versionNumber"]').val())) {
     Fliplet.Modal.alert({
-      message: 'The version number is incorrect: you must use a period-separated list of three non-negative integers.'
+      message: ERRORS.INVALID_VERSION
     });
     return;
   }
@@ -2531,7 +2537,7 @@ $('#enterpriseConfiguration').validator().on('submit', function (event) {
 
   if (!isValidVersion($('[name="fl-ent-versionNumber"]').val())) {
     Fliplet.Modal.alert({
-      message: 'The version number is incorrect: you must use a period-separated list of three non-negative integers.'
+      message: ERRORS.INVALID_VERSION
     });
     return;
   }
@@ -2612,7 +2618,7 @@ $('#unsignedConfiguration').validator().on('submit', function (event) {
 
   if (!isValidVersion($('[name="fl-uns-versionNumber"]').val())) {
     Fliplet.Modal.alert({
-      message: 'The version number is incorrect: you must use a period-separated list of three non-negative integers.'
+      message: ERRORS.INVALID_VERSION
     });
     return;
   }
