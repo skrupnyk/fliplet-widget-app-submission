@@ -67,6 +67,12 @@ var socket = Fliplet.Socket({
 });
 var socketClientId;
 
+/* ERROR MESSAGES */
+
+var ERRORS = {
+  INVALID_VERSION: 'The version number is incorrect. Please use a 3-part version number such as 1.0.0 where each part is no larger than 99.'
+};
+
 /* FUNCTIONS */
 String.prototype.toCamelCase = function () {
   return this.replace(/^([A-Z])|[^A-Za-z]+(\w)/g, function (match, p1, p2, offset) {
@@ -106,7 +112,7 @@ function createBundleID(orgName, appName) {
 }
 
 function incrementVersionNumber(versionNumber) {
-  var splitNumber = versionNumber.split('.');
+  var splitNumber = _.compact(versionNumber.split('.'));
   var arrLength = splitNumber.length;
 
   while (arrLength--) {
@@ -1566,6 +1572,10 @@ function checkGroupErrors() {
   });
 }
 
+function isValidVersion(version) {
+  return /^[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{1,2}$/.test(version);
+}
+
 function validateScreenshots() {
   var imageErrors = [];
   var supportedFormats = _.uniqBy(_.concat.apply(null, _.map(screenshotRequirements, 'sizes')),
@@ -2424,6 +2434,13 @@ $('#appStoreConfiguration').validator().on('submit', function (event) {
 
   event.preventDefault();
 
+  if (!isValidVersion($('[name="fl-store-versionNumber"]').val())) {
+    Fliplet.Modal.alert({
+      message: ERRORS.INVALID_VERSION
+    });
+    return;
+  }
+
   if ($('[name="fl-store-screenshots"]:checked').val() === 'new' && !hasAllScreenshots) {
     Fliplet.Modal.alert({
       message: 'You need to add screenshots before submitting'
@@ -2518,6 +2535,13 @@ $('#enterpriseConfiguration').validator().on('submit', function (event) {
 
   event.preventDefault();
 
+  if (!isValidVersion($('[name="fl-ent-versionNumber"]').val())) {
+    Fliplet.Modal.alert({
+      message: ERRORS.INVALID_VERSION
+    });
+    return;
+  }
+
   if (!enterpriseManual && !enterpriseLoggedIn) {
     Fliplet.Modal.alert({
       message: 'Please log in with the Apple Developer Account or choose to enter the data manually.'
@@ -2591,6 +2615,13 @@ $('#unsignedConfiguration').validator().on('submit', function (event) {
   }
 
   event.preventDefault();
+
+  if (!isValidVersion($('[name="fl-uns-versionNumber"]').val())) {
+    Fliplet.Modal.alert({
+      message: ERRORS.INVALID_VERSION
+    });
+    return;
+  }
 
   if (appInfo && appInfo.productionAppId) {
     if (allAppData.indexOf('unsigned') > -1) {
