@@ -1527,7 +1527,9 @@ function init() {
     });
   });
 
-  $('#fl-store-keywords').tokenfield();
+  $('#fl-store-keywords').tokenfield({
+    createTokensOnBlur: true
+  });
 
   /* APP ICON */
   if (appIcon) {
