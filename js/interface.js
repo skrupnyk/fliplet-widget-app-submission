@@ -357,7 +357,11 @@ function loadAppStoreTeams(devEmail) {
           return itcTeam.team_name === team.name;
         });
 
-        return team.type === "Company/Organization" && !_.isUndefined(itunesTeam);
+        if (itunesTeam) {
+          return false;
+        }
+
+        return team.type !== "In-House";
       });
 
       var options = ['<option value="">-- Select a team</option>'];
