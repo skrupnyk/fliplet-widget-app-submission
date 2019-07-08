@@ -357,7 +357,7 @@ function loadAppStoreTeams(devEmail) {
           return itcTeam.team_name === team.name;
         });
 
-        if (itunesTeam) {
+        if (!itunesTeam) {
           return false;
         }
 
