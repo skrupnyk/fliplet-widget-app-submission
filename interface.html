@@ -702,12 +702,12 @@
                 <div class="form-group clearfix">
                   <div class="col-sm-4 control-label">
                     <label for="fl-store-versionNumber">App-specific password</label>
-                    <p class="help-block label-helper"><small><strong>If your Apple account has two-step verification enabled</strong>, this is needed to ensure Fliplet is authorized to submit your app to the store.</small></p>
+                    <p class="help-block label-helper"><small>This is required to ensure Fliplet is authorized to submit your app to the store.</small></p>
                   </div>
                   <div class="col-sm-8">
-                    <input type="text" name="fl-store-appPassword" class="form-control" id="fl-store-appPassword" data-error="Please enter an app-specific password" maxlength="19" />
+                    <input type="text" name="fl-store-appPassword" class="form-control" id="fl-store-appPassword" data-error="Please enter an app-specific password" maxlength="19" required/>
                     <div class="help-block with-errors"></div>
-                    <p class="help-block"><small>See <a href="https://support.apple.com/en-gb/HT204397" target="_blank">Apple documentation</a> to learn more about app-specific passwords and how to create them.</small></p>
+                    <div class="alert alert-warning">Please note that <strong>you need to generate a unique password for every app</strong>.<br />See <a href="https://support.apple.com/en-gb/HT204397" target="_blank">Apple documentation</a> about how to create an <strong>app-specific password</strong> that Fliplet can use.</small></div>
                   </div>
                 </div>
 
