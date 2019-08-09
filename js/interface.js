@@ -1571,6 +1571,11 @@ function checkGroupErrors() {
   });
 }
 
+// We set required attribute to 'demo password' only if 'demo user' field is not empty
+function checkDemoUser() {
+  $('#fl-store-revDemoPass').prop('required', $('#fl-store-revDemoUser').val() !== ''); 
+}
+
 function isValidVersion(version) {
   return /^[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{1,2}$/.test(version);
 }
@@ -2255,6 +2260,17 @@ $('#fl-store-2fa-select, #fl-ent-2fa-select').on('change', function (e) {
   // Send device selection via socket
   toggleLoginForm(getCurrentLoginForm(), '2fa-waiting');
   socket.to(socketClientId).emit('aab.apple.login.2fa.device', e.target.value);
+});
+
+// When app is loaded we check if user previosly saved 'demo user' but not 'demo user password'.
+Fliplet().then(function () {
+  checkDemoUser();
+});
+
+// After user blur from 'demo user' field we check again to make sure that the field is empty. 
+// If field is empty we remove required attribute.
+$('#fl-store-revDemoUser').on('blur', function () {
+  checkDemoUser();
 });
 
 $('.2fa-code-store-button, .2fa-code-ent-button').on('click', function (e) {
