@@ -28,6 +28,7 @@ var enterpriseSubmission = {};
 var unsignedSubmission = {};
 var notificationSettings = {};
 var appInfo;
+var demoUser;
 var statusTableTemplate = $('#status-table-template').html();
 var $statusAppStoreTableElement = $('.app-build-appstore-status-holder');
 var $statusEnterpriseTableElement = $('.app-build-enterprise-status-holder');
@@ -270,6 +271,12 @@ function loadAppStoreData() {
 
     $('[name="' + name + '"]').val((typeof appStoreSubmission.data[name] !== "undefined") ? appStoreSubmission.data[name] : '');
   });
+
+  // Saving 'demo user' value from API to compare it in checkDemoUser function
+  demoUser = appStoreSubmission.data['fl-store-revDemoUser'];
+  
+  // When all data is loaded we can check if demo user was saved before
+  checkDemoUser();
 
   if (appName !== '' && appIcon && (checkHasAllScreenshots() || screenshotValidationNotRequired)) {
     if (appSettings.splashScreen && appSettings.splashScreen.size && (appSettings.splashScreen.size[0] && appSettings.splashScreen.size[1]) < 2732) {
@@ -1573,6 +1580,9 @@ function checkGroupErrors() {
 
 // We set required attribute to 'demo password' only if 'demo user' field is not empty
 function checkDemoUser() {
+  // When google tries to auto-fill 'demo user' field, we checking data fron API and delete google auto-fill
+  // if no saved data for this field
+  $('#fl-store-revDemoUser').val(demoUser ? demoUser : '');
   $('#fl-store-revDemoPass').prop('required', $('#fl-store-revDemoUser').val() !== ''); 
 }
 
@@ -2260,11 +2270,6 @@ $('#fl-store-2fa-select, #fl-ent-2fa-select').on('change', function (e) {
   // Send device selection via socket
   toggleLoginForm(getCurrentLoginForm(), '2fa-waiting');
   socket.to(socketClientId).emit('aab.apple.login.2fa.device', e.target.value);
-});
-
-// When app is loaded we check if user previosly saved 'demo user' but not 'demo user password'.
-Fliplet().then(function () {
-  checkDemoUser();
 });
 
 // After user blur from 'demo user' field we check again to make sure that the field is empty. 
