@@ -29,6 +29,7 @@ var unsignedSubmission = {};
 var notificationSettings = {};
 var appInfo;
 var demoUser;
+var userInput;
 var statusTableTemplate = $('#status-table-template').html();
 var $statusAppStoreTableElement = $('.app-build-appstore-status-holder');
 var $statusEnterpriseTableElement = $('.app-build-enterprise-status-holder');
@@ -1582,8 +1583,11 @@ function checkGroupErrors() {
 function checkDemoUser() {
   // When google tries to auto-fill 'demo user' field, we checking data fron API and delete google auto-fill
   // if no saved data for this field
-  $('#fl-store-revDemoUser').val(demoUser ? demoUser : '');
-  $('#fl-store-revDemoPass').prop('required', $('#fl-store-revDemoUser').val() !== ''); 
+  var $demoUserFiled = $('#fl-store-revDemoUser');
+  if (!userInput) {
+    $demoUserFiled.val(demoUser ? demoUser : '');
+  }
+  $('#fl-store-revDemoPass').prop('required', $demoUserFiled.val() !== ''); 
 }
 
 function isValidVersion(version) {
@@ -2272,9 +2276,18 @@ $('#fl-store-2fa-select, #fl-ent-2fa-select').on('change', function (e) {
   socket.to(socketClientId).emit('aab.apple.login.2fa.device', e.target.value);
 });
 
+Fliplet().then(function () {
+  checkDemoUser();
+});
+
+// This listener need that we can understand that it is a user entering data but not an any password managers.
+$('#fl-store-revDemoUser').on('keyup', function (event) {
+  userInput = event && event.key || false;
+});
+
 // After user blur from 'demo user' field we check again to make sure that the field is empty. 
 // If field is empty we remove required attribute.
-$('#fl-store-revDemoUser').on('blur', function () {
+$('#fl-store-revDemoUser').on('change', function () {
   checkDemoUser();
 });
 
