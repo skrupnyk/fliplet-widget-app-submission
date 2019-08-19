@@ -2397,12 +2397,11 @@ $('.redirectToSettings, [data-change-settings]').on('click', function (event) {
         appId: Fliplet.Env.get('appId')
       }
     });
-  })
-  .catch(function (err) {
+  }).catch(function (err) {
     Fliplet.Modal.alert({
       message: Fliplet.parseError(err)
     })
-  })
+  });
 
 });
 
@@ -2423,14 +2422,12 @@ $(document).on('click', '[data-change-assets]', function (event) {
         appId: Fliplet.Env.get('appId')
       }
     });
-  })
-  .catch(function (err) {
+  }).catch(function (err) {
     Fliplet.Modal.alert({
       message: Fliplet.parseError(err)
     })
-  })
-
-
+  });
+  
 });
 
 $('#appStoreConfiguration, #enterpriseConfiguration, #unsignedConfiguration').on('validated.bs.validator', function () {
