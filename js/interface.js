@@ -29,7 +29,8 @@ var unsignedSubmission = {};
 var notificationSettings = {};
 var appInfo;
 var demoUser;
-var userInput;
+var userInput = false;
+var autoFill = 0;
 var statusTableTemplate = $('#status-table-template').html();
 var $statusAppStoreTableElement = $('.app-build-appstore-status-holder');
 var $statusEnterpriseTableElement = $('.app-build-enterprise-status-holder');
@@ -1581,11 +1582,15 @@ function checkGroupErrors() {
 
 // We set required attribute to 'demo password' only if 'demo user' field is not empty
 function checkDemoUser() {
-  // When google tries to auto-fill 'demo user' field, we checking data fron API and delete google auto-fill
+  // When google tries to auto-fill 'demo user' field, we checking data from API and delete google auto-fill
   // if no saved data for this field
+  // To allow a user to use auto-fill from google but disallow google to put the information to the field by itself.
+  // We check how many times use google auto-fill after numerous tries found out that google inserts data to this input
+  // only three times at a row, so, therefore, the fourth time it's a user trying to input information from auto-fill.
   var $demoUserFiled = $('#fl-store-revDemoUser');
-  if (!userInput) {
+  if (!userInput && autoFill < 3) {
     $demoUserFiled.val(demoUser ? demoUser : '');
+    autoFill++;
   }
   $('#fl-store-revDemoPass').prop('required', $demoUserFiled.val() !== ''); 
 }
@@ -2280,14 +2285,11 @@ Fliplet().then(function () {
   checkDemoUser();
 });
 
-// This listener need that we can understand that it is a user entering data but not an any password managers.
-$('#fl-store-revDemoUser').on('keyup', function (event) {
-  userInput = event && event.key || false;
-});
-
 // After user blur from 'demo user' field we check again to make sure that the field is empty. 
 // If field is empty we remove required attribute.
-$('#fl-store-revDemoUser').on('change', function () {
+$('#fl-store-revDemoUser').on('input', function (event) {
+  userInput = event.originalEvent.inputType || false;
+  
   checkDemoUser();
 });
 
