@@ -136,7 +136,7 @@ function saveFirebaseSettings(origin) {
 
     formData.append('firebase', unsignedFirebaseFileField.files[0]);
 
-    return setFirebaseConfigFile(enterpriseSubmission.id, formData);
+    return setFirebaseConfigFile(unsignedSubmission.id, formData);
   }
 
   return Promise.resolve();
