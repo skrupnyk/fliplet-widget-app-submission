@@ -741,19 +741,19 @@ function save(origin, submission) {
           .then(function (newSubmission) {
             var cloneCredentialsPromise = Promise.resolve();
 
+            newSubmission.data['fl-credentials'] = 'submission-' + newSubmission.id;
+
             if (origin === "appStore") {
-              newSubmission.data['fl-credentials'] = 'submission-' + newSubmission.id;
               appStoreSubmission = newSubmission;
               cloneCredentialsPromise = cloneCredentials(previousCredentials, appStoreSubmission);
-            }
-            if (origin === "enterprise") {
-              newSubmission.data['fl-credentials'] = 'submission-' + newSubmission.id;
+            } else if (origin === "enterprise") {
               enterpriseSubmission = newSubmission;
               cloneCredentialsPromise = cloneCredentials(previousCredentials, enterpriseSubmission);
-            }
-            if (origin === "unsigned") {
+            } else if (origin === "unsigned") {
               unsignedSubmission = newSubmission;
+              cloneCredentialsPromise = cloneCredentials(previousCredentials, unsignedSubmission);
             }
+
             return cloneCredentialsPromise.then(function () {
               return Fliplet.App.Submissions.update(newSubmission.id, newSubmission.data);
             }).then(function () {
@@ -1213,6 +1213,8 @@ function saveUnsignedData(request) {
 
     data[name] = value;
   });
+
+  data['fl-credentials'] = 'submission-' + unsignedSubmission.id;
 
   unsignedSubmission.data = data;
 
@@ -1930,6 +1932,24 @@ function submissionChecker(submissions) {
     }
   }
 
+  var cloneUnsignedCredentialsPromise = Promise.resolve();
+  if (unsignedSubmission.data && !unsignedSubmission.data['fl-credentials']) {
+
+    var prevSubCred = _.filter(esub, function (submission) {
+      return submission.data && submission.data['fl-credentials'];
+    });
+
+    var previousSubWithCredentials = _.maxBy(prevSubCred, function (el) {
+      return new Date(el.createdAt).getTime();
+    });
+
+    unsignedSubmission.data['fl-credentials'] = 'submission-' + unsignedSubmission.id;
+
+    if (previousSubWithCredentials) {
+      cloneUnsignedCredentialsPromise = cloneCredentials(previousSubWithCredentials.data['fl-credentials'], unsignedSubmission, true);
+    }
+  }
+
   var usub = _.filter(submissions, function (submission) {
     return submission.data.submissionType === "unsigned" && submission.platform === "ios";
   });
@@ -1946,6 +1966,8 @@ function submissionChecker(submissions) {
 
   return cloneAppStoreCredentialsPromise.then(function () {
     return cloneEnterpriseCredentialsPromise;
+  }).then(function () {
+    return cloneUnsignedCredentialsPromise;
   }).then(function () {
     if (_.isEmpty(appStoreSubmission)) {
       return Fliplet.App.Submissions.create({
