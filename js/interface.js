@@ -1027,8 +1027,8 @@ function saveAppStoreData(request) {
       value = value.trim();
     }
 
-    if (name === 'fl-store-appPassword') {
-      // Skip saving app-specific password
+    if (name === 'fl-store-appPassword' || name === 'fl-store-firebase') {
+      // Skip saving app-specific password and Firebase config file
       // This will be saved in credentials
       return;
     }
@@ -1110,6 +1110,10 @@ function saveEnterpriseData(request) {
       }
       data[name] = newValue;
       return;
+    }
+
+    if (name === 'fl-ent-firebase') {
+      return; // saved in credentials
     }
 
     if (name === 'fl-ent-teamId') {
@@ -1196,6 +1200,11 @@ function saveUnsignedData(request) {
 
   $('#unsignedConfiguration [name]').each(function (i, el) {
     var name = $(el).attr("name");
+
+    if (name === 'fl-uns-firebase') {
+      return; // saved in credentials
+    }
+
     var value = $(el).val();
 
     if (typeof value === 'string') {
