@@ -15,6 +15,9 @@ var previousAppStoreSubmission = {};
 var previousEnterpriseStoreSubmission = {};
 var appStorePreviousCredential = undefined;
 var appStoreFileField = undefined;
+var appStoreFirebaseFileField = undefined;
+var enterpriseFirebaseFileField = undefined;
+var unsignedFirebaseFileField = undefined;
 var appStoreTeamId = undefined;
 var enterprisePreviousCredential = undefined;
 var enterpriseFileField = undefined;
@@ -109,6 +112,34 @@ function createBundleID(orgName, appName) {
     url: "https://itunes.apple.com/lookup?bundleId=com." + orgName + "." + appName,
     dataType: "jsonp"
   });
+}
+
+function saveFirebaseSettings(origin) {
+  if (origin === 'appStore' && appStoreFirebaseFileField && appStoreFirebaseFileField.files[0]) {
+    var formData = new FormData();
+
+    formData.append('firebase', appStoreFirebaseFileField.files[0]);
+
+    return setFirebaseConfigFile(appStoreSubmission.id, formData);
+  }
+
+  if (origin === 'enterprise' && enterpriseFirebaseFileField && enterpriseFirebaseFileField.files[0]) {
+    var formData = new FormData();
+
+    formData.append('firebase', enterpriseFirebaseFileField.files[0]);
+
+    return setFirebaseConfigFile(enterpriseSubmission.id, formData);
+  }
+
+  if (origin === 'unsigned' && unsignedFirebaseFileField && unsignedFirebaseFileField.files[0]) {
+    var formData = new FormData();
+
+    formData.append('firebase', unsignedFirebaseFileField.files[0]);
+
+    return setFirebaseConfigFile(unsignedSubmission.id, formData);
+  }
+
+  return Promise.resolve();
 }
 
 function incrementVersionNumber(versionNumber) {
@@ -246,6 +277,11 @@ function loadAppStoreData() {
       } else {
         $('[name="' + name + '"]').val('1.0.0');
       }
+      return;
+    }
+
+    // Firebase
+    if (name === 'fl-store-firebase') {
       return;
     }
 
@@ -443,6 +479,11 @@ function loadEnterpriseData() {
       return;
     }
 
+    // Firebase
+    if (name === 'fl-ent-firebase') {
+      return;
+    }
+
     $('[name="' + name + '"]').val((typeof enterpriseSubmission.data[name] !== "undefined") ? enterpriseSubmission.data[name] : '');
   });
 
@@ -571,6 +612,11 @@ function loadUnsignedData() {
       return;
     }
 
+    // Firebase
+    if (name === 'fl-uns-firebase') {
+      return;
+    }
+
     $('[name="' + name + '"]').val((typeof unsignedSubmission.data[name] !== "undefined") ? unsignedSubmission.data[name] : '');
   });
 
@@ -612,8 +658,9 @@ function loadPushNotesData() {
 }
 
 function submissionBuild(appSubmission, origin) {
-  Fliplet.App.Submissions.build(appSubmission.id).then(function (builtSubmission) {
-
+  saveFirebaseSettings(origin).then(function () {
+    return Fliplet.App.Submissions.build(appSubmission.id);
+  }).then(function (builtSubmission) {
     if (origin === "appStore") {
       appStoreSubmission = builtSubmission.submission;
       // Auto increments the version number and saves the submission
@@ -694,19 +741,19 @@ function save(origin, submission) {
           .then(function (newSubmission) {
             var cloneCredentialsPromise = Promise.resolve();
 
+            newSubmission.data['fl-credentials'] = 'submission-' + newSubmission.id;
+
             if (origin === "appStore") {
-              newSubmission.data['fl-credentials'] = 'submission-' + newSubmission.id;
               appStoreSubmission = newSubmission;
               cloneCredentialsPromise = cloneCredentials(previousCredentials, appStoreSubmission);
-            }
-            if (origin === "enterprise") {
-              newSubmission.data['fl-credentials'] = 'submission-' + newSubmission.id;
+            } else if (origin === "enterprise") {
               enterpriseSubmission = newSubmission;
               cloneCredentialsPromise = cloneCredentials(previousCredentials, enterpriseSubmission);
-            }
-            if (origin === "unsigned") {
+            } else if (origin === "unsigned") {
               unsignedSubmission = newSubmission;
+              cloneCredentialsPromise = cloneCredentials(previousCredentials, unsignedSubmission);
             }
+
             return cloneCredentialsPromise.then(function () {
               return Fliplet.App.Submissions.update(newSubmission.id, newSubmission.data);
             }).then(function () {
@@ -768,6 +815,7 @@ function requestBuild(origin, submission) {
         if (submission.data.hasOwnProperty('fl-credentials')) {
           delete submission.data['fl-credentials'];
         }
+
         return Fliplet.App.Submissions.create({
             platform: 'ios',
             data: $.extend(true, submission.data, {
@@ -799,6 +847,8 @@ function requestBuild(origin, submission) {
                   submissionBuild(newSubmission, origin);
                 });
             }
+
+            // TODO: APPEND FIREBASE FILE?
 
             if (origin === "appStore" && appStoreSubmission.data['fl-store-distribution'] === 'upload-file') {
               var formData = new FormData();
@@ -870,6 +920,8 @@ function requestBuild(origin, submission) {
             submissionBuild(newSubmission, origin);
           });
       }
+
+      // Code for first submission of this type
 
       setCredentials(appStoreSubmission.id, {
         appPassword: $('#fl-store-appPassword').val().trim()
@@ -975,8 +1027,8 @@ function saveAppStoreData(request) {
       value = value.trim();
     }
 
-    if (name === 'fl-store-appPassword') {
-      // Skip saving app-specific password
+    if (name === 'fl-store-appPassword' || name === 'fl-store-firebase') {
+      // Skip saving app-specific password and Firebase config file
       // This will be saved in credentials
       return;
     }
@@ -1058,6 +1110,10 @@ function saveEnterpriseData(request) {
       }
       data[name] = newValue;
       return;
+    }
+
+    if (name === 'fl-ent-firebase') {
+      return; // saved in credentials
     }
 
     if (name === 'fl-ent-teamId') {
@@ -1144,6 +1200,11 @@ function saveUnsignedData(request) {
 
   $('#unsignedConfiguration [name]').each(function (i, el) {
     var name = $(el).attr("name");
+
+    if (name === 'fl-uns-firebase') {
+      return; // saved in credentials
+    }
+
     var value = $(el).val();
 
     if (typeof value === 'string') {
@@ -1152,6 +1213,8 @@ function saveUnsignedData(request) {
 
     data[name] = value;
   });
+
+  data['fl-credentials'] = 'submission-' + unsignedSubmission.id;
 
   unsignedSubmission.data = data;
 
@@ -1216,7 +1279,7 @@ function saveProgressOnClose () {
     "enterprise-control": saveEnterpriseData,
     "unsigned-control": saveUnsignedData
   }
-  
+
   //Finding out active tab to use correct save method
   var activeTabId = $(".nav.nav-tabs li.active").prop("id");
 
@@ -1529,6 +1592,16 @@ function setCertificateP12(id, file) {
   });
 }
 
+function setFirebaseConfigFile(id, file) {
+  return Fliplet.API.request({
+    method: 'PUT',
+    url: 'v1/organizations/' + organizationID + '/credentials/submission-' + id + '?fileName=firebase',
+    data: file,
+    contentType: false,
+    processData: false
+  });
+}
+
 function revokeCertificate(id, certId) {
   return Fliplet.API.request({
     method: 'DELETE',
@@ -1711,7 +1784,7 @@ function checkSubmissionStatus(origin, iosSubmissions) {
 
       // Default copy for testing status for different users
       if (submission.status === 'ready-for-testing') {
-        if (userInfo.user && (userInfo.user.isAdmin || userInfo.user.isImpersonating)) {
+        if (userInfo && userInfo.user && (userInfo.user.isAdmin || userInfo.user.isImpersonating)) {
           // Fliplet users
           build.testingStatus = 'Ready for testing';
           build.testingMessage = 'App is ready for testing';
@@ -1756,7 +1829,7 @@ function checkSubmissionStatus(origin, iosSubmissions) {
         build.message = submission.result.message;
       }
 
-      if (userInfo.user && (userInfo.user.isAdmin || userInfo.user.isImpersonating)) {
+      if (userInfo && userInfo.user && (userInfo.user.isAdmin || userInfo.user.isImpersonating)) {
         build.debugFileUrl = debugHtmlPage ? debugHtmlPage.url : '';
       }
 
@@ -1859,6 +1932,24 @@ function submissionChecker(submissions) {
     }
   }
 
+  var cloneUnsignedCredentialsPromise = Promise.resolve();
+  if (unsignedSubmission.data && !unsignedSubmission.data['fl-credentials']) {
+
+    var prevSubCred = _.filter(esub, function (submission) {
+      return submission.data && submission.data['fl-credentials'];
+    });
+
+    var previousSubWithCredentials = _.maxBy(prevSubCred, function (el) {
+      return new Date(el.createdAt).getTime();
+    });
+
+    unsignedSubmission.data['fl-credentials'] = 'submission-' + unsignedSubmission.id;
+
+    if (previousSubWithCredentials) {
+      cloneUnsignedCredentialsPromise = cloneCredentials(previousSubWithCredentials.data['fl-credentials'], unsignedSubmission, true);
+    }
+  }
+
   var usub = _.filter(submissions, function (submission) {
     return submission.data.submissionType === "unsigned" && submission.platform === "ios";
   });
@@ -1875,6 +1966,8 @@ function submissionChecker(submissions) {
 
   return cloneAppStoreCredentialsPromise.then(function () {
     return cloneEnterpriseCredentialsPromise;
+  }).then(function () {
+    return cloneUnsignedCredentialsPromise;
   }).then(function () {
     if (_.isEmpty(appStoreSubmission)) {
       return Fliplet.App.Submissions.create({
@@ -2387,7 +2480,7 @@ $('.redirectToSettings, [data-change-settings]').on('click', function (event) {
     Fliplet.Studio.emit('close-overlay', {
       name: 'publish-apple'
     });
-  
+
     Fliplet.Studio.emit('overlay', {
       name: 'app-settings',
       options: {
@@ -2412,7 +2505,7 @@ $(document).on('click', '[data-change-assets]', function (event) {
     Fliplet.Studio.emit('close-overlay', {
       name: 'publish-apple'
     });
-  
+
     Fliplet.Studio.emit('overlay', {
       name: 'app-settings',
       options: {
@@ -2427,7 +2520,7 @@ $(document).on('click', '[data-change-assets]', function (event) {
       message: Fliplet.parseError(err)
     })
   });
-  
+
 });
 
 $('#appStoreConfiguration, #enterpriseConfiguration, #unsignedConfiguration').on('validated.bs.validator', function () {
@@ -2884,6 +2977,35 @@ $('#fl-store-certificate').on('change', function () {
 
   if (appStoreFileField.files && appStoreFileField.files[0]) {
     $('#fl-store-certificate-label').val(fileName);
+  }
+});
+
+// Firebase
+
+$('#fl-store-firebase').on('change', function () {
+  appStoreFirebaseFileField = this;
+  var fileName = this.value.replace(/\\/g, '/').replace(/.*\//, '');
+
+  if (this.files && this.files[0]) {
+    $('#fl-store-firebase-uploaded').html('File uploaded: <strong>' + fileName + '</strong>').removeClass('hidden');
+  }
+});
+
+$('#fl-ent-firebase').on('change', function () {
+  enterpriseFirebaseFileField = this;
+  var fileName = this.value.replace(/\\/g, '/').replace(/.*\//, '');
+
+  if (this.files && this.files[0]) {
+    $('#fl-ent-firebase-uploaded').html('File uploaded: <strong>' + fileName + '</strong>').removeClass('hidden');
+  }
+});
+
+$('#fl-uns-firebase').on('change', function () {
+  unsignedFirebaseFileField = this;
+  var fileName = this.value.replace(/\\/g, '/').replace(/.*\//, '');
+
+  if (this.files && this.files[0]) {
+    $('#fl-uns-firebase-uploaded').html('File uploaded: <strong>' + fileName + '</strong>').removeClass('hidden');
   }
 });
 
