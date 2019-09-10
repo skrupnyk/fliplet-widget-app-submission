@@ -1588,10 +1588,12 @@ function checkDemoUser() {
   // We check how many times use google auto-fill after numerous tries found out that google inserts data to this input
   // only three times at a row, so, therefore, the fourth time it's a user trying to input information from auto-fill.
   var $demoUserFiled = $('#fl-store-revDemoUser');
+
   if (!userInput && autoFill < 3) {
     $demoUserFiled.val(demoUser ? demoUser : '');
     autoFill++;
   }
+  
   $('#fl-store-revDemoPass').prop('required', $demoUserFiled.val() !== ''); 
 }
 
