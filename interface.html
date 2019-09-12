@@ -529,239 +529,8 @@
             </div>
           </div>
           <div class="panel panel-default">
-            <div class="panel-heading" role="tab" id="appStoreTechHeading">
-              <h4 class="panel-title collapsed" role="button" data-toggle="collapse" data-parent="#accordionAppStore" href="#appStoreTech" aria-expanded="true" aria-controls="appStoreTech"><strong>3 -</strong> App technical details <small>(Required)</small> <i class="fa fa-angle-down" aria-hidden="true"></i></h4>
-            </div>
-            <div id="appStoreTech" class="panel-collapse collapse" role="tabpanel" aria-labelledby="appStoreTechHeading">
-              <div class="panel-body">
-                <p>We will need some technical information now, such as your developer account login details. Don't worry, these details will be safe with us. We need them in order to publish your app for you.</p>
-                <h3><small>Apple developer account details and distribution certificates</small></h3>
-
-                <div class="appStore-login-details">
-                  <div class="alert alert-info">
-                    <p>If you do not know what the developer account login details are please contact your organization's IT team.</p>
-                  </div>
-                  <div class="alert alert-warning">
-                    <p>If you have ad blockers enabled for your browser, please make sure they are disabled before continuing with login and team selection.</p>
-                  </div>
-                  <div class="form-group clearfix">
-                    <div class="col-sm-4 control-label">
-                      <label for="fl-store-appDevLogin">Apple Developer account login</label>
-                    </div>
-                    <div class="col-sm-8">
-                      <input type="email" class="form-control" id="fl-store-appDevLogin" data-error="Please enter a valid email address" required>
-                      <div class="help-block with-errors"></div>
-                    </div>
-                  </div>
-                  <div class="form-group clearfix">
-                    <div class="col-sm-4 control-label">
-                      <label for="fl-store-appDevPass">Apple Developer account password</label>
-                    </div>
-                    <div class="col-sm-8">
-                      <input type="password" class="form-control" id="fl-store-appDevPass" data-error="Please enter a password">
-                      <div class="help-block with-errors"></div>
-                      <p class="help-block label-helper"><small>This password will be encrypted, safely stored and never shared or used for purposes other than publishing this app.</small></p>
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <div class="col-sm-4 control-label">
-                      <label>Login to verify the account and choose the distribution certificate</label>
-                    </div>
-                    <div class="col-sm-8">
-                      <button type="button" class="btn btn-primary login-appStore-button">Log in</button>
-                      <div class="text-danger login-error"></div>
-                    </div>
-                  </div>
-                </div>
-                <div class="appStore-login-2fa-devices">
-                  <div class="alert alert-info">
-                    <p>Your Apple ID is protected with two-step verification.</p>
-                  </div>
-                  <div class="form-group">
-                    <div class="col-sm-4 control-label">
-                      <label>Select a trusted number to receive a verification code</label>
-                    </div>
-                    <div class="col-sm-8">
-                      <div class="btn-group-vertical btn-block" id="fl-store-2fa-select"></div>
-                    </div>
-                  </div>
-                </div>
-                <div class="appStore-login-2fa-waiting">
-                  <div class="text-center"><i class="fa fa-spinner fa-pulse fa-lg"></i></div>
-                </div>
-                <div class="appStore-login-2fa-code">
-                  <div class="alert alert-info">
-                    <p>Apple has sent a verification code to your device(s) from <span class="region-server-location">one of Fliplet's server locations</span>. Please enter the code to continue.</p>
-                    <p><strong>Note:</strong> If you don't receive the code, please check your Apple account settings.</p>
-                  </div>
-                  <div class="form-group">
-                    <div class="col-sm-4 control-label">
-                      <label>Verify your identity</label>
-                    </div>
-                    <div class="col-sm-8">
-                      <input type="text" class="form-control" id="fl-store-2fa-code" data-error="You must enter the verification code to continue" placeholder="Enter the verification code" required>
-                      <p class="help-block appStore-2fa-sms"><strong>Did not get a verification code?</strong> <a href="#">Get a text message with a code</a></p>
-                      <div class="help-block with-errors"></div>
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <div class="col-sm-8 col-sm-offset-4">
-                      <button type="button" class="btn btn-primary 2fa-code-store-button">Verify</button>
-                    </div>
-                  </div>
-                </div>
-                <div class="appStore-logged-in">
-                  <div class="form-group">
-                    <div class="col-sm-4 control-label">
-                      <label>You are logged in as:</label>
-                    </div>
-                    <div class="col-sm-8">
-                      <div class="form-control-static">
-                        <span class="appStore-logged-email"></span> - <a href="#" class="log-out-appStore">Change account</a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="appStore-teams">
-                  <div class="form-group">
-                    <div class="col-sm-4 control-label">
-                      <label>Select a Developer Account Team</label>
-                    </div>
-                    <div class="col-sm-8">
-                      <a class="btn btn-secondary" id="fl-load-store-teams" href="#">Load teams</a>
-                      <label for="fl-store-teams" class="select-proxy-display">
-                        <select class="hidden-select form-control appStore-team" id="fl-store-teams" data-label="select">
-                          <option value="">-- Select a team</option>
-                        </select>
-                        <span class="icon fa fa-chevron-down"></span>
-                      </label>
-                    </div>
-                  </div>
-                </div>
-                <div class="form-group appStore-more-options">
-                  <div class="col-sm-4 control-label">
-                    <label>Provide us with a distribution certificate choosing from the following options:</label>
-                    <p class="help-block label-helper">
-                      <small>The certificate file cannot be password protected. For more information on certificates topic see the <a href="https://fliplet.kayako.com/article/122-how-to-use-apple-distribution-certificates" target="_blank">Support Documents.</a></small>
-                    </p>
-                  </div>
-                  <div class="col-sm-8">
-                    <div class="radio radio-icon if-appStore-credential">
-                      <input type="radio" id="fl-store-distribution-1" name="fl-store-distribution" value="previous-file">
-                      <label for="fl-store-distribution-1">
-                        <span class="check"><i class="fa fa-circle"></i></span> Use distribution certificate details from your latest submissions
-                      </label>
-                    </div>
-                    <div class="appStore-previous-file indented-area">
-                      <p class="appStore-certificate-expiring text-warning hidden">Your distribution certificate is about to expire.</p>
-                      <p><span class="appStore-file-name">Certificate Name</span> - <strong>Expires on <span class="appStore-file-expire">October 30th 2018</span></strong><span class="appStore-replace-element hidden"> - <a href="#" class="appStore-replace-cert">Replace certificate</a><span></p>
-                      <div class="text-danger replace-error"></div>
-                    </div>
-                    <div class="appStore-previous-file-success indented-area">
-                      <p class="text-success">Distribution certificate created successfully.</p>
-                      <p><span class="appStore-file-name-success">Certificate Name</span> - <strong>Expires on <span class="appStore-file-expire-success"></span></strong> (<a class="appStore-file-download-success" href="#" target="_blank">Download</a>)</p>
-                      <p class="text-danger replace-error"></p>
-                    </div>
-                    <div class="radio radio-icon">
-                      <input type="radio" id="fl-store-distribution-2" name="fl-store-distribution" value="generate-file">
-                      <label for="fl-store-distribution-2">
-                        <span class="check"><i class="fa fa-circle"></i></span> Generate a new distribution certificate
-                      </label>
-                    </div>
-                    <div class="appStore-generate-file indented-area">
-                      <p><button type="button" class="btn btn-primary appStore-generate-cert disabled">Generate certificate</button></p>
-                      <p class="text-danger generate-error"></p>
-                    </div>
-                    <div class="appStore-generate-file-success indented-area">
-                      <p class="text-success">Distribution certificate created successfully.</p>
-                      <p><span class="appStore-file-name-success">Certificate Name</span> - <strong>Expires on <span class="appStore-file-expire-success"></span></strong> (<a class="appStore-file-download-success" href="#" target="_blank">Download</a>)</p>
-                    </div>
-                    <div class="radio radio-icon">
-                      <input type="radio" id="fl-store-distribution-3" name="fl-store-distribution" value="upload-file">
-                      <label for="fl-store-distribution-3">
-                        <span class="check"><i class="fa fa-circle"></i></span> Upload your own distribution certificate (.p12 file)
-                      </label>
-                    </div>
-                    <div class="appStore-upload-file indented-area">
-                      <div class="appStore-upload-certificate disabled">
-                        <p><label>Upload a .p12 file</label></p>
-                        <p>
-                          <div class="input-group">
-                            <label class="input-group-btn">
-                              <span class="btn btn-default">Browse&hellip; <input id="fl-store-certificate" class="hidden" type="file" accept="application/keychain_access, application/x-pkcs12"></span>
-                            </label>
-                            <input type="text" class="form-control" id="fl-store-certificate-label" placeholder="Click &ldquo;Browse&rdquo; to select a new file" readonly>
-                          </div>
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <h3><small>App-specific password</small></h3>
-                <div class="form-group clearfix">
-                  <div class="col-sm-4 control-label">
-                    <label for="fl-store-versionNumber">App-specific password</label>
-                    <p class="help-block label-helper"><small>This is required to ensure Fliplet is authorized to submit your app to the store.</small></p>
-                  </div>
-                  <div class="col-sm-8">
-                    <input type="text" name="fl-store-appPassword" class="form-control" id="fl-store-appPassword" data-error="Please enter an app-specific password" maxlength="19" required/>
-                    <div class="help-block with-errors"></div>
-                    <div class="alert alert-warning">Please note that <strong>you need to generate a unique password for every app</strong>.<br />See <a href="https://support.apple.com/en-gb/HT204397" target="_blank">Apple documentation</a> about how to create an <strong>app-specific password</strong> that Fliplet can use.</small></div>
-                  </div>
-                </div>
-
-                <h3><small>App version and bundle ID</small></h3>
-                <div class="form-group clearfix">
-                  <div class="col-sm-4 control-label">
-                    <label for="fl-store-versionNumber">App version number</label>
-                    <p class="help-block label-helper"><small>This is the version number of your app and will be displayed on the App Store listing.</small></p>
-                  </div>
-                  <div class="col-sm-8">
-                    <input type="text" name="fl-store-versionNumber" class="form-control" id="fl-store-versionNumber" data-error="Please enter an app version number" maxlength="64" required />
-                    <div class="help-block with-errors"></div>
-                    <p class="help-block"><small>The required format for version number is <code>1.0.0</code>. With a maximum value of <code>99</code> per number.</small></p>
-                  </div>
-                </div>
-                <div class="form-group clearfix">
-                  <div class="col-sm-4 control-label">
-                    <label for="fl-store-bundleId">Bundle ID</label>
-                    <p class="help-block label-helper"><small>This is a unique ID for your app on the App Store. Fliplet auto-generated one for you. The Bundle ID will never be shown to the users.</small></p>
-                  </div>
-                  <div class="col-sm-8 fl-bundleId-holder">
-                    <span class="bundleId-ast-text"></span> <span class="btn btn-sm btn-default" change-bundleid>Change</span>
-                    <div class="help-block with-errors"></div>
-                  </div>
-                  <div class="fl-bundleId-field">
-                    <div class="col-sm-8">
-                      <input type="text" name="fl-store-bundleId" class="form-control" id="fl-store-bundleId" data-error="Please enter the Bundle ID" required />
-                      <div class="help-block with-errors"></div>
-                      <p class="help-block"><small>This value needs to be unique and the structure must be <code>com.<i>organizationName</i>.<i>appName</i></code>.</small></p>
-                    </div>
-                  </div>
-                </div>
-
-                <h3><small>Google Firebase (optional)</small></h3>
-                <div class="form-group clearfix">
-                  <div class="col-sm-4 control-label">
-                    <label for="fl-store-versionNumber">Firebase config file</label>
-                    <p class="help-block"><small><a href="https://console.firebase.google.com" target="_blank">Register your app on Firebase</a> and download the config file from the Firebase project settings.</small></p>
-                  </div>
-                  <div class="col-sm-8">
-                    <label class="input-group-btn">
-                      <span class="btn btn-default">Browse .plist file<input id="fl-store-firebase" name="fl-store-firebase" class="hidden" type="file" accept=".plist" data-error="Please upload a .plist file."></span>
-                    </label>
-                    <div class="help-block with-errors">
-                      <p id="fl-store-firebase-uploaded" class="hidden"><strong>✔ You selected a config file.</strong></p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="panel panel-default">
             <div class="panel-heading" role="tab" id="appStoreContactsHeading">
-              <h4 class="panel-title collapsed" role="button" data-toggle="collapse" data-parent="#accordionAppStore" href="#appStoreContacts" aria-expanded="true" aria-controls="appStoreContacts"><strong>4 -</strong> App submission details <small>(Required)</small> <i class="fa fa-angle-down" aria-hidden="true"></i></h4>
+              <h4 class="panel-title collapsed" role="button" data-toggle="collapse" data-parent="#accordionAppStore" href="#appStoreContacts" aria-expanded="true" aria-controls="appStoreContacts"><strong>3 -</strong> App submission details <small>(Required)</small> <i class="fa fa-angle-down" aria-hidden="true"></i></h4>
             </div>
             <div id="appStoreContacts" class="panel-collapse collapse" role="tabpanel" aria-labelledby="appStoreContactsHeading">
               <div class="panel-body">
@@ -1113,6 +882,265 @@ If you have any questions please reply and I will be happy to answer any questio
                     </textarea>
                   </div>
                 </div>
+              </div>
+            </div>
+          </div>
+          <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="appStoreAnalyticsHeading">
+              <h4 class="panel-title collapsed" role="button" data-toggle="collapse" data-parent="#accordionAppStore" href="#appStoreAnalytics" aria-expanded="true" aria-controls="appStoreAnalytics"><strong>4 -</strong> App analytics <i class="fa fa-angle-down" aria-hidden="true"></i></h4>
+            </div>
+            <div id="appStoreAnalytics" class="panel-collapse collapse" role="tabpanel" aria-labelledby="appStoreAnalyticsHeading">
+              <div class="panel-body">
+                <div>
+                  <h3>Fliplet analytics</h3>
+                  <h4>Status: <span data-fl-analytics-status>Disabled</span></h4>
+                  <p>Fliplet’s analytics records usage data, including the user’s login if the app has a login, and displays the data within Fliplet Studio. <a href="#" target="_blank">Learn more about Fliplet Analytics.</a></p>
+                  <p><small>To enable in Fliplet Studio visit App Settings > Add-ons tab > Fliplet Analytics</small></p>
+                </div>
+
+                <div>
+                  <h3>Firebase analytics</h3>
+                  <h4>Status: <span data-fl-firebase-status>Disabled</span></h4>
+                  <p>Google Firebase offers analytics via Google Analytics and other features. <a href="#" target="_blank">Learn more about Firebase.</a></p>
+                  <small>To enable:
+                    <ol>
+                      <li>Login to a Firebase account (any existing Google Account can be used).</li>
+                      <li>Create a new app.</li>
+                      <li>Select Apple.</li>
+                      <li>Download your Firebase plist file.</li>
+                      <li>Upload it by clicking the button below:</li>
+                    </ol>
+                  </small>
+
+                  <div>
+                    <div class="form-group clearfix">
+                      <div class="col-sm-8">
+                        <label class="input-group-btn">
+                          <span class="btn btn-default">Upload Firebase .plist file<input id="fl-store-firebase" name="fl-store-firebase" class="hidden" type="file" accept=".plist" data-error="Please upload a .plist file."></span>
+                        </label>
+                        <div class="help-block with-errors">
+                          <p id="fl-store-firebase-uploaded" class="hidden"><strong>✔ You selected a config file.</strong></p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="appStoreTechHeading">
+              <h4 class="panel-title collapsed" role="button" data-toggle="collapse" data-parent="#accordionAppStore" href="#appStoreTech" aria-expanded="true" aria-controls="appStoreTech"><strong>5 -</strong> App technical details <small>(Required)</small> <i class="fa fa-angle-down" aria-hidden="true"></i></h4>
+            </div>
+            <div id="appStoreTech" class="panel-collapse collapse" role="tabpanel" aria-labelledby="appStoreTechHeading">
+              <div class="panel-body">
+                <p>We will need some technical information now, such as your developer account login details. Don't worry, these details will be safe with us. We need them in order to publish your app for you.</p>
+                <h3><small>Apple developer account details and distribution certificates</small></h3>
+
+                <div class="appStore-login-details">
+                  <div class="alert alert-info">
+                    <p>If you do not know what the developer account login details are please contact your organization's IT team.</p>
+                  </div>
+                  <div class="alert alert-warning">
+                    <p>If you have ad blockers enabled for your browser, please make sure they are disabled before continuing with login and team selection.</p>
+                  </div>
+                  <div class="form-group clearfix">
+                    <div class="col-sm-4 control-label">
+                      <label for="fl-store-appDevLogin">Apple Developer account login</label>
+                    </div>
+                    <div class="col-sm-8">
+                      <input type="email" class="form-control" id="fl-store-appDevLogin" data-error="Please enter a valid email address" required>
+                      <div class="help-block with-errors"></div>
+                    </div>
+                  </div>
+                  <div class="form-group clearfix">
+                    <div class="col-sm-4 control-label">
+                      <label for="fl-store-appDevPass">Apple Developer account password</label>
+                    </div>
+                    <div class="col-sm-8">
+                      <input type="password" class="form-control" id="fl-store-appDevPass" data-error="Please enter a password">
+                      <div class="help-block with-errors"></div>
+                      <p class="help-block label-helper"><small>This password will be encrypted, safely stored and never shared or used for purposes other than publishing this app.</small></p>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-sm-4 control-label">
+                      <label>Login to verify the account and choose the distribution certificate</label>
+                    </div>
+                    <div class="col-sm-8">
+                      <button type="button" class="btn btn-primary login-appStore-button">Log in</button>
+                      <div class="text-danger login-error"></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="appStore-login-2fa-devices">
+                  <div class="alert alert-info">
+                    <p>Your Apple ID is protected with two-step verification.</p>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-sm-4 control-label">
+                      <label>Select a trusted number to receive a verification code</label>
+                    </div>
+                    <div class="col-sm-8">
+                      <div class="btn-group-vertical btn-block" id="fl-store-2fa-select"></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="appStore-login-2fa-waiting">
+                  <div class="text-center"><i class="fa fa-spinner fa-pulse fa-lg"></i></div>
+                </div>
+                <div class="appStore-login-2fa-code">
+                  <div class="alert alert-info">
+                    <p>Apple has sent a verification code to your device(s) from <span class="region-server-location">one of Fliplet's server locations</span>. Please enter the code to continue.</p>
+                    <p><strong>Note:</strong> If you don't receive the code, please check your Apple account settings.</p>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-sm-4 control-label">
+                      <label>Verify your identity</label>
+                    </div>
+                    <div class="col-sm-8">
+                      <input type="text" class="form-control" id="fl-store-2fa-code" data-error="You must enter the verification code to continue" placeholder="Enter the verification code" required>
+                      <p class="help-block appStore-2fa-sms"><strong>Did not get a verification code?</strong> <a href="#">Get a text message with a code</a></p>
+                      <div class="help-block with-errors"></div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-sm-8 col-sm-offset-4">
+                      <button type="button" class="btn btn-primary 2fa-code-store-button">Verify</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="appStore-logged-in">
+                  <div class="form-group">
+                    <div class="col-sm-4 control-label">
+                      <label>You are logged in as:</label>
+                    </div>
+                    <div class="col-sm-8">
+                      <div class="form-control-static">
+                        <span class="appStore-logged-email"></span> - <a href="#" class="log-out-appStore">Change account</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="appStore-teams">
+                  <div class="form-group">
+                    <div class="col-sm-4 control-label">
+                      <label>Select a Developer Account Team</label>
+                    </div>
+                    <div class="col-sm-8">
+                      <a class="btn btn-secondary" id="fl-load-store-teams" href="#">Load teams</a>
+                      <label for="fl-store-teams" class="select-proxy-display">
+                        <select class="hidden-select form-control appStore-team" id="fl-store-teams" data-label="select">
+                          <option value="">-- Select a team</option>
+                        </select>
+                        <span class="icon fa fa-chevron-down"></span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group appStore-more-options">
+                  <div class="col-sm-4 control-label">
+                    <label>Provide us with a distribution certificate choosing from the following options:</label>
+                    <p class="help-block label-helper">
+                      <small>The certificate file cannot be password protected. For more information on certificates topic see the <a href="https://fliplet.kayako.com/article/122-how-to-use-apple-distribution-certificates" target="_blank">Support Documents.</a></small>
+                    </p>
+                  </div>
+                  <div class="col-sm-8">
+                    <div class="radio radio-icon if-appStore-credential">
+                      <input type="radio" id="fl-store-distribution-1" name="fl-store-distribution" value="previous-file">
+                      <label for="fl-store-distribution-1">
+                        <span class="check"><i class="fa fa-circle"></i></span> Use distribution certificate details from your latest submissions
+                      </label>
+                    </div>
+                    <div class="appStore-previous-file indented-area">
+                      <p class="appStore-certificate-expiring text-warning hidden">Your distribution certificate is about to expire.</p>
+                      <p><span class="appStore-file-name">Certificate Name</span> - <strong>Expires on <span class="appStore-file-expire">October 30th 2018</span></strong><span class="appStore-replace-element hidden"> - <a href="#" class="appStore-replace-cert">Replace certificate</a><span></p>
+                      <div class="text-danger replace-error"></div>
+                    </div>
+                    <div class="appStore-previous-file-success indented-area">
+                      <p class="text-success">Distribution certificate created successfully.</p>
+                      <p><span class="appStore-file-name-success">Certificate Name</span> - <strong>Expires on <span class="appStore-file-expire-success"></span></strong> (<a class="appStore-file-download-success" href="#" target="_blank">Download</a>)</p>
+                      <p class="text-danger replace-error"></p>
+                    </div>
+                    <div class="radio radio-icon">
+                      <input type="radio" id="fl-store-distribution-2" name="fl-store-distribution" value="generate-file">
+                      <label for="fl-store-distribution-2">
+                        <span class="check"><i class="fa fa-circle"></i></span> Generate a new distribution certificate
+                      </label>
+                    </div>
+                    <div class="appStore-generate-file indented-area">
+                      <p><button type="button" class="btn btn-primary appStore-generate-cert disabled">Generate certificate</button></p>
+                      <p class="text-danger generate-error"></p>
+                    </div>
+                    <div class="appStore-generate-file-success indented-area">
+                      <p class="text-success">Distribution certificate created successfully.</p>
+                      <p><span class="appStore-file-name-success">Certificate Name</span> - <strong>Expires on <span class="appStore-file-expire-success"></span></strong> (<a class="appStore-file-download-success" href="#" target="_blank">Download</a>)</p>
+                    </div>
+                    <div class="radio radio-icon">
+                      <input type="radio" id="fl-store-distribution-3" name="fl-store-distribution" value="upload-file">
+                      <label for="fl-store-distribution-3">
+                        <span class="check"><i class="fa fa-circle"></i></span> Upload your own distribution certificate (.p12 file)
+                      </label>
+                    </div>
+                    <div class="appStore-upload-file indented-area">
+                      <div class="appStore-upload-certificate disabled">
+                        <p><label>Upload a .p12 file</label></p>
+                        <p>
+                          <div class="input-group">
+                            <label class="input-group-btn">
+                              <span class="btn btn-default">Browse&hellip; <input id="fl-store-certificate" class="hidden" type="file" accept="application/keychain_access, application/x-pkcs12"></span>
+                            </label>
+                            <input type="text" class="form-control" id="fl-store-certificate-label" placeholder="Click &ldquo;Browse&rdquo; to select a new file" readonly>
+                          </div>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <h3><small>App-specific password</small></h3>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-store-versionNumber">App-specific password</label>
+                    <p class="help-block label-helper"><small>This is required to ensure Fliplet is authorized to submit your app to the store.</small></p>
+                  </div>
+                  <div class="col-sm-8">
+                    <input type="text" name="fl-store-appPassword" class="form-control" id="fl-store-appPassword" data-error="Please enter an app-specific password" maxlength="19" required/>
+                    <div class="help-block with-errors"></div>
+                    <div class="alert alert-warning">Please note that <strong>you need to generate a unique password for every app</strong>.<br />See <a href="https://support.apple.com/en-gb/HT204397" target="_blank">Apple documentation</a> about how to create an <strong>app-specific password</strong> that Fliplet can use.</small></div>
+                  </div>
+                </div>
+
+                <h3><small>App version and bundle ID</small></h3>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-store-versionNumber">App version number</label>
+                    <p class="help-block label-helper"><small>This is the version number of your app and will be displayed on the App Store listing.</small></p>
+                  </div>
+                  <div class="col-sm-8">
+                    <input type="text" name="fl-store-versionNumber" class="form-control" id="fl-store-versionNumber" data-error="Please enter an app version number" maxlength="64" required />
+                    <div class="help-block with-errors"></div>
+                    <p class="help-block"><small>The required format for version number is <code>1.0.0</code>. With a maximum value of <code>99</code> per number.</small></p>
+                  </div>
+                </div>
+                <div class="form-group clearfix">
+                  <div class="col-sm-4 control-label">
+                    <label for="fl-store-bundleId">Bundle ID</label>
+                    <p class="help-block label-helper"><small>This is a unique ID for your app on the App Store. Fliplet auto-generated one for you. The Bundle ID will never be shown to the users.</small></p>
+                  </div>
+                  <div class="col-sm-8 fl-bundleId-holder">
+                    <span class="bundleId-ast-text"></span> <span class="btn btn-sm btn-default" change-bundleid>Change</span>
+                    <div class="help-block with-errors"></div>
+                  </div>
+                  <div class="fl-bundleId-field">
+                    <div class="col-sm-8">
+                      <input type="text" name="fl-store-bundleId" class="form-control" id="fl-store-bundleId" data-error="Please enter the Bundle ID" required />
+                      <div class="help-block with-errors"></div>
+                      <p class="help-block"><small>This value needs to be unique and the structure must be <code>com.<i>organizationName</i>.<i>appName</i></code>.</small></p>
+                    </div>
+                  </div>
+                </div>
+
               </div>
             </div>
           </div>

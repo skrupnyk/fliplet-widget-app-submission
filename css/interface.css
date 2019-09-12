@@ -521,3 +521,7 @@ h3 small {
 .screenshot-previews .alert {
   margin-bottom: 0;
 }
+
+.analytics-success {
+  color: rgb(106, 168, 79);
+}

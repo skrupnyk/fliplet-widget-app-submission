@@ -2149,6 +2149,16 @@ function initialLoad(initial, timeout) {
           })
           .then(function (org) {
             organizationName = org.name;
+          }),
+          Fliplet.API.request({
+            cache: true,
+            url: 'v1/widgets?include_instances=true&tags=type:appComponent&appId='+Fliplet.Env.get('appId')+'&package=com.fliplet.analytics'
+          })
+          .then(function(res) {
+            var isEnabled = !_.isEmpty(res.widgets[0].instances);
+            if (isEnabled) {
+              $('[data-fl-analytics-status]').html('Enabled').addClass('analytics-success');
+            }
           })
         ]);
       })
@@ -3025,6 +3035,7 @@ $('#fl-store-firebase').on('change', function () {
   var fileName = this.value.replace(/\\/g, '/').replace(/.*\//, '');
 
   if (this.files && this.files[0]) {
+    $('[data-fl-firebase-status]').html('Enabled').addClass('analytics-success');
     $('#fl-store-firebase-uploaded').html('File uploaded: <strong>' + fileName + '</strong>').removeClass('hidden');
   }
 });
