@@ -2158,9 +2158,7 @@ function initialLoad(initial, timeout) {
             var isEnabled = !_.isEmpty(res.widgets[0].instances);
 
             if (isEnabled) {
-              $('[data-fl-analytics-status]').each(function() {
-                $(this).html('Enabled').addClass('analytics-success');
-              }) 
+              $('[data-fl-analytics-status]').html('Enabled').addClass('analytics-success');
             }
 
           })
