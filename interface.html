@@ -900,7 +900,7 @@ If you have any questions please reply and I will be happy to answer any questio
 
                 <div>
                   <h3>Firebase analytics</h3>
-                  <h4>Status: <span data-fl-firebase-status>Disabled</span></h4>
+                  <h4>Status: <span id="fl-store-firebase-status">Disabled</span></h4>
                   <p>Google Firebase offers analytics via Google Analytics and other features. <a href="#" target="_blank">Learn more about Firebase.</a></p>
                   <small>To enable:
                     <ol>
@@ -1219,6 +1219,51 @@ If you have any questions please reply and I will be happy to answer any questio
               </div>
             </div>
           </div>
+
+          <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="enterpriseAnalyticsHeading">
+              <h4 class="panel-title collapsed" role="button" data-toggle="collapse" data-parent="#accordionEnterprise" href="#enterpriseAnalytics" aria-expanded="true" aria-controls="enterpriseAnalytics"><strong>4 -</strong> App analytics <i class="fa fa-angle-down" aria-hidden="true"></i></h4>
+            </div>
+            <div id="enterpriseAnalytics" class="panel-collapse collapse" role="tabpanel" aria-labelledby="enterpriseAnalyticsHeading">
+              <div class="panel-body">
+                <div>
+                  <h3>Fliplet analytics</h3>
+                  <h4>Status: <span data-fl-analytics-status>Disabled</span></h4>
+                  <p>Fliplet’s analytics records usage data, including the user’s login if the app has a login, and displays the data within Fliplet Studio. <a href="#" target="_blank">Learn more about Fliplet Analytics.</a></p>
+                  <p><small>To enable in Fliplet Studio visit App Settings > Add-ons tab > Fliplet Analytics</small></p>
+                </div>
+
+                <div>
+                  <h3>Firebase analytics</h3>
+                  <h4>Status: <span id="fl-ent-firebase-status">Disabled</span></h4>
+                  <p>Google Firebase offers analytics via Google Analytics and other features. <a href="#" target="_blank">Learn more about Firebase.</a></p>
+                  <small>To enable:
+                    <ol>
+                      <li>Login to a Firebase account (any existing Google Account can be used).</li>
+                      <li>Create a new app.</li>
+                      <li>Select Apple.</li>
+                      <li>Download your Firebase plist file.</li>
+                      <li>Upload it by clicking the button below:</li>
+                    </ol>
+                  </small>
+
+                  <div>
+                    <div class="form-group clearfix">
+                      <div class="col-sm-8">
+                        <label class="input-group-btn">
+                          <span class="btn btn-default">Upload Firebase .plist file<input id="fl-ent-firebase" name="fl-ent-firebase" class="hidden" type="file" accept=".plist" data-error="Please upload a .plist file."></span>
+                        </label>
+                        <div class="help-block with-errors">
+                          <p id="fl-ent-firebase-uploaded" class="hidden"><strong>✔ You selected a config file.</strong></p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div class="panel panel-default">
             <div class="panel-heading" role="tab" id="enterpriseTechHeading">
               <h4 class="panel-title collapsed" role="button" data-toggle="collapse" data-parent="#accordionEnterprise" href="#enterpriseTech" aria-expanded="true" aria-controls="enterpriseTech"><strong>3 -</strong> App technical details <small>(Required)</small> <i class="fa fa-angle-down" aria-hidden="true"></i></h4>
@@ -1485,25 +1530,10 @@ If you have any questions please reply and I will be happy to answer any questio
                   </div>
                 </div>
 
-                <h3><small>Google Firebase (optional)</small></h3>
-                <div class="form-group clearfix">
-                  <div class="col-sm-4 control-label">
-                    <label for="fl-ent-versionNumber">Firebase config file</label>
-                    <p class="help-block"><small><a href="https://console.firebase.google.com" target="_blank">Register your app on Firebase</a> and download the config file from the Firebase project settings.</small></p>
-                  </div>
-                  <div class="col-sm-8">
-                    <label class="input-group-btn">
-                      <span class="btn btn-default">Browse .plist file<input id="fl-ent-firebase" name="fl-ent-firebase" class="hidden" type="file" accept=".plist" data-error="Please upload a .plist file."></span>
-                    </label>
-                    <div class="help-block with-errors">
-                      <p id="fl-ent-firebase-uploaded" class="hidden"><strong>✔ You selected a config file.</strong></p>
-                    </div>
-                  </div>
-                </div>
-
               </div>
             </div>
           </div>
+
         </div>
         <hr>
         <div class="col-xs-5 save-btn-holder">
@@ -1581,6 +1611,51 @@ If you have any questions please reply and I will be happy to answer any questio
               </div>
             </div>
           </div>
+
+          <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="unsignedAnalyticsHeading">
+              <h4 class="panel-title collapsed" role="button" data-toggle="collapse" data-parent="#accordionUnsigned" href="#unsignedAnalytics" aria-expanded="true" aria-controls="unsignedAnalytics"><strong>4 -</strong> App analytics <i class="fa fa-angle-down" aria-hidden="true"></i></h4>
+            </div>
+            <div id="unsignedAnalytics" class="panel-collapse collapse" role="tabpanel" aria-labelledby="unsignedAnalyticsHeading">
+              <div class="panel-body">
+                <div>
+                  <h3>Fliplet analytics</h3>
+                  <h4>Status: <span data-fl-analytics-status>Disabled</span></h4>
+                  <p>Fliplet’s analytics records usage data, including the user’s login if the app has a login, and displays the data within Fliplet Studio. <a href="#" target="_blank">Learn more about Fliplet Analytics.</a></p>
+                  <p><small>To enable in Fliplet Studio visit App Settings > Add-ons tab > Fliplet Analytics</small></p>
+                </div>
+
+                <div>
+                  <h3>Firebase analytics</h3>
+                  <h4>Status: <span id="fl-uns-firebase-status">Disabled</span></h4>
+                  <p>Google Firebase offers analytics via Google Analytics and other features. <a href="#" target="_blank">Learn more about Firebase.</a></p>
+                  <small>To enable:
+                    <ol>
+                      <li>Login to a Firebase account (any existing Google Account can be used).</li>
+                      <li>Create a new app.</li>
+                      <li>Select Apple.</li>
+                      <li>Download your Firebase plist file.</li>
+                      <li>Upload it by clicking the button below:</li>
+                    </ol>
+                  </small>
+
+                  <div>
+                    <div class="form-group clearfix">
+                      <div class="col-sm-8">
+                        <label class="input-group-btn">
+                          <span class="btn btn-default">Upload Firebase .plist file<input id="fl-uns-firebase" name="fl-uns-firebase" class="hidden" type="file" accept=".plist" data-error="Please upload a .plist file."></span>
+                        </label>
+                        <div class="help-block with-errors">
+                          <p id="fl-uns-firebase-uploaded" class="hidden"><strong>✔ You selected a config file.</strong></p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div class="panel panel-default">
             <div class="panel-heading" role="tab" id="unsignedTechHeading">
               <h4 class="panel-title collapsed" role="button" data-toggle="collapse" data-parent="#accordionUnsigned" href="#unsignedTech" aria-expanded="true" aria-controls="unsignedTech"><strong>3 -</strong> App technical details <small>(Required)</small> <i class="fa fa-angle-down" aria-hidden="true"></i></h4>
@@ -1617,25 +1692,10 @@ If you have any questions please reply and I will be happy to answer any questio
                   </div>
                 </div>
 
-                <h3><small>Google Firebase (optional)</small></h3>
-                <div class="form-group clearfix">
-                  <div class="col-sm-4 control-label">
-                    <label for="fl-uns-versionNumber">Firebase config file</label>
-                    <p class="help-block"><small><a href="https://console.firebase.google.com" target="_blank">Register your app on Firebase</a> and download the config file from the Firebase project settings.</small></p>
-                  </div>
-                  <div class="col-sm-8">
-                    <label class="input-group-btn">
-                      <span class="btn btn-default">Browse .plist file<input id="fl-uns-firebase" name="fl-uns-firebase" class="hidden" type="file" accept=".plist" data-error="Please upload a .plist file."></span>
-                    </label>
-                    <div class="help-block with-errors">
-                      <p id="fl-uns-firebase-uploaded" class="hidden"><strong>✔ You selected a config file.</strong></p>
-                    </div>
-                  </div>
-                </div>
-
               </div>
             </div>
           </div>
+
         </div>
         <hr>
         <div class="col-xs-5 save-btn-holder">

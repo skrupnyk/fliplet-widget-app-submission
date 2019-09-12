@@ -2156,6 +2156,7 @@ function initialLoad(initial, timeout) {
           })
           .then(function(res) {
             var isEnabled = !_.isEmpty(res.widgets[0].instances);
+
             if (isEnabled) {
               $('[data-fl-analytics-status]').html('Enabled').addClass('analytics-success');
             }
@@ -3035,7 +3036,7 @@ $('#fl-store-firebase').on('change', function () {
   var fileName = this.value.replace(/\\/g, '/').replace(/.*\//, '');
 
   if (this.files && this.files[0]) {
-    $('[data-fl-firebase-status]').html('Enabled').addClass('analytics-success');
+    $('#fl-store-firebase-status').html('Enabled').addClass('analytics-success');
     $('#fl-store-firebase-uploaded').html('File uploaded: <strong>' + fileName + '</strong>').removeClass('hidden');
   }
 });
@@ -3045,6 +3046,7 @@ $('#fl-ent-firebase').on('change', function () {
   var fileName = this.value.replace(/\\/g, '/').replace(/.*\//, '');
 
   if (this.files && this.files[0]) {
+    $('#fl-ent-firebase-status').html('Enabled').addClass('analytics-success');
     $('#fl-ent-firebase-uploaded').html('File uploaded: <strong>' + fileName + '</strong>').removeClass('hidden');
   }
 });
@@ -3054,6 +3056,7 @@ $('#fl-uns-firebase').on('change', function () {
   var fileName = this.value.replace(/\\/g, '/').replace(/.*\//, '');
 
   if (this.files && this.files[0]) {
+    $('#fl-uns-firebase-status').html('Enabled').addClass('analytics-success');
     $('#fl-uns-firebase-uploaded').html('File uploaded: <strong>' + fileName + '</strong>').removeClass('hidden');
   }
 });
