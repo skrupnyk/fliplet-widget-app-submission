@@ -2160,7 +2160,6 @@ function initialLoad(initial, timeout) {
             if (isEnabled) {
               $('[data-fl-analytics-status]').html('Enabled').addClass('analytics-success');
             }
-
           })
         ]);
       })
