@@ -700,21 +700,20 @@ function submissionBuild(appSubmission, origin) {
 
     Fliplet.Studio.emit('refresh-app-submissions');
 
+    Fliplet.Modal.alert({
+      title: 'Your request was sent successfully!',
+      message: 'Your app is building!'
+    }).then(function () {
+      document.getElementById('nav-tabs').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+
     $('.button-' + origin + '-request').html('Request App <i class="fa fa-paper-plane"></i>');
     $('.button-' + origin + '-request').prop('disabled', false);
-    $('.save-' + origin + '-request').addClass('saved').hide().fadeIn(250);
 
     clearTimeout(initLoad);
     initialLoad(false, 0);
 
     Fliplet.Widget.autosize();
-
-    setTimeout(function () {
-      $('.save-' + origin + '-request').fadeOut(250, function () {
-        $('.save-' + origin + '-request').removeClass('saved');
-        Fliplet.Widget.autosize();
-      });
-    }, 10000);
   }, function (err) {
     $('.button-' + origin + '-request').html('Request App <i class="fa fa-paper-plane"></i>');
     $('.button-' + origin + '-request').prop('disabled', false);
