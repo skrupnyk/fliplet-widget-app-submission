@@ -292,9 +292,6 @@ h3 small {
 .save-appStore-progress,
 .save-enterprise-progress,
 .save-unsigned-progress,
-.save-appStore-request,
-.save-enterprise-request,
-.save-unsigned-request,
 .save-push-progress {
   opacity: 0;
   -webkit-transition: opacity 0.25s ease;
@@ -304,9 +301,6 @@ h3 small {
 .save-appStore-progress.saved,
 .save-enterprise-progress.saved,
 .save-unsigned-progress.saved,
-.save-appStore-request.saved,
-.save-enterprise-request.saved,
-.save-unsigned-request.saved,
 .save-push-progress.saved {
   opacity: 1;
 }
