@@ -312,7 +312,7 @@ function loadAppStoreData() {
 
   // Saving 'demo user' value from API to compare it in checkDemoUser function
   demoUser = appStoreSubmission.data['fl-store-revDemoUser'];
-  
+
   // When all data is loaded we can check if demo user was saved before
   checkDemoUser();
 
@@ -1677,8 +1677,8 @@ function checkDemoUser() {
     $demoUserFiled.val(demoUser ? demoUser : '');
     autoFill++;
   }
-  
-  $('#fl-store-revDemoPass').prop('required', $demoUserFiled.val() !== ''); 
+
+  $('#fl-store-revDemoPass').prop('required', $demoUserFiled.val() !== '');
 }
 
 function isValidVersion(version) {
@@ -2383,7 +2383,11 @@ function toggleLoginForm(form, state, data) {
 
 /* ATTACH LISTENERS */
 
-$('[data-toggle="tooltip"]').tooltip();
+$('[data-toggle="tooltip"]').tooltip({ title: function() {
+    var tooltipText = $(this).text();
+    return tooltipText;
+  }
+});
 
 $('.appStore-2fa-sms, .enterprise-2fa-sms').find('a').on('click', function (e) {
   e.preventDefault();
@@ -2402,11 +2406,11 @@ Fliplet().then(function () {
   checkDemoUser();
 });
 
-// After user blur from 'demo user' field we check again to make sure that the field is empty. 
+// After user blur from 'demo user' field we check again to make sure that the field is empty.
 // If field is empty we remove required attribute.
 $('#fl-store-revDemoUser').on('input', function (event) {
   userInput = event.originalEvent.inputType || false;
-  
+
   checkDemoUser();
 });
 
