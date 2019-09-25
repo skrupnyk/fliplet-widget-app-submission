@@ -229,6 +229,21 @@ h3 small {
   margin-top: -5px;
 }
 
+.bundleId-ast-text,
+.bundleId-ent-text,
+.bundleId-uns-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.bundleId-ast-text:before,
+.bundleId-ent-text:before,
+.bundleId-uns-text:before {
+  content: '';
+  display: block;
+}
+
 .fl-bundleId-holder,
 .fl-price-holder {
   height: 44px;
@@ -518,4 +533,9 @@ h3 small {
 
 .analytics-success {
   color: rgb(106, 168, 79);
+}
+
+.tooltip-inner {
+  max-width: 320px;
+  word-wrap: break-word;
 }
