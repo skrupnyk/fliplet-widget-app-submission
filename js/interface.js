@@ -2383,10 +2383,15 @@ function toggleLoginForm(form, state, data) {
 
 /* ATTACH LISTENERS */
 
-$('[data-toggle="tooltip"]').tooltip({ title: function() {
+$('[data-toggle="tooltip"]').tooltip({
+  title: function() {
     var tooltipText = $(this).text();
+    if (tooltipText.length < 41) {
+      return;
+    }
     return tooltipText;
-  }
+  },
+  delay: { "show": 500, "hide": 300 }
 });
 
 $('.appStore-2fa-sms, .enterprise-2fa-sms').find('a').on('click', function (e) {
