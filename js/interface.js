@@ -1868,6 +1868,10 @@ function checkSubmissionStatus(origin, iosSubmissions) {
 }
 
 function submissionChecker(submissions) {
+  // ---------------------
+  // App Store submissions
+  // ---------------------
+
   var asub = _.filter(submissions, function (submission) {
     return submission.data.submissionType === "appStore" && submission.platform === "ios";
   });
@@ -1876,7 +1880,8 @@ function submissionChecker(submissions) {
     return submission.status === "completed";
   });
 
-  //Get the Submission data from the first completed submission, it has the certification values that are in use on the app store.
+  // Get the Submission data from the first completed submission,
+  // it has the certification values that are in use on the app store.
   previousAppStoreSubmission = _.minBy(completedAsub, function (el) {
     return el.id;
   });
@@ -1914,6 +1919,10 @@ function submissionChecker(submissions) {
     }
   }
 
+  // ----------------------
+  // Enterprise submissions
+  // ----------------------
+
   var esub = _.filter(submissions, function (submission) {
     return submission.data.submissionType === "enterprise" && submission.platform === "ios";
   });
@@ -1921,7 +1930,9 @@ function submissionChecker(submissions) {
   var completedEsub = _.filter(esub, function (submission) {
     return submission.status === "completed";
   });
-  //Get the Submission data from the first completed submission, it has certification values that are in use on the developer portal.
+
+  // Get the Submission data from the first completed submission,
+  // it has certification values that are in use on the developer portal.
   previousEnterpriseStoreSubmission = _.minBy(completedEsub, function (el) {
     return el.id;
   });
@@ -1957,10 +1968,32 @@ function submissionChecker(submissions) {
     }
   }
 
+  // --------------------
+  // Unsigned submissions
+  // --------------------
+
+  var usub = _.filter(submissions, function (submission) {
+    return submission.data.submissionType === "enterprise" && submission.platform === "ios";
+  });
+
+  usub = _.orderBy(usub, function (submission) {
+    return new Date(submission.createdAt).getTime();
+  }, ['desc']);
+  
+  checkSubmissionStatus("unsigned", usub);
+
+  unsignedSubmission = _.maxBy(usub, function (el) {
+    return new Date(el.createdAt).getTime();
+  });
+
+  if (!unsignedSubmission) {
+    unsignedSubmission = {};
+  }
+
   var cloneUnsignedCredentialsPromise = Promise.resolve();
   if (unsignedSubmission.data && !unsignedSubmission.data['fl-credentials']) {
 
-    var prevSubCred = _.filter(esub, function (submission) {
+    var prevSubCred = _.filter(usub, function (submission) {
       return submission.data && submission.data['fl-credentials'];
     });
 
@@ -1974,20 +2007,6 @@ function submissionChecker(submissions) {
       cloneUnsignedCredentialsPromise = cloneCredentials(previousSubWithCredentials.data['fl-credentials'], unsignedSubmission, true);
     }
   }
-
-  var usub = _.filter(submissions, function (submission) {
-    return submission.data.submissionType === "unsigned" && submission.platform === "ios";
-  });
-
-  usub = _.orderBy(usub, function (submission) {
-    return new Date(submission.createdAt).getTime();
-  }, ['desc']);
-  checkSubmissionStatus("unsigned", usub);
-
-  usub = _.maxBy(usub, function (el) {
-    return new Date(el.createdAt).getTime();
-  });
-  unsignedSubmission = usub;
 
   return cloneAppStoreCredentialsPromise.then(function () {
     return cloneEnterpriseCredentialsPromise;
