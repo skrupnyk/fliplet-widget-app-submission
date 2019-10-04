@@ -1968,27 +1968,18 @@ function submissionChecker(submissions) {
     }
   }
 
-  var usub = _.filter(submissions, function (submission) {
-    return submission.data.submissionType === "enterprise" && submission.platform === "ios";
-  });
-
-  var completedEsub = _.filter(usub, function (submission) {
-    return submission.status === "completed";
-  });
-
-  // Get the Submission data from the first completed submission,
-  // it has certification values that are in use on the developer portal.
-  previousEnterpriseStoreSubmission = _.minBy(completedEsub, function (el) {
-    return el.id;
-  });
-
   // --------------------
   // Unsigned submissions
   // --------------------
 
+  var usub = _.filter(submissions, function (submission) {
+    return submission.data.submissionType === "enterprise" && submission.platform === "ios";
+  });
+
   usub = _.orderBy(usub, function (submission) {
     return new Date(submission.createdAt).getTime();
   }, ['desc']);
+  
   checkSubmissionStatus("unsigned", usub);
 
   unsignedSubmission = _.maxBy(usub, function (el) {
