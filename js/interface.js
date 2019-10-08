@@ -1973,7 +1973,7 @@ function submissionChecker(submissions) {
   // --------------------
 
   var usub = _.filter(submissions, function (submission) {
-    return submission.data.submissionType === "enterprise" && submission.platform === "ios";
+    return submission.data.submissionType === "unsigned" && submission.platform === "ios";
   });
 
   usub = _.orderBy(usub, function (submission) {
