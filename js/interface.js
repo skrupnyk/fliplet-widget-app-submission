@@ -794,9 +794,10 @@ function save(origin, submission) {
     });
 }
 
-function checkFileExtention (fileName) {
+function checkFileExtension (fileName) {
   var regexp = /[^.]+$/;
-  var isCorrectExtension = fileName.match(regexp)[0];
+  var fileExtension = fileName.match(regexp);
+  var isCorrectExtension = fileExtension ? fileExtension[0] : undefined;
 
   if (isCorrectExtension !== 'plist') {
     Fliplet.Modal.alert({
@@ -3076,8 +3077,7 @@ $('#fl-store-certificate').on('change', function () {
 
 $('#fl-store-firebase').on('change', function () {
   var fileName = this.value.replace(/\\/g, '/').replace(/.*\//, '');
-  var fileExtension = checkFileExtention(fileName); 
-
+  var fileExtension = checkFileExtension(fileName); 
   if (!fileExtension) {
     return;
   }
@@ -3092,7 +3092,7 @@ $('#fl-store-firebase').on('change', function () {
 
 $('#fl-ent-firebase').on('change', function () {
   var fileName = this.value.replace(/\\/g, '/').replace(/.*\//, '');
-  var fileExtension = checkFileExtention(fileName); 
+  var fileExtension = checkFileExtension(fileName); 
 
   if (!fileExtension) {
     return;
@@ -3108,7 +3108,7 @@ $('#fl-ent-firebase').on('change', function () {
 
 $('#fl-uns-firebase').on('change', function () {
   var fileName = this.value.replace(/\\/g, '/').replace(/.*\//, '');
-  var fileExtension = checkFileExtention(fileName); 
+  var fileExtension = checkFileExtension(fileName); 
 
   if (!fileExtension) {
     return;
