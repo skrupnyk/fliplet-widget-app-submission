@@ -794,6 +794,22 @@ function save(origin, submission) {
     });
 }
 
+function checkFileExtention (fileName) {
+  var regexp = /[^.]+$/;
+  var isCorrectExtension = fileName.match(regexp)[0];
+
+  if (isCorrectExtension !== 'plist') {
+    Fliplet.Modal.alert({
+      title: 'Wrong file extension',
+      message: 'Please select a .plist file',
+      size: 'small'
+    });
+    return false;
+  }
+
+  return true;
+}
+
 function requestBuild(origin, submission) {
   $('.button-' + origin + '-request').html('Requesting ' + spinner);
 
@@ -3060,15 +3076,9 @@ $('#fl-store-certificate').on('change', function () {
 
 $('#fl-store-firebase').on('change', function () {
   var fileName = this.value.replace(/\\/g, '/').replace(/.*\//, '');
-  var fileExtension = (/[.]/.exec(fileName)) ? /[^.]+$/.exec(fileName)[0] : undefined; 
+  var fileExtension = checkFileExtention(fileName); 
 
-  if ( !fileExtension || fileExtension !== 'plist' ) {
-    Fliplet.Modal.alert({
-      title: 'Wrong file extension',
-      message: 'Please select correct file.',
-      size: 'small'
-    });
-    
+  if (!fileExtension) {
     return;
   }
 
@@ -3082,15 +3092,9 @@ $('#fl-store-firebase').on('change', function () {
 
 $('#fl-ent-firebase').on('change', function () {
   var fileName = this.value.replace(/\\/g, '/').replace(/.*\//, '');
-  var fileExtension = (/[.]/.exec(fileName)) ? /[^.]+$/.exec(fileName)[0] : undefined; 
+  var fileExtension = checkFileExtention(fileName); 
 
-  if ( !fileExtension || fileExtension !== 'plist' ) {
-    Fliplet.Modal.alert({
-      title: 'Wrong file extension',
-      message: 'Please select correct file.',
-      size: 'small'
-    });
-
+  if (!fileExtension) {
     return;
   }
 
@@ -3104,15 +3108,9 @@ $('#fl-ent-firebase').on('change', function () {
 
 $('#fl-uns-firebase').on('change', function () {
   var fileName = this.value.replace(/\\/g, '/').replace(/.*\//, '');
-  var fileExtension = (/[.]/.exec(fileName)) ? /[^.]+$/.exec(fileName)[0] : undefined; 
+  var fileExtension = checkFileExtention(fileName); 
 
-  if ( !fileExtension || fileExtension !== 'plist' ) {
-    Fliplet.Modal.alert({
-      title: 'Wrong file extension',
-      message: 'Please select correct file.',
-      size: 'small'
-    });
-
+  if (!fileExtension) {
     return;
   }
 
