@@ -794,12 +794,13 @@ function save(origin, submission) {
     });
 }
 
-function checkFileExtension (fileName) {
+function checkFileExtension (fileName, element) {
   var regexp = /[^.]+$/;
   var fileExtension = fileName.match(regexp);
   var isCorrectExtension = fileExtension ? fileExtension[0] : undefined;
 
   if (isCorrectExtension !== 'plist') {
+    $(element).val('');
     Fliplet.Modal.alert({
       title: 'Wrong file extension',
       message: 'Please select a .plist file',
@@ -3077,7 +3078,7 @@ $('#fl-store-certificate').on('change', function () {
 
 $('#fl-store-firebase').on('change', function () {
   var fileName = this.value.replace(/\\/g, '/').replace(/.*\//, '');
-  var fileExtension = checkFileExtension(fileName); 
+  var fileExtension = checkFileExtension(fileName, this); 
   if (!fileExtension) {
     return;
   }
@@ -3092,7 +3093,7 @@ $('#fl-store-firebase').on('change', function () {
 
 $('#fl-ent-firebase').on('change', function () {
   var fileName = this.value.replace(/\\/g, '/').replace(/.*\//, '');
-  var fileExtension = checkFileExtension(fileName); 
+  var fileExtension = checkFileExtension(fileName, this); 
 
   if (!fileExtension) {
     return;
@@ -3108,7 +3109,7 @@ $('#fl-ent-firebase').on('change', function () {
 
 $('#fl-uns-firebase').on('change', function () {
   var fileName = this.value.replace(/\\/g, '/').replace(/.*\//, '');
-  var fileExtension = checkFileExtension(fileName); 
+  var fileExtension = checkFileExtension(fileName, this); 
 
   if (!fileExtension) {
     return;
