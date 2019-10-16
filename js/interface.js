@@ -794,6 +794,24 @@ function save(origin, submission) {
     });
 }
 
+function checkFileExtension (fileName, element) {
+  var regexp = /[^.]+$/;
+  var fileExtension = fileName.match(regexp);
+  var isCorrectExtension = fileExtension ? fileExtension[0] : undefined;
+
+  if (isCorrectExtension !== 'plist') {
+    $(element).val('');
+    Fliplet.Modal.alert({
+      title: 'Wrong file extension',
+      message: 'Please select a .plist file',
+      size: 'small'
+    });
+    return false;
+  }
+
+  return true;
+}
+
 function requestBuild(origin, submission) {
   $('.button-' + origin + '-request').html('Requesting ' + spinner);
 
@@ -3059,8 +3077,13 @@ $('#fl-store-certificate').on('change', function () {
 // Firebase
 
 $('#fl-store-firebase').on('change', function () {
-  appStoreFirebaseFileField = this;
   var fileName = this.value.replace(/\\/g, '/').replace(/.*\//, '');
+  var fileExtension = checkFileExtension(fileName, this); 
+  if (!fileExtension) {
+    return;
+  }
+
+  appStoreFirebaseFileField = this;
 
   if (this.files && this.files[0]) {
     $('#fl-store-firebase-status').html('Enabled').addClass('analytics-success');
@@ -3069,8 +3092,14 @@ $('#fl-store-firebase').on('change', function () {
 });
 
 $('#fl-ent-firebase').on('change', function () {
-  enterpriseFirebaseFileField = this;
   var fileName = this.value.replace(/\\/g, '/').replace(/.*\//, '');
+  var fileExtension = checkFileExtension(fileName, this); 
+
+  if (!fileExtension) {
+    return;
+  }
+
+  enterpriseFirebaseFileField = this;
 
   if (this.files && this.files[0]) {
     $('#fl-ent-firebase-status').html('Enabled').addClass('analytics-success');
@@ -3079,8 +3108,14 @@ $('#fl-ent-firebase').on('change', function () {
 });
 
 $('#fl-uns-firebase').on('change', function () {
-  unsignedFirebaseFileField = this;
   var fileName = this.value.replace(/\\/g, '/').replace(/.*\//, '');
+  var fileExtension = checkFileExtension(fileName, this); 
+
+  if (!fileExtension) {
+    return;
+  }
+
+  unsignedFirebaseFileField = this;
 
   if (this.files && this.files[0]) {
     $('#fl-uns-firebase-status').html('Enabled').addClass('analytics-success');
