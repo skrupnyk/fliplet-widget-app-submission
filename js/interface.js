@@ -2111,6 +2111,30 @@ function getSubmissions() {
   return Fliplet.App.Submissions.get();
 }
 
+function setFirebaseStatus(credentialKey, origin) {
+  var environment;
+
+  switch (origin) {
+    case 'appStore':
+      environment = 'store';
+      break;
+    case 'enterprise':
+      environment = 'env';
+      break;
+    case 'unsigned':
+      environment = 'uns';
+      break;
+    default:
+      break;
+  }
+
+  getCredential(credentialKey).then(function (credentials) {
+    if (credentials.firebase.url) {
+      $('#fl-' + environment + '-firebase-status').html('Enabled').addClass('analytics-success');
+    }
+  })
+}
+
 function initialLoad(initial, timeout) {
   if (!initial) {
     initLoad = setTimeout(function () {
@@ -2123,7 +2147,13 @@ function initialLoad(initial, timeout) {
   } else {
     getSubmissions()
       .then(function (submissions) {
-        if (!submissions.length) {
+        if (submissions.length) {
+          submissions.forEach(function (submission) {
+            if (submission.data['fl-credentials'] && submission.platform === 'ios') {
+              setFirebaseStatus(submission.data['fl-credentials'], submission.data.submissionType);
+            }
+          });
+        } else {
           return Promise.all([
             Fliplet.App.Submissions.create({
               platform: 'ios',
