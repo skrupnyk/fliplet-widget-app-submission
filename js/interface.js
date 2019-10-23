@@ -2129,13 +2129,21 @@ function setFirebaseStatus(credentialKey, origin) {
       environment = 'uns';
       break;
     default:
+      environment = false;
       break;
+  }
+
+  if (!environment) {
+    console.error('Invalid environment');
+    return;
   }
 
   getCredential(credentialKey).then(function (credentials) {
     if (credentials.firebase.url) {
       $('#fl-' + environment + '-firebase-status').html('Enabled').addClass('analytics-success');
     }
+  }).catch(function (error) {
+    console.error(error);
   });
 }
 
