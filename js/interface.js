@@ -2112,6 +2112,10 @@ function getSubmissions() {
 }
 
 function setFirebaseStatus(credentialKey, origin) {
+  if (!credentialKey) {
+    return;
+  }
+  
   var environment;
 
   switch (origin) {
@@ -2132,7 +2136,7 @@ function setFirebaseStatus(credentialKey, origin) {
     if (credentials.firebase.url) {
       $('#fl-' + environment + '-firebase-status').html('Enabled').addClass('analytics-success');
     }
-  })
+  });
 }
 
 function initialLoad(initial, timeout) {
