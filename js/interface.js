@@ -1997,7 +1997,7 @@ function submissionChecker(submissions) {
   usub = _.orderBy(usub, function (submission) {
     return new Date(submission.createdAt).getTime();
   }, ['desc']);
-  
+
   checkSubmissionStatus("unsigned", usub);
 
   unsignedSubmission = _.maxBy(usub, function (el) {
@@ -2115,7 +2115,7 @@ function setFirebaseStatus(credentialKey, origin) {
   if (!credentialKey) {
     return;
   }
-  
+
   var environment;
 
   switch (origin) {
@@ -2139,7 +2139,7 @@ function setFirebaseStatus(credentialKey, origin) {
   }
 
   getCredential(credentialKey).then(function (credentials) {
-    if (credentials.firebase.url) {
+    if (_.get(credentials, 'firebase.url')) {
       $('#fl-' + environment + '-firebase-status').html('Enabled').addClass('analytics-success');
     }
   }).catch(function (error) {
@@ -3120,7 +3120,7 @@ $('#fl-store-certificate').on('change', function () {
 
 $('#fl-store-firebase').on('change', function () {
   var fileName = this.value.replace(/\\/g, '/').replace(/.*\//, '');
-  var fileExtension = checkFileExtension(fileName, this); 
+  var fileExtension = checkFileExtension(fileName, this);
   if (!fileExtension) {
     return;
   }
@@ -3135,7 +3135,7 @@ $('#fl-store-firebase').on('change', function () {
 
 $('#fl-ent-firebase').on('change', function () {
   var fileName = this.value.replace(/\\/g, '/').replace(/.*\//, '');
-  var fileExtension = checkFileExtension(fileName, this); 
+  var fileExtension = checkFileExtension(fileName, this);
 
   if (!fileExtension) {
     return;
@@ -3151,7 +3151,7 @@ $('#fl-ent-firebase').on('change', function () {
 
 $('#fl-uns-firebase').on('change', function () {
   var fileName = this.value.replace(/\\/g, '/').replace(/.*\//, '');
-  var fileExtension = checkFileExtension(fileName, this); 
+  var fileExtension = checkFileExtension(fileName, this);
 
   if (!fileExtension) {
     return;
