@@ -775,16 +775,18 @@ function save(origin, submission) {
       }
 
       // Save app-specific password before saving remaining submission data
-      return setCredentials(submission.id, {
-        appPassword: $('#fl-store-appPassword').val().trim()
-      }, false).then(function () {
-        return Fliplet.App.Submissions.update(submission.id, submission.data)
-      }).then(function () {
-        $('.save-' + origin + '-progress').addClass('saved');
+      return saveFirebaseSettings(origin).then(function () {
+        return setCredentials(submission.id, {
+          appPassword: $('#fl-store-appPassword').val().trim()
+        }, false).then(function () {
+          return Fliplet.App.Submissions.update(submission.id, submission.data)
+        }).then(function () {
+          $('.save-' + origin + '-progress').addClass('saved');
 
-        setTimeout(function () {
-          $('.save-' + origin + '-progress').removeClass('saved');
-        }, 4000);
+          setTimeout(function () {
+            $('.save-' + origin + '-progress').removeClass('saved');
+          }, 4000);
+        });
       });
     })
     .catch(function (err) {
@@ -2123,7 +2125,7 @@ function setFirebaseStatus(credentialKey, origin) {
       environment = 'store';
       break;
     case 'enterprise':
-      environment = 'env';
+      environment = 'ent';
       break;
     case 'unsigned':
       environment = 'uns';
