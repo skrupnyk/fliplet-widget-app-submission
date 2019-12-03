@@ -782,7 +782,7 @@ function save(origin, submission) {
           return Fliplet.App.Submissions.update(submission.id, submission.data)
         }).then(function () {
           $('.save-' + origin + '-progress').addClass('saved');
-  
+
           setTimeout(function () {
             $('.save-' + origin + '-progress').removeClass('saved');
           }, 4000);
