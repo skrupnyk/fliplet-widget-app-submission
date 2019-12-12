@@ -2479,12 +2479,24 @@ $('.appStore-2fa-sms, .enterprise-2fa-sms').find('a').on('click', function (e) {
   e.preventDefault();
   // Send SMS request via socket
   toggleLoginForm(getCurrentLoginForm(), '2fa-waiting');
+
+  if (!socketClientId) {
+    toggleLoginForm(getCurrentLoginForm(), 'login');
+    return;
+  }
+
   socket.to(socketClientId).emit('aab.apple.login.2fa.sms');
 });
 
 $('#fl-store-2fa-select, #fl-ent-2fa-select').on('change', function (e) {
   // Send device selection via socket
   toggleLoginForm(getCurrentLoginForm(), '2fa-waiting');
+
+  if (!socketClientId) {
+    toggleLoginForm(getCurrentLoginForm(), 'login');
+    return;
+  }
+
   socket.to(socketClientId).emit('aab.apple.login.2fa.device', e.target.value);
 });
 
@@ -2507,6 +2519,11 @@ $('.2fa-code-store-button, .2fa-code-ent-button').on('click', function (e) {
     Fliplet.Modal.alert({
       message: 'You must enter the verification code to continue'
     });
+    return;
+  }
+
+  if (!socketClientId) {
+    toggleLoginForm(getCurrentLoginForm(), 'login');
     return;
   }
 
@@ -3027,10 +3044,12 @@ $('#fl-load-store-teams').on('click', function (e) {
   e.preventDefault();
   var $button = $(this);
   var initialLabel = $button.html();
+  var email = $('.appStore-logged-email').text();
   $button.html('Loading ' + spinner).addClass('disabled');
-  loadAppStoreTeams($('.appStore-logged-email').text())
+  loadAppStoreTeams(email)
     .then(function () {
       $button.html(initialLabel).removeClass('disabled');
+      toggleLoginForm('app-store', 'logged-in', { email: email });
     })
     .catch(function (error) {
       $button.html(initialLabel).removeClass('disabled');
@@ -3532,13 +3551,13 @@ $('.browse-files').on('click', function (e) {
 
 // Listen for 2FA code when requested
 socket.on('aab.apple.login.2fa', function (data) {
-  socketClientId = data.clientId;
+  socketClientId = data.clientId || socketClientId;
   // Ask user for code
   toggleLoginForm(getCurrentLoginForm(), '2fa-code', data);
 });
 
 socket.on('aab.apple.login.2fa.devices', function (data) {
-  socketClientId = data.clientId;
+  socketClientId = data.clientId || socketClientId;
   // Ask user for device
   toggleLoginForm(getCurrentLoginForm(), '2fa-device', data);
 });
