@@ -3534,13 +3534,13 @@ $('.browse-files').on('click', function (e) {
 
 // Listen for 2FA code when requested
 socket.on('aab.apple.login.2fa', function (data) {
-  socketClientId = data.clientId;
+  socketClientId = data.clientId || socketClientId;
   // Ask user for code
   toggleLoginForm(getCurrentLoginForm(), '2fa-code', data);
 });
 
 socket.on('aab.apple.login.2fa.devices', function (data) {
-  socketClientId = data.clientId;
+  socketClientId = data.clientId || socketClientId;
   // Ask user for device
   toggleLoginForm(getCurrentLoginForm(), '2fa-device', data);
 });
