@@ -3025,10 +3025,12 @@ $('#fl-load-store-teams').on('click', function (e) {
   e.preventDefault();
   var $button = $(this);
   var initialLabel = $button.html();
+  var email = $('.appStore-logged-email').text();
   $button.html('Loading ' + spinner).addClass('disabled');
-  loadAppStoreTeams($('.appStore-logged-email').text())
+  loadAppStoreTeams(email)
     .then(function () {
       $button.html(initialLabel).removeClass('disabled');
+      toggleLoginForm('app-store', 'logged-in', { email: email });
     })
     .catch(function (error) {
       $button.html(initialLabel).removeClass('disabled');
