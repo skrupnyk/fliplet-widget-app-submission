@@ -796,17 +796,17 @@ function save(origin, submission) {
     });
 }
 
-function checkFileExtension (fileName, element) {
-  var regexp = /[^.]+$/;
-  var fileExtension = fileName.match(regexp);
-  var isCorrectExtension = fileExtension ? fileExtension[0] : undefined;
+function checkFileExtension (fileName, element, validExt) {
+  var lastDotInName = fileName.lastIndexOf('.');
+  var fileExt = fileName.substring(lastDotInName);
 
-  if (isCorrectExtension !== 'plist') {
-    $(element).val('');
+  if (fileExt !== validExt) {
     Fliplet.Modal.alert({
       title: 'Wrong file extension',
-      message: 'Please select a .plist file',
+      message: 'Please select a ' + validExt + ' file',
       size: 'small'
+    }).then(function() {
+      $(element).val('');
     });
     return false;
   }
@@ -3008,6 +3008,14 @@ $('.log-out-appStore').on('click', function () {
   clearAppStoreCredentials();
 });
 
+$('#fl-ent-certificate-manual-details').on('change', function() {
+  checkFileExtension(this.files[0].name, $('#fl-ent-certificate-manual-details-label'), '.p12');
+})
+
+$('#fl-ent-mobileprovision-manual-details').on('change', function() {
+  checkFileExtension(this.files[0].name, $('#fl-ent-mobileprovision-manual-details-label'), '.mobileprovision');
+})
+
 $('[name="fl-store-distribution"]').on('change', function () {
   var value = $(this).val();
 
@@ -3141,8 +3149,9 @@ $('#fl-store-certificate').on('change', function () {
 
 $('#fl-store-firebase').on('change', function () {
   var fileName = this.value.replace(/\\/g, '/').replace(/.*\//, '');
-  var fileExtension = checkFileExtension(fileName, this);
+  var fileExtension = checkFileExtension(fileName, this, '.plist');
   if (!fileExtension) {
+    $('#fl-store-firebase-uploaded').html('').addClass('hidden');
     return;
   }
 
@@ -3156,9 +3165,10 @@ $('#fl-store-firebase').on('change', function () {
 
 $('#fl-ent-firebase').on('change', function () {
   var fileName = this.value.replace(/\\/g, '/').replace(/.*\//, '');
-  var fileExtension = checkFileExtension(fileName, this);
+  var fileExtension = checkFileExtension(fileName, this, '.plist');
 
   if (!fileExtension) {
+    $('#fl-ent-firebase-uploaded').html('').addClass('hidden');
     return;
   }
 
@@ -3172,9 +3182,10 @@ $('#fl-ent-firebase').on('change', function () {
 
 $('#fl-uns-firebase').on('change', function () {
   var fileName = this.value.replace(/\\/g, '/').replace(/.*\//, '');
-  var fileExtension = checkFileExtension(fileName, this);
+  var fileExtension = checkFileExtension(fileName, this, '.plist');
 
   if (!fileExtension) {
+    $('#fl-uns-firebase-uploaded').html('').addClass('hidden');
     return;
   }
 
