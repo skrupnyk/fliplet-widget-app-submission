@@ -2601,6 +2601,14 @@ $('.fl-sb-appStore [change-bundleid], .fl-sb-enterprise [change-bundleid], .fl-s
 $('.panel-group')
   .on('shown.bs.collapse', '.panel-collapse', function () {
     Fliplet.Widget.autosize();
+
+    var $panel = $(this).closest('.panel');
+
+    if (!$panel || !$panel.offset()) {
+      return;
+    }
+  
+    Fliplet.Studio.emit('scrollOverlayTo', $panel.offset().top);
   })
   .on('hidden.bs.collapse', '.panel-collapse', function () {
     Fliplet.Widget.autosize();
