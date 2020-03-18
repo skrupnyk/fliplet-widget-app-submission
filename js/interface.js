@@ -750,27 +750,30 @@ function save(origin, submission) {
             var cloneCredentialsPromise = Promise.resolve();
 
             newSubmission.data['fl-credentials'] = 'submission-' + newSubmission.id;
-
-            if (origin === "appStore") {
-              appStoreSubmission = newSubmission;
-              cloneCredentialsPromise = cloneCredentials(previousCredentials, appStoreSubmission);
-            } else if (origin === "enterprise") {
-              enterpriseSubmission = newSubmission;
-              cloneCredentialsPromise = cloneCredentials(previousCredentials, enterpriseSubmission);
-            } else if (origin === "unsigned") {
-              unsignedSubmission = newSubmission;
-              cloneCredentialsPromise = cloneCredentials(previousCredentials, unsignedSubmission);
-            }
-
-            return cloneCredentialsPromise.then(function () {
-              return Fliplet.App.Submissions.update(newSubmission.id, newSubmission.data);
-            }).then(function () {
-              $('.save-' + origin + '-progress').addClass('saved');
-
-              setTimeout(function () {
-                $('.save-' + origin + '-progress').removeClass('saved');
-              }, 4000);
-            });
+            
+            // Before we will decide clone credentials or not we should check has it been set by this time
+            return getCredential(previousCredentials).then(function(credentialIsExist) {
+              if (origin === "appStore" && credentialIsExist) {
+                appStoreSubmission = newSubmission;
+                cloneCredentialsPromise = cloneCredentials(previousCredentials, appStoreSubmission);
+              } else if (origin === "enterprise" && credentialIsExist) {
+                enterpriseSubmission = newSubmission;
+                cloneCredentialsPromise = cloneCredentials(previousCredentials, enterpriseSubmission);
+              } else if (origin === "unsigned" && credentialIsExist) {
+                unsignedSubmission = newSubmission;
+                cloneCredentialsPromise = cloneCredentials(previousCredentials, unsignedSubmission);
+              }
+  
+              return cloneCredentialsPromise.then(function () {
+                return Fliplet.App.Submissions.update(newSubmission.id, newSubmission.data);
+              }).then(function () {
+                $('.save-' + origin + '-progress').addClass('saved');
+  
+                setTimeout(function () {
+                  $('.save-' + origin + '-progress').removeClass('saved');
+                }, 4000);
+              });
+            })
           });
       }
 
