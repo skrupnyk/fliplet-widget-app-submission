@@ -3495,7 +3495,9 @@ $('.enterprise-replace-cert').on('click', function () {
               .then(function (response) {
                 var p12Url = Fliplet.Env.get('apiUrl') + 'v1/organizations/' + organizationID + '/credentials/submission-' + enterpriseSubmission.id + '/download/p12';
                 var certUrl = Fliplet.Env.get('apiUrl') + 'v1/organizations/' + organizationID + '/credentials/submission-' + enterpriseSubmission.id + '/download/certificate';
-                                enterpriseCertificateReplaced = true;
+
+                enterpriseCertificateReplaced = true;
+
                 $('.enterprise-previous-file-success').find('.enterprise-file-name-success').html(response.certificate.name);
                 $('.enterprise-previous-file-success').find('.enterprise-file-expire-success').html(moment(response.certificate.expiresAt).format('MMMM Do YYYY'));
                 $('.enterprise-previous-file-success').find('.enterprise-file-download-key').attr('href', p12Url);
