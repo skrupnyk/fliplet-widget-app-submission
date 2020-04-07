@@ -1601,7 +1601,7 @@ If you have any questions please reply and I will be happy to answer any questio
                     <p class="help-block label-helper"><small>The name below the icon on the home screen. Note that the app icon name will only display a maximum of 13 characters</small></p>
                   </div>
                   <div class="col-sm-8">
-                    <input type="text" name="fl-uns-iconName" class="form-control" id="fl-uns-iconName" maxlength="30" data-error="Please enter an app icon name" required />
+                    <input pattern="^(?!\s*$).+" type="text" name="fl-uns-iconName" class="form-control" id="fl-uns-iconName" maxlength="30" data-error="Please enter an app icon name" required />
                     <div class="help-block with-errors"></div>
                     <p class="help-block"><small>App names are limited to 30 characters.</small></p>
                   </div>
