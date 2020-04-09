@@ -750,7 +750,7 @@ function save(origin, submission) {
             var cloneCredentialsPromise = Promise.resolve();
 
             newSubmission.data['fl-credentials'] = 'submission-' + newSubmission.id;
-            
+
             // Before we will decide clone credentials or not we should check has it been set by this time
             return getCredential(previousCredentials).then(function(credentialIsExist) {
               if (origin === "appStore" && credentialIsExist) {
@@ -763,12 +763,12 @@ function save(origin, submission) {
                 unsignedSubmission = newSubmission;
                 cloneCredentialsPromise = cloneCredentials(previousCredentials, unsignedSubmission);
               }
-  
+
               return cloneCredentialsPromise.then(function () {
                 return Fliplet.App.Submissions.update(newSubmission.id, newSubmission.data);
               }).then(function () {
                 $('.save-' + origin + '-progress').addClass('saved');
-  
+
                 setTimeout(function () {
                   $('.save-' + origin + '-progress').removeClass('saved');
                 }, 4000);
@@ -2610,7 +2610,7 @@ $('.panel-group')
     if (!$panel || !$panel.offset()) {
       return;
     }
-  
+
     Fliplet.Studio.emit('scrollOverlayTo', $panel.offset().top);
   })
   .on('hidden.bs.collapse', '.panel-collapse', function () {
@@ -3128,11 +3128,14 @@ $('.appStore-generate-cert').on('click', function () {
         submissionId: appStoreSubmission.id
       })
         .then(function (response) {
-          var p12Url = Fliplet.Env.get('apiUrl') + 'v1/organizations/' + organizationID + '/credentials/submission-' + appStoreSubmission.id + '/download/p12'
+          var p12Url = Fliplet.Env.get('apiUrl') + 'v1/organizations/' + organizationID + '/credentials/submission-' + appStoreSubmission.id + '/download/p12';
+          var certUrl = Fliplet.Env.get('apiUrl') + 'v1/organizations/' + organizationID + '/credentials/submission-' + appStoreSubmission.id + '/download/certificate';
+
           appStoreCertificateCreated = true;
           $('.appStore-generate-file-success').find('.appStore-file-name-success').html(response.certificate.name);
           $('.appStore-generate-file-success').find('.appStore-file-expire-success').html(moment(response.certificate.expiresAt).format('MMMM Do YYYY'));
-          $('.appStore-generate-file-success').find('.appStore-file-download-success').attr('href', p12Url);
+          $('.appStore-generate-file-success').find('.appStore-file-download-key').attr('href', p12Url);
+          $('.appStore-generate-file-success').find('.appStore-file-download-cert').attr('href', certUrl);
           $('.appStore-generate-file').removeClass('show');
           $('.appStore-generate-file-success').addClass('show');
           $this.html('Generate certificate');
@@ -3230,11 +3233,14 @@ $('.appStore-replace-cert').on('click', function () {
               submissionId: appStoreSubmission.id
             })
               .then(function (response) {
-                var p12Url = Fliplet.Env.get('apiUrl') + 'v1/organizations/' + organizationID + '/credentials/submission-' + appStoreSubmission.id + '/download/p12'
+                var p12Url = Fliplet.Env.get('apiUrl') + 'v1/organizations/' + organizationID + '/credentials/submission-' + appStoreSubmission.id + '/download/p12';
+                var certUrl = Fliplet.Env.get('apiUrl') + 'v1/organizations/' + organizationID + '/credentials/submission-' + appStoreSubmission.id + '/download/certificate';
+
                 appStoreCertificateReplaced = true;
                 $('.appStore-previous-file-success').find('.appStore-file-name-success').html(response.certificate.name);
                 $('.appStore-previous-file-success').find('.appStore-file-expire-success').html(moment(response.certificate.expiresAt).format('MMMM Do YYYY'));
-                $('.appStore-previous-file-success').find('.appStore-file-download-success').attr('href', p12Url);
+                $('.appStore-previous-file-success').find('.appStore-file-download-key').attr('href', p12Url);
+                $('.appStore-previous-file-success').find('.appStore-file-download-cert').attr('href', certUrl);
                 $('.appStore-previous-file-success').addClass('show');
                 $this.html('Replace certificate');
                 $this.removeClass('disabled');
@@ -3416,11 +3422,13 @@ $('.enterprise-generate-cert').on('click', function () {
         inHouse: true
       })
         .then(function (response) {
-          var p12Url = Fliplet.Env.get('apiUrl') + 'v1/organizations/' + organizationID + '/credentials/submission-' + enterpriseSubmission.id + '/download/p12'
+          var p12Url = Fliplet.Env.get('apiUrl') + 'v1/organizations/' + organizationID + '/credentials/submission-' + enterpriseSubmission.id + '/download/p12';
+          var certUrl = Fliplet.Env.get('apiUrl') + 'v1/organizations/' + organizationID + '/credentials/submission-' + enterpriseSubmission.id + '/download/certificate';
           enterpriseCertificateCreated = true;
           $('.enterprise-generate-file-success').find('.enterprise-file-name-success').html(response.certificate.name);
           $('.enterprise-generate-file-success').find('.enterprise-file-expire-success').html(moment(response.certificate.expiresAt).format('MMMM Do YYYY'));
-          $('.enterprise-generate-file-success').find('.enterprise-file-download-success').attr('href', p12Url);
+          $('.enterprise-generate-file-success').find('.enterprise-file-download-key').attr('href', p12Url);
+          $('.enterprise-generate-file-success').find('.enterprise-file-download-cert').attr('href', certUrl);
           $('.enterprise-generate-file').removeClass('show');
           $('.enterprise-generate-file-success').addClass('show');
           $this.html('Generate certificate');
@@ -3485,11 +3493,15 @@ $('.enterprise-replace-cert').on('click', function () {
               inHouse: true
             })
               .then(function (response) {
-                var p12Url = Fliplet.Env.get('apiUrl') + 'v1/organizations/' + organizationID + '/credentials/submission-' + enterpriseSubmission.id + '/download/p12'
+                var p12Url = Fliplet.Env.get('apiUrl') + 'v1/organizations/' + organizationID + '/credentials/submission-' + enterpriseSubmission.id + '/download/p12';
+                var certUrl = Fliplet.Env.get('apiUrl') + 'v1/organizations/' + organizationID + '/credentials/submission-' + enterpriseSubmission.id + '/download/certificate';
+
                 enterpriseCertificateReplaced = true;
+
                 $('.enterprise-previous-file-success').find('.enterprise-file-name-success').html(response.certificate.name);
                 $('.enterprise-previous-file-success').find('.enterprise-file-expire-success').html(moment(response.certificate.expiresAt).format('MMMM Do YYYY'));
-                $('.enterprise-previous-file-success').find('.enterprise-file-download-success').attr('href', p12Url);
+                $('.enterprise-previous-file-success').find('.enterprise-file-download-key').attr('href', p12Url);
+                $('.enterprise-previous-file-success').find('.enterprise-file-download-cert').attr('href', certUrl);
                 $('.enterprise-previous-file-success').addClass('show');
                 $this.html('Replace certificate');
                 $this.removeClass('disabled');
