@@ -699,6 +699,10 @@ function submissionBuild(appSubmission, origin) {
     }
 
     Fliplet.Studio.emit('refresh-app-submissions');
+    Fliplet.Studio.emit('app-launch', {
+      platform: 'ios',
+      submissionType: origin
+    })
 
     Fliplet.Modal.alert({
       title: 'Your request was sent successfully!',
