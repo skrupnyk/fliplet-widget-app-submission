@@ -1,5 +1,6 @@
 var widgetId = Fliplet.Widget.getDefaultId();
 var widgetData = Fliplet.Widget.getData(widgetId) || {};
+var organizationIsPaying = widgetData.organizationIsPaying;
 var appName = '';
 var organizationName = '';
 var appIcon = '';
@@ -66,6 +67,13 @@ var screenshotRequirements = [
 var hasAllScreenshots = false;
 var screenshotValidationNotRequired = false;
 var spinner = '<i class="fa fa-spinner fa-pulse fa-fw fa-lg"></i>';
+
+var formInputSelectors = [
+  '#appStoreConfiguration :input',
+  '#enterpriseConfiguration :input',
+  '#unsignedConfiguration :input',
+  '#pushConfiguration :input'
+];
 
 var socketRequiresLogin = true;
 var socket = Fliplet.Socket({
@@ -1051,7 +1059,7 @@ function requestBuild(origin, submission) {
 }
 
 function saveAppStoreData(request) {
-  var data = appStoreSubmission.data;
+  var data = appStoreSubmission.data || {};
   var pushData = notificationSettings;
 
   $('#appStoreConfiguration [name]').each(function (i, el) {
@@ -2156,7 +2164,29 @@ function setFirebaseStatus(credentialKey, origin) {
   });
 }
 
+function disableForm() {
+  $(formInputSelectors.join(',')).prop('disabled', true);
+  $('[data-push-save]').addClass('disabled').prop('disabled', true);
+  $('[data-app-store-save]').addClass('disabled').prop('disabled', true);
+  $('[data-app-store-build]').addClass('disabled').prop('disabled', true);
+}
+
+function enableForm() {
+  $(formInputSelectors.join(',')).prop('disabled', false);
+  $('[data-push-save]').removeClass('disabled').prop('disabled', false);
+  $('[data-app-store-save]').removeClass('disabled').prop('disabled', false);
+  $('[data-app-store-build]').removeClass('disabled').prop('disabled', false);
+}
+
 function initialLoad(initial, timeout) {
+  if (!organizationIsPaying) {
+    disableForm();
+
+    return;
+  }
+
+  enableForm();
+
   if (!initial) {
     initLoad = setTimeout(function () {
       getSubmissions()
