@@ -1059,6 +1059,10 @@ function requestBuild(origin, submission) {
 }
 
 function saveAppStoreData(request) {
+  if (!organizationIsPaying) {
+    return;
+  }
+
   var data = appStoreSubmission.data || {};
   var pushData = notificationSettings;
 
@@ -1131,6 +1135,10 @@ function saveAppStoreData(request) {
 }
 
 function saveEnterpriseData(request) {
+  if (!organizationIsPaying) {
+    return;
+  }
+
   var data = enterpriseSubmission.data || {};
   var pushData = notificationSettings;
   var uploadFilePromise = Promise.resolve();
@@ -1239,6 +1247,10 @@ function saveEnterpriseData(request) {
 }
 
 function saveUnsignedData(request) {
+  if (!organizationIsPaying) {
+    return;
+  }
+
   var data = unsignedSubmission.data || {};
 
   $('#unsignedConfiguration [name]').each(function (i, el) {
@@ -1269,6 +1281,10 @@ function saveUnsignedData(request) {
 }
 
 function savePushData(silentSave) {
+  if (!organizationIsPaying) {
+    return;
+  }
+
   var data = notificationSettings || {};
   var pushDataMap = {
     'fl-push-authKey': 'apnAuthKey',
@@ -1317,6 +1333,10 @@ function savePushData(silentSave) {
 }
 
 function saveProgressOnClose () {
+  if (!organizationIsPaying) {
+    return;
+  }
+
   var savingFunctions = {
     "appstore-control": saveAppStoreData,
     "enterprise-control": saveEnterpriseData,
