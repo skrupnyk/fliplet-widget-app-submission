@@ -1131,7 +1131,7 @@ function saveAppStoreData(request) {
 }
 
 function saveEnterpriseData(request) {
-  var data = enterpriseSubmission.data;
+  var data = enterpriseSubmission.data || {};
   var pushData = notificationSettings;
   var uploadFilePromise = Promise.resolve();
 
@@ -1239,7 +1239,7 @@ function saveEnterpriseData(request) {
 }
 
 function saveUnsignedData(request) {
-  var data = unsignedSubmission.data;
+  var data = unsignedSubmission.data || {};
 
   $('#unsignedConfiguration [name]').each(function (i, el) {
     var name = $(el).attr("name");
@@ -1269,7 +1269,7 @@ function saveUnsignedData(request) {
 }
 
 function savePushData(silentSave) {
-  var data = notificationSettings;
+  var data = notificationSettings || {};
   var pushDataMap = {
     'fl-push-authKey': 'apnAuthKey',
     'fl-push-keyId': 'apnKeyId'
