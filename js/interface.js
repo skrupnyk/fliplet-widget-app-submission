@@ -1281,10 +1281,6 @@ function saveUnsignedData(request) {
 }
 
 function savePushData(silentSave) {
-  if (!organizationIsPaying) {
-    return;
-  }
-
   var data = notificationSettings || {};
   var pushDataMap = {
     'fl-push-authKey': 'apnAuthKey',
