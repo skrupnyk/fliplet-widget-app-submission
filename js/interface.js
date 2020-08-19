@@ -1333,10 +1333,6 @@ function savePushData(silentSave) {
 }
 
 function saveProgressOnClose () {
-  if (!organizationIsPaying) {
-    return;
-  }
-
   var savingFunctions = {
     "appstore-control": saveAppStoreData,
     "enterprise-control": saveEnterpriseData,
