@@ -1909,6 +1909,10 @@ function checkSubmissionStatus(origin, iosSubmissions) {
         build.message = submission.result.message;
       }
 
+      if (submission.result.errorCode < 0) {
+        build.message = 'There was an error processing your submission. To learn more, go to <a target="_blank" href="https://help.fliplet.com/common-apple-issues/">help.fliplet.com/common-apple-issues</a>.';
+      }
+
       if (userInfo && userInfo.user && (userInfo.user.isAdmin || userInfo.user.isImpersonating)) {
         build.debugFileUrl = debugHtmlPage ? debugHtmlPage.url : '';
       }
