@@ -1910,7 +1910,7 @@ function checkSubmissionStatus(origin, iosSubmissions) {
       }
 
       if (submission.result.errorCode < 0) {
-        build.message = 'There was an error processing your submission. To learn more, go to <a target="_blank" href="https://help.fliplet.com/apple">help.fliplet.com/apple</a>.';
+        build.message = 'There was an error processing your submission. To learn more, go to <a target="_blank" href="https://https://help.fliplet.com/common-apple-issues/">https://help.fliplet.com/common-apple-issues/</a>.';
       }
 
       if (userInfo && userInfo.user && (userInfo.user.isAdmin || userInfo.user.isImpersonating)) {
