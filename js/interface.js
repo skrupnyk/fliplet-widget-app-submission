@@ -16,6 +16,8 @@ var previousAppStoreSubmission = {};
 var previousEnterpriseStoreSubmission = {};
 var appStorePreviousCredential = undefined;
 var appStoreFileField = undefined;
+var defaultReleaseNotes = undefined;
+var defaultReviewNotes = undefined;
 var appStoreFirebaseFileField = undefined;
 var enterpriseFirebaseFileField = undefined;
 var unsignedFirebaseFileField = undefined;
@@ -307,7 +309,20 @@ function loadAppStoreData() {
 
     /* Review notes */
     if (name === "fl-store-revNotes") {
-      // avoid resetting to empty string since this field has a default value
+      defaultReviewNotes = $('[name="' + name + '"]').val();
+      
+      // Avoid resetting to empty string since this field has a default value
+      if (appStoreSubmission.data[name]) {
+        $('[name="' + name + '"]').val(appStoreSubmission.data[name]);
+      }
+
+      return;
+    }
+
+    if (name === "fl-store-releaseNotes") {
+      defaultReleaseNotes = $('[name="' + name + '"]').val();
+      
+      // Avoid resetting to empty string since this field has a default value
       if (appStoreSubmission.data[name]) {
         $('[name="' + name + '"]').val(appStoreSubmission.data[name]);
       }
@@ -2535,6 +2550,18 @@ $('[data-toggle="tooltip"]').tooltip({
   },
   delay: { "show": 500, "hide": 300 }
 });
+
+$('[data-template="fl-store-releaseNotes"]').on('click', function(e) {
+  e.preventDefault();
+
+  $('[name=fl-store-releaseNotes]').val(defaultReleaseNotes);
+})
+
+$('[data-template="fl-store-revNotes"]').on('click', function(e) {
+  e.preventDefault();
+
+  $('[name=fl-store-revNotes]').val(defaultReviewNotes);
+})
 
 $('.appStore-2fa-sms, .enterprise-2fa-sms').find('a').on('click', function (e) {
   e.preventDefault();

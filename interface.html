@@ -37,7 +37,10 @@
       <div class="app-build-appstore-status-holder app-build-status-holder">
         <!-- App Status Area -->
       </div>
-      <p class="text-info">Complete this section to submit your app to the <a href="https://www.apple.com/ios/app-store/" target="_blank">Apple App Store</a>.</p>
+      <p class="text-info">
+        Complete this section to submit your app to the <a href="https://www.apple.com/ios/app-store/" target="_blank">Apple App Store</a>.
+        Make sure your app meets the <a href="https://developer.apple.com/app-store/review/guidelines/" target="_blank">Apple App Store Review Guidelines.</a>
+      </p>
       <form data-disable="false" role="form" id="appStoreConfiguration" autocomplete="off">
         <div class="panel-group" id="accordionAppStore" role="tablist" aria-multiselectable="true">
           <div class="panel panel-default app-details-appStore">
@@ -526,10 +529,25 @@
                 <div class="form-group clearfix">
                   <div class="col-sm-4 control-label">
                     <label for="fl-store-releaseNotes">Release Notes</label>
-                    <p class="help-block label-helper"><small>When submitting an update to your app, use the Release Notes to tell users what is new in the new version.</small></p>
+                    <p class="help-block label-helper">
+                      <small>
+                        When submitting an update to your app, use the Release Notes to tell users what is new in the new version.
+                        <br />
+                        <a href="#" data-template="fl-store-releaseNotes">Use template</a>
+                      </small>
+                    </p>
                   </div>
                   <div class="col-sm-8">
-                    <textarea name="fl-store-releaseNotes" id="fl-store-releaseNotes" class="form-control" rows="8"></textarea>
+                    <textarea name="fl-store-releaseNotes" id="fl-store-releaseNotes" class="form-control" rows="8">[PLEASE REVIEW AND UPDATE OR REMOVE SECTION IN SQUARE BRACKETS. Apple have said they expect detailed release notes and may reject apps without detailed release notes]
+
+What's new [for new apps and updates]
+
+- [Summarize new features and what users can do with them, e.g. added/updated X so employees can Y. Ensure your features align with Apple’s app store guidelines]
+
+Bug fixes [for updates only]
+
+- [Summarize bug fixes and the problems they solve, e.g. fixed a problem where X prevented users from doing Y. Apple may approve the update if the bugs resolved are significant regardless of their guidelines]
+                    </textarea>
                   </div>
                 </div>
               </div>
@@ -867,7 +885,13 @@
                 <div class="form-group clearfix">
                   <div class="col-sm-4 control-label">
                     <label for="fl-store-revNotes">Notes</label>
-                    <p class="help-block label-helper"><small>Optional</small></p>
+                    <p class="help-block label-helper">
+                      <small>
+                        Optional
+                        <br />
+                        <a href="#" data-template="fl-store-revNotes">Use template</a>
+                      </small >
+                    </p>
                   </div>
                   <div class="col-sm-8">
                     <textarea name="fl-store-revNotes" class="form-control" id="fl-store-revNotes" rows="10">[PLEASE REVIEW AND UPDATE OR REMOVE SECTION IN SQUARE BRACKETS]
