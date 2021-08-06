@@ -17,6 +17,8 @@ var previousAppStoreSubmission = {};
 var previousEnterpriseStoreSubmission = {};
 var appStorePreviousCredential = undefined;
 var appStoreFileField = undefined;
+var defaultReleaseNotes = undefined;
+var defaultReviewNotes = undefined;
 var appStoreFirebaseFileField = undefined;
 var enterpriseFirebaseFileField = undefined;
 var unsignedFirebaseFileField = undefined;
@@ -308,7 +310,20 @@ function loadAppStoreData() {
 
     /* Review notes */
     if (name === "fl-store-revNotes") {
-      // avoid resetting to empty string since this field has a default value
+      defaultReviewNotes = $('[name="' + name + '"]').val();
+      
+      // Avoid resetting to empty string since this field has a default value
+      if (appStoreSubmission.data[name]) {
+        $('[name="' + name + '"]').val(appStoreSubmission.data[name]);
+      }
+
+      return;
+    }
+
+    if (name === "fl-store-releaseNotes") {
+      defaultReleaseNotes = $('[name="' + name + '"]').val();
+      
+      // Avoid resetting to empty string since this field has a default value
       if (appStoreSubmission.data[name]) {
         $('[name="' + name + '"]').val(appStoreSubmission.data[name]);
       }
@@ -1355,6 +1370,10 @@ function cloneCredentials(credentialKey, submission, saveData) {
     }
 
     return Promise.resolve();
+  }).catch(function(err) {
+    if (err.status === 400) {
+      return Fliplet.App.Submissions.update(submission.id, submission.data);
+    }
   });
 }
 
@@ -1905,6 +1924,10 @@ function checkSubmissionStatus(origin, iosSubmissions) {
 
       if (submission.result.message) {
         build.message = submission.result.message;
+      }
+
+      if (submission.result.errorCode < 0) {
+        build.message = 'There was an error processing your submission. To learn more, go to <a target="_blank" href="https://help.fliplet.com/common-apple-issues/">help.fliplet.com/common-apple-issues</a>.';
       }
 
       if (userInfo && userInfo.user && (userInfo.user.isAdmin || userInfo.user.isImpersonating)) {
@@ -2529,6 +2552,18 @@ $('[data-toggle="tooltip"]').tooltip({
   },
   delay: { "show": 500, "hide": 300 }
 });
+
+$('[data-template="fl-store-releaseNotes"]').on('click', function(e) {
+  e.preventDefault();
+
+  $('[name=fl-store-releaseNotes]').val(defaultReleaseNotes);
+})
+
+$('[data-template="fl-store-revNotes"]').on('click', function(e) {
+  e.preventDefault();
+
+  $('[name=fl-store-revNotes]').val(defaultReviewNotes);
+})
 
 $('.appStore-2fa-sms, .enterprise-2fa-sms').find('a').on('click', function (e) {
   e.preventDefault();
