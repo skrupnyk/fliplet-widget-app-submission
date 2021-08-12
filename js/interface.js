@@ -42,7 +42,7 @@ var $statusAppStoreTableElement = $('.app-build-appstore-status-holder');
 var $statusEnterpriseTableElement = $('.app-build-enterprise-status-holder');
 var $statusUnsignedTableElement = $('.app-build-unsigned-status-holder');
 var initLoad;
-var organizationID = Fliplet.Env.get('organizationId');
+var organizationId = Fliplet.Env.get('organizationId');
 var userInfo;
 var hasFolders = false;
 // Each collection requirement will need to match at least one of the width/height sizes
@@ -114,7 +114,7 @@ function waitForSocketConnection() {
   });
 }
 
-function createBundleID(bundleId) {
+function createBundleId(bundleId) {
   return $.ajax({
     url: 'https://itunes.apple.com/lookup?bundleId=' + bundleId,
     dataType: 'jsonp'
@@ -263,7 +263,7 @@ function loadAppStoreData() {
     if (name === 'fl-store-bundleId' && typeof appStoreSubmission.data[name] === 'undefined') {
       var bundleId = 'com.' + _.camelCase(organizationName) + '.' + _.camelCase(appName);
 
-      createBundleID(bundleId).then(function(response) {
+      createBundleId(bundleId).then(function(response) {
         if (response.resultCount === 0) {
           $('.bundleId-ast-text').html(bundleId);
           $('[name="' + name + '"]').val(bundleId);
@@ -489,7 +489,7 @@ function loadEnterpriseData() {
     if (name === 'fl-ent-bundleId' && typeof enterpriseSubmission.data[name] === 'undefined') {
       var bundleId = 'com.' + _.camelCase(organizationName) + '.' + _.camelCase(appName);
 
-      createBundleID(bundleId).then(function(response) {
+      createBundleId(bundleId).then(function(response) {
         if (response.resultCount === 0) {
           $('.bundleId-ent-text').html(bundleId);
           $('[name="' + name + '"]').val(bundleId);
@@ -646,7 +646,7 @@ function loadUnsignedData() {
     if (name === 'fl-uns-bundleId' && typeof unsignedSubmission.data[name] === 'undefined') {
       var bundleId = 'com.' + _.camelCase(organizationName) + '.' + _.camelCase(appName);
 
-      createBundleID(bundleId).then(function(response) {
+      createBundleId(bundleId).then(function(response) {
         if (response.resultCount === 0) {
           $('.bundleId-uns-text').html(bundleId);
           $('[name="' + name + '"]').val(bundleId);
@@ -1049,7 +1049,7 @@ function requestBuild(origin, submission) {
       }).then(function() {
         var formData;
         var fileName;
-        var teamID;
+        var teamId;
         var teamName;
 
         // Check which type of certificate was given
@@ -1070,7 +1070,7 @@ function requestBuild(origin, submission) {
         if (origin === 'appStore' && appStoreSubmission.data['fl-store-distribution'] === 'upload-file') {
           formData = new FormData();
           fileName = appStoreFileField.value.replace(/\\/g, '/').replace(/.*\//, '');
-          teamID = $('#fl-store-teams').val();
+          teamId = $('#fl-store-teams').val();
           teamName = $('#fl-store-teams').find(':selected').data('team-name');
 
           if (appStoreFileField.files && appStoreFileField.files[0]) {
@@ -1081,7 +1081,7 @@ function requestBuild(origin, submission) {
           return setCertificateP12(appStoreSubmission.id, formData)
             .then(function() {
               return setCredentials(appStoreSubmission.id, {
-                teamId: teamID,
+                teamId: teamId,
                 teamName: teamName
               });
             })
@@ -1107,7 +1107,7 @@ function requestBuild(origin, submission) {
         if (origin === 'enterprise' && enterpriseSubmission.data['fl-ent-distribution'] === 'upload-file') {
           formData = new FormData();
           fileName = enterpriseFileField.value.replace(/\\/g, '/').replace(/.*\//, '');
-          teamID = $('#fl-ent-teams').val();
+          teamId = $('#fl-ent-teams').val();
           teamName = $('#fl-ent-teams').find(':selected').data('team-name');
 
           if (enterpriseFileField.files && enterpriseFileField.files[0]) {
@@ -1118,7 +1118,7 @@ function requestBuild(origin, submission) {
           return setCertificateP12(enterpriseSubmission.id, formData)
             .then(function() {
               return setCredentials(enterpriseSubmission.id, {
-                teamId: teamID,
+                teamId: teamId,
                 teamName: teamName
               });
             })
@@ -1447,7 +1447,7 @@ function saveProgressOnClose() {
 function cloneCredentials(credentialKey, submission, saveData) {
   return Fliplet.API.request({
     method: 'POST',
-    url: 'v1/organizations/' + organizationID + '/credentials/' + credentialKey + '/clone',
+    url: 'v1/organizations/' + organizationId + '/credentials/' + credentialKey + '/clone',
     data: {
       key: submission.data['fl-credentials']
     }
@@ -1470,7 +1470,7 @@ function setCredentials(id, data, verify) {
   return waitForSocketConnection().then(function() {
     return Fliplet.API.request({
       method: 'PUT',
-      url: 'v1/organizations/' + organizationID + '/credentials/submission-' + id + '?verify=' + verify,
+      url: 'v1/organizations/' + organizationId + '/credentials/submission-' + id + '?verify=' + verify,
       data: data
     });
   });
@@ -1480,7 +1480,7 @@ function getTeams(id, isItunes) {
   return waitForSocketConnection().then(function() {
     return Fliplet.API.request({
       method: 'GET',
-      url: 'v1/organizations/' + organizationID + '/credentials/submission-' + id + '/teams?itunes=' + isItunes
+      url: 'v1/organizations/' + organizationId + '/credentials/submission-' + id + '/teams?itunes=' + isItunes
     });
   }).then(function(result) {
     return Promise.resolve(result.teams);
@@ -1490,7 +1490,7 @@ function getTeams(id, isItunes) {
 function searchCredentials(data) {
   return Fliplet.API.request({
     method: 'POST',
-    url: 'v1/organizations/' + organizationID + '/credentials/search',
+    url: 'v1/organizations/' + organizationId + '/credentials/search',
     data: data
   }).then(function(response) {
     if (!response) {
@@ -1679,7 +1679,7 @@ function getCompletedSubmissions(devEmail, teamId, teamName) {
     return s !== 'failed';
   });
   var url = [
-    'v1/organizations/' + organizationID,
+    'v1/organizations/' + organizationId,
     '/submissions?status=' + statusFilter.join(','),
     '&email=' + devEmail,
     '&teamId=' + teamId
@@ -1724,7 +1724,7 @@ function getCredential(credentialKey) {
 
   return Fliplet.API.request({
     method: 'GET',
-    url: 'v1/organizations/' + organizationID + '/credentials/' + credentialKey
+    url: 'v1/organizations/' + organizationId + '/credentials/' + credentialKey
   }).catch(function(error) {
     if (error && error.status === 404) {
       // Credential not found
@@ -1753,7 +1753,7 @@ function createCertificates(options) {
 function setCertificateP12(id, file) {
   return Fliplet.API.request({
     method: 'PUT',
-    url: 'v1/organizations/' + organizationID + '/credentials/submission-' + id + '?fileName=p12',
+    url: 'v1/organizations/' + organizationId + '/credentials/submission-' + id + '?fileName=p12',
     data: file,
     contentType: false,
     processData: false
@@ -1763,7 +1763,7 @@ function setCertificateP12(id, file) {
 function setFirebaseConfigFile(id, file) {
   return Fliplet.API.request({
     method: 'PUT',
-    url: 'v1/organizations/' + organizationID + '/credentials/submission-' + id + '?fileName=firebase',
+    url: 'v1/organizations/' + organizationId + '/credentials/submission-' + id + '?fileName=firebase',
     data: file,
     contentType: false,
     processData: false
@@ -1773,7 +1773,7 @@ function setFirebaseConfigFile(id, file) {
 function revokeCertificate(id, certId) {
   return Fliplet.API.request({
     method: 'DELETE',
-    url: 'v1/organizations/' + organizationID + '/credentials/submission-' + id + '/' + certId
+    url: 'v1/organizations/' + organizationId + '/credentials/submission-' + id + '/' + certId
   });
 }
 
@@ -2405,7 +2405,7 @@ function initialLoad(initial, timeout) {
             }),
           Fliplet.API.request({
             method: 'GET',
-            url: 'v1/organizations/' + organizationID
+            url: 'v1/organizations/' + organizationId
           })
             .then(function(org) {
               organizationName = org.name;
@@ -3371,12 +3371,12 @@ $('.appStore-generate-cert').on('click', function() {
   })
     .then(function() {
       return createCertificates({
-        organizationId: organizationID,
+        organizationId: organizationId,
         submissionId: appStoreSubmission.id
       })
         .then(function(response) {
-          var p12Url = Fliplet.Env.get('apiUrl') + 'v1/organizations/' + organizationID + '/credentials/submission-' + appStoreSubmission.id + '/download/p12';
-          var certUrl = Fliplet.Env.get('apiUrl') + 'v1/organizations/' + organizationID + '/credentials/submission-' + appStoreSubmission.id + '/download/certificate';
+          var p12Url = Fliplet.Env.get('apiUrl') + 'v1/organizations/' + organizationId + '/credentials/submission-' + appStoreSubmission.id + '/download/p12';
+          var certUrl = Fliplet.Env.get('apiUrl') + 'v1/organizations/' + organizationId + '/credentials/submission-' + appStoreSubmission.id + '/download/certificate';
 
           appStoreCertificateCreated = true;
           $('.appStore-generate-file-success').find('.appStore-file-name-success').html(response.certificate.name);
@@ -3482,12 +3482,12 @@ $('.appStore-replace-cert').on('click', function() {
         })
           .then(function() {
             return createCertificates({
-              organizationId: organizationID,
+              organizationId: organizationId,
               submissionId: appStoreSubmission.id
             })
               .then(function(response) {
-                var p12Url = Fliplet.Env.get('apiUrl') + 'v1/organizations/' + organizationID + '/credentials/submission-' + appStoreSubmission.id + '/download/p12';
-                var certUrl = Fliplet.Env.get('apiUrl') + 'v1/organizations/' + organizationID + '/credentials/submission-' + appStoreSubmission.id + '/download/certificate';
+                var p12Url = Fliplet.Env.get('apiUrl') + 'v1/organizations/' + organizationId + '/credentials/submission-' + appStoreSubmission.id + '/download/p12';
+                var certUrl = Fliplet.Env.get('apiUrl') + 'v1/organizations/' + organizationId + '/credentials/submission-' + appStoreSubmission.id + '/download/certificate';
 
                 appStoreCertificateReplaced = true;
                 $('.appStore-previous-file-success').find('.appStore-file-name-success').html(response.certificate.name);
@@ -3681,13 +3681,13 @@ $('.enterprise-generate-cert').on('click', function() {
   })
     .then(function() {
       return createCertificates({
-        organizationId: organizationID,
+        organizationId: organizationId,
         submissionId: enterpriseSubmission.id,
         inHouse: true
       })
         .then(function(response) {
-          var p12Url = Fliplet.Env.get('apiUrl') + 'v1/organizations/' + organizationID + '/credentials/submission-' + enterpriseSubmission.id + '/download/p12';
-          var certUrl = Fliplet.Env.get('apiUrl') + 'v1/organizations/' + organizationID + '/credentials/submission-' + enterpriseSubmission.id + '/download/certificate';
+          var p12Url = Fliplet.Env.get('apiUrl') + 'v1/organizations/' + organizationId + '/credentials/submission-' + enterpriseSubmission.id + '/download/p12';
+          var certUrl = Fliplet.Env.get('apiUrl') + 'v1/organizations/' + organizationId + '/credentials/submission-' + enterpriseSubmission.id + '/download/certificate';
 
           enterpriseCertificateCreated = true;
           $('.enterprise-generate-file-success').find('.enterprise-file-name-success').html(response.certificate.name);
@@ -3765,8 +3765,8 @@ $('.enterprise-replace-cert').on('click', function() {
               inHouse: true
             })
               .then(function(response) {
-                var p12Url = Fliplet.Env.get('apiUrl') + 'v1/organizations/' + organizationID + '/credentials/submission-' + enterpriseSubmission.id + '/download/p12';
-                var certUrl = Fliplet.Env.get('apiUrl') + 'v1/organizations/' + organizationID + '/credentials/submission-' + enterpriseSubmission.id + '/download/certificate';
+                var p12Url = Fliplet.Env.get('apiUrl') + 'v1/organizations/' + organizationId + '/credentials/submission-' + enterpriseSubmission.id + '/download/p12';
+                var certUrl = Fliplet.Env.get('apiUrl') + 'v1/organizations/' + organizationId + '/credentials/submission-' + enterpriseSubmission.id + '/download/certificate';
 
                 enterpriseCertificateReplaced = true;
 
