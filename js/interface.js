@@ -3519,7 +3519,7 @@ $('.login-enterprise-button').on('click', function() {
   var $this = $(this);
   var devEmail = $('#fl-ent-appDevLogin').val();
   var devPass = $('#fl-ent-appDevPass').val();
-  var emailError = $('#fl-ent-distributionnt-appDevLogin').data('error');
+  var emailError = $('#fl-ent-appDevLogin').data('error');
   var passError = $('#fl-ent-appDevPass').data('error');
 
   // Remove errors
