@@ -91,12 +91,6 @@ var ERRORS = {
 };
 
 /* FUNCTIONS */
-String.prototype.toCamelCase = function () {
-  return this.replace(/^([A-Z])|[^A-Za-z]+(\w)/g, function (match, p1, p2, offset) {
-    if (p2) return p2.toUpperCase();
-    return p1.toLowerCase();
-  }).replace(/([^A-Z-a-z])/g, '').toLowerCase();
-};
 
 function socketIsReady() {
   return socket.connected && (!socketRequiresLogin || socket.loggedIn);
@@ -121,10 +115,10 @@ function waitForSocketConnection() {
   });
 }
 
-function createBundleID(orgName, appName) {
+function createBundleID(bundleId) {
   return $.ajax({
-    url: "https://itunes.apple.com/lookup?bundleId=com." + orgName + "." + appName,
-    dataType: "jsonp"
+    url: 'https://itunes.apple.com/lookup?bundleId=' + bundleId,
+    dataType: 'jsonp'
   });
 }
 
@@ -257,13 +251,15 @@ function loadAppStoreData() {
 
     /* ADD BUNDLE ID */
     if (name === "fl-store-bundleId" && typeof appStoreSubmission.data[name] === "undefined") {
-      createBundleID(organizationName.toCamelCase(), appName.toCamelCase()).then(function (response) {
+      var bundleId = 'com.' + _.camelCase(organizationName) + '.' + _.camelCase(appName);
+
+      createBundleID(bundleId).then(function(response) {
         if (response.resultCount === 0) {
-          $('.bundleId-ast-text').html('com.' + organizationName.toCamelCase() + '.' + appName.toCamelCase());
-          $('[name="' + name + '"]').val('com.' + organizationName.toCamelCase() + '.' + appName.toCamelCase());
+          $('.bundleId-ast-text').html(bundleId);
+          $('[name="' + name + '"]').val(bundleId);
         } else {
-          $('.bundleId-ast-text').html('com.' + organizationName.toCamelCase() + '.' + appName.toCamelCase() + (response.resultCount + 1));
-          $('[name="' + name + '"]').val('com.' + organizationName.toCamelCase() + '.' + appName.toCamelCase() + (response.resultCount + 1));
+          $('.bundleId-ast-text').html(bundleId + (response.resultCount + 1));
+          $('[name="' + name + '"]').val(bundleId + (response.resultCount + 1));
         }
       });
       return;
@@ -472,13 +468,15 @@ function loadEnterpriseData() {
 
     /* ADD BUNDLE ID */
     if (name === "fl-ent-bundleId" && typeof enterpriseSubmission.data[name] === "undefined") {
-      createBundleID(organizationName.toCamelCase(), appName.toCamelCase()).then(function (response) {
+      var bundleId = 'com.' + _.camelCase(organizationName) + '.' + _.camelCase(appName);
+
+      createBundleID(bundleId).then(function(response) {
         if (response.resultCount === 0) {
-          $('.bundleId-ent-text').html('com.' + organizationName.toCamelCase() + '.' + appName.toCamelCase());
-          $('[name="' + name + '"]').val('com.' + organizationName.toCamelCase() + '.' + appName.toCamelCase());
+          $('.bundleId-ent-text').html(bundleId);
+          $('[name="' + name + '"]').val(bundleId);
         } else {
-          $('.bundleId-ent-text').html('com.' + organizationName.toCamelCase() + '.' + appName.toCamelCase() + (response.resultCount + 1));
-          $('[name="' + name + '"]').val('com.' + organizationName.toCamelCase() + '.' + appName.toCamelCase() + (response.resultCount + 1));
+          $('.bundleId-ent-text').html(bundleId + (response.resultCount + 1));
+          $('[name="' + name + '"]').val(bundleId + (response.resultCount + 1));
         }
       });
       return;
@@ -618,13 +616,15 @@ function loadUnsignedData() {
 
     /* ADD BUNDLE ID */
     if (name === "fl-uns-bundleId" && typeof unsignedSubmission.data[name] === "undefined") {
-      createBundleID(organizationName.toCamelCase(), appName.toCamelCase()).then(function (response) {
+      var bundleId = 'com.' + _.camelCase(organizationName) + '.' + _.camelCase(appName);
+
+      createBundleID(bundleId).then(function(response) {
         if (response.resultCount === 0) {
-          $('.bundleId-uns-text').html('com.' + organizationName.toCamelCase() + '.' + appName.toCamelCase());
-          $('[name="' + name + '"]').val('com.' + organizationName.toCamelCase() + '.' + appName.toCamelCase());
+          $('.bundleId-uns-text').html(bundleId);
+          $('[name="' + name + '"]').val(bundleId);
         } else {
-          $('.bundleId-uns-text').html('com.' + organizationName.toCamelCase() + '.' + appName.toCamelCase() + (response.resultCount + 1));
-          $('[name="' + name + '"]').val('com.' + organizationName.toCamelCase() + '.' + appName.toCamelCase() + (response.resultCount + 1));
+          $('.bundleId-uns-text').html(bundleId + (response.resultCount + 1));
+          $('[name="' + name + '"]').val(bundleId + (response.resultCount + 1));
         }
       });
       return;
