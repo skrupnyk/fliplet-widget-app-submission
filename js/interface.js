@@ -3760,7 +3760,7 @@ $('.enterprise-replace-cert').on('click', function() {
         })
           .then(function() {
             return createCertificates({
-              organiazationId: organizationID,
+              organizationId: organizationId,
               submissionId: enterpriseSubmission.id,
               inHouse: true
             })
