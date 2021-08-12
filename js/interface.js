@@ -1800,11 +1800,6 @@ function publishApp(context) {
     }
   };
 
-  if (mustReviewTos) {
-    Fliplet.Studio.emit('onMustReviewTos');
-    return;
-  }
-
   return Fliplet.API.request({
     method: 'POST',
     url: 'v1/apps/' + Fliplet.Env.get('appId') + '/publish',
@@ -2823,6 +2818,12 @@ $('#appStoreConfiguration').validator().on('submit', function (event) {
     return;
   }
 
+  if (mustReviewTos) {
+    Fliplet.Studio.emit('onMustReviewTos');
+
+    return;
+  }
+
   if (appInfo && appInfo.productionAppId) {
     if (allAppData.indexOf('appStore') > -1) {
       if (appStoreLoggedIn) {
@@ -2938,6 +2939,12 @@ $('#enterpriseConfiguration').validator().on('submit', function (event) {
     }
   }
 
+  if (mustReviewTos) {
+    Fliplet.Studio.emit('onMustReviewTos');
+
+    return;
+  }
+
   if (appInfo && appInfo.productionAppId) {
     if (allAppData.indexOf('enterprise') > -1) {
       var message = 'Are you sure you wish to update your published app?';
@@ -2991,6 +2998,13 @@ $('#unsignedConfiguration').validator().on('submit', function (event) {
     Fliplet.Modal.alert({
       message: ERRORS.INVALID_VERSION
     });
+
+    return;
+  }
+
+  if (mustReviewTos) {
+    Fliplet.Studio.emit('onMustReviewTos');
+
     return;
   }
 
