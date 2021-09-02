@@ -531,14 +531,14 @@
                     <label for="fl-store-releaseNotes">Release Notes</label>
                     <p class="help-block label-helper">
                       <small>
-                        When submitting an update to your app, use the Release Notes to tell users what is new in the new version.
+                        The release notes are required to let users know what's new in this version. If it's the first version of your app please highlight this.
                         <br />
                         <a href="#" data-template="fl-store-releaseNotes">Use template</a>
                       </small>
                     </p>
                   </div>
                   <div class="col-sm-8">
-                    <textarea name="fl-store-releaseNotes" id="fl-store-releaseNotes" class="form-control" rows="8">[PLEASE REVIEW AND UPDATE OR REMOVE SECTION IN SQUARE BRACKETS. Apple have said they expect detailed release notes and may reject apps without detailed release notes]
+                    <textarea name="fl-store-releaseNotes" id="fl-store-releaseNotes" class="form-control" rows="8" data-error="Please enter your Release Notes" required>[PLEASE REVIEW AND UPDATE OR REMOVE SECTION IN SQUARE BRACKETS. Apple have said they expect detailed release notes and may reject apps without detailed release notes]
 
 What's new [for new apps and updates]
 
@@ -548,6 +548,7 @@ Bug fixes [for updates only]
 
 - [Summarize bug fixes and the problems they solve, e.g. fixed a problem where X prevented users from doing Y. Apple may approve the update if the bugs resolved are significant regardless of their guidelines]
                     </textarea>
+                    <div class="help-block with-errors"></div>
                   </div>
                 </div>
               </div>
