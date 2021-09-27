@@ -1226,6 +1226,12 @@ function saveAppStoreData(request) {
         helpLink: 'https://help.fliplet.com/app-settings/'
       }
     });
+
+    Fliplet.Studio.emit('track-event', {
+      category: 'app_billing',
+      action: 'open',
+      context: 'apple_launch'
+    });
   }
 
   if (request && appStoreTypeAvailability.public) {
@@ -1358,6 +1364,12 @@ function saveEnterpriseData(request) {
           helpLink: 'https://help.fliplet.com/app-settings/'
         }
       });
+
+      Fliplet.Studio.emit('track-event', {
+        category: 'app_billing',
+        action: 'open',
+        context: 'apple_launch'
+      });
     }
 
     if (request && appStoreTypeAvailability.private) {
@@ -1403,6 +1415,12 @@ function saveUnsignedData(request) {
         section: 'appBilling',
         helpLink: 'https://help.fliplet.com/app-settings/'
       }
+    });
+
+    Fliplet.Studio.emit('track-event', {
+      category: 'app_billing',
+      action: 'open',
+      context: 'apple_launch'
     });
   }
 
@@ -2922,6 +2940,12 @@ $('#appStoreConfiguration').validator().on('submit', function (event) {
       }
     });
 
+    Fliplet.Studio.emit('track-event', {
+      category: 'app_billing',
+      action: 'open',
+      context: 'apple_launch'
+    });
+
     return;
   }
 
@@ -3052,6 +3076,12 @@ $('#enterpriseConfiguration').validator().on('submit', function(event) {
       }
     });
 
+    Fliplet.Studio.emit('track-event', {
+      category: 'app_billing',
+      action: 'open',
+      context: 'apple_launch'
+    });
+
     return;
   }
 
@@ -3172,6 +3202,12 @@ $('#unsignedConfiguration').validator().on('submit', function(event) {
         section: 'appBilling',
         helpLink: 'https://help.fliplet.com/app-settings/'
       }
+    });
+
+    Fliplet.Studio.emit('track-event', {
+      category: 'app_billing',
+      action: 'open',
+      context: 'apple_launch'
     });
 
     return;
