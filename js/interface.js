@@ -2,6 +2,8 @@ var widgetId = Fliplet.Widget.getDefaultId();
 var widgetData = Fliplet.Widget.getData(widgetId) || {};
 var organizationIsPaying = widgetData.organizationIsPaying;
 var mustReviewTos = widgetData.mustReviewTos;
+var appStoreTypeAvailability = widgetData.appStoreTypeAvailability;
+console.log(appStoreTypeAvailability);
 var appName = '';
 var organizationName = '';
 var appIcon = '';
@@ -1140,10 +1142,6 @@ function requestBuild(origin, submission) {
 }
 
 function saveAppStoreData(request) {
-  if (!organizationIsPaying) {
-    return;
-  }
-
   var data = appStoreSubmission.data || {};
   var pushData = notificationSettings;
 
@@ -1218,7 +1216,20 @@ function saveAppStoreData(request) {
 
   savePushData(true);
 
-  if (request) {
+  if (!appStoreTypeAvailability.public) {
+    Fliplet.Studio.emit('overlay', {
+      name: 'app-settings',
+      options: {
+        size: 'large',
+        title: 'App Settings',
+        appId: Fliplet.Env.get('appId'),
+        section: 'appBilling',
+        helpLink: 'https://help.fliplet.com/app-settings/'
+      }
+    });
+  }
+
+  if (request && appStoreTypeAvailability.public) {
     return requestBuild('appStore', appStoreSubmission);
   }
 
@@ -1226,10 +1237,6 @@ function saveAppStoreData(request) {
 }
 
 function saveEnterpriseData(request) {
-  if (!organizationIsPaying) {
-    return;
-  }
-
   var data = enterpriseSubmission.data || {};
   var pushData = notificationSettings;
   var uploadFilePromise = Promise.resolve();
@@ -1339,7 +1346,20 @@ function saveEnterpriseData(request) {
 
     savePushData(true);
 
-    if (request) {
+    if (!appStoreTypeAvailability.private) {
+      Fliplet.Studio.emit('overlay', {
+        name: 'app-settings',
+        options: {
+          size: 'large',
+          title: 'App Settings',
+          appId: Fliplet.Env.get('appId'),
+          section: 'appBilling',
+          helpLink: 'https://help.fliplet.com/app-settings/'
+        }
+      });
+    }
+
+    if (request && appStoreTypeAvailability.private) {
       return requestBuild('enterprise', enterpriseSubmission);
     }
 
@@ -1348,10 +1368,6 @@ function saveEnterpriseData(request) {
 }
 
 function saveUnsignedData(request) {
-  if (!organizationIsPaying) {
-    return;
-  }
-
   var data = unsignedSubmission.data || {};
 
   $('#unsignedConfiguration [name]').each(function(i, el) {
@@ -1374,7 +1390,20 @@ function saveUnsignedData(request) {
 
   unsignedSubmission.data = data;
 
-  if (request) {
+  if (!organizationIsPaying) {
+    Fliplet.Studio.emit('overlay', {
+      name: 'app-settings',
+      options: {
+        size: 'large',
+        title: 'App Settings',
+        appId: Fliplet.Env.get('appId'),
+        section: 'appBilling',
+        helpLink: 'https://help.fliplet.com/app-settings/'
+      }
+    });
+  }
+
+  if (request && organizationIsPaying) {
     return requestBuild('unsigned', unsignedSubmission);
   }
 
@@ -2306,29 +2335,7 @@ function setFirebaseStatus(credentialKey, origin) {
   });
 }
 
-function disableForm() {
-  $(formInputSelectors.join(',')).prop('disabled', true);
-  $('[data-push-save], [data-app-store-save], [data-enterprise-save], [data-unsigned-save], [data-app-store-build], [change-bundleid]')
-    .addClass('disabled')
-    .prop('disabled', true);
-}
-
-function enableForm() {
-  $(formInputSelectors.join(',')).prop('disabled', false);
-  $('[data-push-save], [data-app-store-save], [data-enterprise-save], [data-unsigned-save], [data-app-store-build], [change-bundleid]')
-    .removeClass('disabled')
-    .prop('disabled', false);
-}
-
 function initialLoad(initial, timeout) {
-  if (!organizationIsPaying) {
-    disableForm();
-
-    return;
-  }
-
-  enableForm();
-
   if (!initial) {
     initLoad = setTimeout(function() {
       getSubmissions()
@@ -2897,7 +2904,22 @@ $('#appStoreConfiguration, #enterpriseConfiguration, #unsignedConfiguration').on
   Fliplet.Widget.autosize();
 });
 
-$('#appStoreConfiguration').validator().on('submit', function(event) {
+$('#appStoreConfiguration').validator().on('submit', function (event) {
+  if (!appStoreTypeAvailability.public) {
+    Fliplet.Studio.emit('overlay', {
+      name: 'app-settings',
+      options: {
+        size: 'large',
+        title: 'App Settings',
+        appId: Fliplet.Env.get('appId'),
+        section: 'appBilling',
+        helpLink: 'https://help.fliplet.com/app-settings/'
+      }
+    });
+
+    return;
+  }
+
   if (_.includes(['fl-store-appDevLogin', 'fl-store-appDevPass'], document.activeElement.id)) {
     // User submitted app store login form
     $('.login-appStore-button').trigger('click');
@@ -3013,6 +3035,21 @@ $('#appStoreConfiguration').validator().on('submit', function(event) {
 });
 
 $('#enterpriseConfiguration').validator().on('submit', function(event) {
+  if (!appStoreTypeAvailability.private) {
+    Fliplet.Studio.emit('overlay', {
+      name: 'app-settings',
+      options: {
+        size: 'large',
+        title: 'App Settings',
+        appId: Fliplet.Env.get('appId'),
+        section: 'appBilling',
+        helpLink: 'https://help.fliplet.com/app-settings/'
+      }
+    });
+
+    return;
+  }
+
   if (_.includes(['fl-ent-appDevLogin', 'fl-ent-appDevPass'], document.activeElement.id)) {
     // User submitted enterprise login form
     $('.login-enterprise-button').trigger('click');
@@ -3120,6 +3157,21 @@ $('#enterpriseConfiguration').validator().on('submit', function(event) {
 });
 
 $('#unsignedConfiguration').validator().on('submit', function(event) {
+  if (!organizationIsPaying) {
+    Fliplet.Studio.emit('overlay', {
+      name: 'app-settings',
+      options: {
+        size: 'large',
+        title: 'App Settings',
+        appId: Fliplet.Env.get('appId'),
+        section: 'appBilling',
+        helpLink: 'https://help.fliplet.com/app-settings/'
+      }
+    });
+
+    return;
+  }
+
   if (event.isDefaultPrevented()) {
     // Gives time to Validator to apply classes
     setTimeout(checkGroupErrors, 0);
