@@ -1229,10 +1229,12 @@ function saveAppStoreData(request) {
   }
 
   if (request && appStoreTypeAvailability.public) {
-    return requestBuild('appStore', appStoreSubmission);
+    requestBuild('appStore', appStoreSubmission);
+
+    return;
   }
 
-  return save('appStore', appStoreSubmission);
+  save('appStore', appStoreSubmission);
 }
 
 function saveEnterpriseData(request) {
@@ -1359,10 +1361,12 @@ function saveEnterpriseData(request) {
     }
 
     if (request && appStoreTypeAvailability.private) {
-      return requestBuild('enterprise', enterpriseSubmission);
+      requestBuild('enterprise', enterpriseSubmission);
+
+      return;
     }
 
-    return save('enterprise', enterpriseSubmission);
+    save('enterprise', enterpriseSubmission);
   }
 }
 
@@ -1403,10 +1407,12 @@ function saveUnsignedData(request) {
   }
 
   if (request && organizationIsPaying) {
-    return requestBuild('unsigned', unsignedSubmission);
+    requestBuild('unsigned', unsignedSubmission);
+
+    return;
   }
 
-  return save('unsigned', unsignedSubmission);
+  save('unsigned', unsignedSubmission);
 }
 
 function savePushData(silentSave) {
