@@ -98,6 +98,15 @@
   border-bottom-color: #000201;
 }
 
+.btn:focus,
+.btn:active:focus,
+.btn.active:focus,
+.btn.focus,
+.btn:active.focus,
+.btn.active.focus {
+  outline: none;
+}
+
 .form-group.has-error .control-label label {
   color: #a94442;
 }
