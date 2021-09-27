@@ -3,7 +3,6 @@ var widgetData = Fliplet.Widget.getData(widgetId) || {};
 var organizationIsPaying = widgetData.organizationIsPaying;
 var mustReviewTos = widgetData.mustReviewTos;
 var appStoreTypeAvailability = widgetData.appStoreTypeAvailability;
-console.log(appStoreTypeAvailability);
 var appName = '';
 var organizationName = '';
 var appIcon = '';
