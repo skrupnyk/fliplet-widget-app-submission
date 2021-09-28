@@ -2,7 +2,8 @@ var widgetId = Fliplet.Widget.getDefaultId();
 var widgetData = Fliplet.Widget.getData(widgetId) || {};
 var organizationIsPaying = widgetData.organizationIsPaying;
 var mustReviewTos = widgetData.mustReviewTos;
-var appStoreTypeAvailability = widgetData.appStoreTypeAvailability;
+var storeFeatures = widgetData.appFeatures.hasOwnProperty('appStores')
+  && widgetData.appFeatures.appStores.apple;
 var appName = '';
 var organizationName = '';
 var appIcon = '';
@@ -1215,7 +1216,7 @@ function saveAppStoreData(request) {
 
   savePushData(true);
 
-  if (!appStoreTypeAvailability.public) {
+  if (!storeFeatures.public) {
     Fliplet.Studio.emit('overlay', {
       name: 'app-settings',
       options: {
@@ -1234,7 +1235,7 @@ function saveAppStoreData(request) {
     });
   }
 
-  if (request && appStoreTypeAvailability.public) {
+  if (request && storeFeatures.public) {
     requestBuild('appStore', appStoreSubmission);
 
     return;
@@ -1353,7 +1354,7 @@ function saveEnterpriseData(request) {
 
     savePushData(true);
 
-    if (!appStoreTypeAvailability.private) {
+    if (!storeFeatures.private) {
       Fliplet.Studio.emit('overlay', {
         name: 'app-settings',
         options: {
@@ -1372,7 +1373,7 @@ function saveEnterpriseData(request) {
       });
     }
 
-    if (request && appStoreTypeAvailability.private) {
+    if (request && storeFeatures.private) {
       requestBuild('enterprise', enterpriseSubmission);
 
       return;
@@ -2928,7 +2929,7 @@ $('#appStoreConfiguration, #enterpriseConfiguration, #unsignedConfiguration').on
 });
 
 $('#appStoreConfiguration').validator().on('submit', function (event) {
-  if (!appStoreTypeAvailability.public) {
+  if (!storeFeatures.public) {
     Fliplet.Studio.emit('overlay', {
       name: 'app-settings',
       options: {
@@ -3064,7 +3065,7 @@ $('#appStoreConfiguration').validator().on('submit', function (event) {
 });
 
 $('#enterpriseConfiguration').validator().on('submit', function(event) {
-  if (!appStoreTypeAvailability.private) {
+  if (!storeFeatures.private) {
     Fliplet.Studio.emit('overlay', {
       name: 'app-settings',
       options: {
