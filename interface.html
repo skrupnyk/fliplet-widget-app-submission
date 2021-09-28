@@ -1184,7 +1184,7 @@ If you have any questions please reply and I will be happy to answer any questio
           <p class="text-success save-appStore-progress">Your progress was saved successfully!</p>
         </div>
         <div class="col-xs-5 save-btn-holder col-xs-offset-2 text-right">
-          {{#if appStoreTypeAvailability.public }}
+          {{#if appFeatures.appStores.apple.public }}
           <p class="help-block"><small>Submit your information when you are ready!<br>We will take care of the rest.</small></p>
           <button type="submit" class="btn btn-primary fl-green button-appStore-request" data-app-store-build>Request App <i class="fa fa-paper-plane"></i></button>
           {{else}}
@@ -1578,7 +1578,7 @@ If you have any questions please reply and I will be happy to answer any questio
           <p class="text-success save-enterprise-progress">Your progress was saved successfully!</p>
         </div>
         <div class="col-xs-5 save-btn-holder col-xs-offset-2 text-right">
-          {{#if appStoreTypeAvailability.private }}
+          {{#if appFeatures.appStores.apple.private }}
           <p class="help-block"><small>Submit your information when you are ready!<br>We will take care of the rest.</small></p>
           <button type="submit" class="btn btn-primary fl-green button-enterprise-request" data-enterprise-build>Request App <i class="fa fa-paper-plane"></i></button>
           {{else}}
