@@ -2,8 +2,7 @@ var widgetId = Fliplet.Widget.getDefaultId();
 var widgetData = Fliplet.Widget.getData(widgetId) || {};
 var organizationIsPaying = widgetData.organizationIsPaying;
 var mustReviewTos = widgetData.mustReviewTos;
-var storeFeatures = widgetData.appFeatures.hasOwnProperty('appStores')
-  && widgetData.appFeatures.appStores.apple;
+var storeFeatures = _.get(widgetData, 'appFeatures.appStores.apple', {});
 var appName = '';
 var organizationName = '';
 var appIcon = '';
@@ -89,6 +88,32 @@ var socketClientId;
 
 var ERRORS = {
   INVALID_VERSION: 'The version number is incorrect. Please use a 3-part version number such as 1.0.0 where each part is no larger than 99.'
+};
+
+// Mapping of legacy categories and new categories
+var legacyAppStoreCategories = {
+  Book: 'BOOKS',
+  Business: 'BUSINESS',
+  Education: 'EDUCATION',
+  Entertainment: 'ENTERTAINMENT',
+  Finance: 'FINANCE',
+  'Apps.Food_Drink': 'FOOD_AND_DRINK',
+  Games: 'GAMES',
+  Healthcare_Fitness: 'HEALTH_AND_FITNESS',
+  Lifestyle: 'LIFESTYLE',
+  'Apps.Newsstand': 'MAGAZINES_AND_NEWSPAPERS',
+  Medical: 'MEDICAL',
+  Music: 'MUSIC',
+  Navigation: 'NAVIGATION',
+  News: 'NEWS',
+  Photography: 'PHOTO_AND_VIDEO',
+  Productivity: 'PRODUCTIVITY',
+  Reference: 'REFERENCE',
+  'Apps.Shopping': 'SHOPPING',
+  SocialNetworking: 'SOCIAL_NETWORKING',
+  Sports: 'SPORTS',
+  Travel: 'TRAVEL',
+  Utilities: 'UTILITIES'
 };
 
 /* FUNCTIONS */
@@ -245,6 +270,15 @@ function loadAppStoreData() {
     }
 
     if (name === 'fl-store-userCountry' || name === 'fl-store-category1' || name === 'fl-store-category2' || name === 'fl-store-language') {
+      if (['fl-store-category1', 'fl-store-category2'].indexOf(name) > -1) {
+        var category = appStoreSubmission.data[name];
+
+        // Upgrade legacy app store category names
+        if (category && legacyAppStoreCategories[category]) {
+          appStoreSubmission.data[name] = legacyAppStoreCategories[category];
+        }
+      }
+
       $('[name="' + name + '"]').val((typeof appStoreSubmission.data[name] !== 'undefined') ? appStoreSubmission.data[name] : '').trigger('change');
 
       if (name === 'fl-store-language' && !_.isUndefined($('[name="' + name + '"]').val()) && (hasAppId || appStoreSubmissionInStore)) {
@@ -803,6 +837,8 @@ function submissionBuild(appSubmission, origin) {
 }
 
 function save(origin, submission) {
+  submission = submission || {};
+
   return Fliplet.App.Submissions.get()
     .then(function(submissions) {
       var savedSubmission = _.find(submissions, function(sub) {
@@ -1228,7 +1264,7 @@ function saveAppStoreData(request) {
           helpLink: 'https://help.fliplet.com/app-settings/'
         }
       });
-  
+
       Fliplet.Studio.emit('track-event', {
         category: 'app_billing',
         action: 'open',
@@ -1366,7 +1402,7 @@ function saveEnterpriseData(request) {
             helpLink: 'https://help.fliplet.com/app-settings/'
           }
         });
-  
+
         Fliplet.Studio.emit('track-event', {
           category: 'app_billing',
           action: 'open',
@@ -1418,7 +1454,7 @@ function saveUnsignedData(request) {
           helpLink: 'https://help.fliplet.com/app-settings/'
         }
       });
-  
+
       Fliplet.Studio.emit('track-event', {
         category: 'app_billing',
         action: 'open',
@@ -2928,7 +2964,7 @@ $('#appStoreConfiguration, #enterpriseConfiguration, #unsignedConfiguration').on
   Fliplet.Widget.autosize();
 });
 
-$('#appStoreConfiguration').validator().on('submit', function (event) {
+$('#appStoreConfiguration').validator().on('submit', function(event) {
   if (!storeFeatures.public) {
     Fliplet.Studio.emit('overlay', {
       name: 'app-settings',
