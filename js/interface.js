@@ -1234,14 +1234,14 @@ function saveAppStoreData(request) {
         action: 'open',
         context: 'apple_launch'
       });
-    } else {
-      requestBuild('appStore', appStoreSubmission);
-    }
 
-    return;
+      return;
+    } else {
+      return requestBuild('appStore', appStoreSubmission);
+    }
   }
 
-  save('appStore', appStoreSubmission);
+  return save('appStore', appStoreSubmission);
 }
 
 function saveEnterpriseData(request) {
@@ -1372,14 +1372,14 @@ function saveEnterpriseData(request) {
           action: 'open',
           context: 'apple_launch'
         });
-      } else {
-        requestBuild('enterprise', enterpriseSubmission);
-      }
 
-      return;
+        return;
+      } else {
+        return requestBuild('enterprise', enterpriseSubmission);
+      }
     }
 
-    save('enterprise', enterpriseSubmission);
+    return save('enterprise', enterpriseSubmission);
   }
 }
 
@@ -1424,14 +1424,14 @@ function saveUnsignedData(request) {
         action: 'open',
         context: 'apple_launch'
       });
-    } else {
-      requestBuild('unsigned', unsignedSubmission);
-    }
 
-    return;
+      return;
+    } else {
+      return requestBuild('unsigned', unsignedSubmission);
+    }
   }
 
-  save('unsigned', unsignedSubmission);
+  return save('unsigned', unsignedSubmission);
 }
 
 function savePushData(silentSave) {
