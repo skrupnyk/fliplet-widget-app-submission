@@ -1141,7 +1141,7 @@ If you have any questions please reply and I will be happy to answer any questio
                     <p class="help-block label-helper"><small>This is required to ensure Fliplet is authorized to submit your app to the store.</small></p>
                   </div>
                   <div class="col-sm-8">
-                    <input type="text" name="fl-store-appPassword" class="form-control" id="fl-store-appPassword" data-error="Please enter an app-specific password" maxlength="19" required/>
+                    <input type="text" name="fl-store-appPassword" placeholder="xxxx-xxxx-xxxx-xxxx" class="form-control" id="fl-store-appPassword" pattern="([0-9a-zA-Z]{4})-([0-9a-zA-Z]{4})-([0-9a-zA-Z]{4})-([0-9a-zA-Z]{4})" data-error="Invalid app-specific password format. Please enter a password in the format xxxx-xxxx-xxxx-xxxx." data-required-error="Please enter an app-specific password" maxlength="19" required/>
                     <div class="help-block with-errors"></div>
                     <div class="alert alert-warning">Please note that <strong>you need to generate a unique password for every app</strong>.<br />See <a href="https://support.apple.com/en-gb/HT204397" target="_blank">Apple documentation</a> about how to create an <strong>app-specific password</strong> that Fliplet can use.</small></div>
                   </div>
