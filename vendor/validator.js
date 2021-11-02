@@ -20,10 +20,10 @@
   }
 
   var Validator = function(element, options) {
-    this.options    = options;
+    this.options = options;
     this.validators = $.extend({}, Validator.VALIDATORS, options.custom);
-    this.$element   = $(element);
-    this.$btn       = $('button[type="submit"], input[type="submit"]')
+    this.$element = $(element);
+    this.$btn = $('button[type="submit"], input[type="submit"]')
       .filter('[form="' + this.$element.attr('id') + '"]')
       .add(this.$element.find('input[type="submit"], button[type="submit"]'));
 
@@ -34,7 +34,7 @@
     this.$element.on('reset.bs.validator', $.proxy(this.reset, this));
 
     this.$element.find('[data-match]').each(function() {
-      var $this  = $(this);
+      var $this = $(this);
       var target = $this.attr('data-match');
 
       $(target).on('input.bs.validator', function(e) {
@@ -42,7 +42,7 @@
       });
     });
     this.$element.find('[data-nomatch]').each(function() {
-      var $this  = $(this);
+      var $this = $(this);
       var target = $this.attr('data-nomatch');
 
       $(target).on('input.bs.validator', function(e) {
@@ -121,8 +121,8 @@
   };
 
   Validator.prototype.onInput = function(e) {
-    var self        = this;
-    var $el         = $(e.target);
+    var self = this;
+    var $el = $(e.target);
     var deferErrors = e.type !== 'focusout';
 
     if (!this.$inputs.is($el)) return;
@@ -133,7 +133,7 @@
   };
 
   Validator.prototype.validateInput = function($el, deferErrors) {
-    var value      = getValue($el);
+    var value = getValue($el);
     var prevErrors = $el.data('bs.validator.errors');
 
     if ($el.is('[type="radio"]')) $el = this.$element.find('input[name="' + $el.attr('name') + '"]');
@@ -168,7 +168,7 @@
 
 
   Validator.prototype.runValidators = function($el) {
-    var errors   = [];
+    var errors = [];
     var deferred = $.Deferred();
 
     $el.data('bs.validator.deferred') && $el.data('bs.validator.deferred').reject();
@@ -365,11 +365,11 @@
     this.$inputs
       .off('.bs.validator');
 
-    this.options    = null;
+    this.options = null;
     this.validators = null;
-    this.$element   = null;
-    this.$btn       = null;
-    this.$inputs    = null;
+    this.$element = null;
+    this.$btn = null;
+    this.$inputs = null;
 
     return this;
   };
@@ -380,11 +380,11 @@
 
   function Plugin(option) {
     return this.each(function() {
-      var $this   = $(this);
+      var $this = $(this);
       var options = $.extend({}, Validator.DEFAULTS, $this.data(), typeof option === 'object' && option);
-      var data    = $this.data('bs.validator');
+      var data = $this.data('bs.validator');
 
-      if (!data && option == 'destroy') return;
+      if (!data && option === 'destroy') return;
       if (!data) $this.data('bs.validator', (data = new Validator(this, options)));
       if (typeof option === 'string') data[option]();
     });
@@ -392,7 +392,7 @@
 
   var old = $.fn.validator;
 
-  $.fn.validator             = Plugin;
+  $.fn.validator = Plugin;
   $.fn.validator.Constructor = Validator;
 
 
