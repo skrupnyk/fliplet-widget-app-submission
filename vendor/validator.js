@@ -377,7 +377,6 @@
   // VALIDATOR PLUGIN DEFINITION
   // ===========================
 
-
   function Plugin(option) {
     return this.each(function() {
       var $this = $(this);
@@ -395,7 +394,6 @@
   $.fn.validator = Plugin;
   $.fn.validator.Constructor = Validator;
 
-
   // VALIDATOR NO CONFLICT
   // =====================
 
@@ -404,7 +402,6 @@
 
     return this;
   };
-
 
   // VALIDATOR DATA-API
   // ==================
