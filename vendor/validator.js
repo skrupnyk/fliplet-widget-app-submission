@@ -187,7 +187,7 @@
             : validity.rangeOverflow ? $el.attr('data-max-error')
               : validity.rangeUnderflow ? $el.attr('data-min-error')
                 : validity.valueMissing ? $el.attr('data-required-error')
-                  :                            null;
+                  : null;
     }
 
     function getGenericError() {
