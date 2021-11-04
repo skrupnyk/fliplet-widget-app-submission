@@ -1272,9 +1272,9 @@ function saveAppStoreData(request) {
       });
 
       return;
-    } else {
-      return requestBuild('appStore', appStoreSubmission);
     }
+
+    return requestBuild('appStore', appStoreSubmission);
   }
 
   return save('appStore', appStoreSubmission);
@@ -1410,9 +1410,9 @@ function saveEnterpriseData(request) {
         });
 
         return;
-      } else {
-        return requestBuild('enterprise', enterpriseSubmission);
       }
+
+      return requestBuild('enterprise', enterpriseSubmission);
     }
 
     return save('enterprise', enterpriseSubmission);
@@ -1462,9 +1462,9 @@ function saveUnsignedData(request) {
       });
 
       return;
-    } else {
-      return requestBuild('unsigned', unsignedSubmission);
     }
+
+    return requestBuild('unsigned', unsignedSubmission);
   }
 
   return save('unsigned', unsignedSubmission);
