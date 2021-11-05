@@ -99,8 +99,38 @@
     'minlength': function ($el) {
       var minlength = $el.attr('data-minlength')
       return $el.val().length < minlength && Validator.DEFAULTS.errors.minlength
+    },
+    'version-number': function($el) {
+      var previosVersion = $el.data('version-number');
+
+      if (!previosVersion || !$el.val()) {
+        return false;
+      }
+
+      var newVersion = $el.val();
+      var oldVer = previosVersion.split('.');
+      var newVer = newVersion.split('.');
+
+      for (var i = 0; i < newVer.length; i++) {
+        var a = parseInt(newVer[i], 10) || 0;
+        var b = parseInt(oldVer[i], 10) || 0;
+
+        if (a > b) {
+          return false;
+        }
+
+        if (a < b) {
+          $el.attr('data-version-number-error', 'Please make sure the version number is higher than ' + $el.data('version-number'));
+
+          return true;
+        }
+      }
+
+      $el.attr('data-version-number-error', 'Please make sure the version number is higher than ' + $el.data('version-number'));
+
+      return true;
     }
-  }
+  };
 
   Validator.prototype.update = function () {
     var self = this

@@ -334,6 +334,7 @@ function loadAppStoreData() {
         $('[name="' + name + '"]').val(appStoreSubmission.data[name]);
       } else if (typeof appStoreSubmission.previousResults !== 'undefined' && typeof appStoreSubmission.previousResults.versionNumber !== 'undefined' && appStoreSubmission.previousResults.versionNumber !== '') {
         $('[name="' + name + '"]').val(appStoreSubmission.previousResults.versionNumber);
+        $('[name="fl-store-versionNumber"]').data('version-number', appStoreSubmission.previousResults.versionNumber);
       } else {
         $('[name="' + name + '"]').val('1.0.0');
       }
