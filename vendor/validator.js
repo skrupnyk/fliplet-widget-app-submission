@@ -103,7 +103,7 @@
     'version-number': function($el) {
       var previosVersion = $el.data('version-number');
 
-      if (!previosVersion || !$el.val() || $el.val().length < 5) {
+      if (!previosVersion || !$el.val()) {
         return false;
       }
 
