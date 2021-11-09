@@ -101,6 +101,7 @@
       return $el.val().length < minlength && Validator.DEFAULTS.errors.minlength
     },
     'version-number': function($el) {
+      debugger;
       var previosVersion = $el.data('version-number');
 
       if (!previosVersion || !$el.val()) {
@@ -108,12 +109,12 @@
       }
 
       var newVersion = $el.val();
-      var oldVer = previosVersion.split('.');
-      var newVer = newVersion.split('.');
+      var segmentedOldVersion = previosVersion.split('.');
+      var segmentedNewVersion = newVersion.split('.');
 
-      for (var i = 0; i < newVer.length; i++) {
-        var a = parseInt(newVer[i], 10) || 0;
-        var b = parseInt(oldVer[i], 10) || 0;
+      for (var i = 0; i < segmentedNewVersion.length; i++) {
+        var a = parseInt(segmentedNewVersion[i], 10) || 0;
+        var b = parseInt(segmentedOldVersion[i], 10) || 0;
 
         if (a > b) {
           return false;
