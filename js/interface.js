@@ -745,7 +745,6 @@ function loadUnsignedData() {
   }
 }
 
-
 function loadPushNotesData() {
   $('#pushConfiguration [name]').each(function(i, el) {
     var name = $(el).attr('name');
@@ -1462,9 +1461,9 @@ function saveUnsignedData(request) {
       });
 
       return;
-    } else {
-      return requestBuild('unsigned', unsignedSubmission);
     }
+
+    return requestBuild('unsigned', unsignedSubmission);
   }
 
   return save('unsigned', unsignedSubmission);
@@ -4001,6 +4000,7 @@ socket.on('aab.apple.login.2fa.devices', function(data) {
 /* INIT */
 $('#appStoreConfiguration, #enterpriseConfiguration, #unsignedConfiguration').validator().off('change.bs.validator focusout.bs.validator');
 $('[name="submissionType"][value="appStore"]').prop('checked', true).trigger('change');
+$('.copyright-helper').html('<small>e.g. ' + new Date().getFullYear() + ' Acme Inc.</small>');
 
 updateServerLocation();
 
