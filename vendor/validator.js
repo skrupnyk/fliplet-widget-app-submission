@@ -99,37 +99,6 @@
     'minlength': function ($el) {
       var minlength = $el.attr('data-minlength')
       return $el.val().length < minlength && Validator.DEFAULTS.errors.minlength
-    },
-    'version-number': function($el) {
-      debugger;
-      var previosVersion = $el.data('version-number');
-
-      if (!previosVersion || !$el.val()) {
-        return false;
-      }
-
-      var newVersion = $el.val();
-      var segmentedOldVersion = previosVersion.split('.');
-      var segmentedNewVersion = newVersion.split('.');
-
-      for (var i = 0; i < segmentedNewVersion.length; i++) {
-        var a = parseInt(segmentedNewVersion[i], 10) || 0;
-        var b = parseInt(segmentedOldVersion[i], 10) || 0;
-
-        if (a > b) {
-          return false;
-        }
-
-        if (a < b) {
-          $el.attr('data-version-number-error', 'Please make sure the version number is higher than ' + $el.data('version-number'));
-
-          return true;
-        }
-      }
-
-      $el.attr('data-version-number-error', 'Please make sure the version number is higher than ' + $el.data('version-number'));
-
-      return true;
     }
   };
 

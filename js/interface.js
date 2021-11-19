@@ -2965,6 +2965,54 @@ $('#appStoreConfiguration, #enterpriseConfiguration, #unsignedConfiguration').on
   Fliplet.Widget.autosize();
 });
 
+$('form').validator({
+  custom: {
+    'version-number': function($el) {
+      var previosVersion = $el.data('version-number');
+      var newVersion = $el.val();
+      var versionRegExp = /^\d{1,}\.\d{1,}\.\d{1,}$/;
+
+      if (!previosVersion || !$el.val() || !versionRegExp.test(newVersion)) {
+        return false;
+      }
+
+      var segmentedOldVersion = previosVersion.split('.');
+      var segmentedNewVersion = newVersion.split('.');
+
+      for (var i = 0; i < segmentedNewVersion.length; i++) {
+        var a = parseInt(segmentedNewVersion[i], 10) || 0;
+        var b = parseInt(segmentedOldVersion[i], 10) || 0;
+
+        if (a > b) {
+          return false;
+        }
+
+        if (a < b) {
+          $el.attr('data-version-number-error', 'Please make sure the version number is higher than ' + $el.data('version-number'));
+
+          return true;
+        }
+      }
+
+      $el.attr('data-version-number-error', 'Please make sure the version number is higher than ' + $el.data('version-number'));
+
+      return true;
+    },
+    'valid-version': function($el) {
+      var newVersion = $el.val();
+      var versionRegExp = /[^\d\.]/;
+
+      if (versionRegExp.test(newVersion) && newVersion.length > 4) {
+        $el.attr('data-valid-version-error', 'Please make sure the app version is a number');
+
+        return true;
+      }
+
+      return false;
+    }
+  }
+});
+
 $('#appStoreConfiguration').validator().on('submit', function(event) {
   if (!storeFeatures.public) {
     Fliplet.Studio.emit('overlay', {
