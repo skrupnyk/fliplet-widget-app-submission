@@ -2727,9 +2727,7 @@ $('form').validator({
     'validation-copyright-text': function($el) {
       var value = $el.val().trim();
 
-      if (!value) return false;
-
-      return !(value.length > 4 && yearRegex.test(value));
+      return !(value && value.length > 4 && yearRegex.test(value));
     }
   }
 });
