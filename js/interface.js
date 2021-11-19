@@ -84,10 +84,8 @@ var socket = Fliplet.Socket({
 });
 var socketClientId;
 
-var regExp = {
-  urlRegex: new RegExp('(https?|ftp):\/\/[^\s]+'),
-  yearRegex: new RegExp('(^|[^A-Za-z0-9]{1})' + new Date().getFullYear() + '([^A-Za-z0-9]{1}|$)')
-};
+var urlRegex = new RegExp('(https?|ftp):\/\/[^\s]+');
+var yearRegex = new RegExp('(^|[^A-Za-z0-9]{1})' + new Date().getFullYear() + '([^A-Za-z0-9]{1}|$)');
 
 /* ERROR MESSAGES */
 
@@ -2724,16 +2722,16 @@ function toggleLoginForm(form, state, data) {
 $('form').validator({
   custom: {
     'url-contains': function($el) {
-      console.log(regExp.urlRegex.test($el.val()));
+      console.log(urlRegex.test($el.val()));
 
-      return regExp.urlRegex.test($el.val());
+      return urlRegex.test($el.val());
     },
     'copyright-text': function($el) {
       var value = $el.val().trim();
 
       if (!value) return false;
 
-      if (value.length > 4 && regExp.yearRegex.test(value)) {
+      if (value.length > 4 && yearRegex.test(value)) {
         return false;
       }
 
