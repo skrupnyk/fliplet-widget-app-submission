@@ -2722,8 +2722,6 @@ function toggleLoginForm(form, state, data) {
 $('form').validator({
   custom: {
     'validation-url-contains': function($el) {
-      console.log(urlRegex.test($el.val()));
-
       return urlRegex.test($el.val());
     },
     'validation-copyright-text': function($el) {
@@ -2731,11 +2729,7 @@ $('form').validator({
 
       if (!value) return false;
 
-      if (value.length > 4 && yearRegex.test(value)) {
-        return false;
-      }
-
-      return true;
+      return !(value.length > 4 && yearRegex.test(value));
     }
   }
 });
