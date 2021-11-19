@@ -2721,12 +2721,12 @@ function toggleLoginForm(form, state, data) {
 
 $('form').validator({
   custom: {
-    'url-contains': function($el) {
+    'validation-url-contains': function($el) {
       console.log(urlRegex.test($el.val()));
 
       return urlRegex.test($el.val());
     },
-    'copyright-text': function($el) {
+    'validation-copyright-text': function($el) {
       var value = $el.val().trim();
 
       if (!value) return false;
