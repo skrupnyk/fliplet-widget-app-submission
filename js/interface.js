@@ -2973,15 +2973,15 @@ $('#appStoreConfiguration, #enterpriseConfiguration, #unsignedConfiguration').on
 $('form').validator({
   custom: {
     'validation-version-number': function($el) {
-      var previosVersion = $el.data('validation-version-number');
+      var oldVersion = $el.data('validation-version-number');
       var newVersion = $el.val();
       var versionRegExp = /^\d{1,}\.\d{1,}\.\d{1,}$/;
 
-      if (!previosVersion || !$el.val() || !versionRegExp.test(newVersion)) {
+      if (!oldVersion || !$el.val() || !versionRegExp.test(newVersion)) {
         return false;
       }
 
-      var segmentedOldVersion = previosVersion.split('.');
+      var segmentedOldVersion = oldVersion.split('.');
       var segmentedNewVersion = newVersion.split('.');
 
       for (var i = 0; i < segmentedNewVersion.length; i++) {
@@ -2993,13 +2993,13 @@ $('form').validator({
         }
 
         if (a < b) {
-          $el.attr('data-validation-version-number-error', 'Please make sure the version number is higher than ' + $el.data('validation-version-number'));
+          $el.attr('data-validation-version-number-error', 'Please make sure the version number is higher than ' + oldVersion);
 
           return true;
         }
       }
 
-      $el.attr('data-validation-version-number-error', 'Please make sure the version number is higher than ' + $el.data('validation-version-number'));
+      $el.attr('data-validation-version-number-error', 'Please make sure the version number is higher than ' + oldVersion);
 
       return true;
     },
