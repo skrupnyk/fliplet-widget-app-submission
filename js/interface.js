@@ -335,8 +335,10 @@ function loadAppStoreData() {
     if (name === 'fl-store-versionNumber') {
       if (typeof appStoreSubmission.data[name] !== 'undefined' && appStoreSubmission.data[name] !== '') {
         $('[name="' + name + '"]').val(appStoreSubmission.data[name]);
+        $('[name="fl-store-versionNumber"]').data('validation-version-number', appStoreSubmission.data[name]);
       } else if (typeof appStoreSubmission.previousResults !== 'undefined' && typeof appStoreSubmission.previousResults.versionNumber !== 'undefined' && appStoreSubmission.previousResults.versionNumber !== '') {
         $('[name="' + name + '"]').val(appStoreSubmission.previousResults.versionNumber);
+        $('[name="fl-store-versionNumber"]').data('validation-version-number', appStoreSubmission.previousResults.versionNumber);
       } else {
         $('[name="' + name + '"]').val('1.0.0');
       }
@@ -551,8 +553,10 @@ function loadEnterpriseData() {
     if (name === 'fl-ent-versionNumber') {
       if (typeof enterpriseSubmission.data[name] !== 'undefined' && enterpriseSubmission.data[name] !== '') {
         $('[name="' + name + '"]').val(enterpriseSubmission.data[name]);
+        $('[name="fl-ent-versionNumber"]').data('validation-version-number', enterpriseSubmission.data[name]);
       } else if (typeof enterpriseSubmission.previousResults !== 'undefined' && typeof enterpriseSubmission.previousResults.versionNumber !== 'undefined' && enterpriseSubmission.previousResults.versionNumber !== '') {
         $('[name="' + name + '"]').val(enterpriseSubmission.previousResults.versionNumber);
+        $('[name="fl-ent-versionNumber"]').data('validation-version-number', enterpriseSubmission.previousResults.versionNumber);
       } else {
         $('[name="' + name + '"]').val('1.0.0');
       }
@@ -708,8 +712,10 @@ function loadUnsignedData() {
     if (name === 'fl-uns-versionNumber') {
       if (typeof unsignedSubmission.data[name] !== 'undefined' && unsignedSubmission.data[name] !== '') {
         $('[name="' + name + '"]').val(unsignedSubmission.data[name]);
+        $('[name="fl-uns-versionNumber"]').data('validation-version-number', unsignedSubmission.data[name]);
       } else if (typeof unsignedSubmission.previousResults !== 'undefined' && typeof unsignedSubmission.previousResults.versionNumber !== 'undefined' && unsignedSubmission.previousResults.versionNumber !== '') {
         $('[name="' + name + '"]').val(unsignedSubmission.previousResults.versionNumber);
+        $('[name="fl-ent-versionNumber"]').data('validation-version-number', unsignedSubmission.previousResults.versionNumber);
       } else {
         $('[name="' + name + '"]').val('1.0.0');
       }
@@ -2977,6 +2983,54 @@ $(document).on('click', '[data-change-assets]', function(event) {
 $('#appStoreConfiguration, #enterpriseConfiguration, #unsignedConfiguration').on('validated.bs.validator', function() {
   checkGroupErrors();
   Fliplet.Widget.autosize();
+});
+
+$('form').validator({
+  custom: {
+    'validation-version-number': function($el) {
+      var oldVersion = $el.data('validation-version-number');
+      var newVersion = $el.val();
+      var versionRegExp = /^\d{1,}\.\d{1,}\.\d{1,}$/;
+
+      if (!oldVersion || !$el.val() || !versionRegExp.test(newVersion)) {
+        return false;
+      }
+
+      var segmentedOldVersion = oldVersion.split('.');
+      var segmentedNewVersion = newVersion.split('.');
+
+      for (var i = 0; i < segmentedNewVersion.length; i++) {
+        var a = parseInt(segmentedNewVersion[i], 10) || 0;
+        var b = parseInt(segmentedOldVersion[i], 10) || 0;
+
+        if (a > b) {
+          return false;
+        }
+
+        if (a < b) {
+          $el.attr('data-validation-version-number-error', 'Please make sure the version number is higher than ' + oldVersion);
+
+          return true;
+        }
+      }
+
+      $el.attr('data-validation-version-number-error', 'Please make sure the version number is higher than ' + oldVersion);
+
+      return true;
+    },
+    'validation-version-number-type': function($el) {
+      var newVersion = $el.val();
+      var versionRegExp = /[^\d\.]/;
+
+      if (versionRegExp.test(newVersion) && newVersion.length > 4) {
+        $el.attr('data-validation-version-number-type-error', 'Please make sure the app version is a number');
+
+        return true;
+      }
+
+      return false;
+    }
+  }
 });
 
 $('#appStoreConfiguration').validator().on('submit', function(event) {

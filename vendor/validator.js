@@ -100,7 +100,7 @@
       var minlength = $el.attr('data-minlength')
       return $el.val().length < minlength && Validator.DEFAULTS.errors.minlength
     }
-  }
+  };
 
   Validator.prototype.update = function () {
     var self = this
