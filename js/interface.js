@@ -2973,6 +2973,7 @@ $('#appStoreConfiguration, #enterpriseConfiguration, #unsignedConfiguration').on
 $('form').validator({
   custom: {
     'validation-version-number': function($el) {
+      debugger;
       var oldVersion = $el.data('validation-version-number');
       var newVersion = $el.val();
       var versionRegExp = /^\d{1,}\.\d{1,}\.\d{1,}$/;
@@ -3004,6 +3005,7 @@ $('form').validator({
       return true;
     },
     'validation-version-number-type': function($el) {
+      debugger;
       var newVersion = $el.val();
       var versionRegExp = /[^\d\.]/;
 
