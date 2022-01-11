@@ -84,6 +84,9 @@ var socket = Fliplet.Socket({
 });
 var socketClientId;
 
+var urlRegex = new RegExp('(https?|ftp):\/\/[^\s]+');
+var yearRegex = new RegExp('(^|[^A-Za-z0-9]{1})' + new Date().getFullYear() + '([^A-Za-z0-9]{1}|$)');
+
 /* ERROR MESSAGES */
 
 var ERRORS = {
@@ -751,7 +754,6 @@ function loadUnsignedData() {
   }
 }
 
-
 function loadPushNotesData() {
   $('#pushConfiguration [name]').each(function(i, el) {
     var name = $(el).attr('name');
@@ -1278,9 +1280,9 @@ function saveAppStoreData(request) {
       });
 
       return;
-    } else {
-      return requestBuild('appStore', appStoreSubmission);
     }
+
+    return requestBuild('appStore', appStoreSubmission);
   }
 
   return save('appStore', appStoreSubmission);
@@ -1416,9 +1418,9 @@ function saveEnterpriseData(request) {
         });
 
         return;
-      } else {
-        return requestBuild('enterprise', enterpriseSubmission);
       }
+
+      return requestBuild('enterprise', enterpriseSubmission);
     }
 
     return save('enterprise', enterpriseSubmission);
@@ -1468,9 +1470,9 @@ function saveUnsignedData(request) {
       });
 
       return;
-    } else {
-      return requestBuild('unsigned', unsignedSubmission);
     }
+
+    return requestBuild('unsigned', unsignedSubmission);
   }
 
   return save('unsigned', unsignedSubmission);
@@ -2722,6 +2724,19 @@ function toggleLoginForm(form, state, data) {
 
   Fliplet.Widget.autosize();
 }
+
+$('form').validator({
+  custom: {
+    'validation-url-contains': function($el) {
+      return urlRegex.test($el.val());
+    },
+    'validation-copyright-text': function($el) {
+      var value = $el.val().trim();
+
+      return !(value && value.length > 4 && yearRegex.test(value));
+    }
+  }
+});
 
 /* ATTACH LISTENERS */
 
@@ -4057,6 +4072,7 @@ socket.on('aab.apple.login.2fa.devices', function(data) {
 /* INIT */
 $('#appStoreConfiguration, #enterpriseConfiguration, #unsignedConfiguration').validator().off('change.bs.validator focusout.bs.validator');
 $('[name="submissionType"][value="appStore"]').prop('checked', true).trigger('change');
+$('.copyright-helper').html('<small>e.g. ' + new Date().getFullYear() + ' Acme Inc.</small>');
 
 updateServerLocation();
 
