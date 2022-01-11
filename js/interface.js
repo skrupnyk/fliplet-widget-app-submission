@@ -2734,6 +2734,49 @@ $('form').validator({
       var value = $el.val().trim();
 
       return !(value && value.length > 4 && yearRegex.test(value));
+    },
+    'validation-version-number': function($el) {
+      var oldVersion = $el.data('validation-version-number');
+      var newVersion = $el.val();
+      var versionRegExp = /^\d{1,}\.\d{1,}\.\d{1,}$/;
+
+      if (!oldVersion || !$el.val() || !versionRegExp.test(newVersion)) {
+        return false;
+      }
+
+      var segmentedOldVersion = oldVersion.split('.');
+      var segmentedNewVersion = newVersion.split('.');
+
+      for (var i = 0; i < segmentedNewVersion.length; i++) {
+        var a = parseInt(segmentedNewVersion[i], 10) || 0;
+        var b = parseInt(segmentedOldVersion[i], 10) || 0;
+
+        if (a > b) {
+          return false;
+        }
+
+        if (a < b) {
+          $el.attr('data-validation-version-number-error', 'Please make sure the version number is higher than ' + oldVersion);
+
+          return true;
+        }
+      }
+
+      $el.attr('data-validation-version-number-error', 'Please make sure the version number is higher than ' + oldVersion);
+
+      return true;
+    },
+    'validation-version-number-type': function($el) {
+      var newVersion = $el.val();
+      var versionRegExp = /[^\d\.]/;
+
+      if (versionRegExp.test(newVersion) && newVersion.length > 4) {
+        $el.attr('data-validation-version-number-type-error', 'Please make sure the app version is a number');
+
+        return true;
+      }
+
+      return false;
     }
   }
 });
@@ -2983,56 +3026,6 @@ $(document).on('click', '[data-change-assets]', function(event) {
 $('#appStoreConfiguration, #enterpriseConfiguration, #unsignedConfiguration').on('validated.bs.validator', function() {
   checkGroupErrors();
   Fliplet.Widget.autosize();
-});
-
-$('form').validator({
-  custom: {
-    'validation-version-number': function($el) {
-      debugger;
-      var oldVersion = $el.data('validation-version-number');
-      var newVersion = $el.val();
-      var versionRegExp = /^\d{1,}\.\d{1,}\.\d{1,}$/;
-
-      if (!oldVersion || !$el.val() || !versionRegExp.test(newVersion)) {
-        return false;
-      }
-
-      var segmentedOldVersion = oldVersion.split('.');
-      var segmentedNewVersion = newVersion.split('.');
-
-      for (var i = 0; i < segmentedNewVersion.length; i++) {
-        var a = parseInt(segmentedNewVersion[i], 10) || 0;
-        var b = parseInt(segmentedOldVersion[i], 10) || 0;
-
-        if (a > b) {
-          return false;
-        }
-
-        if (a < b) {
-          $el.attr('data-validation-version-number-error', 'Please make sure the version number is higher than ' + oldVersion);
-
-          return true;
-        }
-      }
-
-      $el.attr('data-validation-version-number-error', 'Please make sure the version number is higher than ' + oldVersion);
-
-      return true;
-    },
-    'validation-version-number-type': function($el) {
-      debugger;
-      var newVersion = $el.val();
-      var versionRegExp = /[^\d\.]/;
-
-      if (versionRegExp.test(newVersion) && newVersion.length > 4) {
-        $el.attr('data-validation-version-number-type-error', 'Please make sure the app version is a number');
-
-        return true;
-      }
-
-      return false;
-    }
-  }
 });
 
 $('#appStoreConfiguration').validator().on('submit', function(event) {
