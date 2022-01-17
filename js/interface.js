@@ -3001,6 +3001,16 @@ $('#appStoreConfiguration').validator().on('submit', function(event) {
     return;
   }
 
+  var xhr = new XMLHttpRequest();
+
+  xhr.open('HEAD', appIcon, true);
+
+  xhr.send();
+
+  xhr.onload = function() {
+    console.log('xhr.status: ', xhr.status);
+  };
+
   if (_.includes(['fl-store-appDevLogin', 'fl-store-appDevPass'], document.activeElement.id)) {
     // User submitted app store login form
     $('.login-appStore-button').trigger('click');
