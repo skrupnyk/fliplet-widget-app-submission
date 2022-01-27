@@ -3033,16 +3033,14 @@ $('#appStoreConfiguration').validator().on('submit', function(event) {
   if (appSettings.splashScreen) {
     validateImageUrl(appSettings.splashScreen.url, $('.app-splash-screen'), $('.splash-details-error'));
   } else {
-    $('.setting-splash-screen.default, .app-splash-screen').addClass('has-error');
-    $('.splash-details-error').removeClass('hidden');
+    showErrors($('.setting-splash-screen.default, .app-splash-screen'), $('.splash-details-error'));
   }
 
   if ($('[name="fl-store-screenshots"]:checked').val() === 'new'
       && (!hasFolders || _.some(screenshotRequirements, function(req) {
         return !req.screenshots.length;
       }))) {
-    $('.app-screenshots').addClass('has-error');
-    $('.screenshots-details-error').removeClass('hidden');
+    showErrors($('.app-screenshots'), $('.screenshots-details-error'));
 
     return;
   }
@@ -3188,8 +3186,7 @@ $('#enterpriseConfiguration').validator().on('submit', function(event) {
   if (appSettings.splashScreen) {
     validateImageUrl(appSettings.splashScreen.url, $('.app-splash-screen'), $('.splash-details-error'));
   } else {
-    $('.setting-splash-screen.default, .app-splash-screen').addClass('has-error');
-    $('.splash-details-error').removeClass('hidden');
+    showErrors($('.setting-splash-screen.default, .app-splash-screen'), $('.splash-details-error'));
   }
 
   if (_.includes(['fl-ent-appDevLogin', 'fl-ent-appDevPass'], document.activeElement.id)) {
@@ -3325,8 +3322,7 @@ $('#unsignedConfiguration').validator().on('submit', function(event) {
   if (appSettings.splashScreen) {
     validateImageUrl(appSettings.splashScreen.url, $('.app-splash-screen'), $('.splash-details-error'));
   } else {
-    $('.setting-splash-screen.default, .app-splash-screen').addClass('has-error');
-    $('.splash-details-error').removeClass('hidden');
+    showErrors($('.setting-splash-screen.default, .app-splash-screen'), $('.splash-details-error'));
   }
 
   if (event.isDefaultPrevented()) {
