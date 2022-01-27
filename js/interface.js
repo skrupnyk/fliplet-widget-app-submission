@@ -1977,6 +1977,21 @@ function validateScreenshots() {
   return true;
 }
 
+function validateImageUrl(url) {
+  return new Promise(function(resolve, reject) {
+    var img = document.createElement('img');
+
+    img.onload = resolve;
+    img.onerror = reject;
+    img.src = url;
+  }).then(function() {
+    return;
+  }).catch(function() {
+    $('.setting-app-icon.default').addClass('has-error');
+    $('.image-details-error').removeClass('hidden');
+  });
+}
+
 function publishApp(context) {
   var options = {
     release: {
@@ -2846,6 +2861,7 @@ $('[name="fl-store-screenshots"]').on('change', function() {
       $('[data-item="fl-store-screenshots-existing"]').removeClass('hidden');
       $('[data-item="fl-store-screenshots-new-warning"]').addClass('hidden');
       $('[data-item="fl-store-screenshots-new"]').addClass('hidden');
+      $('.screenshots-details-error').addClass('hidden');
       break;
     default:
       break;
@@ -3001,15 +3017,25 @@ $('#appStoreConfiguration').validator().on('submit', function(event) {
     return;
   }
 
-  var xhr = new XMLHttpRequest();
+  validateImageUrl(appIcon);
 
-  xhr.open('HEAD', appIcon, true);
+  if (appSettings.splashScreen) {
+    validateImageUrl(appSettings.splashScreen.url);
+  } else {
+    $('.setting-splash-screen.default').addClass('has-error');
+    $('.app-splash-screen').addClass('has-error');
+    $('.splash-details-error').removeClass('hidden');
+  }
 
-  xhr.send();
+  if ($('[name="fl-store-screenshots"]:checked').val() === 'new'
+      && (!hasFolders || _.some(screenshotRequirements, function(req) {
+        return !req.screenshots.length;
+      }))) {
+    $('.app-screenshots').addClass('has-error');
+    $('.screenshots-details-error').removeClass('hidden');
 
-  xhr.onload = function() {
-    console.log('xhr.status: ', xhr.status);
-  };
+    return;
+  }
 
   if (_.includes(['fl-store-appDevLogin', 'fl-store-appDevPass'], document.activeElement.id)) {
     // User submitted app store login form
