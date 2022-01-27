@@ -1977,7 +1977,12 @@ function validateScreenshots() {
   return true;
 }
 
-function validateImageUrl(url) {
+function removeImageErrors(imageSelector, errorSelector) {
+  imageSelector.removeClass('has-error');
+  errorSelector.addClass('hidden');
+}
+
+function validateImageUrl(url, imageSelector, errorSelector) {
   return new Promise(function(resolve, reject) {
     var img = document.createElement('img');
 
@@ -1985,10 +1990,12 @@ function validateImageUrl(url) {
     img.onerror = reject;
     img.src = url;
   }).then(function() {
+    removeImageErrors(imageSelector, errorSelector);
+
     return;
   }).catch(function() {
-    $('.setting-app-icon.default').addClass('has-error');
-    $('.image-details-error').removeClass('hidden');
+    imageSelector.addClass('has-error');
+    errorSelector.removeClass('hidden');
   });
 }
 
@@ -3017,10 +3024,10 @@ $('#appStoreConfiguration').validator().on('submit', function(event) {
     return;
   }
 
-  validateImageUrl(appIcon);
+  validateImageUrl(appIcon, $('.setting-app-icon.default'), $('.image-details-error'));
 
   if (appSettings.splashScreen) {
-    validateImageUrl(appSettings.splashScreen.url);
+    validateImageUrl(appSettings.splashScreen.url, $('.app-splash-screen'), $('.splash-details-error'));
   } else {
     $('.setting-splash-screen.default').addClass('has-error');
     $('.app-splash-screen').addClass('has-error');
@@ -3173,6 +3180,16 @@ $('#enterpriseConfiguration').validator().on('submit', function(event) {
     return;
   }
 
+  validateImageUrl(appIcon, $('.setting-app-icon.default'), $('.image-details-error'));
+
+  if (appSettings.splashScreen) {
+    validateImageUrl(appSettings.splashScreen.url, $('.app-splash-screen'), $('.splash-details-error'));
+  } else {
+    $('.setting-splash-screen.default').addClass('has-error');
+    $('.app-splash-screen').addClass('has-error');
+    $('.splash-details-error').removeClass('hidden');
+  }
+
   if (_.includes(['fl-ent-appDevLogin', 'fl-ent-appDevPass'], document.activeElement.id)) {
     // User submitted enterprise login form
     $('.login-enterprise-button').trigger('click');
@@ -3299,6 +3316,16 @@ $('#unsignedConfiguration').validator().on('submit', function(event) {
     });
 
     return;
+  }
+
+  validateImageUrl(appIcon, $('.setting-app-icon.default'), $('.image-details-error'));
+
+  if (appSettings.splashScreen) {
+    validateImageUrl(appSettings.splashScreen.url, $('.app-splash-screen'), $('.splash-details-error'));
+  } else {
+    $('.setting-splash-screen.default').addClass('has-error');
+    $('.app-splash-screen').addClass('has-error');
+    $('.splash-details-error').removeClass('hidden');
   }
 
   if (event.isDefaultPrevented()) {
