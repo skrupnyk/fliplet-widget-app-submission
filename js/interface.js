@@ -1977,17 +1977,17 @@ function validateScreenshots() {
   return true;
 }
 
-function hideErrors(imageSelector, errorSelector) {
-  imageSelector.removeClass('has-error');
-  errorSelector.addClass('hidden');
+function hideErrors($element, $error) {
+  $element.removeClass('has-error');
+  $error.addClass('hidden');
 }
 
-function showErrors(imageSelector, errorSelector) {
-  imageSelector.addClass('has-error');
-  errorSelector.removeClass('hidden');
+function showErrors($element, $error) {
+  $element.addClass('has-error');
+  $error.removeClass('hidden');
 }
 
-function validateImageUrl(url, imageSelector, errorSelector) {
+function validateImageUrl(url, $image, $error) {
   return new Promise(function(resolve, reject) {
     var img = document.createElement('img');
 
@@ -1995,11 +1995,11 @@ function validateImageUrl(url, imageSelector, errorSelector) {
     img.onerror = reject;
     img.src = url;
   }).then(function() {
-    hideErrors(imageSelector, errorSelector);
+    hideErrors($image, $error);
 
     return;
   }).catch(function() {
-    showErrors(imageSelector, errorSelector);
+    showErrors($image, $error);
   });
 }
 
