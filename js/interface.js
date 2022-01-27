@@ -1977,12 +1977,12 @@ function validateScreenshots() {
   return true;
 }
 
-function hideErrors($element, $error) {
+function hideError($element, $error) {
   $element.removeClass('has-error');
   $error.addClass('hidden');
 }
 
-function showErrors($element, $error) {
+function showError($element, $error) {
   $element.addClass('has-error');
   $error.removeClass('hidden');
 }
@@ -1995,11 +1995,11 @@ function validateImageUrl(url, $image, $error) {
     img.onerror = reject;
     img.src = url;
   }).then(function() {
-    hideErrors($image, $error);
+    hideError($image, $error);
 
     return;
   }).catch(function() {
-    showErrors($image, $error);
+    showError($image, $error);
   });
 }
 
@@ -3033,14 +3033,14 @@ $('#appStoreConfiguration').validator().on('submit', function(event) {
   if (appSettings.splashScreen) {
     validateImageUrl(appSettings.splashScreen.url, $('.app-splash-screen'), $('.splash-details-error'));
   } else {
-    showErrors($('.setting-splash-screen.default, .app-splash-screen'), $('.splash-details-error'));
+    showError($('.setting-splash-screen.default, .app-splash-screen'), $('.splash-details-error'));
   }
 
   if ($('[name="fl-store-screenshots"]:checked').val() === 'new'
       && (!hasFolders || _.some(screenshotRequirements, function(req) {
         return !req.screenshots.length;
       }))) {
-    showErrors($('.app-screenshots'), $('.screenshots-details-error'));
+    showError($('.app-screenshots'), $('.screenshots-details-error'));
 
     return;
   }
@@ -3186,7 +3186,7 @@ $('#enterpriseConfiguration').validator().on('submit', function(event) {
   if (appSettings.splashScreen) {
     validateImageUrl(appSettings.splashScreen.url, $('.app-splash-screen'), $('.splash-details-error'));
   } else {
-    showErrors($('.setting-splash-screen.default, .app-splash-screen'), $('.splash-details-error'));
+    showError($('.setting-splash-screen.default, .app-splash-screen'), $('.splash-details-error'));
   }
 
   if (_.includes(['fl-ent-appDevLogin', 'fl-ent-appDevPass'], document.activeElement.id)) {
@@ -3322,7 +3322,7 @@ $('#unsignedConfiguration').validator().on('submit', function(event) {
   if (appSettings.splashScreen) {
     validateImageUrl(appSettings.splashScreen.url, $('.app-splash-screen'), $('.splash-details-error'));
   } else {
-    showErrors($('.setting-splash-screen.default, .app-splash-screen'), $('.splash-details-error'));
+    showError($('.setting-splash-screen.default, .app-splash-screen'), $('.splash-details-error'));
   }
 
   if (event.isDefaultPrevented()) {
