@@ -3028,12 +3028,12 @@ $('#appStoreConfiguration').validator().on('submit', function(event) {
     return;
   }
 
-  validateImageUrl(appIcon, $('.setting-app-icon.default'), $('.image-details-error'));
+  validateImageUrl(appIcon, $('.fl-sb-appStore .setting-app-icon.default'), $('.fl-sb-appStore .image-details-error'));
 
   if (appSettings.splashScreen) {
-    validateImageUrl(appSettings.splashScreen.url, $('.app-splash-screen'), $('.splash-details-error'));
+    validateImageUrl(appSettings.splashScreen.url, $('.fl-sb-appStore .app-splash-screen'), $('.fl-sb-appStore .splash-details-error'));
   } else {
-    showError($('.setting-splash-screen.default, .app-splash-screen'), $('.splash-details-error'));
+    showError($('.fl-sb-appStore .app-splash-screen, .fl-sb-appStore .setting-splash-screen.default'), $('.fl-sb-appStore .splash-details-error'));
   }
 
   if ($('[name="fl-store-screenshots"]:checked').val() === 'new'
@@ -3181,12 +3181,12 @@ $('#enterpriseConfiguration').validator().on('submit', function(event) {
     return;
   }
 
-  validateImageUrl(appIcon, $('.setting-app-icon.default'), $('.image-details-error'));
+  validateImageUrl(appIcon, $('.fl-sb-enterprise .setting-app-icon.default'), $('.fl-sb-enterprise .image-details-error'));
 
   if (appSettings.splashScreen) {
-    validateImageUrl(appSettings.splashScreen.url, $('.app-splash-screen'), $('.splash-details-error'));
+    validateImageUrl(appSettings.splashScreen.url, $('.fl-sb-enterprise .app-splash-screen'), $('.fl-sb-enterprise .splash-details-error'));
   } else {
-    showError($('.setting-splash-screen.default, .app-splash-screen'), $('.splash-details-error'));
+    showError($('.fl-sb-enterprise .setting-splash-screen.default, .fl-sb-enterprise .app-splash-screen'), $('.fl-sb-enterprise .splash-details-error'));
   }
 
   if (_.includes(['fl-ent-appDevLogin', 'fl-ent-appDevPass'], document.activeElement.id)) {
@@ -3317,12 +3317,12 @@ $('#unsignedConfiguration').validator().on('submit', function(event) {
     return;
   }
 
-  validateImageUrl(appIcon, $('.setting-app-icon.default'), $('.image-details-error'));
+  validateImageUrl(appIcon, $('.fl-sb-unsigned .setting-app-icon.default'), $('.fl-sb-unsigned .image-details-error'));
 
   if (appSettings.splashScreen) {
-    validateImageUrl(appSettings.splashScreen.url, $('.app-splash-screen'), $('.splash-details-error'));
+    validateImageUrl(appSettings.splashScreen.url, $('.fl-sb-unsigned .app-splash-screen'), $('.fl-sb-unsigned .splash-details-error'));
   } else {
-    showError($('.setting-splash-screen.default, .app-splash-screen'), $('.splash-details-error'));
+    showError($('.fl-sb-unsigned .setting-splash-screen.default, .fl-sb-unsigned .app-splash-screen'), $('.fl-sb-unsigned .splash-details-error'));
   }
 
   if (event.isDefaultPrevented()) {
