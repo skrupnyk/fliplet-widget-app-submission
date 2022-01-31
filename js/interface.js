@@ -3031,7 +3031,7 @@ $('#appStoreConfiguration').validator().on('submit', function(event) {
   validateImageUrl(appIcon, $('.fl-sb-appStore .setting-app-icon.default'), $('.fl-sb-appStore .image-details-error'));
 
   var defaultSplashScreenData = {
-    'url': $('[data-' + enterpriseSubmission.data.submissionType.toLowerCase() + '-default-splash-url]').data(enterpriseSubmission.data.submissionType.toLowerCase() + '-default-splash-url')
+    'url': $('[data-' + appStoreSubmission.data.submissionType.toLowerCase() + '-default-splash-url]').data(appStoreSubmission.data.submissionType.toLowerCase() + '-default-splash-url')
   };
 
   if (appSettings.splashScreen) {
