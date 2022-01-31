@@ -3030,10 +3030,16 @@ $('#appStoreConfiguration').validator().on('submit', function(event) {
 
   validateImageUrl(appIcon, $('.fl-sb-appStore .setting-app-icon.default'), $('.fl-sb-appStore .image-details-error'));
 
+  var defaultSplashScreenData = {
+    'url': $('[data-' + enterpriseSubmission.data.submissionType.toLowerCase() + '-default-splash-url]').data(enterpriseSubmission.data.submissionType.toLowerCase() + '-default-splash-url')
+  };
+
   if (appSettings.splashScreen) {
-    validateImageUrl(appSettings.splashScreen.url, $('.fl-sb-appStore .app-splash-screen'), $('.fl-sb-appStore .splash-details-error'));
-  } else {
-    showError($('.fl-sb-appStore .app-splash-screen, .fl-sb-appStore .setting-splash-screen.default'), $('.fl-sb-appStore .splash-details-error'));
+    validateImageUrl(appSettings.splashScreen.url, $('.fl-sb-unsigned .app-splash-screen'), $('.fl-sb-unsigned .splash-details-error'));
+  }
+
+  if (defaultSplashScreenData.url) {
+    validateImageUrl(defaultSplashScreenData.url, $('.fl-sb-unsigned .app-splash-screen'), $('.fl-sb-unsigned .splash-details-error'));
   }
 
   if ($('[name="fl-store-screenshots"]:checked').val() === 'new'
@@ -3183,10 +3189,16 @@ $('#enterpriseConfiguration').validator().on('submit', function(event) {
 
   validateImageUrl(appIcon, $('.fl-sb-enterprise .setting-app-icon.default'), $('.fl-sb-enterprise .image-details-error'));
 
+  var defaultSplashScreenData = {
+    'url': $('[data-' + enterpriseSubmission.data.submissionType.toLowerCase() + '-default-splash-url]').data(enterpriseSubmission.data.submissionType.toLowerCase() + '-default-splash-url')
+  };
+
   if (appSettings.splashScreen) {
-    validateImageUrl(appSettings.splashScreen.url, $('.fl-sb-enterprise .app-splash-screen'), $('.fl-sb-enterprise .splash-details-error'));
-  } else {
-    showError($('.fl-sb-enterprise .setting-splash-screen.default, .fl-sb-enterprise .app-splash-screen'), $('.fl-sb-enterprise .splash-details-error'));
+    validateImageUrl(appSettings.splashScreen.url, $('.fl-sb-unsigned .app-splash-screen'), $('.fl-sb-unsigned .splash-details-error'));
+  }
+
+  if (defaultSplashScreenData.url) {
+    validateImageUrl(defaultSplashScreenData.url, $('.fl-sb-unsigned .app-splash-screen'), $('.fl-sb-unsigned .splash-details-error'));
   }
 
   if (_.includes(['fl-ent-appDevLogin', 'fl-ent-appDevPass'], document.activeElement.id)) {
@@ -3319,10 +3331,16 @@ $('#unsignedConfiguration').validator().on('submit', function(event) {
 
   validateImageUrl(appIcon, $('.fl-sb-unsigned .setting-app-icon.default'), $('.fl-sb-unsigned .image-details-error'));
 
+  var defaultSplashScreenData = {
+    'url': $('[data-' + unsignedSubmission.data.submissionType.toLowerCase() + '-default-splash-url]').data(unsignedSubmission.data.submissionType.toLowerCase() + '-default-splash-url')
+  };
+
   if (appSettings.splashScreen) {
     validateImageUrl(appSettings.splashScreen.url, $('.fl-sb-unsigned .app-splash-screen'), $('.fl-sb-unsigned .splash-details-error'));
-  } else {
-    showError($('.fl-sb-unsigned .setting-splash-screen.default, .fl-sb-unsigned .app-splash-screen'), $('.fl-sb-unsigned .splash-details-error'));
+  }
+
+  if (defaultSplashScreenData.url) {
+    validateImageUrl(defaultSplashScreenData.url, $('.fl-sb-unsigned .app-splash-screen'), $('.fl-sb-unsigned .splash-details-error'));
   }
 
   if (event.isDefaultPrevented()) {
