@@ -1983,6 +1983,32 @@ function validateScreenshots() {
   return true;
 }
 
+function hideError($element, $error) {
+  $element.removeClass('has-error');
+  $error.addClass('hidden');
+}
+
+function showError($element, $error) {
+  $element.addClass('has-error');
+  $error.removeClass('hidden');
+}
+
+function validateImageUrl(url, $image, $error) {
+  return new Promise(function(resolve, reject) {
+    var img = document.createElement('img');
+
+    img.onload = resolve;
+    img.onerror = reject;
+    img.src = url;
+  }).then(function() {
+    hideError($image, $error);
+
+    return;
+  }).catch(function() {
+    showError($image, $error);
+  });
+}
+
 function publishApp(context) {
   var options = {
     release: {
@@ -2895,6 +2921,7 @@ $('[name="fl-store-screenshots"]').on('change', function() {
       $('[data-item="fl-store-screenshots-existing"]').removeClass('hidden');
       $('[data-item="fl-store-screenshots-new-warning"]').addClass('hidden');
       $('[data-item="fl-store-screenshots-new"]').addClass('hidden');
+      $('.screenshots-details-error').addClass('hidden');
       break;
     default:
       break;
@@ -3050,6 +3077,29 @@ $('#appStoreConfiguration').validator().on('submit', function(event) {
     return;
   }
 
+  validateImageUrl(appIcon, $('.fl-sb-appStore .setting-app-icon.default'), $('.fl-sb-appStore .image-details-error'));
+
+  var defaultSplashScreenData = {
+    'url': $('[data-' + appStoreSubmission.data.submissionType.toLowerCase() + '-default-splash-url]').data(appStoreSubmission.data.submissionType.toLowerCase() + '-default-splash-url')
+  };
+
+  if (appSettings.splashScreen) {
+    validateImageUrl(appSettings.splashScreen.url, $('.fl-sb-unsigned .app-splash-screen'), $('.fl-sb-unsigned .splash-details-error'));
+  }
+
+  if (defaultSplashScreenData.url) {
+    validateImageUrl(defaultSplashScreenData.url, $('.fl-sb-unsigned .app-splash-screen'), $('.fl-sb-unsigned .splash-details-error'));
+  }
+
+  if ($('[name="fl-store-screenshots"]:checked').val() === 'new'
+      && (!hasFolders || _.some(screenshotRequirements, function(req) {
+        return !req.screenshots.length;
+      }))) {
+    showError($('.app-screenshots'), $('.screenshots-details-error'));
+
+    return;
+  }
+
   if (_.includes(['fl-store-appDevLogin', 'fl-store-appDevPass'], document.activeElement.id)) {
     // User submitted app store login form
     $('.login-appStore-button').trigger('click');
@@ -3186,6 +3236,20 @@ $('#enterpriseConfiguration').validator().on('submit', function(event) {
     return;
   }
 
+  validateImageUrl(appIcon, $('.fl-sb-enterprise .setting-app-icon.default'), $('.fl-sb-enterprise .image-details-error'));
+
+  var defaultSplashScreenData = {
+    'url': $('[data-' + enterpriseSubmission.data.submissionType.toLowerCase() + '-default-splash-url]').data(enterpriseSubmission.data.submissionType.toLowerCase() + '-default-splash-url')
+  };
+
+  if (appSettings.splashScreen) {
+    validateImageUrl(appSettings.splashScreen.url, $('.fl-sb-unsigned .app-splash-screen'), $('.fl-sb-unsigned .splash-details-error'));
+  }
+
+  if (defaultSplashScreenData.url) {
+    validateImageUrl(defaultSplashScreenData.url, $('.fl-sb-unsigned .app-splash-screen'), $('.fl-sb-unsigned .splash-details-error'));
+  }
+
   if (_.includes(['fl-ent-appDevLogin', 'fl-ent-appDevPass'], document.activeElement.id)) {
     // User submitted enterprise login form
     $('.login-enterprise-button').trigger('click');
@@ -3312,6 +3376,20 @@ $('#unsignedConfiguration').validator().on('submit', function(event) {
     });
 
     return;
+  }
+
+  validateImageUrl(appIcon, $('.fl-sb-unsigned .setting-app-icon.default'), $('.fl-sb-unsigned .image-details-error'));
+
+  var defaultSplashScreenData = {
+    'url': $('[data-' + unsignedSubmission.data.submissionType.toLowerCase() + '-default-splash-url]').data(unsignedSubmission.data.submissionType.toLowerCase() + '-default-splash-url')
+  };
+
+  if (appSettings.splashScreen) {
+    validateImageUrl(appSettings.splashScreen.url, $('.fl-sb-unsigned .app-splash-screen'), $('.fl-sb-unsigned .splash-details-error'));
+  }
+
+  if (defaultSplashScreenData.url) {
+    validateImageUrl(defaultSplashScreenData.url, $('.fl-sb-unsigned .app-splash-screen'), $('.fl-sb-unsigned .splash-details-error'));
   }
 
   if (event.isDefaultPrevented()) {
