@@ -2764,7 +2764,7 @@ $('form').validator({
     'validation-version-number': function($el) {
       var oldVersion = $el.data('validation-version-number');
       var newVersion = $el.val();
-      var versionRegExp = /^\d{1,}\.\d{1,}\.\d{1,}$/;
+      var versionRegExp = /^\d+\.\d+\.\d+$/;
 
       if (!oldVersion || !$el.val() || !versionRegExp.test(newVersion)) {
         return false;
@@ -2794,9 +2794,9 @@ $('form').validator({
     },
     'validation-version-number-type': function($el) {
       var newVersion = $el.val();
-      var versionRegExp = /[^\d\.]/;
+      var versionRegExp = /^\d+\.\d+\.\d+$/;
 
-      if (versionRegExp.test(newVersion) && newVersion.length > 4) {
+      if (!versionRegExp.test(newVersion)) {
         $el.attr('data-validation-version-number-type-error', 'Please make sure the app version is a number');
 
         return true;
