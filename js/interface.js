@@ -1484,6 +1484,11 @@ function savePushData(silentSave) {
     'fl-push-authKey': 'apnAuthKey',
     'fl-push-keyId': 'apnKeyId'
   };
+  var authKeyHasError = !!$('#fl-push-authKey').attr('data-validation-authentication-key-error');
+
+  if (authKeyHasError) {
+    return;
+  }
 
   $('#pushConfiguration [name]').each(function(i, el) {
     var name = $(el).attr('name');
@@ -2798,6 +2803,20 @@ $('form').validator({
 
       if (!versionRegExp.test(newVersion)) {
         $el.attr('data-validation-version-number-type-error', 'Please make sure the app version is a number');
+
+        return true;
+      }
+
+      return false;
+    },
+    'validation-authentication-key': function($el) {
+      var authKey = $el.val().replace(/\\n/g, '\n');
+      var authKeyRegExp = /^(-----BEGIN\sPRIVATE\sKEY-----\n)+(.|\n)+(\n-----END\sPRIVATE\sKEY-----)$/;
+
+      $el.val(authKey);
+
+      if (!authKeyRegExp.test($el.val())) {
+        $el.attr('data-validation-authentication-key-error', 'Authentication Key invalid. Please make sure the format is correct.');
 
         return true;
       }
