@@ -1479,14 +1479,15 @@ function saveUnsignedData(request) {
 }
 
 function savePushData(silentSave) {
+  var $authKeyInput = $('#fl-push-authKey');
   var data = notificationSettings || {};
   var pushDataMap = {
     'fl-push-authKey': 'apnAuthKey',
     'fl-push-keyId': 'apnKeyId'
   };
-  var authKeyHasError = !!$('#fl-push-authKey').attr('data-validation-authentication-key-error');
+  var authKeyHasError = !!$authKeyInput.attr('data-validation-authentication-key-error');
 
-  if (authKeyHasError) {
+  if (authKeyHasError && $authKeyInput.val()) {
     return;
   }
 
