@@ -715,7 +715,7 @@ function loadUnsignedData() {
         $('[name="fl-uns-versionNumber"]').data('validation-version-number', unsignedSubmission.data[name]);
       } else if (typeof unsignedSubmission.previousResults !== 'undefined' && typeof unsignedSubmission.previousResults.versionNumber !== 'undefined' && unsignedSubmission.previousResults.versionNumber !== '') {
         $('[name="' + name + '"]').val(unsignedSubmission.previousResults.versionNumber);
-        $('[name="fl-ent-versionNumber"]').data('validation-version-number', unsignedSubmission.previousResults.versionNumber);
+        $('[name="fl-uns-versionNumber"]').data('validation-version-number', unsignedSubmission.previousResults.versionNumber);
       } else {
         $('[name="' + name + '"]').val('1.0.0');
       }
