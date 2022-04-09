@@ -2810,12 +2810,10 @@ $('form').validator({
       return false;
     },
     'validation-authentication-key': function($el) {
-      var authKey = $el.val().replace(/\\n/g, '\n');
-      var authKeyRegExp = /^(-----BEGIN\sPRIVATE\sKEY-----\n)+(.|\n)+(\n-----END\sPRIVATE\sKEY-----)$/;
+      var invalidCharacterRegExp = /\\n/;
+      var authKeyRegExp = /^(-----BEGIN\sPRIVATE\sKEY-----\n)(.|\n)+(\n-----END\sPRIVATE\sKEY-----)$/;
 
-      $el.val(authKey);
-
-      if (!authKeyRegExp.test($el.val())) {
+      if (!authKeyRegExp.test($el.val()) || invalidCharacterRegExp.test($el.val())) {
         $el.attr('data-validation-authentication-key-error', 'Authentication Key invalid. Please make sure the format is correct.');
 
         return true;
