@@ -42,7 +42,7 @@ var statusTableTemplate = $('#status-table-template').html();
 var $statusAppStoreTableElement = $('.app-build-appstore-status-holder');
 var $statusEnterpriseTableElement = $('.app-build-enterprise-status-holder');
 var $statusUnsignedTableElement = $('.app-build-unsigned-status-holder');
-var $pushConfigurationForm = $('#pushConfiguration');
+var $pushConfigurationSaveButton = $('#pushConfiguration').find('.btn-primary');
 var initLoad;
 var organizationId = Fliplet.Env.get('organizationId');
 var userInfo;
@@ -2813,12 +2813,12 @@ $('form').validator({
         $el.attr('data-validation-authentication-key-error', 'Authentication Key invalid. Please make sure the format is correct.');
 
 
-        $pushConfigurationForm.find('.btn-primary').addClass('disabled');
+        $pushConfigurationSaveButton.addClass('disabled');
 
         return true;
       }
 
-      $pushConfigurationForm.find('.btn-primary').removeClass('disabled');
+      $pushConfigurationSaveButton.removeClass('disabled');
 
       return false;
     }
@@ -2829,7 +2829,7 @@ $('form').validator({
 
 $('[name="fl-push-authKey"]').on('input', function(event) {
   if (!$(event.target).val()) {
-    $pushConfigurationForm.find('.btn-primary').removeClass('disabled');
+    $pushConfigurationSaveButton.removeClass('disabled');
   }
 });
 
