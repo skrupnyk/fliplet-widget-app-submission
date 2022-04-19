@@ -42,6 +42,7 @@ var statusTableTemplate = $('#status-table-template').html();
 var $statusAppStoreTableElement = $('.app-build-appstore-status-holder');
 var $statusEnterpriseTableElement = $('.app-build-enterprise-status-holder');
 var $statusUnsignedTableElement = $('.app-build-unsigned-status-holder');
+var $pushConfigurationForm = $('#pushConfiguration');
 var initLoad;
 var organizationId = Fliplet.Env.get('organizationId');
 var userInfo;
@@ -1479,16 +1480,11 @@ function saveUnsignedData(request) {
 }
 
 function savePushData(silentSave) {
-  var $form = $('#pushConfiguration');
   var data = notificationSettings || {};
   var pushDataMap = {
     'fl-push-authKey': 'apnAuthKey',
     'fl-push-keyId': 'apnKeyId'
   };
-
-  if ($form.find('.has-error').length) {
-    return;
-  }
 
   $('#pushConfiguration [name]').each(function(i, el) {
     var name = $(el).attr('name');
@@ -2816,8 +2812,13 @@ $('form').validator({
       if (!authKeyRegExp.test($el.val()) || invalidCharacterRegExp.test($el.val())) {
         $el.attr('data-validation-authentication-key-error', 'Authentication Key invalid. Please make sure the format is correct.');
 
+
+        $pushConfigurationForm.find('.btn-primary').addClass('disabled');
+
         return true;
       }
+
+      $pushConfigurationForm.find('.btn-primary').removeClass('disabled');
 
       return false;
     }
@@ -2825,6 +2826,12 @@ $('form').validator({
 });
 
 /* ATTACH LISTENERS */
+
+$('[name="fl-push-authKey"]').on('input', function(event) {
+  if (!$(event.target).val()) {
+    $pushConfigurationForm.find('.btn-primary').removeClass('disabled');
+  }
+});
 
 $('[data-toggle="tooltip"]').tooltip({
   title: function() {
