@@ -42,7 +42,7 @@ var statusTableTemplate = $('#status-table-template').html();
 var $statusAppStoreTableElement = $('.app-build-appstore-status-holder');
 var $statusEnterpriseTableElement = $('.app-build-enterprise-status-holder');
 var $statusUnsignedTableElement = $('.app-build-unsigned-status-holder');
-var $pushConfigurationSaveButton = $('#pushConfiguration').find('.btn-primary');
+var $pushConfigurationSaveButton = $('#pushConfiguration .btn-primary');
 var initLoad;
 var organizationId = Fliplet.Env.get('organizationId');
 var userInfo;
