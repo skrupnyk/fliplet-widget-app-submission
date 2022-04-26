@@ -1788,9 +1788,17 @@ If you have any questions please reply and I will be happy to answer any questio
                     <p class="help-block label-helper"><small>Authentication Key can be created <a target="_blank" href="https://developer.apple.com/account/ios/certificate/key">here</a></small></p>
                   </div>
                   <div class="col-sm-8">
-                    <textarea name="fl-push-authKey" class="form-control" id="fl-push-authKey" rows="6">-----BEGIN PRIVATE KEY-----
+                    <textarea 
+                      name="fl-push-authKey"
+                      class="form-control"
+                      id="fl-push-authKey"
+                      rows="6"
+                      data-validation-authentication-key=""
+                      data-validation-authentication-key-error=""
+                      placeholder="-----BEGIN PRIVATE KEY-----
 ...
------END PRIVATE KEY-----</textarea>
+-----END PRIVATE KEY-----"></textarea>
+                    <div class="help-block with-errors"></div>
                   </div>
                 </div>
                 <div class="form-group clearfix">
